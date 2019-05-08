@@ -12,7 +12,7 @@ def auto_less_to_css(file_dir):
         print("files:::", files)
         print("==="*10)
         if(root.endswith("BQB") == True):
-            md_content = md_content + "\n##"+ root.split("/")[-1] + "\n"
+            md_content = md_content + "\n## "+ root.split("/")[-1] + "\n"
             for file in files:
                 try:
                     if ((file[-4:] == ".gif")or(file[-4:] == ".jpg")or(file[-4:] == ".png")):
