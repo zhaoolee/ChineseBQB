@@ -19,7 +19,7 @@ def auto_less_to_css(file_dir):
     for whole_path_file in  all_whole_path_files:
         img_addr = "".join(whole_path_file)
         print(img_addr)
-        md_content = md_content + "!["+img_addr+"]("+img_addr+")\n"+img_addr+"\n"
+        md_content = md_content + "\n!["+img_addr+"]("+img_addr+")\n\n"+img_addr+"\n"+"---"+"\n"
 
     # 清除上一份文件
     if os.path.isfile("./index.md"):
