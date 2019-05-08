@@ -93,3 +93,13 @@ https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/动物/猫🐱/webw
 
 https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/动物/猫🐱/webwxgetmsgimg.gif
 ---
+
+![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/动物/狗🐶/webwxgetmsgimg-1.jpg](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/动物/狗🐶/webwxgetmsgimg-1.jpg)
+
+https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/动物/狗🐶/webwxgetmsgimg-1.jpg
+---
+
+![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/动物/狗🐶/webwxgetmsgimg.jpg](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/动物/狗🐶/webwxgetmsgimg.jpg)
+
+https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/动物/狗🐶/webwxgetmsgimg.jpg
+---
