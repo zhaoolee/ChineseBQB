@@ -19,7 +19,7 @@ def auto_less_to_css(file_dir):
                         file_info = ["https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master", (root+'/')[1:], file]
                         img_addr = "".join(file_info)
                         print(img_addr)
-                        md_content = md_content + "\n---\n" + "!["+img_addr+"]("+img_addr+")\n\n - "+"(" + img_addr + ")["+ img_addr +"]"+"\n"+"---"+"\n"
+                        md_content = md_content + "\n---\n" + "!["+img_addr+"]("+img_addr+")\n\n > "+"(" + img_addr + ")["+ img_addr +"]"+"\n"+"---"+"\n"
 
                 except Exception as e:
                     print(e)
