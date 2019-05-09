@@ -8,31 +8,31 @@
 
 ## 表情包目录
 
-- [熊本熊BQB](https://zhaoolee.github.io/ChineseBQB/熊本熊BQB/)
+- [熊本熊BQB(当前收录31张)](https://zhaoolee.github.io/ChineseBQB/熊本熊BQB/)
 
 
-- [可爱男孩纸BQB](https://zhaoolee.github.io/ChineseBQB/可爱男孩纸BQB/)
+- [可爱男孩纸BQB(当前收录23张)](https://zhaoolee.github.io/ChineseBQB/可爱男孩纸BQB/)
 
 
-- [仓鼠🐹BQB](https://zhaoolee.github.io/ChineseBQB/仓鼠🐹BQB/)
+- [仓鼠🐹BQB(当前收录1张)](https://zhaoolee.github.io/ChineseBQB/仓鼠🐹BQB/)
 
 
-- [猫🐱BQB](https://zhaoolee.github.io/ChineseBQB/猫🐱BQB/)
+- [猫🐱BQB(当前收录35张)](https://zhaoolee.github.io/ChineseBQB/猫🐱BQB/)
 
 
-- [狗🐶BQB](https://zhaoolee.github.io/ChineseBQB/狗🐶BQB/)
+- [狗🐶BQB(当前收录40张)](https://zhaoolee.github.io/ChineseBQB/狗🐶BQB/)
 
 
-- [金馆长熊猫🐼BQB](https://zhaoolee.github.io/ChineseBQB/金馆长熊猫🐼BQB/)
+- [金馆长熊猫🐼BQB(当前收录151张)](https://zhaoolee.github.io/ChineseBQB/金馆长熊猫🐼BQB/)
 
 
-- [猪🐖BQB](https://zhaoolee.github.io/ChineseBQB/猪🐖BQB/)
+- [猪🐖BQB(当前收录5张)](https://zhaoolee.github.io/ChineseBQB/猪🐖BQB/)
 
 
-- [可爱的女孩纸BQB](https://zhaoolee.github.io/ChineseBQB/可爱的女孩纸BQB/)
+- [可爱的女孩纸BQB(当前收录100张)](https://zhaoolee.github.io/ChineseBQB/可爱的女孩纸BQB/)
 
 
-- [苏大强BQB](https://zhaoolee.github.io/ChineseBQB/苏大强BQB/)
+- [苏大强BQB(当前收录33张)](https://zhaoolee.github.io/ChineseBQB/苏大强BQB/)
 
 BQBEND
 

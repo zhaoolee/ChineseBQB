@@ -15,14 +15,18 @@ def auto_less_to_css(file_dir):
             print("files:::", files)
             print("==="*10)
             md_content = ""
+            # 记录数量
+            img_num = 0
             md_content = md_content + "\n## "+ root.split("/")[-1] + "\n"
             for file in files:
                 try:
                     if ((file[-4:] == ".gif")or(file[-4:] == ".jpg")or(file[-4:] == ".png")):
+
                         file_info = ["https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master", (root+'/')[1:], file]
                         img_addr = "".join(file_info)
                         print(img_addr)
                         md_content = md_content + "\n---\n" + "!["+img_addr+"]("+img_addr+")\n\n"+"[" + img_addr + "]("+ img_addr +")"+"\n"+"---"+"\n"
+                        img_num = img_num + 1
 
                 except Exception as e:
                     print(e)
@@ -37,9 +41,10 @@ def auto_less_to_css(file_dir):
 
 
             html_path_atom = "https://zhaoolee.github.io/ChineseBQB/"+root.split("/")[-1]+"/"
-            html_path.append("- ["+html_path_atom.split("/")[-2]+"]("+html_path_atom+")")
+            html_path.append("- ["+html_path_atom.split("/")[-2]+"(当前收录"+str(img_num)+"张)"+"]("+html_path_atom+")")
 
             md_content = ""
+            img_num = 0
 
 
 
