@@ -14,6 +14,8 @@ def auto_less_to_css(file_dir):
             print("dirs:::", dirs)
             print("files:::", files)
             print("==="*10)
+            # 存储预览图
+            preview_pic = ""
             md_content = ""
             # 记录数量
             img_num = 0
@@ -22,11 +24,16 @@ def auto_less_to_css(file_dir):
                 try:
                     if ((file[-4:] == ".gif")or(file[-4:] == ".jpg")or(file[-4:] == ".png")):
 
+
                         file_info = ["https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master", (root+'/')[1:], file]
                         img_addr = "".join(file_info)
                         print(img_addr)
                         md_content = md_content + "\n---\n" + "!["+img_addr+"]("+img_addr+")\n\n"+"[" + img_addr + "]("+ img_addr +")"+"\n"+"---"+"\n"
                         img_num = img_num + 1
+                        # 第一张图片为预览图
+                        if(img_num == 1):
+                            preview_pic = img_addr
+
 
                 except Exception as e:
                     print(e)
@@ -41,14 +48,16 @@ def auto_less_to_css(file_dir):
 
 
             html_path_atom = "https://zhaoolee.github.io/ChineseBQB/"+root.split("/")[-1]+"/"
-            html_path.append("- ["+html_path_atom.split("/")[-2]+"(当前收录"+str(img_num)+"张)"+"]("+html_path_atom+")")
+            html_path.append("| !["+ preview_pic +"]("+ preview_pic +") | ["+html_path_atom.split("/")[-2]+"(当前收录"+str(img_num)+"张)"+"]("+html_path_atom+") |")
 
+            # 清空记录的变量
+            preview_pic = ""
             md_content = ""
             img_num = 0
 
 
-
-    html_path_str = "\n\n\n".join(html_path)
+    # 生成表格
+    html_path_str = "| 预览图 | 链接 | \n | :---: | :---: | \n" + "\n".join(html_path)
 
     readme_content = ""
     with open('./README.md', "r") as f:
