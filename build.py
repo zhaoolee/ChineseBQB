@@ -36,9 +36,9 @@ def auto_less_to_css(file_dir):
                 f.write(md_content.encode("utf-8"))
 
             html_path_atom = "https://zhaoolee.github.io/ChineseBQB/"+root.split("/")[-1]+"/"
-            html_path.append("["+html_path_atom.split("/")[-2]+"]("+html_path_atom+")")
+            html_path.append("- ["+html_path_atom.split("/")[-2]+"]("+html_path_atom+")")
 
-    html_path_str = "\n".join(html_path)
+    html_path_str = "\n\n\n".join(html_path)
 
     readme_content = ""
     with open('./README.md', "r") as f:
