@@ -2,11 +2,16 @@
 
 让中国表情包 走向世界 Let the Chinese BQB go to the world
 
+中国的表情包是中国的, 也是世界的!
+
+这是一个专门用于收录表情包的仓库, 所有收录的表情包均可在线查看, 所有图片索引数据由python程序自动生成, 欢迎斗图高手们贡献表情包, 如果不会使用git可以将表情包发送到我的邮箱 zhaoolee@gmail.com
+
 表情包在线查看地址: [https://zhaoolee.github.io/ChineseBQB/](https://zhaoolee.github.io/ChineseBQB/)
 
 
 
-## 表情包目录(截止2019-05-09 13:37:39共收录431张表情包)
+
+## 表情包目录(截止2019-05-09 13:42:31共收录431张表情包)
 
 | 预览图 | 链接 | 
  | :---: | :---: | 
@@ -23,4 +28,7 @@
 
 BQBEND
 
-(readme未完成, 完成进度60%)
+(readme未完成, 完成进度80%)
+
+
+
