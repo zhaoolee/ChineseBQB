@@ -35,8 +35,8 @@ def auto_less_to_css(file_dir):
             with open(root+"/index.md", "ab+") as f:
                 f.write(md_content.encode("utf-8"))
 
-            html_path_atom = "https://zhaoolee.github.io/ChineseBQB/"+root.split("/")[-1]
-            html_path.append("["+html_path_atom+"]("+html_path_atom+")");
+            html_path_atom = "https://zhaoolee.github.io/ChineseBQB/"+root.split("/")[-1]+"/"
+            html_path.append("["+html_path_atom.split("/")[-2]+"]("+html_path_atom+")")
 
     html_path_str = "\n".join(html_path)
 
@@ -46,14 +46,14 @@ def auto_less_to_css(file_dir):
     with open('./README.md', "r") as f:
         readme_content = f.read()
 
-    print("README内容===>>", readme_content);
-    start_index = readme_content.index("表情包目录:")
+    print("README内容===>>", readme_content)
+    start_index = readme_content.index("表情包目录")
     end_index = readme_content.index("BQBEND")
 
     print("开始位置:", start_index, "结束位置:", end_index)
 
     old_content = readme_content[start_index: end_index+1]
-    new_content = "表情包目录" + html_path_str + "BQBEND"
+    new_content = "表情包目录\n" + html_path_str + "BQBEND"
 
     new_readme_content = readme_content[0: start_index] + new_content +readme_content[end_index:]
 
