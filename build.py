@@ -20,7 +20,7 @@ def auto_less_to_css(file_dir):
             # 记录数量
             img_num = 0
             md_content = md_content + "\n## "+ root.split("/")[-1] + "\n"
-            for file in files:
+            for file in sorted(files):
                 try:
                     if ((file[-4:] == ".gif")or(file[-4:] == ".jpg")or(file[-4:] == ".png")):
 
