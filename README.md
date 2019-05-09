@@ -17,7 +17,7 @@
 
 
 
-## 表情包目录(共收录459张表情包)
+## 表情包目录(共收录489张表情包)
 
 | 预览图 | 链接 | 
  | :---: | :---: | 
@@ -26,9 +26,10 @@
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/莲蓬头男孩BQB/0.gif' /> | [莲蓬头男孩BQB(已收录7张)](https://zhaoolee.github.io/ChineseBQB/莲蓬头男孩BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/仓鼠🐹BQB/0.gif' /> | [仓鼠🐹BQB(已收录1张)](https://zhaoolee.github.io/ChineseBQB/仓鼠🐹BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/0.gif' /> | [猫🐱BQB(已收录35张)](https://zhaoolee.github.io/ChineseBQB/猫🐱BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/开心鸭BQB/2018-7-17-10.gif' /> | [开心鸭BQB(已收录7张)](https://zhaoolee.github.io/ChineseBQB/开心鸭BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/狗🐶BQB/0.gif' /> | [狗🐶BQB(已收录40张)](https://zhaoolee.github.io/ChineseBQB/狗🐶BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/金馆长熊猫🐼BQB/0.gif' /> | [金馆长熊猫🐼BQB(已收录151张)](https://zhaoolee.github.io/ChineseBQB/金馆长熊猫🐼BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/假笑男孩BQB/0.jpg' /> | [假笑男孩BQB(已收录20张)](https://zhaoolee.github.io/ChineseBQB/假笑男孩BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/金馆长熊猫🐼BQB/0.gif' /> | [金馆长熊猫🐼BQB(已收录171张)](https://zhaoolee.github.io/ChineseBQB/金馆长熊猫🐼BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/假笑男孩BQB/0.jpg' /> | [假笑男孩BQB(已收录23张)](https://zhaoolee.github.io/ChineseBQB/假笑男孩BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猪🐖BQB/0.gif' /> | [猪🐖BQB(已收录5张)](https://zhaoolee.github.io/ChineseBQB/猪🐖BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/0.gif' /> | [可爱的女孩纸BQB(已收录99张)](https://zhaoolee.github.io/ChineseBQB/可爱的女孩纸BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/0.gif' /> | [苏大强BQB(已收录26张)](https://zhaoolee.github.io/ChineseBQB/苏大强BQB/) |
