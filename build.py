@@ -1,5 +1,5 @@
 import os
-import re
+import time
 
 
 def auto_less_to_css(file_dir):
@@ -8,6 +8,8 @@ def auto_less_to_css(file_dir):
     md_content = ""
     # 获取当前目录下所有的图片路径
     all_whole_path_files = []
+    # 记录总数量
+    all_img_num = 0
     for root, dirs, files in os.walk(file_dir):
         if(root.endswith("BQB") == True):
             print("root:::", root)
@@ -30,6 +32,7 @@ def auto_less_to_css(file_dir):
                         print(img_addr)
                         md_content = md_content + "\n---\n" + "!["+img_addr+"]("+img_addr+")\n\n"+"[" + img_addr + "]("+ img_addr +")"+"\n"+"---"+"\n"
                         img_num = img_num + 1
+                        all_img_num = all_img_num + 1
                         # 第一张图片为预览图
                         if(img_num == 1):
                             preview_pic = img_addr
@@ -68,7 +71,8 @@ def auto_less_to_css(file_dir):
 
 
     old_content = readme_content[start_index: end_index+1]
-    new_content = "表情包目录\n\n" + html_path_str + "\n\n"
+    now_date = str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+    new_content = "表情包目录(截止"+now_date+"共收录"+str(all_img_num)+"张表情包)\n\n" + html_path_str + "\n\n"
 
     new_readme_content = readme_content[0: start_index] + new_content +readme_content[end_index:]
 
