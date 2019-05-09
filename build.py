@@ -14,7 +14,7 @@ def auto_less_to_css(file_dir):
             print("dirs:::", dirs)
             print("files:::", files)
             print("==="*10)
-            # md_content = ""
+            md_content = ""
             md_content = md_content + "\n## "+ root.split("/")[-1] + "\n"
             for file in files:
                 try:
@@ -40,24 +40,19 @@ def auto_less_to_css(file_dir):
 
     html_path_str = "\n".join(html_path)
 
-    # 读取readme
-    print("生成的链接::", html_path_str)
     readme_content = ""
     with open('./README.md', "r") as f:
         readme_content = f.read()
 
-    print("README内容===>>", readme_content)
     start_index = readme_content.index("表情包目录")
     end_index = readme_content.index("BQBEND")
 
-    print("开始位置:", start_index, "结束位置:", end_index)
 
     old_content = readme_content[start_index: end_index+1]
     new_content = "表情包目录\n\n" + html_path_str + "\n\n"
 
     new_readme_content = readme_content[0: start_index] + new_content +readme_content[end_index:]
 
-    print("new_readme_content::", new_readme_content)
     # 清除上一份README.md
     if os.path.isfile("./README.md"):
         os.remove("./README.md")
