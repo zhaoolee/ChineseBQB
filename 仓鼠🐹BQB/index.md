@@ -326,3 +326,11 @@
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱男孩纸BQB/20190109-6.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱男孩纸BQB/20190109-6.gif)
 ---
+
+## 仓鼠🐹BQB
+
+---
+![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/仓鼠🐹BQB/20190113-1.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/仓鼠🐹BQB/20190113-1.gif)
+
+[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/仓鼠🐹BQB/20190113-1.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/仓鼠🐹BQB/20190113-1.gif)
+---
