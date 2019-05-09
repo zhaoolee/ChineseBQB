@@ -2,6 +2,12 @@
 ## 可爱的女孩纸BQB
 
 ---
+![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/0.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/0.gif)
+
+[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/0.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/0.gif)
+---
+
+---
 ![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/2018-7-09-19.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/2018-7-09-19.gif)
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/2018-7-09-19.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/2018-7-09-19.gif)
@@ -527,18 +533,6 @@
 ![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/5-30更新10.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/5-30更新10.gif)
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/5-30更新10.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/5-30更新10.gif)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/5-30更新11.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/5-30更新11.gif)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/5-30更新11.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/5-30更新11.gif)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/5-30更新12.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/5-30更新12.gif)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/5-30更新12.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸BQB/5-30更新12.gif)
 ---
 
 ---

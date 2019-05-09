@@ -2,6 +2,12 @@
 ## 猫🐱BQB
 
 ---
+![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/0.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/0.gif)
+
+[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/0.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/0.gif)
+---
+
+---
 ![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/webwxgetmsgimg-1.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/webwxgetmsgimg-1.gif)
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/webwxgetmsgimg-1.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/webwxgetmsgimg-1.gif)
@@ -167,12 +173,6 @@
 ![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/webwxgetmsgimg-7.jpg](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/webwxgetmsgimg-7.jpg)
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/webwxgetmsgimg-7.jpg](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/webwxgetmsgimg-7.jpg)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/webwxgetmsgimg-8.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/webwxgetmsgimg-8.gif)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/webwxgetmsgimg-8.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/webwxgetmsgimg-8.gif)
 ---
 
 ---

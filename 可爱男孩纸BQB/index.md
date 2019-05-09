@@ -2,6 +2,12 @@
 ## 可爱男孩纸BQB
 
 ---
+![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱男孩纸BQB/0.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱男孩纸BQB/0.gif)
+
+[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱男孩纸BQB/0.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱男孩纸BQB/0.gif)
+---
+
+---
 ![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱男孩纸BQB/20190109-10.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱男孩纸BQB/20190109-10.gif)
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱男孩纸BQB/20190109-10.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱男孩纸BQB/20190109-10.gif)
@@ -53,12 +59,6 @@
 ![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱男孩纸BQB/20190109-18.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱男孩纸BQB/20190109-18.gif)
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱男孩纸BQB/20190109-18.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱男孩纸BQB/20190109-18.gif)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱男孩纸BQB/20190109-19.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱男孩纸BQB/20190109-19.gif)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱男孩纸BQB/20190109-19.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱男孩纸BQB/20190109-19.gif)
 ---
 
 ---

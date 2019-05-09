@@ -2,6 +2,12 @@
 ## 苏大强BQB
 
 ---
+![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/0.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/0.gif)
+
+[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/0.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/0.gif)
+---
+
+---
 ![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-1.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-1.gif)
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-1.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-1.gif)
@@ -29,54 +35,6 @@
 ![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-13.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-13.gif)
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-13.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-13.gif)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-14.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-14.gif)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-14.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-14.gif)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-15.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-15.gif)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-15.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-15.gif)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-16.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-16.gif)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-16.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-16.gif)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-17.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-17.gif)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-17.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-17.gif)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-18.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-18.gif)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-18.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-18.gif)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-19.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-19.gif)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-19.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-19.gif)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-2.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-2.gif)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-2.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-2.gif)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-20.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-20.gif)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-20.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强BQB/20100328-20.gif)
 ---
 
 ---

@@ -2,6 +2,12 @@
 ## 狗🐶BQB
 
 ---
+![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/狗🐶BQB/0.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/狗🐶BQB/0.gif)
+
+[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/狗🐶BQB/0.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/狗🐶BQB/0.gif)
+---
+
+---
 ![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/狗🐶BQB/38.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/狗🐶BQB/38.gif)
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/狗🐶BQB/38.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/狗🐶BQB/38.gif)
@@ -161,12 +167,6 @@
 ![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/狗🐶BQB/webwxgetmsgimg-4.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/狗🐶BQB/webwxgetmsgimg-4.gif)
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/狗🐶BQB/webwxgetmsgimg-4.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/狗🐶BQB/webwxgetmsgimg-4.gif)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/狗🐶BQB/webwxgetmsgimg-5.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/狗🐶BQB/webwxgetmsgimg-5.gif)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/狗🐶BQB/webwxgetmsgimg-5.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/狗🐶BQB/webwxgetmsgimg-5.gif)
 ---
 
 ---
