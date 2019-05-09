@@ -53,7 +53,7 @@ def auto_less_to_css(file_dir):
     print("开始位置:", start_index, "结束位置:", end_index)
 
     old_content = readme_content[start_index: end_index+1]
-    new_content = "表情包目录\n" + html_path_str + "BQBEND"
+    new_content = "表情包目录\n\n" + html_path_str + "\n\n"
 
     new_readme_content = readme_content[0: start_index] + new_content +readme_content[end_index:]
 

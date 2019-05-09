@@ -7,6 +7,7 @@
 
 
 ## 表情包目录
+
 [可爱男孩纸BQB](https://zhaoolee.github.io/ChineseBQB/可爱男孩纸BQB/)
 [可爱的女孩纸BQB](https://zhaoolee.github.io/ChineseBQB/可爱的女孩纸BQB/)
 [熊本熊BQB](https://zhaoolee.github.io/ChineseBQB/熊本熊BQB/)
@@ -15,6 +16,8 @@
 [狗🐶BQB](https://zhaoolee.github.io/ChineseBQB/狗🐶BQB/)
 [金馆长熊猫🐼BQB](https://zhaoolee.github.io/ChineseBQB/金馆长熊猫🐼BQB/)
 [猪🐖BQB](https://zhaoolee.github.io/ChineseBQB/猪🐖BQB/)
-[苏大强BQB](https://zhaoolee.github.io/ChineseBQB/苏大强BQB/)BQBENDBQBENDBQBENDBQBENDBQBEND
+[苏大强BQB](https://zhaoolee.github.io/ChineseBQB/苏大强BQB/)
+
+BQBEND
 
 (readme未完成, 完成进度60%)
