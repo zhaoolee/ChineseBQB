@@ -48,7 +48,7 @@ def auto_less_to_css(file_dir):
 
 
             html_path_atom = "https://zhaoolee.github.io/ChineseBQB/"+root.split("/")[-1]+"/"
-            html_path.append("| !["+ preview_pic +"]("+ preview_pic +") | ["+html_path_atom.split("/")[-2]+"(当前收录"+str(img_num)+"张)"+"]("+html_path_atom+") |")
+            html_path.append("| <img height='100px' src='"+ preview_pic+"'" +" /> | " + "["+html_path_atom.split("/")[-2]+"(当前收录"+str(img_num)+"张)"+"]("+html_path_atom+") |")
 
             # 清空记录的变量
             preview_pic = ""
