@@ -1,7 +1,9 @@
 import os
+import re
 
 
 def auto_less_to_css(file_dir):
+    html_path = []
     # 生成文件写入的字符串
     md_content = ""
     # 获取当前目录下所有的图片路径
@@ -33,7 +35,40 @@ def auto_less_to_css(file_dir):
             with open(root+"/index.md", "ab+") as f:
                 f.write(md_content.encode("utf-8"))
 
-            print("生成的md路径:", root+"/index.md")
+            html_path_atom = "https://zhaoolee.github.io/ChineseBQB/"+root.split("/")[-1]
+            html_path.append("["+html_path_atom+"]("+html_path_atom+")");
+
+    html_path_str = "\n".join(html_path)
+
+    # 读取readme
+    print("生成的链接::", html_path_str)
+    readme_content = ""
+    with open('./README.md', "r") as f:
+        readme_content = f.read()
+
+    print("README内容===>>", readme_content);
+    start_index = readme_content.index("表情包目录:")
+    end_index = readme_content.index("BQBEND")
+
+    print("开始位置:", start_index, "结束位置:", end_index)
+
+    old_content = readme_content[start_index: end_index+1]
+    new_content = "表情包目录" + html_path_str + "BQBEND"
+
+    new_readme_content = readme_content[0: start_index] + new_content +readme_content[end_index:]
+
+    print("new_readme_content::", new_readme_content)
+    # 清除上一份README.md
+    if os.path.isfile("./README.md"):
+        os.remove("./README.md")
+
+    # 生成README.md
+    with open("./README.md", "ab+") as f:
+        f.write(new_readme_content.encode("utf-8"))
+
+    print("生成成功")
+
+
 
 def main():
     auto_less_to_css('.')
