@@ -51,7 +51,7 @@ def auto_less_to_css(file_dir):
 
 
             html_path_atom = "https://zhaoolee.github.io/ChineseBQB/"+root.split("/")[-1]+"/"
-            html_path.append("| <img height='100px' src='"+ preview_pic+"'" +" /> | " + "["+html_path_atom.split("/")[-2]+"(当前收录"+str(img_num)+"张)"+"]("+html_path_atom+") |")
+            html_path.append("| <img height='100px' src='"+ preview_pic+"'" +" /> | " + "["+html_path_atom.split("/")[-2]+"(已收录"+str(img_num)+"张)"+"]("+html_path_atom+") |")
 
             # 清空记录的变量
             preview_pic = ""
@@ -72,7 +72,7 @@ def auto_less_to_css(file_dir):
 
     old_content = readme_content[start_index: end_index+1]
     now_date = str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
-    new_content = "表情包目录(已收录"+str(all_img_num)+"张表情包)\n\n" + html_path_str + "\n\n"
+    new_content = "表情包目录(共收录"+str(all_img_num)+"张表情包)\n\n" + html_path_str + "\n\n"
     now_date = str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
     new_readme_content = readme_content[0: start_index] + new_content + "\n\n > 数据生成时间"+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())+"\n\n"+readme_content[end_index:]
 
