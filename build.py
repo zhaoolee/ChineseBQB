@@ -7,11 +7,12 @@ def auto_less_to_css(file_dir):
     # 获取当前目录下所有的图片路径
     all_whole_path_files = []
     for root, dirs, files in os.walk(file_dir):
-        print("root:::", root)
-        print("dirs:::", dirs)
-        print("files:::", files)
-        print("==="*10)
         if(root.endswith("BQB") == True):
+            print("root:::", root)
+            print("dirs:::", dirs)
+            print("files:::", files)
+            print("==="*10)
+            # md_content = ""
             md_content = md_content + "\n## "+ root.split("/")[-1] + "\n"
             for file in files:
                 try:
@@ -24,16 +25,15 @@ def auto_less_to_css(file_dir):
                 except Exception as e:
                     print(e)
 
+            # 清除上一份文件
+            if os.path.isfile(root+"/index.md"):
+                os.remove(root+"/index.md")
 
+            # 生成index.md
+            with open(root+"/index.md", "ab+") as f:
+                f.write(md_content.encode("utf-8"))
 
-    # 清除上一份文件
-    if os.path.isfile("./index.md"):
-        os.remove("./index.md")
-
-    # 生成index.md
-    with open("./index.md", "ab+") as f:
-        f.write(md_content.encode("utf-8"))
-
+            print("生成的md路径:", root+"/index.md")
 
 def main():
     auto_less_to_css('.')
