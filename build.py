@@ -73,8 +73,8 @@ def auto_less_to_css(file_dir):
     old_content = readme_content[start_index: end_index+1]
     now_date = str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
     new_content = "表情包目录(已收录"+str(all_img_num)+"张表情包)\n\n" + html_path_str + "\n\n"
-
-    new_readme_content = readme_content[0: start_index] + new_content +readme_content[end_index:]
+    now_date = str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+    new_readme_content = readme_content[0: start_index] + new_content +time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())  +readme_content[end_index:]
 
     # 清除上一份README.md
     if os.path.isfile("./README.md"):
@@ -82,8 +82,6 @@ def auto_less_to_css(file_dir):
 
     # 生成README.md
     with open("./README.md", "ab+") as f:
-        now_date = str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
-        new_readme_content = new_readme_content+"\n\n 统计数据生成时间: " + now_date + "\n"
         f.write(new_readme_content.encode("utf-8"))
 
     print("生成成功")
