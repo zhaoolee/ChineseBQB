@@ -35,8 +35,13 @@ def auto_less_to_css(file_dir):
             with open(root+"/index.md", "ab+") as f:
                 f.write(md_content.encode("utf-8"))
 
+
             html_path_atom = "https://zhaoolee.github.io/ChineseBQB/"+root.split("/")[-1]+"/"
             html_path.append("- ["+html_path_atom.split("/")[-2]+"]("+html_path_atom+")")
+
+            md_content = ""
+
+
 
     html_path_str = "\n\n\n".join(html_path)
 
