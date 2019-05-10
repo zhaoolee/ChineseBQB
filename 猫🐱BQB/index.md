@@ -216,3 +216,9 @@
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/webwxgetmsgimg.png](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/webwxgetmsgimg.png)
 ---
+
+---
+![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/yanni.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/yanni.gif)
+
+[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/yanni.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/yanni.gif)
+---
