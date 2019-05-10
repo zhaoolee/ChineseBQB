@@ -18,7 +18,7 @@
 
 
 
-## 表情包目录(共收录786张表情包)
+## 表情包目录(共收录787张表情包)
 
 | 预览图 | 链接 | 
  | :---: | :---: | 
@@ -29,13 +29,13 @@
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/假笑男孩👦BQB/0.jpg' /> | [假笑男孩👦BQB(已收录23张)](https://zhaoolee.github.io/ChineseBQB/假笑男孩👦BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/鹦鹉🐦BQB/0.gif' /> | [鹦鹉🐦BQB(已收录16张)](https://zhaoolee.github.io/ChineseBQB/鹦鹉🐦BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/仓鼠🐹BQB/0.gif' /> | [仓鼠🐹BQB(已收录1张)](https://zhaoolee.github.io/ChineseBQB/仓鼠🐹BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/0.gif' /> | [猫🐱BQB(已收录35张)](https://zhaoolee.github.io/ChineseBQB/猫🐱BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猫🐱BQB/0.gif' /> | [猫🐱BQB(已收录36张)](https://zhaoolee.github.io/ChineseBQB/猫🐱BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/滑稽大佬😏BQB/0.gif' /> | [滑稽大佬😏BQB(已收录35张)](https://zhaoolee.github.io/ChineseBQB/滑稽大佬😏BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/狗🐶BQB/0.gif' /> | [狗🐶BQB(已收录40张)](https://zhaoolee.github.io/ChineseBQB/狗🐶BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强👴BQB/0.gif' /> | [苏大强👴BQB(已收录26张)](https://zhaoolee.github.io/ChineseBQB/苏大强👴BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/喷雾🚿BQB/0.gif' /> | [喷雾🚿BQB(已收录15张)](https://zhaoolee.github.io/ChineseBQB/喷雾🚿BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/金馆长熊猫🐼BQB/0.gif' /> | [金馆长熊猫🐼BQB(已收录171张)](https://zhaoolee.github.io/ChineseBQB/金馆长熊猫🐼BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/演奏🎻BQB/webwxgetmsgimg-1.gif' /> | [演奏🎻BQB(已收录23张)](https://zhaoolee.github.io/ChineseBQB/演奏🎻BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/演奏🎻BQB/0.gif' /> | [演奏🎻BQB(已收录23张)](https://zhaoolee.github.io/ChineseBQB/演奏🎻BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸👧BQB/0.gif' /> | [可爱的女孩纸👧BQB(已收录185张)](https://zhaoolee.github.io/ChineseBQB/可爱的女孩纸👧BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猪🐖BQB/0.gif' /> | [猪🐖BQB(已收录5张)](https://zhaoolee.github.io/ChineseBQB/猪🐖BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/TATAN🤷‍♂️BQB/0.gif' /> | [TATAN🤷‍♂️BQB(已收录31张)](https://zhaoolee.github.io/ChineseBQB/TATAN🤷‍♂️BQB/) |
