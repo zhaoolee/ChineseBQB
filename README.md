@@ -16,6 +16,12 @@
 - 表情包在线查看入口页面: [https://zhaoolee.github.io/ChineseBQB/](https://zhaoolee.github.io/ChineseBQB/)
 
 
+## 通过 git clone 获取所有表情包
+
+```
+git clone --depth 1 https://github.com/zhaoolee/ChineseBQB
+```
+
 
 
 ## 表情包目录(共收录807张表情包)
