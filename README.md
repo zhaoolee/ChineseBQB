@@ -18,7 +18,7 @@
 
 
 
-## 表情包目录(共收录782张表情包)
+## 表情包目录(共收录786张表情包)
 
 | 预览图 | 链接 | 
  | :---: | :---: | 
@@ -35,7 +35,7 @@
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/苏大强👴BQB/0.gif' /> | [苏大强👴BQB(已收录26张)](https://zhaoolee.github.io/ChineseBQB/苏大强👴BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/喷雾🚿BQB/0.gif' /> | [喷雾🚿BQB(已收录15张)](https://zhaoolee.github.io/ChineseBQB/喷雾🚿BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/金馆长熊猫🐼BQB/0.gif' /> | [金馆长熊猫🐼BQB(已收录171张)](https://zhaoolee.github.io/ChineseBQB/金馆长熊猫🐼BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/演奏🎻BQB/演奏表情包1.gif' /> | [演奏🎻BQB(已收录19张)](https://zhaoolee.github.io/ChineseBQB/演奏🎻BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/演奏🎻BQB/webwxgetmsgimg-1.gif' /> | [演奏🎻BQB(已收录23张)](https://zhaoolee.github.io/ChineseBQB/演奏🎻BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/可爱的女孩纸👧BQB/0.gif' /> | [可爱的女孩纸👧BQB(已收录185张)](https://zhaoolee.github.io/ChineseBQB/可爱的女孩纸👧BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/猪🐖BQB/0.gif' /> | [猪🐖BQB(已收录5张)](https://zhaoolee.github.io/ChineseBQB/猪🐖BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/TATAN🤷‍♂️BQB/0.gif' /> | [TATAN🤷‍♂️BQB(已收录31张)](https://zhaoolee.github.io/ChineseBQB/TATAN🤷‍♂️BQB/) |
@@ -64,6 +64,7 @@ BQBEND
 | --- | --- | --- |
 | ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/%F0%9F%87%A8%F0%9F%87%B3%E6%96%97%E5%9B%BE%E5%A4%A7%E4%BD%AC%E4%BB%AC%F0%9F%91%91%E5%8F%AF%E4%BB%A5%E6%8A%8A%E8%A1%A8%E6%83%85%E5%8C%85%E4%B8%8A%E4%BC%A0%E5%88%B0%E8%BF%99%E4%B8%AA%E6%96%87%E4%BB%B6%E5%A4%B9/dalao01.jpg) | ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/%F0%9F%87%A8%F0%9F%87%B3%E6%96%97%E5%9B%BE%E5%A4%A7%E4%BD%AC%E4%BB%AC%F0%9F%91%91%E5%8F%AF%E4%BB%A5%E6%8A%8A%E8%A1%A8%E6%83%85%E5%8C%85%E4%B8%8A%E4%BC%A0%E5%88%B0%E8%BF%99%E4%B8%AA%E6%96%87%E4%BB%B6%E5%A4%B9/dalao02.jpg) |  ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/%F0%9F%87%A8%F0%9F%87%B3%E6%96%97%E5%9B%BE%E5%A4%A7%E4%BD%AC%E4%BB%AC%F0%9F%91%91%E5%8F%AF%E4%BB%A5%E6%8A%8A%E8%A1%A8%E6%83%85%E5%8C%85%E4%B8%8A%E4%BC%A0%E5%88%B0%E8%BF%99%E4%B8%AA%E6%96%87%E4%BB%B6%E5%A4%B9/dalao03.jpg) |
 
+- 如果你是表情包作者, 也可以联系我, 这个仓库可以帮你推广表情包, 提升你的知名度
 
 
 如何通过表情包,实现文化输出?
