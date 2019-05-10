@@ -10,12 +10,11 @@ def auto_less_to_css(file_dir):
     all_whole_path_files = []
     # 记录总数量
     all_img_num = 0
-    for root, dirs, files in os.walk(file_dir):
+    for root, dirs, files in sorted(os.walk(file_dir)):
         if(root.endswith("BQB") == True):
             print("root:::", root)
-            print("dirs:::", dirs)
-            print("files:::", files)
-            print("==="*10)
+            # print("dirs:::", dirs)
+            # print("files:::", files)
             # 存储预览图
             preview_pic = ""
             md_content = ""
@@ -29,7 +28,7 @@ def auto_less_to_css(file_dir):
 
                         file_info = ["https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master", (root+'/')[1:], file]
                         img_addr = "".join(file_info)
-                        print(img_addr)
+                        # print(img_addr)
                         md_content = md_content + "\n---\n" + "!["+img_addr+"]("+img_addr+")\n\n"+"[" + img_addr + "]("+ img_addr +")"+"\n"+"---"+"\n"
                         img_num = img_num + 1
                         all_img_num = all_img_num + 1
