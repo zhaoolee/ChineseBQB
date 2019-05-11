@@ -16,26 +16,20 @@
 - 表情包在线查看入口页面: [https://zhaoolee.github.io/ChineseBQB/](https://zhaoolee.github.io/ChineseBQB/)
 
 
-## 通过 git clone 获取所有表情包
+## 如何获取表情包?
+
+- 借助Chrome扩展程序[GitZip for github](https://chrome.google.com/webstore/detail/gitzip-for-github/ffabmkklhbepgcgfonabamgnfafbdlkn) 获取部分 (推荐)
+
+![](https://upload-images.jianshu.io/upload_images/3203841-a4e7a7958d026592.gif)
+
+> GitZip for github 使用方法: [《GitZip for github》从Github批量下载表情包](https://zhaoolee.gitbooks.io/chrome/content/040gitzip-for-github.html)
+
+- 通过git获取全部表情包
+
 
 ```
 git clone --depth 1 https://github.com/zhaoolee/ChineseBQB
 ```
-
-
-## 借助Chrome扩展程序GitZip for github直接从仓库下载表情包
-
-
-
-> ![](https://upload-images.jianshu.io/upload_images/3203841-a4e7a7958d026592.gif)
-
-- 如果遇到无法下载的问题, 可以尝试将自己的github账号授权GitZip for github, 就可以正常下载了
-
-> ![](https://upload-images.jianshu.io/upload_images/3203841-047639bc03ec1131.gif?imageMogr2/auto-orient/strip)
-
-
-- 扩展程序GitZip for github下载地址 [https://chrome.google.com/webstore/detail/gitzip-for-github/ffabmkklhbepgcgfonabamgnfafbdlkn](https://chrome.google.com/webstore/detail/gitzip-for-github/ffabmkklhbepgcgfonabamgnfafbdlkn)
-
 
 
 
@@ -69,7 +63,7 @@ git clone --depth 1 https://github.com/zhaoolee/ChineseBQB
 
 
 
- > 数据生成时间2019-05-11
+ > 数据生成时间2019-05-12
 
 BQBEND
 
@@ -89,8 +83,6 @@ BQBEND
 
 - 如果你是表情包作者, 也可以联系我, 这个仓库可以帮你推广表情包, 提升你的知名度
 
-
-如何通过表情包,实现文化输出?
 
 ---
 
