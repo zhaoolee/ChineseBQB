@@ -23,6 +23,22 @@ git clone --depth 1 https://github.com/zhaoolee/ChineseBQB
 ```
 
 
+## 借助Chrome扩展程序GitZip for github直接从仓库下载表情包
+
+
+
+> ![](https://upload-images.jianshu.io/upload_images/3203841-a4e7a7958d026592.gif)
+
+- 如果遇到无法下载的问题, 可以尝试将自己的github账号授权GitZip for github, 就可以正常下载了
+
+> ![](https://upload-images.jianshu.io/upload_images/3203841-047639bc03ec1131.gif?imageMogr2/auto-orient/strip)
+
+
+- 扩展程序GitZip for github下载地址 [https://chrome.google.com/webstore/detail/gitzip-for-github/ffabmkklhbepgcgfonabamgnfafbdlkn](https://chrome.google.com/webstore/detail/gitzip-for-github/ffabmkklhbepgcgfonabamgnfafbdlkn)
+
+
+
+
 
 ## 表情包目录(共收录807张表情包)
 
@@ -53,7 +69,7 @@ git clone --depth 1 https://github.com/zhaoolee/ChineseBQB
 
 
 
- > 数据生成时间2019-05-10
+ > 数据生成时间2019-05-11
 
 BQBEND
 
