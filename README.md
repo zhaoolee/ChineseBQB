@@ -41,7 +41,7 @@
 git clone --depth 1 https://github.com/zhaoolee/ChineseBQB
 ```
 
-## 表情包目录(共收录807张表情包)Emoticon package directory (commonly included 807 emoticon pack)
+## 表情包目录(共收录1011张表情包)Emoticon package directory (commonly included 1011 emoticon pack)
 
 | Example(示例)  | 链接(Entrance link) | 
  | :---: | :---: | 
@@ -65,23 +65,23 @@ git clone --depth 1 https://github.com/zhaoolee/ChineseBQB
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/018WangEgg_汪蛋🥚BQB/0.gif' /> | [018WangEgg_汪蛋🥚BQB(已收录48张)](https://zhaoolee.github.io/ChineseBQB/018WangEgg_汪蛋🥚BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/019Green_Hat绿帽子🖼BQB/绿帽子1.gif' /> | [019Green_Hat绿帽子🖼BQB(已收录23张)](https://zhaoolee.github.io/ChineseBQB/019Green_Hat绿帽子🖼BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/020TATAN🤷‍♂️BQB/0.gif' /> | [020TATAN🤷‍♂️BQB(已收录31张)](https://zhaoolee.github.io/ChineseBQB/020TATAN🤷‍♂️BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/021TongfuInn_同福客栈🏫BQB/0.jpg' /> | [021TongfuInn_同福客栈🏫BQB(已收录19张)](https://zhaoolee.github.io/ChineseBQB/021TongfuInn_同福客栈🏫BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/021TongfuInn_同福客栈🏫BQB/0.jpg' /> | [021TongfuInn_同福客栈🏫BQB(已收录101张)](https://zhaoolee.github.io/ChineseBQB/021TongfuInn_同福客栈🏫BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/022SuDaqiang_苏大强👴BQB/0.gif' /> | [022SuDaqiang_苏大强👴BQB(已收录26张)](https://zhaoolee.github.io/ChineseBQB/022SuDaqiang_苏大强👴BQB/) |
-| <img height='100px' src='' /> | [023emoji🤠BQB(已收录0张)](https://zhaoolee.github.io/ChineseBQB/023emoji🤠BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/023emoji🤠BQB/0.JPG' /> | [023emoji🤠BQB(已收录122张)](https://zhaoolee.github.io/ChineseBQB/023emoji🤠BQB/) |
 
 
 
- > Data generation time (数据生成时间)2019-05-12
+ > Data generation time (数据生成时间): 2019-05-12
 
 BQBEND
 
 
 ## Contribution method  / 贡献方法
-- If you are a big brother and have a github account, you are welcome to contribute the emoticon to the root of the project`000Contribution_贡献🇨🇳`
+- If you are a Daxie and have a github account, you are welcome to contribute the expression pack to the root of the project`000Contribution_贡献🇨🇳`
 - 如果你是斗图大佬, 又有github账号, 欢迎将表情包贡献到项目根目录下的`000Contribution_贡献🇨🇳`
 
 
-- If you are a big fight, don't have a github account, please send the emoticon to my email address zhaoolee@gmail.com, letter **Contribute emoticon **
+- If you are a Daxie, don't have a github account, please send the expression pack to my email address zhaoolee@gmail.com, letter **Contribute emoticon **
 - 如果你是斗图大佬, 没有github账号, 欢迎将表情包发到我的邮箱 zhaoolee@gmail.com , 来信注明 **贡献表情包**
 
 
@@ -91,7 +91,7 @@ BQBEND
 
 | Handing cola to Daxie / 给大佬递可乐 | Giving tea to Daxie / 给大佬端茶 | Give a cigarette to Daxie / 给大佬点烟 |
 | --- | --- | --- |
-| ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/000%F0%9F%87%A8%F0%9F%87%B3%E6%96%97%E5%9B%BE%E5%A4%A7%E4%BD%AC%E4%BB%AC%F0%9F%91%91%E5%8F%AF%E4%BB%A5%E6%8A%8A%E8%A1%A8%E6%83%85%E5%8C%85%E4%B8%8A%E4%BC%A0%E5%88%B0%E8%BF%99%E4%B8%AA%E6%96%87%E4%BB%B6%E5%A4%B9/dalao01.jpg) | ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/000%F0%9F%87%A8%F0%9F%87%B3%E6%96%97%E5%9B%BE%E5%A4%A7%E4%BD%AC%E4%BB%AC%F0%9F%91%91%E5%8F%AF%E4%BB%A5%E6%8A%8A%E8%A1%A8%E6%83%85%E5%8C%85%E4%B8%8A%E4%BC%A0%E5%88%B0%E8%BF%99%E4%B8%AA%E6%96%87%E4%BB%B6%E5%A4%B9/dalao02.jpg) |  ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/000%F0%9F%87%A8%F0%9F%87%B3%E6%96%97%E5%9B%BE%E5%A4%A7%E4%BD%AC%E4%BB%AC%F0%9F%91%91%E5%8F%AF%E4%BB%A5%E6%8A%8A%E8%A1%A8%E6%83%85%E5%8C%85%E4%B8%8A%E4%BC%A0%E5%88%B0%E8%BF%99%E4%B8%AA%E6%96%87%E4%BB%B6%E5%A4%B9/dalao03.jpg) |
+| ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/000Contribution_贡献🇨🇳/dalao01.jpg) | ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/000Contribution_贡献🇨🇳/dalao02.jpg) | ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/000Contribution_贡献🇨🇳/dalao03.jpg) |
 
 
 - If you are an emoticon author, you can also contact me. This warehouse can help you promote emoticons and enhance your visibility.

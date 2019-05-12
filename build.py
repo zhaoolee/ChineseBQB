@@ -23,7 +23,7 @@ def auto_less_to_css(file_dir):
             md_content = md_content + "\n## "+ root.split("/")[-1] + "\n"
             for file in sorted(files):
                 try:
-                    if ((file[-4:] == ".gif")or(file[-4:] == ".jpg")or(file[-4:] == ".png")):
+                    if ((file[-4:] == ".gif")or(file[-4:] == ".jpg")or(file[-4:] == ".png")or(file[-4:] == ".JPG")or(file[-4:] == ".GIF")or(file[-4:] == ".PNG")):
 
 
                         file_info = ["https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master", (root+'/')[1:], file]
@@ -73,7 +73,7 @@ def auto_less_to_css(file_dir):
     now_date = str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
     new_content = "表情包目录(共收录"+str(all_img_num)+"张表情包)Emoticon package directory (commonly included "+str(all_img_num)+" emoticon pack)\n\n" + html_path_str + "\n\n"
     now_date = str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
-    new_readme_content = readme_content[0: start_index] + new_content + "\n\n > Data generation time (数据生成时间)"+time.strftime("%Y-%m-%d", time.localtime())+"\n\n"+readme_content[end_index:]
+    new_readme_content = readme_content[0: start_index] + new_content + "\n\n > Data generation time (数据生成时间): "+time.strftime("%Y-%m-%d", time.localtime())+"\n\n"+readme_content[end_index:]
 
     # 清除上一份README.md
     if os.path.isfile("./README.md"):
