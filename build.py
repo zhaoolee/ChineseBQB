@@ -59,7 +59,7 @@ def auto_less_to_css(file_dir):
 
 
     # 生成表格
-    html_path_str = "| 预览图 | 链接 | \n | :---: | :---: | \n" + "\n".join(html_path)
+    html_path_str = "| Example(示例)  | 链接(Entrance link) | \n | :---: | :---: | \n" + "\n".join(html_path)
 
     readme_content = ""
     with open('./README.md', "r") as f:
@@ -71,9 +71,9 @@ def auto_less_to_css(file_dir):
 
     old_content = readme_content[start_index: end_index+1]
     now_date = str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
-    new_content = "表情包目录(共收录"+str(all_img_num)+"张表情包)\n\n" + html_path_str + "\n\n"
+    new_content = "表情包目录(共收录"+str(all_img_num)+"张表情包)Emoticon package directory (commonly included "+str(all_img_num)+" emoticon pack)\n\n" + html_path_str + "\n\n"
     now_date = str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
-    new_readme_content = readme_content[0: start_index] + new_content + "\n\n > 数据生成时间"+time.strftime("%Y-%m-%d", time.localtime())+"\n\n"+readme_content[end_index:]
+    new_readme_content = readme_content[0: start_index] + new_content + "\n\n > Data generation time (数据生成时间)"+time.strftime("%Y-%m-%d", time.localtime())+"\n\n"+readme_content[end_index:]
 
     # 清除上一份README.md
     if os.path.isfile("./README.md"):
