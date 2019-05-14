@@ -1,6 +1,6 @@
 ## Chinese sticker pack / 中国的表情包
 
-## 表情包目录(共收录1012张表情包)sticker package directory (commonly included 1012 stickers)
+## 表情包目录(共收录1013张表情包)Emoticon package directory (commonly included 1013 emoticon pack)
 
 | Example(示例)  | 链接(Entrance link) | 
  | :---: | :---: | 
@@ -18,7 +18,7 @@
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/012Parrot_鹦鹉🐦BQB/0.gif' /> | [012Parrot_鹦鹉🐦BQB(已收录16张)](https://zhaoolee.github.io/ChineseBQB/012Parrot_鹦鹉🐦BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/013PigPecs_小猪佩奇👑BQB/0.gif' /> | [013PigPecs_小猪佩奇👑BQB(已收录20张)](https://zhaoolee.github.io/ChineseBQB/013PigPecs_小猪佩奇👑BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/014猪_Pig🐖BQB/0.gif' /> | [014猪_Pig🐖BQB(已收录5张)](https://zhaoolee.github.io/ChineseBQB/014猪_Pig🐖BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/015Golden_Curator_Panda金馆长熊猫🐼BQB/0.gif' /> | [015Golden_Curator_Panda金馆长熊猫🐼BQB(已收录171张)](https://zhaoolee.github.io/ChineseBQB/015Golden_Curator_Panda金馆长熊猫🐼BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/015Golden_Curator_Panda金馆长熊猫🐼BQB/0.gif' /> | [015Golden_Curator_Panda金馆长熊猫🐼BQB(已收录172张)](https://zhaoolee.github.io/ChineseBQB/015Golden_Curator_Panda金馆长熊猫🐼BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/016spray_喷雾🚿BQB/0.gif' /> | [016spray_喷雾🚿BQB(已收录15张)](https://zhaoolee.github.io/ChineseBQB/016spray_喷雾🚿BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/017Playing_演奏🎻BQB/0.gif' /> | [017Playing_演奏🎻BQB(已收录23张)](https://zhaoolee.github.io/ChineseBQB/017Playing_演奏🎻BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/018WangEgg_汪蛋🥚BQB/0.gif' /> | [018WangEgg_汪蛋🥚BQB(已收录48张)](https://zhaoolee.github.io/ChineseBQB/018WangEgg_汪蛋🥚BQB/) |
@@ -31,7 +31,7 @@
 
 
 
- > Data generation time (数据生成时间): 2019-05-13
+ > Data generation time (数据生成时间): 2019-05-14
 
 BQBEND
 
@@ -93,7 +93,7 @@ git clone --depth 1 https://github.com/zhaoolee/ChineseBQB
 
 | Handing cola to Daxie / 给大佬递可乐 | Giving tea to Daxie / 给大佬端茶 | Give a cigarette to Daxie / 给大佬点烟 |
 | --- | --- | --- |
-| ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/000Contribution_贡献🇨🇳/dalao01.jpg) | ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/000Contribution_贡献🇨🇳/dalao02.jpg) | ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/000Contribution_贡献🇨🇳/dalao03.jpg) |
+| ![](https://upload-images.jianshu.io/upload_images/3203841-95fd129b72228b6e.jpg) | ![](https://upload-images.jianshu.io/upload_images/3203841-37adc56baec53a0e.jpg) | ![](https://upload-images.jianshu.io/upload_images/3203841-54f87b10a761bf2e.jpg) |
 
 - If you are an sticker author, you can also contact me. This warehouse can help you promote stickers and enhance your visibility.
 - 如果你是表情包作者, 也可以联系我, 这个仓库可以帮你推广表情包, 提升你的知名度
