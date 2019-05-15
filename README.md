@@ -18,7 +18,7 @@
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/012Parrot_鹦鹉🐦BQB/0.gif' /> | [012Parrot_鹦鹉🐦BQB(已收录16张)](https://zhaoolee.github.io/ChineseBQB/012Parrot_鹦鹉🐦BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/013PigPecs_小猪佩奇👑BQB/0.gif' /> | [013PigPecs_小猪佩奇👑BQB(已收录20张)](https://zhaoolee.github.io/ChineseBQB/013PigPecs_小猪佩奇👑BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/014猪_Pig🐖BQB/0.gif' /> | [014猪_Pig🐖BQB(已收录5张)](https://zhaoolee.github.io/ChineseBQB/014猪_Pig🐖BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/015Golden_Curator_Panda金馆长熊猫🐼BQB/0.gif' /> | [015Golden_Curator_Panda金馆长熊猫🐼BQB(已收录172张)](https://zhaoolee.github.io/ChineseBQB/015Golden_Curator_Panda金馆长熊猫🐼BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/015Golden_Curator_Panda金馆长熊猫🐼BQB/0.png' /> | [015Golden_Curator_Panda金馆长熊猫🐼BQB(已收录172张)](https://zhaoolee.github.io/ChineseBQB/015Golden_Curator_Panda金馆长熊猫🐼BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/016spray_喷雾🚿BQB/0.gif' /> | [016spray_喷雾🚿BQB(已收录15张)](https://zhaoolee.github.io/ChineseBQB/016spray_喷雾🚿BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/017Playing_演奏🎻BQB/0.gif' /> | [017Playing_演奏🎻BQB(已收录23张)](https://zhaoolee.github.io/ChineseBQB/017Playing_演奏🎻BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/018WangEgg_汪蛋🥚BQB/0.gif' /> | [018WangEgg_汪蛋🥚BQB(已收录48张)](https://zhaoolee.github.io/ChineseBQB/018WangEgg_汪蛋🥚BQB/) |
@@ -31,7 +31,7 @@
 
 
 
- > Data generation time (数据生成时间): 2019-05-14
+ > Data generation time (数据生成时间): 2019-05-15
 
 BQBEND
 
