@@ -1,6 +1,6 @@
 ## Chinese sticker pack / 中国的表情包
 
-## 表情包目录(共收录1028张表情包)Sticker pack directory (commonly included 1028 sticker pack)
+## 表情包目录(共收录1028张表情包)Emoticon package directory (commonly included 1028 emoticon pack)
 
 | Example(示例)  | 链接(Entrance link) | 
  | :---: | :---: | 
@@ -80,8 +80,8 @@ git clone --depth 1 https://github.com/zhaoolee/ChineseBQB
 
 
 ## Contribution method  / 贡献方法
-- If you are a Daxie and have a github account, you are welcome to contribute the sticker pack to the root of the project`000Contribution_贡献🇨🇳`
-- 如果你是斗图大佬, 又有github账号, 欢迎将表情包贡献到项目根目录下的`000Contribution_贡献🇨🇳`
+- If you are a Daxie and have a github account, you are welcome to contribute the sticker pack to the root of the `https://github.com/zhaoolee/ChineseBQB/000Contribution_贡献🇨🇳`
+- 如果你是斗图大佬, 又有github账号, 欢迎将表情包贡献到项目`https://github.com/zhaoolee/ChineseBQB`根目录下的`000Contribution_贡献🇨🇳`
 
 
 - If you are a Daxie, don't have a github account, please send the sticker pack to my email address zhaoolee@gmail.com, letter **Contribute stickers **
