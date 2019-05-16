@@ -1,6 +1,6 @@
 ## Chinese sticker pack / 中国的表情包
 
-## 表情包目录(共收录1028张表情包)Emoticon package directory (commonly included 1028 emoticon pack)
+## 表情包目录(共收录1028张表情包)Sticker pack directory (commonly included 1028 sticker pack)
 
 | Example(示例)  | 链接(Entrance link) | 
  | :---: | :---: | 
