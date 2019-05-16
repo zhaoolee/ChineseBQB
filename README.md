@@ -1,6 +1,6 @@
 ## Chinese sticker pack / 中国的表情包
 
-## 表情包目录(共收录1028张表情包)Emoticon package directory (commonly included 1028 emoticon pack)
+## 表情包目录(共收录1031张表情包)Emoticon package directory (commonly included 1031 emoticon pack)
 
 | Example(示例)  | 链接(Entrance link) | 
  | :---: | :---: | 
@@ -27,7 +27,7 @@
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/021TongfuInn_同福客栈🏫BQB/0.jpg' /> | [021TongfuInn_同福客栈🏫BQB(已收录101张)](https://zhaoolee.github.io/ChineseBQB/021TongfuInn_同福客栈🏫BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/022SuDaqiang_苏大强👴BQB/0.gif' /> | [022SuDaqiang_苏大强👴BQB(已收录26张)](https://zhaoolee.github.io/ChineseBQB/022SuDaqiang_苏大强👴BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/023emoji🤠BQB/0.JPG' /> | [023emoji🤠BQB(已收录122张)](https://zhaoolee.github.io/ChineseBQB/023emoji🤠BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/024程序员_Programmer💻BQB/0.png' /> | [024程序员_Programmer💻BQB(已收录3张)](https://zhaoolee.github.io/ChineseBQB/024程序员_Programmer💻BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/024程序员_Programmer💻BQB/0.png' /> | [024程序员_Programmer💻BQB(已收录6张)](https://zhaoolee.github.io/ChineseBQB/024程序员_Programmer💻BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/025superHeroes超级英雄们BQB/0.jpg' /> | [025superHeroes超级英雄们BQB(已收录10张)](https://zhaoolee.github.io/ChineseBQB/025superHeroes超级英雄们BQB/) |
 
 
