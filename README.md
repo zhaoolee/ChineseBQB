@@ -27,9 +27,9 @@
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/021TongfuInn_同福客栈🏫BQB/0.jpg' /> | [021TongfuInn_同福客栈🏫BQB(已收录101张)](https://zhaoolee.github.io/ChineseBQB/021TongfuInn_同福客栈🏫BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/022SuDaqiang_苏大强👴BQB/0.gif' /> | [022SuDaqiang_苏大强👴BQB(已收录26张)](https://zhaoolee.github.io/ChineseBQB/022SuDaqiang_苏大强👴BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/023emoji🤠BQB/0.JPG' /> | [023emoji🤠BQB(已收录122张)](https://zhaoolee.github.io/ChineseBQB/023emoji🤠BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/024小幺鸡🐔BQB/webwxgetmsgimg-1.gif' /> | [024小幺鸡🐔BQB(已收录77张)](https://zhaoolee.github.io/ChineseBQB/024小幺鸡🐔BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/024程序员_Programmer💻BQB/0.png' /> | [024程序员_Programmer💻BQB(已收录6张)](https://zhaoolee.github.io/ChineseBQB/024程序员_Programmer💻BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/025superHeroes超级英雄们BQB/0.jpg' /> | [025superHeroes超级英雄们BQB(已收录10张)](https://zhaoolee.github.io/ChineseBQB/025superHeroes超级英雄们BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/026小幺鸡🐔BQB/0.gif' /> | [026小幺鸡🐔BQB(已收录77张)](https://zhaoolee.github.io/ChineseBQB/026小幺鸡🐔BQB/) |
 
 
 
