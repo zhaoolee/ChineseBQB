@@ -1,6 +1,6 @@
 ## Chinese sticker pack / 中国的表情包
 
-## 表情包目录(共收录1036张表情包)Emoticon package directory (commonly included 1036 emoticon pack)
+## 表情包目录(共收录1114张表情包)Emoticon package directory (commonly included 1114 emoticon pack)
 
 | Example(示例)  | 链接(Entrance link) | 
  | :---: | :---: | 
@@ -17,8 +17,8 @@
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/011Dog_狗🐶BQB/0.gif' /> | [011Dog_狗🐶BQB(已收录40张)](https://zhaoolee.github.io/ChineseBQB/011Dog_狗🐶BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/012Parrot_鹦鹉🐦BQB/0.gif' /> | [012Parrot_鹦鹉🐦BQB(已收录16张)](https://zhaoolee.github.io/ChineseBQB/012Parrot_鹦鹉🐦BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/013PigPecs_小猪佩奇👑BQB/0.gif' /> | [013PigPecs_小猪佩奇👑BQB(已收录20张)](https://zhaoolee.github.io/ChineseBQB/013PigPecs_小猪佩奇👑BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/014猪_Pig🐖BQB/0.gif' /> | [014猪_Pig🐖BQB(已收录5张)](https://zhaoolee.github.io/ChineseBQB/014猪_Pig🐖BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/015Golden_Curator_Panda金馆长熊猫🐼BQB/0.png' /> | [015Golden_Curator_Panda金馆长熊猫🐼BQB(已收录178张)](https://zhaoolee.github.io/ChineseBQB/015Golden_Curator_Panda金馆长熊猫🐼BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/014猪_Pig🐖BQB/0.gif' /> | [014猪_Pig🐖BQB(已收录4张)](https://zhaoolee.github.io/ChineseBQB/014猪_Pig🐖BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/015Golden_Curator_Panda金馆长熊猫🐼BQB/0.png' /> | [015Golden_Curator_Panda金馆长熊猫🐼BQB(已收录180张)](https://zhaoolee.github.io/ChineseBQB/015Golden_Curator_Panda金馆长熊猫🐼BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/016spray_喷雾🚿BQB/0.gif' /> | [016spray_喷雾🚿BQB(已收录15张)](https://zhaoolee.github.io/ChineseBQB/016spray_喷雾🚿BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/017Playing_演奏🎻BQB/0.gif' /> | [017Playing_演奏🎻BQB(已收录23张)](https://zhaoolee.github.io/ChineseBQB/017Playing_演奏🎻BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/018WangEgg_汪蛋🥚BQB/0.gif' /> | [018WangEgg_汪蛋🥚BQB(已收录48张)](https://zhaoolee.github.io/ChineseBQB/018WangEgg_汪蛋🥚BQB/) |
@@ -29,10 +29,11 @@
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/023emoji🤠BQB/0.JPG' /> | [023emoji🤠BQB(已收录122张)](https://zhaoolee.github.io/ChineseBQB/023emoji🤠BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/024程序员_Programmer💻BQB/0.png' /> | [024程序员_Programmer💻BQB(已收录6张)](https://zhaoolee.github.io/ChineseBQB/024程序员_Programmer💻BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/025superHeroes超级英雄们BQB/0.jpg' /> | [025superHeroes超级英雄们BQB(已收录10张)](https://zhaoolee.github.io/ChineseBQB/025superHeroes超级英雄们BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/026小幺鸡🐔BQB/0.gif' /> | [026小幺鸡🐔BQB(已收录77张)](https://zhaoolee.github.io/ChineseBQB/026小幺鸡🐔BQB/) |
 
 
 
- > Data generation time (数据生成时间): 2019-05-17
+ > Data generation time (数据生成时间): 2019-05-19
 
 BQBEND
 

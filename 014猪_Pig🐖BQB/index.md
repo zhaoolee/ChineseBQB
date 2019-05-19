@@ -24,9 +24,3 @@
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/014猪_Pig🐖BQB/webwxgetmsgimg.jpg](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/014猪_Pig🐖BQB/webwxgetmsgimg.jpg)
 ---
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/014猪_Pig🐖BQB/webwxgetmsgimg.png](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/014猪_Pig🐖BQB/webwxgetmsgimg.png)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/014猪_Pig🐖BQB/webwxgetmsgimg.png](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/014猪_Pig🐖BQB/webwxgetmsgimg.png)
----
