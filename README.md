@@ -1,6 +1,6 @@
 ## Chinese sticker pack / 中国的表情包
 
-## 表情包目录(共收录1114张表情包)Emoticon package directory (commonly included 1114 emoticon pack)
+## 表情包目录(共收录1118张表情包)Emoticon package directory (commonly included 1118 emoticon pack)
 
 | Example(示例)  | 链接(Entrance link) | 
  | :---: | :---: | 
@@ -30,10 +30,11 @@
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/024程序员_Programmer💻BQB/0.png' /> | [024程序员_Programmer💻BQB(已收录6张)](https://zhaoolee.github.io/ChineseBQB/024程序员_Programmer💻BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/025superHeroes超级英雄们BQB/0.jpg' /> | [025superHeroes超级英雄们BQB(已收录10张)](https://zhaoolee.github.io/ChineseBQB/025superHeroes超级英雄们BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/026小幺鸡🐔BQB/0.gif' /> | [026小幺鸡🐔BQB(已收录77张)](https://zhaoolee.github.io/ChineseBQB/026小幺鸡🐔BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/027王八🐢BQB/王八_光头王八_3.jpg' /> | [027王八🐢BQB(已收录4张)](https://zhaoolee.github.io/ChineseBQB/027王八🐢BQB/) |
 
 
 
- > Data generation time (数据生成时间): 2019-05-19
+ > Data generation time (数据生成时间): 2019-05-20
 
 BQBEND
 
