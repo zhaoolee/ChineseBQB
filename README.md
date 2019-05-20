@@ -1,6 +1,6 @@
 ## Chinese sticker pack / 中国的表情包
 
-## 表情包目录(共收录1118张表情包)Emoticon package directory (commonly included 1118 emoticon pack)
+## 表情包目录(共收录1123张表情包)Emoticon package directory (commonly included 1123 emoticon pack)
 
 | Example(示例)  | 链接(Entrance link) | 
  | :---: | :---: | 
@@ -30,7 +30,7 @@
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/024Programmer_程序员💻BQB/0.png' /> | [024Programmer_程序员💻BQB(已收录6张)](https://zhaoolee.github.io/ChineseBQB/024Programmer_程序员💻BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/025SuperHeroes_超级英雄们👤BQB/0.jpg' /> | [025SuperHeroes_超级英雄们👤BQB(已收录10张)](https://zhaoolee.github.io/ChineseBQB/025SuperHeroes_超级英雄们👤BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/026Chicken_小幺鸡🐔BQB/0.gif' /> | [026Chicken_小幺鸡🐔BQB(已收录77张)](https://zhaoolee.github.io/ChineseBQB/026Chicken_小幺鸡🐔BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/027Turtle_乌龟🐢BQB/王八_光头王八_3.jpg' /> | [027Turtle_乌龟🐢BQB(已收录4张)](https://zhaoolee.github.io/ChineseBQB/027Turtle_乌龟🐢BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/027Turtle_乌龟🐢BQB/王八_光头王八_3.jpg' /> | [027Turtle_乌龟🐢BQB(已收录9张)](https://zhaoolee.github.io/ChineseBQB/027Turtle_乌龟🐢BQB/) |
 
 
 
