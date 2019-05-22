@@ -1,6 +1,6 @@
 ## Chinese sticker pack / 中国的表情包
 
-## 表情包目录(共收录1123张表情包)Emoticon package directory (commonly included 1123 emoticon pack)
+## 表情包目录(共收录1130张表情包)Emoticon package directory (commonly included 1130 emoticon pack)
 
 | Example(示例)  | 链接(Entrance link) | 
  | :---: | :---: | 
@@ -27,14 +27,15 @@
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/021TongfuInn_同福客栈🏫BQB/0.jpg' /> | [021TongfuInn_同福客栈🏫BQB(已收录101张)](https://zhaoolee.github.io/ChineseBQB/021TongfuInn_同福客栈🏫BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/022SuDaqiang_苏大强👴BQB/0.gif' /> | [022SuDaqiang_苏大强👴BQB(已收录26张)](https://zhaoolee.github.io/ChineseBQB/022SuDaqiang_苏大强👴BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/023Emoji_BQB/0.JPG' /> | [023Emoji_BQB(已收录122张)](https://zhaoolee.github.io/ChineseBQB/023Emoji_BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/024Programmer_程序员👩🏿‍💻👨🏾‍💻👩🏼‍💻👨🏽‍💻👩🏻‍💻👩🏻‍💻👨‍💻‍BQB/0.png' /> | [024Programmer_程序员👩🏿‍💻👨🏾‍💻👩🏼‍💻👨🏽‍💻👩🏻‍💻👩🏻‍💻👨‍💻‍BQB(已收录6张)](https://zhaoolee.github.io/ChineseBQB/024Programmer_程序员👩🏿‍💻👨🏾‍💻👩🏼‍💻👨🏽‍💻👩🏻‍💻👩🏻‍💻👨‍💻‍BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/024Programmer_程序员👩🏿‍💻👨🏾‍💻👩🏼‍💻👨🏽‍💻👩🏻‍💻👩🏻‍💻👨‍💻‍BQB/0.png' /> | [024Programmer_程序员👩🏿‍💻👨🏾‍💻👩🏼‍💻👨🏽‍💻👩🏻‍💻👩🏻‍💻👨‍💻‍BQB(已收录7张)](https://zhaoolee.github.io/ChineseBQB/024Programmer_程序员👩🏿‍💻👨🏾‍💻👩🏼‍💻👨🏽‍💻👩🏻‍💻👩🏻‍💻👨‍💻‍BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/025SuperHeroes_超级英雄们👤BQB/0.jpg' /> | [025SuperHeroes_超级英雄们👤BQB(已收录10张)](https://zhaoolee.github.io/ChineseBQB/025SuperHeroes_超级英雄们👤BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/026Chicken_小幺鸡🐔BQB/0.gif' /> | [026Chicken_小幺鸡🐔BQB(已收录77张)](https://zhaoolee.github.io/ChineseBQB/026Chicken_小幺鸡🐔BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/027Turtle_乌龟🐢BQB/王八_光头王八_3.jpg' /> | [027Turtle_乌龟🐢BQB(已收录9张)](https://zhaoolee.github.io/ChineseBQB/027Turtle_乌龟🐢BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/027Turtle_乌龟🐢BQB/王八_七彩王八_10.png' /> | [027Turtle_乌龟🐢BQB(已收录11张)](https://zhaoolee.github.io/ChineseBQB/027Turtle_乌龟🐢BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/028JohnRomero_罗永浩🔨BQB/0.gif' /> | [028JohnRomero_罗永浩🔨BQB(已收录4张)](https://zhaoolee.github.io/ChineseBQB/028JohnRomero_罗永浩🔨BQB/) |
 
 
 
- > Data generation time (数据生成时间): 2019-05-20
+ > Data generation time (数据生成时间): 2019-05-21
 
 BQBEND
 
