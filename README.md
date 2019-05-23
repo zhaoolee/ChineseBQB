@@ -28,6 +28,7 @@
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/022SuDaqiang_苏大强👴BQB/0.gif' /> | [022SuDaqiang_苏大强👴BQB(已收录26张)](https://zhaoolee.github.io/ChineseBQB/022SuDaqiang_苏大强👴BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/023Emoji_BQB/0.JPG' /> | [023Emoji_BQB(已收录122张)](https://zhaoolee.github.io/ChineseBQB/023Emoji_BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/024Programmer_程序员👩🏿‍💻👨🏾‍💻👩🏼‍💻👨🏽‍💻👩🏻‍💻👩🏻‍💻👨‍💻‍BQB/0.png' /> | [024Programmer_程序员👩🏿‍💻👨🏾‍💻👩🏼‍💻👨🏽‍💻👩🏻‍💻👩🏻‍💻👨‍💻‍BQB(已收录13张)](https://zhaoolee.github.io/ChineseBQB/024Programmer_程序员👩🏿‍💻👨🏾‍💻👩🏼‍💻👨🏽‍💻👩🏻‍💻👩🏻‍💻👨‍💻‍BQB/) |
+| <img height='100px' src='' /> | [024Programmer_程序员💻BQB(已收录0张)](https://zhaoolee.github.io/ChineseBQB/024Programmer_程序员💻BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/025SuperHeroes_超级英雄们👤BQB/0.jpg' /> | [025SuperHeroes_超级英雄们👤BQB(已收录10张)](https://zhaoolee.github.io/ChineseBQB/025SuperHeroes_超级英雄们👤BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/026Chicken_小幺鸡🐔BQB/0.gif' /> | [026Chicken_小幺鸡🐔BQB(已收录77张)](https://zhaoolee.github.io/ChineseBQB/026Chicken_小幺鸡🐔BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/027Turtle_乌龟🐢BQB/王八_七彩王八_10.png' /> | [027Turtle_乌龟🐢BQB(已收录11张)](https://zhaoolee.github.io/ChineseBQB/027Turtle_乌龟🐢BQB/) |
@@ -41,7 +42,7 @@
 
 
 
- > Data generation time (数据生成时间): 2019-05-22
+ > Data generation time (数据生成时间): 2019-05-23
 
 BQBEND
 
@@ -51,7 +52,7 @@ BQBEND
 
 |  🍧 | 🍰  | 🍭   | 🍪  | 🍫   |  🍿 | 
 | --- | --- | --- | --- | --- | --- |
-|  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/000.JPG' /><br/><div style="text-align: center;"><span>昭昭</span><div>  |   <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/001.JPG' />   |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/002.JPG' />    |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/003.JPG' />    |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/004.JPG' />    |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/005.JPG' />    |
+|  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/000.JPG' /> |   <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/001.JPG' />   |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/002.JPG' />    |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/003.JPG' />    |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/004.JPG' />    |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/005.JPG' />    |
 |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/006.JPG' />   |   <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/007.JPG' />   |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/008.JPG' />    |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/009.JPG' />   |      |      |
 
 
@@ -107,7 +108,7 @@ git clone --depth 1 https://github.com/zhaoolee/ChineseBQB
 
 
 - If you feel that the first two methods are too much trouble, just want to make friends with the author, welcome to add me wechat (WeChat): `jianzhao111`, after the friend passes, you can send me the sticker package directly~ (Crystal: `BQB`)
-- 如果你感觉前两种方法太麻烦, 只是想和作者交个朋友, 欢迎加我 wechat(微信): `jianzhao111` , 好友通过后, 可以直接把表情包发我哦~ (暗号: `BQB`)
+- 如果你感觉前两种方法太麻烦, 只是想和作者交个朋友, 欢迎加我 wechat(微信): `jianzhao111` , 好友通过后, 可以直接把表情包发我哦~ (暗号: `BQB`),表情包被收录后,您的微信头像将会出现在项目主页中的`贡献值列表中`, 如果您想要署名的话，可以给我微信留言`希望在项目中署名`，我会在项目中为您署名~
 
 
 | Handing cola to Daxie / 给大佬递可乐 | Giving tea to Daxie / 给大佬端茶 | Give a cigarette to Daxie / 给大佬点烟 |
