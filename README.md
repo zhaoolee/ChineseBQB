@@ -46,7 +46,7 @@
 BQBEND
 
 
-## 贡献者列表
+## 贡献者列表(Contributor List)
 
 
 |  🍧 | 🍰  | 🍭   | 🍪  | 🍫   |  🍿 | 
@@ -54,6 +54,7 @@ BQBEND
 |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/000.JPG' /> |   <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/001.JPG' />   |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/002.JPG' />    |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/003.JPG' />    |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/004.JPG' />    |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/005.JPG' />    |
 |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/006.JPG' />   |   <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/007.JPG' />   |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/008.JPG' />    |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/009.JPG' />   |   <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/010.png' />    | <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/011.png' />      |
 |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/012.png' />   |   <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/013.png' />   |    |     |       |       |
+
 
 
 > - The sticker pack is Chinese and the world! 
@@ -107,8 +108,8 @@ git clone --depth 1 https://github.com/zhaoolee/ChineseBQB
 - 如果你是斗图大佬, 没有github账号, 欢迎将表情包发到我的邮箱 zhaoolee@gmail.com , 来信注明 **贡献表情包**
 
 
-- If you feel that the first two methods are too much trouble, just want to make friends with the author, welcome to add me wechat (WeChat): `jianzhao111`, after the friend passes, you can send me the sticker package directly~ (Crystal: `BQB`)
-- 如果你感觉前两种方法太麻烦, 只是想和作者交个朋友, 欢迎加我 wechat(微信): `jianzhao111` , 好友通过后, 可以直接把表情包发我哦~ (暗号: `BQB`),表情包被收录后,您的微信头像将会出现在项目主页中的`贡献值列表中`, 如果您想要署名的话，可以给我微信留言`希望在项目中署名`，我会在项目中为您署名~
+- If you feel that the first two methods are too much trouble, just want to make friends with the author, welcome to add me wechat (WeChat): `jianzhao111`, after the friend passes, you can send me the sticker package directly~ (Crystal: `BQB`), After the sticker pack is included, your avatar will appear in the 'Contributor List' on the project home page. If you want to sign the project, you can leave a message `I want to sign in the project`, I will be in the project Your signature~
+- 如果你感觉前两种方法太麻烦, 只是想和作者交个朋友, 欢迎加我 wechat(微信): `jianzhao111` , 好友通过后, 可以直接把表情包发我哦~ (暗号: `BQB`),表情包被收录后,您的头像将会出现在项目主页中的`贡献值列表中`, 如果您希望在项目中署名，可以给我留言`希望在项目中署名`，我会在项目中为您署名~
 
 
 | Handing cola to Daxie / 给大佬递可乐 | Giving tea to Daxie / 给大佬端茶 | Give a cigarette to Daxie / 给大佬点烟 |
