@@ -1,10 +1,10 @@
 ## Chinese sticker pack / 中国的表情包
 
-## 表情包目录(共收录1264张表情包)Emoticon package directory (commonly included 1264 emoticon pack)
+## 表情包目录(共收录1266张表情包)Emoticon package directory (commonly included 1266 emoticon pack)
 
 | Example(示例)  | 链接(Entrance link) | 
  | :---: | :---: | 
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/001Funny_滑稽大佬😏BQB/0.gif' /> | [001Funny_滑稽大佬😏BQB(已收录35张)](https://zhaoolee.github.io/ChineseBQB/001Funny_滑稽大佬😏BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/001Funny_滑稽大佬😏BQB/0.gif' /> | [001Funny_滑稽大佬😏BQB(已收录37张)](https://zhaoolee.github.io/ChineseBQB/001Funny_滑稽大佬😏BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/002CuteGirl_可爱的女孩纸👧BQB/0.gif' /> | [002CuteGirl_可爱的女孩纸👧BQB(已收录187张)](https://zhaoolee.github.io/ChineseBQB/002CuteGirl_可爱的女孩纸👧BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/003CuteBoy_可爱男孩纸👶BQB/0.gif' /> | [003CuteBoy_可爱男孩纸👶BQB(已收录28张)](https://zhaoolee.github.io/ChineseBQB/003CuteBoy_可爱男孩纸👶BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/004SmirkBoy_假笑男孩👦BQB/0.jpg' /> | [004SmirkBoy_假笑男孩👦BQB(已收录26张)](https://zhaoolee.github.io/ChineseBQB/004SmirkBoy_假笑男孩👦BQB/) |
@@ -41,7 +41,7 @@
 
 
 
- > Data generation time (数据生成时间): 2019-05-23
+ > Data generation time (数据生成时间): 2019-05-24
 
 BQBEND
 
