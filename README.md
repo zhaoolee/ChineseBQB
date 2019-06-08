@@ -1,6 +1,6 @@
 ## Chinese sticker pack / 中国的表情包
 
-## 表情包目录(共收录2288张表情包)Emoticon package directory (commonly included 2288 emoticon pack)
+## 表情包目录(共收录2298张表情包)Emoticon package directory (commonly included 2298 emoticon pack)
 
 | Example(示例)  | 链接(Entrance link) | 
  | :---: | :---: | 
@@ -18,7 +18,7 @@
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/012Parrot_鹦鹉🐦BQB/0.gif' /> | [012Parrot_鹦鹉🐦BQB(已收录16张)](https://zhaoolee.github.io/ChineseBQB/012Parrot_鹦鹉🐦BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/013PigPecs_小猪佩奇👑BQB/0.gif' /> | [013PigPecs_小猪佩奇👑BQB(已收录21张)](https://zhaoolee.github.io/ChineseBQB/013PigPecs_小猪佩奇👑BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/014Pig_猪🐖BQB/Pig00001.jpg' /> | [014Pig_猪🐖BQB(已收录20张)](https://zhaoolee.github.io/ChineseBQB/014Pig_猪🐖BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/015Golden_Curator_Panda金馆长熊猫🐼BQB/GoldenCuratorPanda00001.jpg' /> | [015Golden_Curator_Panda金馆长熊猫🐼BQB(已收录197张)](https://zhaoolee.github.io/ChineseBQB/015Golden_Curator_Panda金馆长熊猫🐼BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/015Golden_Curator_Panda金馆长熊猫🐼BQB/GoldenCuratorPanda00001.jpg' /> | [015Golden_Curator_Panda金馆长熊猫🐼BQB(已收录204张)](https://zhaoolee.github.io/ChineseBQB/015Golden_Curator_Panda金馆长熊猫🐼BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/016spray_喷雾🚿BQB/spray00001.gif' /> | [016spray_喷雾🚿BQB(已收录15张)](https://zhaoolee.github.io/ChineseBQB/016spray_喷雾🚿BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/017Playing_演奏🎻BQB/Playing00001.gif' /> | [017Playing_演奏🎻BQB(已收录22张)](https://zhaoolee.github.io/ChineseBQB/017Playing_演奏🎻BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/018WangEgg_汪蛋🥚BQB/WangEgg00001.gif' /> | [018WangEgg_汪蛋🥚BQB(已收录48张)](https://zhaoolee.github.io/ChineseBQB/018WangEgg_汪蛋🥚BQB/) |
@@ -29,7 +29,7 @@
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/023Emoji_BQB/Emoji00001.JPG' /> | [023Emoji_BQB(已收录122张)](https://zhaoolee.github.io/ChineseBQB/023Emoji_BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/024Programmer_程序员👩🏿‍💻👨🏾‍💻👩🏼‍💻👨🏽‍💻👩🏻‍💻👩🏻‍💻👨‍💻‍BQB/Programmer00001.png' /> | [024Programmer_程序员👩🏿‍💻👨🏾‍💻👩🏼‍💻👨🏽‍💻👩🏻‍💻👩🏻‍💻👨‍💻‍BQB(已收录13张)](https://zhaoolee.github.io/ChineseBQB/024Programmer_程序员👩🏿‍💻👨🏾‍💻👩🏼‍💻👨🏽‍💻👩🏻‍💻👩🏻‍💻👨‍💻‍BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/025SuperHeroes_超级英雄们👤BQB/SuperHeroes00001.jpg' /> | [025SuperHeroes_超级英雄们👤BQB(已收录10张)](https://zhaoolee.github.io/ChineseBQB/025SuperHeroes_超级英雄们👤BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/026Chicken_小幺鸡🐔BQB/Chicken00001.gif' /> | [026Chicken_小幺鸡🐔BQB(已收录77张)](https://zhaoolee.github.io/ChineseBQB/026Chicken_小幺鸡🐔BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/026Chicken_小幺鸡🐔BQB/Chicken00001.gif' /> | [026Chicken_小幺鸡🐔BQB(已收录80张)](https://zhaoolee.github.io/ChineseBQB/026Chicken_小幺鸡🐔BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/027Turtle_乌龟🐢BQB/王八_七彩王八_10.png' /> | [027Turtle_乌龟🐢BQB(已收录18张)](https://zhaoolee.github.io/ChineseBQB/027Turtle_乌龟🐢BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/028JohnRomero_罗永浩🔨BQB/JohnRomero00001.gif' /> | [028JohnRomero_罗永浩🔨BQB(已收录4张)](https://zhaoolee.github.io/ChineseBQB/028JohnRomero_罗永浩🔨BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/029Pigeon_鸽子🕊BQB/Pigeon00001.jpg' /> | [029Pigeon_鸽子🕊BQB(已收录6张)](https://zhaoolee.github.io/ChineseBQB/029Pigeon_鸽子🕊BQB/) |
@@ -42,7 +42,7 @@
 
 
 
- > Data generation time (数据生成时间): 2019-06-03
+ > Data generation time (数据生成时间): 2019-06-06
 
 BQBEND
 
