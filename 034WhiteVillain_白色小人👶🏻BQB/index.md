@@ -590,12 +590,6 @@
 ---
 
 ---
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00099.png](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00099.png)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00099.png](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00099.png)
----
-
----
 ![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00100.jpg](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00100.jpg)
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00100.jpg](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00100.jpg)
@@ -1139,54 +1133,6 @@
 ![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00192.jpg](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00192.jpg)
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00192.jpg](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00192.jpg)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00193.jpg](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00193.jpg)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00193.jpg](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00193.jpg)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00194.png](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00194.png)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00194.png](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00194.png)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00195.png](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00195.png)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00195.png](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00195.png)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00196.png](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00196.png)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00196.png](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00196.png)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00197.png](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00197.png)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00197.png](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00197.png)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00198.jpg](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00198.jpg)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00198.jpg](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00198.jpg)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00199.png](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00199.png)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00199.png](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00199.png)
----
-
----
-![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00200.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00200.gif)
-
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00200.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/FamousPerson00200.gif)
 ---
 
 ---
