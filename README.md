@@ -1,6 +1,6 @@
 ## Chinese sticker pack / 中国的表情包
 
-## 表情包目录(共收录2605张表情包)Emoticon package directory (commonly included 2605 emoticon pack)
+## 表情包目录(共收录2609张表情包)Emoticon package directory (commonly included 2609 emoticon pack)
 
 | Example(示例)  | 链接(Entrance link) | 
  | :---: | :---: | 
@@ -13,7 +13,7 @@
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/007Tiger_胖虎🐯BQB/Tiger00001.gif' /> | [007Tiger_胖虎🐯BQB(已收录21张)](https://zhaoolee.github.io/ChineseBQB/007Tiger_胖虎🐯BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/008HappyDuck_开心鸭🐥BQB/HappyDuck00001.gif' /> | [008HappyDuck_开心鸭🐥BQB(已收录13张)](https://zhaoolee.github.io/ChineseBQB/008HappyDuck_开心鸭🐥BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/009KumamotoBear_熊本熊🐻BQB/KumamotoBear00001.gif' /> | [009KumamotoBear_熊本熊🐻BQB(已收录31张)](https://zhaoolee.github.io/ChineseBQB/009KumamotoBear_熊本熊🐻BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/010Cat_猫🐱BQB/Cat00001.gif' /> | [010Cat_猫🐱BQB(已收录59张)](https://zhaoolee.github.io/ChineseBQB/010Cat_猫🐱BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/010Cat_猫🐱BQB/Cat00001.gif' /> | [010Cat_猫🐱BQB(已收录63张)](https://zhaoolee.github.io/ChineseBQB/010Cat_猫🐱BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/011Dog_狗🐶BQB/0.gif' /> | [011Dog_狗🐶BQB(已收录47张)](https://zhaoolee.github.io/ChineseBQB/011Dog_狗🐶BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/012Parrot_鹦鹉🐦BQB/0.gif' /> | [012Parrot_鹦鹉🐦BQB(已收录16张)](https://zhaoolee.github.io/ChineseBQB/012Parrot_鹦鹉🐦BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/013PigPecs_小猪佩奇👑BQB/0.gif' /> | [013PigPecs_小猪佩奇👑BQB(已收录21张)](https://zhaoolee.github.io/ChineseBQB/013PigPecs_小猪佩奇👑BQB/) |
@@ -43,7 +43,7 @@
 
 
 
- > Data generation time (数据生成时间): 2019-06-20
+ > Data generation time (数据生成时间): 2019-06-21
 
 BQBEND
 
