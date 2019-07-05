@@ -49,6 +49,13 @@
 
 BQBEND
 
+## 本项目相关文章(Related introduction)
+
+- [再好的文案，也干不过这个表情包开源项目！](https://mp.weixin.qq.com/s/U0Gh1gvxis0TkgBc2h1t6g)
+
+- [科技爱好者周刊：第 63 期](http://www.ruanyifeng.com/blog/2019/07/weekly-issue-63.html) 被阮一峰大佬推荐了[开心]
+
+- [《HelloGitHub》第 39 期](https://mp.weixin.qq.com/s/09-JZPVem1_JFf02ZnfLUA)
 
 ## 贡献者列表(Contributor List)
 
