@@ -65,7 +65,7 @@ BQBEND
 | --- | --- | --- | --- | --- | --- |
 |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/000.JPG' /> |   <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/001.JPG' />   |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/002.JPG' />    |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/003.JPG' />    |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/004.JPG' />    |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/005.JPG' />    |
 |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/006.JPG' />   |   <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/007.JPG' />   |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/008.JPG' />    |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/009.JPG' />   |   <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/010.png' />    | <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/011.png' />      |
-|  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/012.png' />   |   <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/013.png' />   |    |     |       |       |
+|  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/012.png' />   |   <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/013.png' />   |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/014.jpg' />  |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/015.jpg' />    |    <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/016.jpg' />    |       |
 
 
 
@@ -112,7 +112,7 @@ git clone --depth 1 https://github.com/zhaoolee/ChineseBQB
 
 
 ## Contribution method  / 贡献方法
-- If you are a Daxie and have a github account, you are welcome to contribute the sticker pack to the root of the `https://github.com/zhaoolee/ChineseBQB/000Contribution_贡献🇨🇳`
+- If you are a Daxie and have a github account, you are welcome to contribute the sticker pack to the root of the `https://github.com/zhaoolee/ChineseBQB/tree/master/000Contribution_%E8%B4%A1%E7%8C%AE%F0%9F%87%A8%F0%9F%87%B3`
 - 如果你是斗图大佬, 又有github账号, 欢迎将表情包贡献到项目`https://github.com/zhaoolee/ChineseBQB`根目录下的`000Contribution_贡献🇨🇳`
 
 
