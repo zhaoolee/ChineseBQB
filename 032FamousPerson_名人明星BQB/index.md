@@ -30,3 +30,9 @@
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/032FamousPerson_名人明星BQB/FamousPerson00005.jpg](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/032FamousPerson_名人明星BQB/FamousPerson00005.jpg)
 ---
+
+---
+![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/032FamousPerson_名人明星BQB/webwxgetmsgimg-8.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/032FamousPerson_名人明星BQB/webwxgetmsgimg-8.gif)
+
+[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/032FamousPerson_名人明星BQB/webwxgetmsgimg-8.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/032FamousPerson_名人明星BQB/webwxgetmsgimg-8.gif)
+---

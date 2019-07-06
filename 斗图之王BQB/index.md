@@ -80,6 +80,12 @@
 ---
 
 ---
+![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/斗图之王BQB/webwxgetmsgimg的副本.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/斗图之王BQB/webwxgetmsgimg的副本.gif)
+
+[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/斗图之王BQB/webwxgetmsgimg的副本.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/斗图之王BQB/webwxgetmsgimg的副本.gif)
+---
+
+---
 ![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/斗图之王BQB/权律二9.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/斗图之王BQB/权律二9.gif)
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/斗图之王BQB/权律二9.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/斗图之王BQB/权律二9.gif)
