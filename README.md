@@ -1,6 +1,6 @@
 ## Chinese sticker pack / 中国的表情包
 
-## 表情包目录(共收录2701张表情包)Emoticon package directory (commonly included 2701 emoticon pack)
+## 表情包目录(共收录2737张表情包)Emoticon package directory (commonly included 2737 emoticon pack)
 
 | Example(示例)  | 链接(Entrance link) | 
  | :---: | :---: | 
@@ -34,14 +34,20 @@
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/028JohnRomero_罗永浩🔨BQB/JohnRomero00001.gif' /> | [028JohnRomero_罗永浩🔨BQB(已收录4张)](https://zhaoolee.github.io/ChineseBQB/028JohnRomero_罗永浩🔨BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/029Pigeon_鸽子🕊BQB/Pigeon00001.jpg' /> | [029Pigeon_鸽子🕊BQB(已收录10张)](https://zhaoolee.github.io/ChineseBQB/029Pigeon_鸽子🕊BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/030AntennaBaby_天线宝宝👶BQB/AntennaBaby00001.gif' /> | [030AntennaBaby_天线宝宝👶BQB(已收录2张)](https://zhaoolee.github.io/ChineseBQB/030AntennaBaby_天线宝宝👶BQB/) |
+| <img height='100px' src='' /> | [031Penguin_企鹅🐧BQB(已收录0张)](https://zhaoolee.github.io/ChineseBQB/031Penguin_企鹅🐧BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/031Penguin_沙雕企鹅🐧BQB/0.gif' /> | [031Penguin_沙雕企鹅🐧BQB(已收录154张)](https://zhaoolee.github.io/ChineseBQB/031Penguin_沙雕企鹅🐧BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/032FamousPerson_名人明星BQB/FamousPerson00001.gif' /> | [032FamousPerson_名人明星BQB(已收录6张)](https://zhaoolee.github.io/ChineseBQB/032FamousPerson_名人明星BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/033Eat_吃🍔BQB/Eat00001.jpg' /> | [033Eat_吃🍔BQB(已收录9张)](https://zhaoolee.github.io/ChineseBQB/033Eat_吃🍔BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/034WhiteVillain_白色小人👶🏻BQB/WhiteVillain00001.jpg' /> | [034WhiteVillain_白色小人👶🏻BQB(已收录839张)](https://zhaoolee.github.io/ChineseBQB/034WhiteVillain_白色小人👶🏻BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/035TomAndJerry_猫和老鼠BQB/0.gif' /> | [035TomAndJerry_猫和老鼠BQB(已收录319张)](https://zhaoolee.github.io/ChineseBQB/035TomAndJerry_猫和老鼠BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/036Pikachu皮卡丘BQB/0.gif' /> | [036Pikachu皮卡丘BQB(已收录2张)](https://zhaoolee.github.io/ChineseBQB/036Pikachu皮卡丘BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/036Pikachu皮卡丘BQB/0.gif' /> | [036Pikachu皮卡丘BQB(已收录3张)](https://zhaoolee.github.io/ChineseBQB/036Pikachu皮卡丘BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/037XunLu鲁迅BQB/0.jpg' /> | [037XunLu鲁迅BQB(已收录12张)](https://zhaoolee.github.io/ChineseBQB/037XunLu鲁迅BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/微信网友贡献表情包_暂存_有时间慢慢整理BQB/webwxgetmsgimg-10.jpg' /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录31张)](https://zhaoolee.github.io/ChineseBQB/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/038Jacky张学友BQB/0.jpg' /> | [038Jacky张学友BQB(已收录8张)](https://zhaoolee.github.io/ChineseBQB/038Jacky张学友BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/039YaoMing表情包三巨头_姚明BQB/0.jpg' /> | [039YaoMing表情包三巨头_姚明BQB(已收录9张)](https://zhaoolee.github.io/ChineseBQB/039YaoMing表情包三巨头_姚明BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/040HanazawaKana表情包三巨头_花泽香菜BQB/0.jpg' /> | [040HanazawaKana表情包三巨头_花泽香菜BQB(已收录3张)](https://zhaoolee.github.io/ChineseBQB/040HanazawaKana表情包三巨头_花泽香菜BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/041ChenguoCui表情包三巨头_崔成国BQB/0.jpg' /> | [041ChenguoCui表情包三巨头_崔成国BQB(已收录7张)](https://zhaoolee.github.io/ChineseBQB/041ChenguoCui表情包三巨头_崔成国BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/042HanZhang张翰BQB/0.jpg' /> | [042HanZhang张翰BQB(已收录8张)](https://zhaoolee.github.io/ChineseBQB/042HanZhang张翰BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/微信网友贡献表情包_暂存_有时间慢慢整理BQB/0.png' /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录31张)](https://zhaoolee.github.io/ChineseBQB/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/斗图之王BQB/0 2.gif' /> | [斗图之王BQB(已收录19张)](https://zhaoolee.github.io/ChineseBQB/斗图之王BQB/) |
 
 
