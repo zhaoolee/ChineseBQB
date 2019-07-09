@@ -159,6 +159,11 @@ It is the last torch of the classical Internet spirit!
 
 ## 欢迎赞助本项目(微信赞赏)
 
-- 赞赏越多,更新的越快越好~[手动滑稽]
+- 收到的赞助, 未来将用于购买服务器, 存放本项目的资源
+- 通过赞赏请作者喝杯咖啡,也是可以的~
+- 赞助越多,表情包更新的越快越好 [手动滑稽]
 
 ![](https://raw.githubusercontent.com/zhaoolee/GraphBed/master/zhaoolee_images000002/ba5b30723b85810c5a8a42be8ead4161.jpeg)
+
+
+![](https://raw.githubusercontent.com/zhaoolee/GraphBed/master/zhaoolee_images000002/2fb086ddf146e0e437fc8a0d4e9db341.png)
