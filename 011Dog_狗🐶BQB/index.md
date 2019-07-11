@@ -282,3 +282,9 @@
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/011Dog_狗🐶BQB/webwxgetmsgimg.png](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/011Dog_狗🐶BQB/webwxgetmsgimg.png)
 ---
+
+---
+![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/011Dog_狗🐶BQB/舔狗.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/011Dog_狗🐶BQB/舔狗.gif)
+
+[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/011Dog_狗🐶BQB/舔狗.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/011Dog_狗🐶BQB/舔狗.gif)
+---

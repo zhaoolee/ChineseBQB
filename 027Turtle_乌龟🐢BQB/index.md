@@ -2,6 +2,12 @@
 ## 027Turtle_乌龟🐢BQB
 
 ---
+![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/027Turtle_乌龟🐢BQB/乌龟.jpg](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/027Turtle_乌龟🐢BQB/乌龟.jpg)
+
+[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/027Turtle_乌龟🐢BQB/乌龟.jpg](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/027Turtle_乌龟🐢BQB/乌龟.jpg)
+---
+
+---
 ![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/027Turtle_乌龟🐢BQB/王八_七彩王八_10.png](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/027Turtle_乌龟🐢BQB/王八_七彩王八_10.png)
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/027Turtle_乌龟🐢BQB/王八_七彩王八_10.png](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/027Turtle_乌龟🐢BQB/王八_七彩王八_10.png)
