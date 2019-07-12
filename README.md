@@ -74,6 +74,12 @@ BQBEND
 |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/012.png' />   |   <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/013.png' />   |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/014.jpg' />  |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/015.jpg' />    |    <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/016.jpg' />    |   <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/017.jpg' />      |
 
 
+## 更新信息
+
+- 新增高校表情包(欢迎各大高校小伙伴贡献表情包)
+
+---
+
 
 > - The sticker pack is Chinese and the world! 
 > - 表情包是中国的, 也是世界的! 
