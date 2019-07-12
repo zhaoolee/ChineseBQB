@@ -1,6 +1,6 @@
 ## Chinese sticker pack / 中国的表情包
 
-## 表情包目录(共收录2756张表情包)Emoticon package directory (commonly included 2756 emoticon pack)
+## 表情包目录(共收录2764张表情包)Emoticon package directory (commonly included 2764 emoticon pack)
 
 | Example(示例)  | 链接(Entrance link) | 
  | :---: | :---: | 
@@ -47,12 +47,14 @@
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/041ChenguoCui表情包三巨头_崔成国BQB/0.jpg' /> | [041ChenguoCui表情包三巨头_崔成国BQB(已收录7张)](https://zhaoolee.github.io/ChineseBQB/041ChenguoCui表情包三巨头_崔成国BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/042HanZhang张翰BQB/0.jpg' /> | [042HanZhang张翰BQB(已收录8张)](https://zhaoolee.github.io/ChineseBQB/042HanZhang张翰BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/043Altman奥特曼BQB/0.jpg' /> | [043Altman奥特曼BQB(已收录7张)](https://zhaoolee.github.io/ChineseBQB/043Altman奥特曼BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/100UCAS中国科学院BQB/0.jpg' /> | [100UCAS中国科学院BQB(已收录7张)](https://zhaoolee.github.io/ChineseBQB/100UCAS中国科学院BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/101HU海南大学BQB/0.gif' /> | [101HU海南大学BQB(已收录1张)](https://zhaoolee.github.io/ChineseBQB/101HU海南大学BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/微信网友贡献表情包_暂存_有时间慢慢整理BQB/0.png' /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://zhaoolee.github.io/ChineseBQB/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/斗图之王BQB/0 2.gif' /> | [斗图之王BQB(已收录19张)](https://zhaoolee.github.io/ChineseBQB/斗图之王BQB/) |
 
 
 
- > Data generation time (数据生成时间): 2019-07-11
+ > Data generation time (数据生成时间): 2019-07-12
 
 BQBEND
 
