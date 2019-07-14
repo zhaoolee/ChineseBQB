@@ -2,6 +2,12 @@
 ## 017Playing_演奏🎻BQB
 
 ---
+![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/017Playing_演奏🎻BQB/1563081874658.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/017Playing_演奏🎻BQB/1563081874658.gif)
+
+[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/017Playing_演奏🎻BQB/1563081874658.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/017Playing_演奏🎻BQB/1563081874658.gif)
+---
+
+---
 ![https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/017Playing_演奏🎻BQB/Playing00001.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/017Playing_演奏🎻BQB/Playing00001.gif)
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/017Playing_演奏🎻BQB/Playing00001.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/017Playing_演奏🎻BQB/Playing00001.gif)

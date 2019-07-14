@@ -1,6 +1,6 @@
 ## Chinese sticker pack / 中国的表情包
 
-## 表情包目录(共收录2768张表情包)Emoticon package directory (commonly included 2768 emoticon pack)
+## 表情包目录(共收录2769张表情包)Emoticon package directory (commonly included 2769 emoticon pack)
 
 | Example(示例)  | 链接(Entrance link) | 
  | :---: | :---: | 
@@ -20,7 +20,7 @@
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/014Pig_猪🐖BQB/Pig00001.jpg' /> | [014Pig_猪🐖BQB(已收录20张)](https://zhaoolee.github.io/ChineseBQB/014Pig_猪🐖BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/015Golden_Curator_Panda金馆长熊猫🐼BQB/GoldenCuratorPanda00001.jpg' /> | [015Golden_Curator_Panda金馆长熊猫🐼BQB(已收录241张)](https://zhaoolee.github.io/ChineseBQB/015Golden_Curator_Panda金馆长熊猫🐼BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/016spray_喷雾🚿BQB/spray00001.gif' /> | [016spray_喷雾🚿BQB(已收录15张)](https://zhaoolee.github.io/ChineseBQB/016spray_喷雾🚿BQB/) |
-| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/017Playing_演奏🎻BQB/Playing00001.gif' /> | [017Playing_演奏🎻BQB(已收录22张)](https://zhaoolee.github.io/ChineseBQB/017Playing_演奏🎻BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/017Playing_演奏🎻BQB/1563081874658.gif' /> | [017Playing_演奏🎻BQB(已收录23张)](https://zhaoolee.github.io/ChineseBQB/017Playing_演奏🎻BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/018WangEgg_汪蛋🥚BQB/WangEgg00001.gif' /> | [018WangEgg_汪蛋🥚BQB(已收录48张)](https://zhaoolee.github.io/ChineseBQB/018WangEgg_汪蛋🥚BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/019Green_Hat绿帽子🖼BQB/GreenHat00001.gif' /> | [019Green_Hat绿帽子🖼BQB(已收录23张)](https://zhaoolee.github.io/ChineseBQB/019Green_Hat绿帽子🖼BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/020TATAN🤷‍♂️BQB/TATAN00001.gif' /> | [020TATAN🤷‍♂️BQB(已收录31张)](https://zhaoolee.github.io/ChineseBQB/020TATAN🤷‍♂️BQB/) |
