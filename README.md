@@ -75,6 +75,7 @@ BQBEND
 |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/000.JPG' /> |   <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/001.JPG' />   |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/002.JPG' />    |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/003.JPG' />    |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/004.JPG' />    |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/005.JPG' />    |
 |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/006.JPG' />   |   <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/007.JPG' />   |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/008.JPG' />    |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/009.JPG' />   |   <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/010.png' />    | <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/011.png' />      |
 |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/012.png' />   |   <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/013.png' />   |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/014.jpg' />  |  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/015.jpg' />    |    <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/016.jpg' />    |   <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/017.jpg' />      |
+|  <img height='50px'  src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/ContributorAvatar/018.jpg' />   |    |   |     |     |  |
 
 
 ## 中国人的表情包-开源小程序
@@ -83,7 +84,7 @@ BQBEND
 
 开源项目地址: [https://github.com/F-loat/ChineseBQB-client](https://github.com/F-loat/ChineseBQB-client), 感谢小伙伴[徒言](https://github.com/F-loat)的贡献~
 
-![](https://user-images.githubusercontent.com/15868458/61170673-58d13700-a59f-11e9-9a85-48b871dd4260.png)
+![](https://user-images.githubusercontent.com/15868458/61185261-cce80980-a689-11e9-9f5e-2774faba3339.png)
 
 
 
