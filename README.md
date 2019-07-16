@@ -1,6 +1,6 @@
 ## Chinese sticker pack / 中国的表情包
 
-## 表情包目录(共收录2812张表情包)Emoticon package directory (commonly included 2812 emoticon pack)
+## 表情包目录(共收录2949张表情包)Emoticon package directory (commonly included 2949 emoticon pack)
 
 | Example(示例)  | 链接(Entrance link) | 
  | :---: | :---: | 
@@ -49,6 +49,8 @@
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/043Altman_奥特曼BQB/0.jpg' /> | [043Altman_奥特曼BQB(已收录7张)](https://zhaoolee.github.io/ChineseBQB/043Altman_奥特曼BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/044YouLe_魔仙王子游乐BQB/0.jpg' /> | [044YouLe_魔仙王子游乐BQB(已收录16张)](https://zhaoolee.github.io/ChineseBQB/044YouLe_魔仙王子游乐BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/045SpongeBob_海绵宝宝BQB/SpongeBob00001.jpg' /> | [045SpongeBob_海绵宝宝BQB(已收录11张)](https://zhaoolee.github.io/ChineseBQB/045SpongeBob_海绵宝宝BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/046WhatToWear_穿什么BQB/0.gif' /> | [046WhatToWear_穿什么BQB(已收录119张)](https://zhaoolee.github.io/ChineseBQB/046WhatToWear_穿什么BQB/) |
+| <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/047ShowSword亮剑BQB/0.gif' /> | [047ShowSword亮剑BQB(已收录18张)](https://zhaoolee.github.io/ChineseBQB/047ShowSword亮剑BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/100UCAS_中国科学院BQB/0.jpg' /> | [100UCAS_中国科学院BQB(已收录8张)](https://zhaoolee.github.io/ChineseBQB/100UCAS_中国科学院BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/101HU_海南大学BQB/0.gif' /> | [101HU_海南大学BQB(已收录1张)](https://zhaoolee.github.io/ChineseBQB/101HU_海南大学BQB/) |
 | <img height='100px' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/微信网友贡献表情包_暂存_有时间慢慢整理BQB/0.png' /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://zhaoolee.github.io/ChineseBQB/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) |
