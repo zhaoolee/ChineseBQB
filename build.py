@@ -2,7 +2,7 @@ import os
 import time
 
 
-def auto_less_to_css(file_dir):
+def create_chinesebqb_info(file_dir):
     html_path = []
     # 生成文件写入的字符串
     md_content = ""
@@ -35,8 +35,6 @@ def auto_less_to_css(file_dir):
                         # 第一张图片为预览图
                         if(img_num == 1):
                             preview_pic = img_addr
-
-
                 except Exception as e:
                     print(e)
 
@@ -50,7 +48,7 @@ def auto_less_to_css(file_dir):
 
 
             html_path_atom = "https://zhaoolee.github.io/ChineseBQB/"+root.split("/")[-1]+"/"
-            html_path.append("| <img height='100px' src='"+ preview_pic+"'" +" /> | " + "["+html_path_atom.split("/")[-2]+"(已收录"+str(img_num)+"张)"+"]("+html_path_atom+") |")
+            html_path.append("| <img style='height:100px;' src='"+ preview_pic+"'" +" /> | " + "["+html_path_atom.split("/")[-2]+"(已收录"+str(img_num)+"张)"+"]("+html_path_atom+") |")
 
             # 清空记录的变量
             preview_pic = ""
@@ -88,7 +86,7 @@ def auto_less_to_css(file_dir):
 
 
 def main():
-    auto_less_to_css('.')
+    create_chinesebqb_info('.')
 
 
 if __name__ == '__main__':
