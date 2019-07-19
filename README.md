@@ -190,26 +190,28 @@ It is the last torch of the classical Internet spirit!
 
 ## ChineseBQB in the meaning of Github / ChinseBQB存在于Github的意义
 
-> - Many people see the first look of ChineseBQB, there will be "Github can still play like this" sigh!
-> - 很多人见到ChineseBQB的第一眼, 会有"Github还能这么玩"的感叹!
+```
+Many people see the first look of ChineseBQB, there will be "Github can still play like this" sigh!
+很多人见到ChineseBQB的第一眼, 会有"Github还能这么玩"的感叹!
 
 
-> - Good ideas should be respected, good ideas can also be realized ~
-> - 好的想法应该被尊重, 好的想法也可以去实现 ~
+Good ideas should be respected, good ideas can also be realized ~
+好的想法应该被尊重, 好的想法也可以去实现 ~
 
-> - Author zhaoolee hopes that ChineseBQB can extend the boundaries of github. Github is not just a platform for managing code, but also can manage emoticons.
-> - 作者zhaoolee希望ChineseBQB能够扩充github的边界, github不只是管理代码的平台, 也可以管理表情包~
+Author zhaoolee hopes that ChineseBQB can extend the boundaries of github. Github is not just a platform for managing code, but also can manage emoticons.
+作者zhaoolee希望ChineseBQB能够扩充github的边界, github不只是管理代码的平台, 也可以管理表情包~
 
-> - ChineseBQB is a "cultural" warehouse, and Zhaoolee hopes to use ChineseBQB to introduce jade and lead a better "cultural" warehouse.
-> - ChineseBQB是一个"文化类"仓库, zhaoolee希望能通过ChineseBQB抛砖引玉, 引出更优质的"文化类"仓库~
-
-> - ChineseBQB uses the page space provided by github. From the feedback received, the page space service is very stable, you can rest assured to eat ~
-> - ChineseBQB使用了github提供的page空间, 从收到的反馈来看, page空间服务是非常稳定的, 大家可以放心食用~
-
-> - ChineseBQB is a relatively "heterogeneous" warehouse, and Github is a compatible and packaged place. ChineseBQB is respected here!
-> - ChineseBQB是一个比较"异类"的仓库, 而Github是一个兼容并包的地方, ChineseBQB在这里得到了尊重!
+ChineseBQB is a "cultural" warehouse, and Zhaoolee hopes to use ChineseBQB to introduce jade and lead a better "cultural" warehouse.
+ChineseBQB是一个"文化类"仓库, zhaoolee希望能通过ChineseBQB抛砖引玉, 引出更优质的"文化类"仓库~
 
 
+ChineseBQB uses the page space provided by github. From the feedback received, the page space service is very stable, you can rest assured to eat ~
+ChineseBQB使用了github提供的page空间, 从收到的反馈来看, page空间服务是非常稳定的, 大家可以放心食用~
+
+
+ChineseBQB is a relatively "heterogeneous" warehouse, and Github is a compatible and packaged place. ChineseBQB is respected here!
+ChineseBQB是一个比较"异类"的仓库, 而Github是一个兼容并包的地方, ChineseBQB在这里得到了尊重!
+```
 
 
 
