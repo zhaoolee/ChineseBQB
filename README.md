@@ -188,7 +188,7 @@ It is the last torch of the classical Internet spirit!
 
 
 
-## 这个仓库对于Github的意义 (作者zhaoolee)
+## 这个仓库存在于Github的意义
 
 - 很多人见到ChineseBQB的第一眼, 会有"Github还能这么玩"的感叹!
 
