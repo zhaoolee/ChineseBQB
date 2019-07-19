@@ -209,8 +209,8 @@ ChineseBQB uses the page space provided by github. From the feedback received, t
 ChineseBQB使用了github提供的page空间, 从收到的反馈来看, page空间服务是非常稳定的, 大家可以放心食用~
 
 
-ChineseBQB is a relatively "heterogeneous" warehouse, and Github is a compatible and packaged place. ChineseBQB is respected here!
-ChineseBQB是一个比较"异类"的仓库, 而Github是一个兼容并包的地方, ChineseBQB在这里得到了尊重!
+ChineseBQB is a relatively "heterogeneous" warehouse, and Github is a compatible and packaged place. ChineseBQB is respected here~
+ChineseBQB是一个比较"异类"的仓库, 而Github是一个兼容并包的地方, ChineseBQB在这里得到了尊重~
 ```
 
 
