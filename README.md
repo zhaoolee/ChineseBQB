@@ -190,8 +190,8 @@ It is the last torch of the classical Internet spirit!
 
 ## ChineseBQB in the meaning of Github / ChinseBQB存在于Github的意义
 
-> - 很多人见到ChineseBQB的第一眼, 会有"Github还能这么玩"的感叹!
 > - Many people see the first look of ChineseBQB, there will be "Github can still play like this" sigh!
+> - 很多人见到ChineseBQB的第一眼, 会有"Github还能这么玩"的感叹!
 
 
 > - Good ideas should be respected, good ideas can also be realized ~
