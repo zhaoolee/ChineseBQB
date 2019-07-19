@@ -187,6 +187,23 @@ It is the last torch of the classical Internet spirit!
 ```
 
 
+
+## 这个仓库对于Github的意义 (作者zhaoolee)
+
+- 很多人见到ChineseBQB的第一眼, 会有"Github还能这么玩"的感叹!
+
+- 好的想法应该被尊重, 好的想法也可以去实现 ~
+
+- 作者zhaoolee希望ChineseBQB能够扩充github的边界, github不只是管理代码的平台, 也可以管理表情包~
+
+- ChineseBQB是一个"文化类"仓库, zhaoolee希望能通过ChineseBQB抛砖引玉, 引出更优质的"文化类"仓库~
+
+- ChineseBQB使用了github提供的page空间, 从收到的反馈来看, page空间服务是非常稳定的, 大家可以放心食用~
+
+- ChineseBQB是一个比较"异类"的仓库, 而Github是一个兼容并包的地方, ChineseBQB在这里得到了尊重!
+
+
+
 ## 欢迎赞助本项目(微信赞赏)
 
 - 收到的赞助, 未来将用于购买服务器, 存放本项目的资源
