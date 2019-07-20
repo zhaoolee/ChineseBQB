@@ -202,7 +202,6 @@ It is the last torch of the classical Internet spirit!
 When people see ChineseBQB, there will be "Github can still play like this" sigh!
 很多人见到ChineseBQB的第一眼, 会有"Github还能这么玩"的感叹!
 
-
 Good ideas should be respected, good ideas can also be realized ~
 好的想法应该被尊重, 好的想法也可以去实现 ~
 
