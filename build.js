@@ -121,7 +121,7 @@ function image_to_md_info(images){
     images.map((image_info, image_index)=>{
 
         let md_info = `<img height='300px' style='height:300px;' src=${image_info} /><br/>`;
-        md_info = md_info + `<h6>下载地址:[${image_info}](${image_info})</h6><hr/>`;
+        md_info = md_info + `<h6>下载地址: [${image_info}](${image_info})</h6><hr/>`;
 
         all_md_info = all_md_info+md_info;
     });

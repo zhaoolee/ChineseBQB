@@ -263,7 +263,7 @@ sidebar:
   #  - always  expand for all pages automatically.
   #  - hide    expand only when click on the sidebar toggle icon.
   #  - remove  totally remove sidebar including sidebar toggle.
-  display: post
+  display: hide
 
   # Sidebar offset from top menubar in pixels (only for Pisces | Gemini).
   offset: 12
@@ -297,8 +297,8 @@ chat:
 # Set the text alignment in the posts.
 text_align:
   # Available values: start | end | left | right | center | justify | justify-all | match-parent
-  desktop: justify
-  mobile: justify
+  desktop: left
+  mobile: left
 
 # Automatically scroll page to section which is under <!-- more --> mark.
 scroll_to_more: true
@@ -364,7 +364,7 @@ reward_settings:
   #comment: Donate comment here
 
 reward:
-  #wechatpay: /images/wechatpay.png
+  wechatpay: https://raw.githubusercontent.com/zhaoolee/GraphBed/master/zhaoolee_images000002/ba5b30723b85810c5a8a42be8ead4161.jpeg
   #alipay: /images/alipay.png
   #bitcoin: /images/bitcoin.png
 

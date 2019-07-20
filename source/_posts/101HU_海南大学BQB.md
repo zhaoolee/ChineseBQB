@@ -12,4 +12,4 @@ categories:
 
 <!-- more -->
 
-<img height='300px' style='height:300px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/101HU_海南大学BQB/0.gif /><br/><h6>下载地址:[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/101HU_海南大学BQB/0.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/101HU_海南大学BQB/0.gif)</h6><hr/>
+<img height='300px' style='height:300px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/101HU_海南大学BQB/0.gif /><br/><h6>下载地址: [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/101HU_海南大学BQB/0.gif](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/101HU_海南大学BQB/0.gif)</h6><hr/>
