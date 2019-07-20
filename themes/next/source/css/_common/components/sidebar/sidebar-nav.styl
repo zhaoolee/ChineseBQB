@@ -1,0 +1,30 @@
+// Sidebar Navigation
+
+.sidebar-nav {
+  margin: 0 0 20px;
+  padding-left: 0;
+}
+
+.sidebar-nav li {
+  display: inline-block;
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+  font-size: 14px;
+  color: $sidebar-nav-color;
+
+  &:hover { color: $sidebar-nav-hover-color; }
+}
+
+.page-post-detail .sidebar-nav-toc { padding: 0 5px; }
+
+.page-post-detail .sidebar-nav-overview { margin-left: 10px; }
+
+.sidebar-nav .sidebar-nav-active {
+  color: $sidebar-highlight;
+  border-bottom-color: $sidebar-highlight;
+
+  &:hover { color: $sidebar-highlight; }
+}
+
+.sidebar-panel { display: none; }
+.sidebar-panel-active { display: block; }

@@ -1,0 +1,16 @@
+sidebar-inline-links-item() {
+  margin: 5px 0 0;
+  if !hexo-config('social_icons.icons_only') { width: 50%; }
+
+  & a, span.exturl {
+    max-width: 216px;
+    box-sizing: border-box;
+    display: inline-block;
+    margin-right: 0;
+    margin-bottom: 0;
+    padding: 0 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}

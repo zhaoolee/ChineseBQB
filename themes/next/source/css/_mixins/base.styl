@@ -1,0 +1,105 @@
+the-transition() {
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in-out;
+  transition-delay: 0s;
+}
+
+the-transition-ease-in() {
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in;
+  transition-delay: 0s;
+}
+
+the-transition-ease-out() {
+  transition-duration: 0.2s;
+  transition-timing-function: ease-out;
+  transition-delay: 0s;
+}
+
+mobile-smallest() {
+  @media (max-width: 413px) {
+    {block}
+  }
+}
+
+mobile-small() {
+  @media (max-width: 567px) {
+    {block}
+  }
+}
+
+mobile() {
+  @media (max-width: 767px) {
+    {block}
+  }
+}
+
+tablet-mobile() {
+  @media (max-width: 991px) {
+    {block}
+  }
+}
+
+tablet() {
+  @media (min-width: 768px) and (max-width: 991px) {
+    {block}
+  }
+}
+
+desktop() {
+  @media (min-width: 992px) {
+    {block}
+  }
+}
+
+desktop-large() {
+  @media (min-width: 1200px) {
+    {block}
+  }
+}
+
+desktop-largest() {
+  @media (min-width: 1600px) {
+    {block}
+  }
+}
+
+circle() {
+  border-radius: 50%;
+}
+
+hide() {
+  display: none;
+}
+
+show() {
+  display: block;
+}
+
+random-color($min, $max) {
+  return floor(math(0, 'random') * ($max - $min + 1) + $min);
+}
+
+// Clearfix. http://nicolasgallagher.com/micro-clearfix-hack/
+clearfix() {
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+  &:after { clear: both; }
+}
+
+word-wrap() {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+disable-touch-hover() {
+  // To prevent hover on external links with touch devices after click.
+  @media (hover:none) {
+    &:hover {
+      background: none;
+    }
+  }
+}

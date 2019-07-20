@@ -1,0 +1,19 @@
+// Based in Nicolas Gallagher's git.io/normalize
+normalize-html5()
+  // `block` display for HTML5 elements in IE 8~11 and FF.
+  article, details, section, summary,
+  aside, main, menu, nav, figcaption,
+  figure, footer, header, hgroup
+    display block
+
+  audio, canvas, progress, video
+    display inline-block // Set `inline-block` not defined in IE 8~9.
+    vertical-align  baseline // Fix v-align of `progress` in Chrome, FF, and O.
+
+  audio:not([controls])
+      display none // Prevent displaying `audio` without controls.
+      height  0 // Remove excess height in iOS 5 devices.
+
+  [hidden], // Address `[hidden]` styling not present in IE 8~10.
+  template  // Hide the `template` element in IE 8~11, Safari, and FF < 22.
+    display none

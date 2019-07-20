@@ -1,0 +1,34 @@
+.page-archive {
+
+  .archive-page-counter {
+    position: relative;
+    top: 3px;
+    left: 20px;
+
+    +mobile() {
+      top: 5px;
+    }
+  }
+
+  .posts-collapse {
+
+    .archive-move-on {
+      position: absolute;
+      top: 11px;
+      left: 0;
+      margin-left: -6px;
+      width: 10px;
+      height: 10px;
+      opacity: 0.5;
+      background: $black-light;
+      border: 1px solid white;
+
+      circle();
+    }
+  }
+
+  .fa-external-link {
+    font-size: 15px;
+    margin-left: 5px;
+  }
+}

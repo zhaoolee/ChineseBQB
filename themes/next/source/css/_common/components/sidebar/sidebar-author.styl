@@ -1,0 +1,39 @@
+.site-author-image {
+  show();
+  margin: 0 auto;
+  padding: $site-author-image-padding;
+  max-width: $site-author-image-width;
+  height: $site-author-image-height;
+  border: $site-author-image-border-width solid $site-author-image-border-color;
+  opacity: hexo-config('avatar.opacity') is a 'unit' ? hexo-config('avatar.opacity') : 1;
+}
+
+if hexo-config('avatar.rounded') {
+  .site-author-image {
+    border-radius: 100%;
+  }
+}
+
+if hexo-config('avatar.rotated') {
+  .site-author-image {
+    transition: transform 1.0s ease-out;
+  }
+
+  .site-author-image:hover {
+    transform: rotateZ(360deg);
+  }
+}
+
+.site-author-name {
+  margin: $site-author-name-margin;
+  text-align: $site-author-name-align;
+  color: $site-author-name-color;
+  font-weight: $site-author-name-weight;
+}
+
+.site-description {
+  margin-top: $site-description-margin-top;
+  text-align: $site-description-align;
+  font-size: $site-description-font-size;
+  color: $site-description-color;
+}

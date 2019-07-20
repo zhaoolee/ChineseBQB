@@ -1,0 +1,31 @@
+{
+  "latedef": "nofunc",
+  "newcap": false,
+  "curly": false,
+  "eqeqeq": true,
+  "eqnull": true,
+  "strict": true,
+  "undef": true,
+  "unused": true,
+  "laxcomma": false,
+  "asi": false,
+  "boss": true,
+  "expr": true,
+  "sub": true,
+  "quotmark": true,
+  "laxbreak": true,
+  "loopfunc": false,
+  "lastsemic": true,
+  "funcscope": false,
+  "esnext": true,
+  "noyield": true,
+  "browser": true,
+  "nonstandard": true,
+  "jquery": true,
+  "devel": true,
+  "node": true,
+  "mocha": true,
+  "globals": {
+    "nunjucks": false
+  }
+}

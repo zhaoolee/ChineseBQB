@@ -1,0 +1,69 @@
+// Based in Nicolas Gallagher's git.io/normalize
+normalize-forms()
+  // Known limitation: Chrome and Safari on OS X allow very limited
+  // styling of `select`, unless a `border` property is set.
+  button, input, optgroup, select, textarea
+    color  inherit // Correct color not being inherited.
+    font   inherit // Correct font properties not being inherited.
+    margin 0 // Fix margins in FF 4+, Safari, and Chrome.
+
+  button // Fix `overflow` set to `hidden` in IE 8/9/10/11.
+    overflow visible
+
+  button, select // Consistent text-transform across browsers.
+    text-transform none
+
+  // Fix WebKit bug in Android 4.0, inability to style clickable `input` in
+  // iOS and improve usability and consistency of cursor style.
+  button, html input[type='button'], input[type='reset'], input[type='submit']
+    cursor pointer
+    -webkit-appearance button
+
+  // Reset default cursor for disabled elements.
+  button[disabled], html input[disabled]
+    cursor default
+
+  // Remove inner padding and border in FF 4+.
+  button::-moz-focus-inner, input::-moz-focus-inner
+    border  0
+    padding 0
+
+  input // Reset line-height again FF 4+ UA stylsheet.
+    line-height normal
+
+  // Fix box sizing and excess padding in IE 8~10
+  input[type='checkbox'], input[type='radio']
+    box-sizing border-box
+    padding    0
+
+  // Fix the cursor style for Chrome's increment/decrement buttons.
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button
+    height auto
+
+  // Consistent appearance and box-sizing in Safari and Chrome.
+  input[type='search']
+    -webkit-appearance  textfield
+    -moz-box-sizing     content-box
+    -webkit-box-sizing  content-box
+    box-sizing          content-box
+
+  // No inner padding and search cancel button in Safari and Chrome on OS X.
+  input[type='search']::-webkit-search-cancel-button,
+  input[type='search']::-webkit-search-decoration
+    -webkit-appearance none
+
+  fieldset // Consistent border, margin, and padding.
+    border  1px solid #c0c0c0
+    margin  0 2px
+    padding 0.35em 0.625em 0.75em
+
+  legend // Hack to correct `color` not being inherited in IE 8/9/10/11.
+    border  0
+    padding 0
+
+  textarea // Remove default vertical scrollbar in IE 8~11.
+    overflow auto
+
+  optgroup // Don't inherit the `font-weight` applied above.
+    font-weight bold

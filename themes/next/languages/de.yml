@@ -1,0 +1,98 @@
+---
+title:
+  archive: Archiv
+  category: Kategorie
+  tag: Schlagwort
+  schedule: Zeitplan
+menu:
+  home: Startseite
+  archives: Archiv
+  categories: Kategorien
+  tags: Schlagwörter
+  about: Über
+  search: Suche
+  schedule: Zeitplan
+  sitemap: Sitemap
+  commonweal: Commonweal 404
+sidebar:
+  overview: Übersicht
+  toc: Inhaltsverzeichnis
+post:
+  posted: Veröffentlicht am
+  edited: Bearbeitet am
+  created: Erstellt
+  modified: Geändert am
+  edit: Diesen Beitrag bearbeiten
+  in: in
+  more: mehr
+  read_more: Weiterlesen
+  untitled: Unbenannt
+  sticky: Angepinnt
+  toc_empty: Dieser Artikel hat kein Inhaltsverzeichnis
+  views: Aufrufe
+  comments_count: Kommentare
+  related_posts: Ähnliche Beiträge
+  copy_button: Kopieren
+  copy_success: Kopiert
+  copy_failure: Kopieren fehlgeschlagen
+  copyright:
+    author: Beitragsautor
+    link: Beitragslink
+    license_title: Urheberrechtshinweis
+    license_content: "Alle Artikel in diesem Blog sind unter %s lizenziert, außer es wird anders angegeben."
+page:
+  totally: Gesamt
+  tags: schlagwörter
+footer:
+  powered: "Erstellt mit  %s"
+  theme: Design
+  total_views: Alle Aufrufe
+  total_visitors: Alle Besucher
+counter:
+  tag_cloud:
+    zero: Keine Schlagworte
+    one: Insgesamt ein Schlagwort
+    other: "Insgesamt %d Schlagwörter"
+  categories:
+    zero: Keine Kategorien
+    one: Insgesamt eine Kategorie
+    other: "Insgesamt %d Kategorien"
+  archive_posts:
+    zero: Keine Artikel vorhanden.
+    one: Ein Artikel.
+    other: "Insgesamt %d Artikel."
+state:
+  posts: Artikel
+  pages: Seiten
+  tags: schlagwörter
+  categories: Kategorien
+search:
+  placeholder: Suche...
+cheers:
+  um: Öhm..
+  ok: OK
+  nice: Schön
+  good: Gut
+  great: Wunderbar
+  excellent: Exzellent
+keep_on: Bleib dran.
+symbol:
+  comma: ". "
+  period: ", "
+  colon: ": "
+reward:
+  donate: Spenden
+  wechatpay: WeChat Bezahlung
+  alipay: Alipay
+  bitcoin: Bitcoin
+gitmentbutton: Zeige Kommentare von Gitment
+accessibility:
+  nav_toggle: Navigationsleiste an/ausschalten
+  prev_page: Vorherige Seite
+  next_page: Nächste Seite
+symbols_count_time:
+  count: Symbole im Artikel gezählt
+  count_total: Insgesamt gezählte Symbole
+  time: Lesezeit
+  time_total: Insgesamte Lesezeit
+  time_minutes: minuten.

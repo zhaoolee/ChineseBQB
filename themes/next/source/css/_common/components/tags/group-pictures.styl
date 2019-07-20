@@ -1,0 +1,35 @@
+.post .post-body .group-picture {
+  img {
+    box-sizing: border-box;
+    padding: 0 3px;
+    border: none;
+  }
+}
+
+.post .group-picture-row {
+  overflow: hidden;
+  margin-top: 6px;
+  &:first-child { margin-top: 0; }
+}
+
+.post .group-picture-column { float: left; }
+
+.page-post-detail .post-body .group-picture-column {
+  float: none;
+  margin-top: 10px;
+  width: auto !important;
+  img { margin: 0 auto; }
+}
+
+.page-archive {
+  .group-picture-container { overflow: hidden; }
+  .group-picture-row {
+    float: left;
+    &:first-child { margin-top: 6px; }
+  }
+
+  .group-picture-column {
+    max-width: 150px;
+    max-height: 150px;
+  }
+}

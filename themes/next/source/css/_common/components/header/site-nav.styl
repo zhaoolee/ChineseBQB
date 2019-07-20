@@ -1,0 +1,28 @@
+.site-nav-toggle {
+  hide();
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  +mobile() {
+    show();
+  }
+
+  button {
+    margin-top: 2px;
+    padding: 9px 10px;
+    background: transparent;
+    border: none;
+  }
+}
+
+.site-nav {
+  +mobile() {
+    hide();
+    margin: 0 -10px;
+    padding: 0 10px;
+    clear: both;
+    border-top: 1px solid $gray-lighter;
+  }
+  +tablet() { display: block !important; }
+  +desktop() { display: block !important; }
+}

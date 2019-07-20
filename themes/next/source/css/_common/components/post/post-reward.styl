@@ -1,0 +1,64 @@
+#reward-container {
+  padding: 10px 0;
+  margin: 20px auto;
+  width: 90%;
+  text-align: center;
+}
+
+#reward-button {
+  cursor: pointer;
+  border: 0;
+  outline: 0;
+  display: inline-block;
+  vertical-align: text-top;
+  margin: 0;
+  padding: 0 15px;
+  border-radius: 5px;
+  height: $font-size-large * 2;
+  line-height: $font-size-large * 2;
+  font-size: $font-size-large;
+  color: #fff;
+  background: #F44336;
+  letter-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+}
+
+#reward-button span:hover {
+  background: #F7877F;
+}
+
+#qr {
+  padding-top: 20px;
+
+  a {
+    border: 0;
+  }
+
+  img {
+    width: 180px;
+    max-width: 100%;
+    display: inline-block;
+    margin: 0.8em 2em 0 2em;
+  }
+
+  p {
+    text-align: center;
+  }
+
+  if hexo-config('reward_settings.animation') {
+    & > div:hover p {
+      animation: roll 0.1s infinite linear;
+    }
+
+    @keyframes roll {
+      from {
+        transform: rotateZ(30deg);
+      }
+      to {
+        transform: rotateZ(-30deg);
+      }
+    }
+  }
+}

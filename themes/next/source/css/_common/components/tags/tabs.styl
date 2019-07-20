@@ -1,0 +1,95 @@
+.post-body .tabs {
+  position: relative;
+  show();
+  margin-bottom: 20px;
+  padding-top: 10px;
+
+  // Read tabs border_radius from NexT config and set in "tbr px" to use it as string variable in this CSS section.
+  hexo-config('tabs.border_radius') is a 'unit' ? (tbr = unit(hexo-config('tabs.border_radius'), px)) : (tbr = 0)
+
+  ul.nav-tabs {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    margin-bottom: -1px;
+
+    +mobile-smallest() {
+      show();
+      margin-bottom: 5px;
+    }
+
+    li.tab {
+      list-style-type: none !important;
+      margin: 0 .25em 0 0;
+      border-top: 3px solid transparent;
+      border-left: 1px solid transparent;
+      border-right: 1px solid transparent;
+
+      +mobile-smallest() {
+        margin: initial;
+        border-top: 1px solid transparent;
+        border-left: 3px solid transparent;
+        border-right: 1px solid transparent;
+        border-bottom: 1px solid transparent;
+      }
+
+      if tbr > 0 {
+        border-radius: tbr tbr 0 0;
+        +mobile-smallest() { border-radius: tbr; }
+      }
+      if hexo-config('tabs.transition.tabs') { the-transition-ease-out(); }
+
+      & a {
+        outline: 0;
+        border-bottom: initial;
+        show();
+        line-height: 1.8em;
+        padding: .25em .75em;
+        & i { width: (18em / 14); }
+        if hexo-config('tabs.transition.labels') { the-transition-ease-out(); }
+      }
+
+      &.active {
+        border-top: 3px solid $orange;
+        border-left: 1px solid $table-border-color;
+        border-right: 1px solid $table-border-color;
+        background-color: #fff;
+
+        +mobile-smallest() {
+          border-top: 1px solid $table-border-color;
+          border-left: 3px solid $orange;
+          border-right: 1px solid $table-border-color;
+          border-bottom: 1px solid $table-border-color;
+        }
+
+        & a {
+          cursor: default;
+          color: $link-color;
+        }
+      }
+    }
+  }
+
+  .tab-content {
+    background-color: #fff;
+
+    .tab-pane {
+      border: 1px solid $table-border-color;
+      padding: 20px 20px 0 20px;
+      if tbr > 0 { border-radius: tbr; }
+
+      &:not(.active) {
+        hide();
+      }
+      &.active {
+        show();
+        if tbr > 0 {
+          &:nth-of-type(1) {
+            border-radius: 0 tbr tbr tbr;
+            +mobile-smallest() { border-radius: tbr; }
+          }
+        }
+      }
+    }
+  }
+}

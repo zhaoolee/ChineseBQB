@@ -1,0 +1,98 @@
+---
+title:
+  archive: 归档
+  category: 分类
+  tag: 标签
+  schedule: 日程表
+menu:
+  home: 首页
+  archives: 归档
+  categories: 分类
+  tags: 标签
+  about: 关于
+  search: 搜索
+  schedule: 日程表
+  sitemap: 站点地图
+  commonweal: 公益 404
+sidebar:
+  overview: 站点概览
+  toc: 文章目录
+post:
+  posted: 发表于
+  edited: 更新于
+  created: 创建时间
+  modified: 修改时间
+  edit: 编辑
+  in: 分类于
+  more: 更多
+  read_more: 阅读全文
+  untitled: 未命名
+  sticky: 置顶
+  toc_empty: 此文章未包含目录
+  views: 阅读次数
+  comments_count: 评论数
+  related_posts: 相关文章
+  copy_button: 复制
+  copy_success: 复制成功
+  copy_failure: 复制失败
+  copyright:
+    author: 本文作者
+    link: 本文链接
+    license_title: 版权声明
+    license_content: "本博客所有文章除特别声明外，均采用 %s 许可协议。转载请注明出处！"
+page:
+  totally: 共有
+  tags: 标签
+footer:
+  powered: "由 %s 强力驱动"
+  theme: 主题
+  total_views: 总访问量
+  total_visitors: 总访客量
+counter:
+  tag_cloud:
+    zero: 暂无标签
+    one: 目前共计 1 个标签
+    other: "目前共计 %d 个标签"
+  categories:
+    zero: 暂无分类
+    one: 目前共计 1 个分类
+    other: "目前共计 %d 个分类"
+  archive_posts:
+    zero: 暂无日志。
+    one: 目前共计 1 篇日志。
+    other: "目前共计 %d 篇日志。"
+state:
+  posts: 日志
+  pages: 页面
+  tags: 标签
+  categories: 分类
+search:
+  placeholder: 搜索...
+cheers:
+  um: 嗯..
+  ok: 还行
+  nice: 不错
+  good: 很好
+  great: 非常好
+  excellent: 太棒了
+keep_on: 继续努力。
+symbol:
+  comma: "，"
+  period: "。"
+  colon: "："
+reward:
+  donate: 打赏
+  wechatpay: 微信支付
+  alipay: 支付宝
+  bitcoin: 比特币
+gitmentbutton: 显示 Gitment 评论
+accessibility:
+  nav_toggle: 切换导航栏
+  prev_page: 上一页
+  next_page: 下一页
+symbols_count_time:
+  count: 本文字数
+  count_total: 站点总字数
+  time: 阅读时长
+  time_total: 站点阅读时长
+  time_minutes: 分钟

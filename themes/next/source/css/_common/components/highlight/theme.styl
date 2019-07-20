@@ -1,0 +1,92 @@
+$highlight_theme = hexo-config("highlight_theme")
+
+
+if $highlight_theme == "normal"
+  $highlight-background   = #f7f7f7
+  $highlight-current-line = #efefef
+  $highlight-selection    = #d6d6d6
+  $highlight-foreground   = #4d4d4c
+  $highlight-comment      = #8e908c
+  $highlight-red          = #c82829
+  $highlight-orange       = #f5871f
+  $highlight-yellow       = #eab700
+  $highlight-green        = #718c00
+  $highlight-aqua         = #3e999f
+  $highlight-blue         = #4271ae
+  $highlight-purple       = #8959a8
+  $highlight-gutter       = {
+    color: #869194,
+    bg-color: #eff2f3
+  }
+
+if $highlight_theme == "night"
+  $highlight-background   = #1d1f21
+  $highlight-current-line = #282a2e
+  $highlight-selection    = #373b41
+  $highlight-foreground   = #c5c8c6
+  $highlight-comment      = #969896
+  $highlight-red          = #cc6666
+  $highlight-orange       = #de935f
+  $highlight-yellow       = #f0c674
+  $highlight-green        = #b5bd68
+  $highlight-aqua         = #8abeb7
+  $highlight-blue         = #81a2be
+  $highlight-purple       = #b294bb
+  $highlight-gutter       = {
+    color: lighten($highlight-background, 50%),
+    bg-color: darken($highlight-background, 100%)
+  }
+
+if $highlight_theme == "night eighties"
+  $highlight-background   = #2d2d2d
+  $highlight-current-line = #393939
+  $highlight-selection    = #515151
+  $highlight-foreground   = #cccccc
+  $highlight-comment      = #999999
+  $highlight-red          = #f2777a
+  $highlight-orange       = #f99157
+  $highlight-yellow       = #ffcc66
+  $highlight-green        = #99cc99
+  $highlight-aqua         = #66cccc
+  $highlight-blue         = #6699cc
+  $highlight-purple       = #cc99cc
+  $highlight-gutter       = {
+    color: $highlight-comment,
+    bg-color: darken($highlight-background, 40%)
+  }
+
+if $highlight_theme == "night blue"
+  $highlight-background   = #002451
+  $highlight-current-line = #00346e
+  $highlight-selection    = #003f8e
+  $highlight-foreground   = #ffffff
+  $highlight-comment      = #7285b7
+  $highlight-red          = #ff9da4
+  $highlight-orange       = #ffc58f
+  $highlight-yellow       = #ffeead
+  $highlight-green        = #d1f1a9
+  $highlight-aqua         = #99ffff
+  $highlight-blue         = #bbdaff
+  $highlight-purple       = #ebbbff
+  $highlight-gutter       = {
+    color: $highlight-comment,
+    bg-color: darken($highlight-background, 60%)
+  }
+
+if $highlight_theme == "night bright"
+  $highlight-background   = #000000
+  $highlight-current-line = #2a2a2a
+  $highlight-selection    = #424242
+  $highlight-foreground   = #eaeaea
+  $highlight-comment      = #969896
+  $highlight-red          = #d54e53
+  $highlight-orange       = #e78c45
+  $highlight-yellow       = #e7c547
+  $highlight-green        = #b9ca4a
+  $highlight-aqua         = #70c0b1
+  $highlight-blue         = #7aa6da
+  $highlight-purple       = #c397d8
+  $highlight-gutter       = {
+    color: lighten($highlight-background, 40%),
+    bg-color: lighten($highlight-background, 16%)
+  }

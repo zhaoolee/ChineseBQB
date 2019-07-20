@@ -1,0 +1,114 @@
+title:
+  archive: Archive
+  category: Category
+  tag: Tag
+  schedule: Schedule
+
+menu:
+  home: Home
+  archives: Archives
+  categories: Categories
+  tags: Tags
+  about: About
+  search: Search
+  schedule: Schedule
+  sitemap: Sitemap
+  commonweal: Commonweal 404
+
+sidebar:
+  overview: Overview
+  toc: Table of Contents
+
+post:
+  posted: Posted on
+  edited: Edited on
+  created: Created
+  modified: Modified
+  edit: Edit this post
+  in: In
+  more: more
+  read_more: Read more
+  untitled: Untitled
+  sticky: Sticky
+  toc_empty: This post does not have a Table of Contents
+  views: Views
+  comments_count: Comments
+  related_posts: Related Posts
+  copy_button: Copy
+  copy_success: Copied
+  copy_failure: Copy failed
+  copyright:
+    author: Post author
+    link: Post link
+    license_title: Copyright Notice
+    license_content: "All articles in this blog are licensed under %s unless stating additionally."
+
+page:
+  totally: Totally
+  tags: tags
+
+footer:
+  powered: "Powered by %s"
+  theme: Theme
+  total_views: Total Views
+  total_visitors: Total Visitors
+
+counter:
+  tag_cloud:
+    zero: No tags
+    one: 1 tag in total
+    other: "%d tags in total"
+
+  categories:
+    zero: No categories
+    one: 1 category in total
+    other: "%d categories in total"
+
+  archive_posts:
+    zero: No posts.
+    one: 1 post.
+    other: "%d posts in total."
+
+state:
+  posts: posts
+  pages: pages
+  tags: tags
+  categories: categories
+
+search:
+  placeholder: Searching...
+
+cheers:
+  um: Um..
+  ok: OK
+  nice: Nice
+  good: Good
+  great: Great
+  excellent: Excellent
+
+keep_on: Keep on posting.
+
+symbol:
+  comma: ", "
+  period: ". "
+  colon: ": "
+
+reward:
+  donate: Donate
+  wechatpay: WeChat Pay
+  alipay: Alipay
+  bitcoin: Bitcoin
+
+gitmentbutton: Show comments from Gitment
+
+accessibility:
+  nav_toggle: Toggle navigation bar
+  prev_page: Previous page
+  next_page: Next page
+
+symbols_count_time:
+  count: Symbols count in article
+  count_total: Symbols count total
+  time: Reading time
+  time_total: Reading time total
+  time_minutes: mins.

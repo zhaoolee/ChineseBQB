@@ -1,0 +1,5 @@
+# Configuration for top-issue-bot - https://github.com/adamzolyak/gh-vote-bot
+
+labelName: '👍 Top Issue!'
+labelColor: '006b75'
+numberOfIssuesToLabel: 10

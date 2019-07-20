@@ -1,0 +1,98 @@
+---
+title:
+  archive: 아카이브
+  category: 카테고리
+  tag: 태그
+  schedule: Schedule
+menu:
+  home: 홈
+  archives: 아카이브
+  categories: 카테고리
+  tags: 태그
+  about: About
+  search: 검색
+  schedule: Schedule
+  sitemap: Sitemap
+  commonweal: Commonweal 404
+sidebar:
+  overview: 흝어보기
+  toc: 목차
+post:
+  posted: 작성일
+  edited: Edited on
+  created: Post created
+  modified: Updated at
+  edit: Edit this post
+  in: In
+  more: more
+  read_more: 더 읽어보기
+  untitled: 제목 없음
+  sticky: 고정
+  toc_empty: 목차 없음
+  views: Views
+  comments_count: 댓글
+  related_posts: Related Posts
+  copy_button: 복사
+  copy_success: Copied
+  copy_failure: Copy failed
+  copyright:
+    author: Post author
+    link: Post link
+    license_title: Copyright Notice
+    license_content: "All articles in this blog are licensed under %s unless stating additionally."
+page:
+  totally: 모두
+  tags: 태그
+footer:
+  powered: "Powered by %s"
+  theme: Theme
+  total_views: Total Views
+  total_visitors: Total Visitors
+counter:
+  tag_cloud:
+    zero: 태그 없음
+    one: 1개의 태그
+    other: "총 %d개의 태그"
+  categories:
+    zero: 카테고리 없음
+    one: 1개의 카테고리
+    other: "총 %d개의 카테고리"
+  archive_posts:
+    zero: 포스트 없음
+    one: 1개의 포스트
+    other: "총 %d개의 포스트"
+state:
+  posts: 포스트
+  pages: 페이지
+  tags: 태그
+  categories: 카테고리
+search:
+  placeholder: Searching...
+cheers:
+  um: 음..
+  ok: OK
+  nice: 잘했어요
+  good: 좋아요
+  great: 훌륭해요
+  excellent: 완벽해요
+keep_on: 포스트를 마저 작성하세요
+symbol:
+  comma: ", "
+  period: ". "
+  colon: ": "
+reward:
+  donate: Donate
+  wechatpay: WeChat Pay
+  alipay: Alipay
+  bitcoin: Bitcoin
+gitmentbutton: Show comments from Gitment
+accessibility:
+  nav_toggle: Toggle navigation bar
+  prev_page: 이전 페이지
+  next_page: 다음 페이지
+symbols_count_time:
+  count: Symbols count in article
+  count_total: Symbols count total
+  time: Reading time
+  time_total: Reading time total
+  time_minutes: mins.

@@ -1,0 +1,18 @@
+language: node_js
+#node_js: node
+node_js: lts/*
+
+cache:
+  directories:
+    - node_modules
+
+install: npm install
+
+before_script:
+  - npm install -g gulp
+
+addons:
+  browserstack:
+    username: "ivannginx1"
+    access_key:
+      secure: "NutOhdgtUdBUXMPZhy8X1F1Jq+tan1LeNOV0FArBt15SNlxtNArqhiyTi4XnG9MPruX4306aGF2RBrKso+OiGNRdGtRGngH613Q0GWNtlC/boMqnI7fHqLIyCs6S12y2uA8PK4Ifxg9bZ0VtCTYYbMy+p1KvBM//L12vmtfdnby8z5Qvex3tB3dLoPOR50CKkINHJVDLm+iVRFrdz4/83oDsulZSRRGIaxu5taDWPIcp3fYZtre2Nc+RXcsyFDyjN7U0Hvr5tKBbloJxXEQEBv2xLkMOtp85nmCPD06s1Il8Wus1ux3raVsfUyaW5FpNX37Jeb5e00RQUM1wgU5m75H6qiGwDvQswbugJG0i/a2nNfsgVmbrSZdMnkHcx2Uxmrw4ejyEP5NSrJSBi05Ck1fQ4UsZ4Qkdf1fd04SI0LpLWt43eoNO/7rHKsQoP4LCX9gxKUuC075NEBLODyJ529RYfA6dKKwwH6o0ZbOgASmCoAWaM65g4+FHRnJcKL/Kj9ZWklQtRa7/ynlHaA65jefFS2lB8Ut6d3rXDDBih9mIrwV1uUaEH96xgAN42bgU/vY6FGzNkDOYZqj4YfsepDM0wbOsslFie7JZq7iFjsYvrXqLvYUMk37AZwQ2Sb6uH4tIT4Qw/4oZfDzA1En3/8HdZJ28nKW/lzjwMSqheIY="

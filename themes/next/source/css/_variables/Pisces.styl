@@ -1,0 +1,79 @@
+// Variables of Pisces scheme
+// =================================================
+
+// Settings for some of the most global styles.
+// --------------------------------------------------
+$body-bg-color                = #f5f7f9
+
+$sidebar-width                = hexo-config('sidebar.width') is a 'unit' ? hexo-config('sidebar.width') : 240
+$sidebar-desktop              = unit($sidebar-width, 'px')
+$content-wrap                 = 'calc(100% - %s)' % unit($sidebar-width + $sidebar-offset, 'px')
+
+$content-desktop              = 'calc(100% - %s)' % unit($content-desktop-padding / 2, 'px')
+$content-desktop-large        = 1160px
+$content-desktop-largest      = 73%
+
+
+// Borders
+// --------------------------------------------------
+$box-shadow-inner                 = initial;
+$box-shadow                       = initial;
+
+$border-radius-inner              = initial;
+$border-radius                    = initial;
+
+
+// Header
+// --------------------------------------------------
+$subtitle-color                   = $gray-lighter
+
+// Sidebar
+// --------------------------------------------------
+$sidebar-nav-hover-color          = $orange
+$sidebar-highlight                = $orange
+
+$site-author-image-width          = 120px
+$site-author-image-border-width   = 1px
+$site-author-image-border-color   = $gainsboro
+
+$site-author-name-margin          = 0
+$site-author-name-color           = $black-deep
+$site-author-name-align           = center
+$site-author-name-weight          = $font-weight-bold
+
+$site-description-font-size       = 13px
+$site-description-color           = $grey-dark
+$site-description-margin-top      = 0
+$site-description-align           = center
+
+$site-state-item-count-font-size  = 16px
+$site-state-item-name-font-size   = 13px
+$site-state-item-name-color       = $grey-dark
+$site-state-item-border-color     = $gainsboro
+
+$toc-link-color                       = $grey-dim
+$toc-link-border-color                = $grey-light
+$toc-link-hover-color                 = black
+$toc-link-hover-border-color          = black
+$toc-link-active-color                = $sidebar-highlight
+$toc-link-active-border-color         = $sidebar-highlight
+$toc-link-active-current-color        = $sidebar-highlight
+$toc-link-active-current-border-color = $sidebar-highlight
+
+
+// Components
+// --------------------------------------------------
+
+// Button
+$btn-default-radius           = 2px
+$btn-default-bg               = white
+$btn-default-color            = $text-color
+$btn-default-border-color     = $text-color
+$btn-default-hover-color      = white
+$btn-default-hover-bg         = $black-deep
+
+// Back to top
+$b2t-opacity                  = .6
+$b2t-position-bottom          = -100px
+$b2t-position-bottom-on       = 30px
+$b2t-sidebar-bg-color         = $body-bg-color

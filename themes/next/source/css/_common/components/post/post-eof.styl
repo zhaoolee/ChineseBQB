@@ -1,0 +1,15 @@
+.posts-expand {
+  .post-eof {
+    margin: $post-eof-margin-top auto $post-eof-margin-bottom;
+    width: 8%;
+    height: 1px;
+    background: $grey-light;
+    text-align: center;
+  }
+}
+
+.post:last-child {
+  .post-eof {
+    hide();
+  }
+}

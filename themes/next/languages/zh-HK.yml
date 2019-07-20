@@ -1,0 +1,98 @@
+---
+title:
+  archive: 歸檔
+  category: 分類
+  tag: 標籤
+  schedule: 日程表
+menu:
+  home: 首頁
+  archives: 歸檔
+  categories: 分類
+  tags: 標籤
+  about: 關於
+  search: 檢索
+  schedule: 日程表
+  sitemap: 站點地圖
+  commonweal: 公益 404
+sidebar:
+  overview: 本站概覽
+  toc: 文章目錄
+post:
+  posted: 發表於
+  edited: 更新於
+  created: 創建時間
+  modified: 修改時間
+  edit: 編輯
+  in: 分類於
+  more: 更多
+  read_more: 閱讀全文
+  untitled: 未命名
+  sticky: 置頂
+  toc_empty: 此文章未包含目錄
+  views: 閱讀次數
+  comments_count: 評論數
+  related_posts: 相關文章
+  copy_button: 複製
+  copy_success: 複製成功
+  copy_failure: 複製失敗
+  copyright:
+    author: 博主
+    link: 文章連結
+    license_title: 版權聲明
+    license_content: "本網誌所有文章除特別聲明外，均採用 %s 許可協議。轉載請註明出處！"
+page:
+  totally: 共有
+  tags: 標籤
+footer:
+  powered: "由 %s 強力驅動"
+  theme: 主題
+  total_views: 總瀏覽次數
+  total_visitors: 訪客總數
+counter:
+  tag_cloud:
+    zero: 暫無標籤
+    one: 目前共有 1 個標籤
+    other: "目前共有 %d 個標籤"
+  categories:
+    zero: 暫無分類
+    one: 目前共有 1 個分類
+    other: "目前共有 %d 個分類"
+  archive_posts:
+    zero: 暫無文章。
+    one: 目前共有 1 篇文章。
+    other: "目前共有 %d 篇文章。"
+state:
+  posts: 文章
+  pages: 頁面
+  tags: 標籤
+  categories: 分類
+search:
+  placeholder: 搜索...
+cheers:
+  um: 嗯..
+  ok: 還行
+  nice: 好
+  good: 很好
+  great: 非常好
+  excellent: 太棒了
+keep_on: 繼續努力。
+symbol:
+  comma: "，"
+  period: "。"
+  colon: "："
+reward:
+  donate: 打賞
+  wechatpay: 微信支付
+  alipay: 支付寶
+  bitcoin: 比特幣
+gitmentbutton: 顯示 Gitment 評論
+accessibility:
+  nav_toggle: 切換導航欄
+  prev_page: 上一頁
+  next_page: 下一頁
+symbols_count_time:
+  count: 本文字數
+  count_total: 站點總字數
+  time: 閱讀時長
+  time_total: 站點閱讀時長
+  time_minutes: 分鍾

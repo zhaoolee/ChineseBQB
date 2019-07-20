@@ -1,0 +1,8 @@
+#!/bin/sh
+
+ROOT=`dirname $0`
+
+$ROOT/bundle.js nunjucks.js
+$ROOT/bundle.js -m nunjucks.min.js
+$ROOT/bundle.js -s nunjucks-slim.js
+$ROOT/bundle.js -m -s nunjucks-slim.min.js

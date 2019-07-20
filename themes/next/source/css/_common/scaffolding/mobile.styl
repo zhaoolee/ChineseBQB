@@ -1,0 +1,141 @@
+/*
+// > 1600px
++desktop-large() {
+
+}
+
+// > 992px
++desktop() {
+
+}
+
+// > 768px & < 991px
++tablet() {
+
+}
+
+// < 767px
++mobile() {
+
+}
+*/
+
+// < 567px
++mobile-small() {
+
+  // For Muse & Mist schemes only vertical economy.
+  .header-inner {
+    margin-bottom: initial !important;
+  }
+  .main-inner {
+    margin-top: initial !important;
+  }
+
+  // For Pisces & Gemini schemes only wider width (remove main blocks in Gemini).
+  .content-wrap {
+    padding: initial !important;
+  }
+
+  // For all schemes wider width.
+  .posts-expand {
+    padding-top: $content-mobile-padding !important;
+    // For Muse & Mist & Pisces schemes only wider width.
+    margin: initial !important;
+
+    .post-header {
+      padding: 0 18px;
+    }
+
+    .post-meta {
+      margin: 3px 0 10px 0 !important;
+    }
+
+  }
+
+  .post-block {
+    // Inside posts blocks content padding (default 40px).
+    padding: $content-mobile-padding 0 !important;
+    margin-top: initial !important;
+  }
+
+  .post-body {
+    // For headers narrow width.
+    h1, h2, h3, h4, h5, h6 {
+      margin: 10px 18px 8px;
+    }
+    // Rewrite paddings & margins inside tags.
+    .note, .tabs .tab-content .tab-pane {
+      h1, h2, h3, h4, h5, h6 {
+        margin: 0 5px;
+      }
+    }
+
+    // For paragraphs narrow width.
+    > p {
+      margin: 0 0 10px 0;
+      padding: 0 18px;
+    }
+
+    // For lists narrow width.
+    > ul {
+       margin-inline-end: 1em;
+    }
+
+    // For blockquotes.
+    > blockquote {
+      margin: 0 18px;
+    }
+
+    // For external links alignment.
+    > span.exturl {
+      margin-left: 18px;
+    }
+
+    // For Mist more button alignment.
+    > div.post-button a {
+      margin-left: 18px;
+    }
+
+    // Rewrite paddings & margins inside tags.
+    .note > p, .tabs .tab-content .tab-pane > p {
+      padding: 0 5px;
+    }
+
+    .video-container .fluid-vids {
+      margin-bottom:  10px !important;
+    }
+
+    .note {
+      padding:        10px !important;
+      margin-bottom:  10px !important;
+
+      if hexo-config('note.icons') {
+        &:not(.no-icon) {
+          padding-left: 35px !important;
+          &:before {
+            top:        8px !important;
+            left:       12px !important;
+          }
+        }
+      }
+    }
+
+    .tabs .tab-content .tab-pane {
+      padding: 10px 10px 0 10px !important;
+    }
+  }
+
+  // Need to refactor into flex.
+  .post-nav {
+    padding-bottom: 2px;
+    //padding: 2px 8px;
+  }
+
+}
+
+/*
+// < 413px
++mobile-smallest() {
+
+}
+*/

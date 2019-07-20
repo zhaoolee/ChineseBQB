@@ -1,0 +1,98 @@
+---
+title:
+  archive: Archivo
+  category: Categoría
+  tag: Etiqueta
+  schedule: Calendario
+menu:
+  home: Inicio
+  archives: Archivo
+  categories: Categorías
+  tags: Etiquetas
+  about: Sobre mi
+  search: Buscar
+  schedule: Calendario
+  sitemap: Mapa del sitio
+  commonweal: Commonweal 404
+sidebar:
+  overview: Inicio
+  toc: Tabla de contenidos
+post:
+  posted: Publicado el
+  edited: Editado el
+  created: Creado por
+  modified: Modificado por
+  edit: Editar esta entrada
+  in: En
+  more: más
+  read_more: Leer más
+  untitled: Sin título
+  sticky: Sticky
+  toc_empty: Esta entrada no tiene una tabla de contenidos
+  views: Visitas
+  comments_count: Comentarios
+  related_posts: Entradas relacionadas
+  copy_button: Copiar
+  copy_success: Copiado
+  copy_failure: Copiar falló
+  copyright:
+    author: Autor de la entrada
+    link: Enlace a la entrada
+    license_title: Copyright
+    license_content: "Todos los artículos de este blog están licenciados bajo %s a no ser que se especifique una licencia adicional."
+page:
+  totally: Totalidad
+  tags: etiquetas
+footer:
+  powered: "Creado mediante %s"
+  theme: Tema
+  total_views: Visitas totales
+  total_visitors: Visitantes totales
+counter:
+  tag_cloud:
+    zero: Sin etiquetas
+    one: 1 etiqueta en total
+    other: "%d etiquetas en total"
+  categories:
+    zero: Sin categorías
+    one: 1 categoría en total
+    other: "%d categorías en total"
+  archive_posts:
+    zero: Sin entradas.
+    one: 1 entrada.
+    other: "%d entradas en total."
+state:
+  posts: entradas
+  pages: páginas
+  tags: tags
+  categories: categorías
+search:
+  placeholder: Buscando...
+cheers:
+  um: Um..
+  ok: Bueno
+  nice: Guai
+  good: Bien
+  great: Genial
+  excellent: Excelente
+keep_on: Sigue posteando.
+symbol:
+  comma: ", "
+  period: ". "
+  colon: ": "
+reward:
+  donate: Donar
+  wechatpay: WeChat Pay
+  alipay: Alipay
+  bitcoin: Bitcoin
+gitmentbutton: Mostrar comentarios de Gitment
+accessibility:
+  nav_toggle: Cambiar a barra de navegación
+  prev_page: Página anterior
+  next_page: Página siguiente
+symbols_count_time:
+  count: Cantidad de caracteres en el articulo
+  count_total: Cantidad total de caracteres
+  time: Tiempo de lectura
+  time_total: Tiempo total de lectura
+  time_minutes: minutos.

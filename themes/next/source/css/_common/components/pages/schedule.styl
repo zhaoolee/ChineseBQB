@@ -1,0 +1,114 @@
+@keyframes dot-flash {
+  from { opacity: 1; transform: scale(1.1); }
+  to { opacity: 0; transform: scale(1); }
+}
+
+#event-list {
+  padding-left: 30px;
+  hr {
+    margin: 20px 0 45px 0 !important;
+    background: #222;
+    &:after {
+      display: inline-block;
+      content: 'NOW';
+      background: #222;
+      color: #FFF;
+      font-weight: bold;
+      text-align: right;
+      padding: 0 5px;
+    }
+  }
+  li.event {
+    margin: 20px 0px;
+    background: #F9F9F9;
+    padding-left: 10px;
+    min-height: 40px;
+    h2.event-summary {
+      margin: 0;
+      padding-bottom: 3px;
+      &:before {
+        display: inline-block;
+        font-family: FontAwesome;
+        font-size: 8px;
+        content: '\f111';
+        vertical-align: middle;
+        margin-right: 25px;
+        color: #bbb;
+      }
+    }
+    span.event-relative-time {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 400;
+      padding-left: 12px;
+      color: #bbb;
+    }
+    span.event-details {
+      show();
+      color: #bbb;
+      margin-left: 56px;
+      padding-top: 3px;
+      padding-bottom: 6px;
+      text-indent: -24px;
+      line-height: 18px;
+      &:before {
+        text-indent: 0;
+        display: inline-block;
+        width: 14px;
+        font-family: FontAwesome;
+        text-align: center;
+        margin-right: 9px;
+        color: #bbb;
+      }
+      &.event-location:before {
+        content: '\f041';
+      }
+      &.event-duration:before {
+        content: '\f017';
+      }
+    }
+  }
+  li.event-past {
+    background: #FCFCFC;
+    padding: 15px 0 15px 10px;
+    & > * {
+      opacity: .9;
+    }
+    h2.event-summary {
+      color: #bbb;
+      &:before {
+        color: #DFDFDF;
+      }
+    }
+  }
+  li.event-now {
+    background: #222;
+    color: #FFF;
+    padding: 15px 0 15px 10px;
+    h2.event-summary {
+      &:before {
+        transform: scale(1.2);
+        color: #FFF;
+        animation: dot-flash 1s alternate infinite ease-in-out;
+      }
+    }
+    * {
+      color: #FFF !important;
+    }
+  }
+  li.event-future {
+    background: #222;
+    color: #FFF;
+    padding: 15px 0 15px 10px;
+    h2.event-summary {
+      &:before {
+        transform: scale(1.2);
+        color: #FFF;
+        animation: dot-flash 1s alternate infinite ease-in-out;
+      }
+    }
+    * {
+      color: #FFF !important;
+    }
+  }
+}

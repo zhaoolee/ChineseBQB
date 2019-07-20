@@ -1,0 +1,39 @@
+{
+  "name": "hexo-theme-next",
+  "version": "7.1.2",
+  "description": "Elegant and powerful theme for Hexo",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "gulp",
+    "contributors:add": "all-contributors add",
+    "contributors:generate": "all-contributors generate"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theme-next/hexo-theme-next.git"
+  },
+  "keywords": [
+    "hexo",
+    "theme",
+    "next"
+  ],
+  "author": "NexT <support@theme-next.org> (https://theme-next.org)",
+  "license": "AGPL",
+  "bugs": {
+    "url": "https://github.com/theme-next/hexo-theme-next/issues"
+  },
+  "homepage": "https://theme-next.org",
+  "devDependencies": {
+    "all-contributors-cli": "^5.4.0",
+    "coffee-script": "^1.10.0",
+    "gulp": "^3.9.0",
+    "gulp-jshint": "^1.12.0",
+    "gulp-shell": "^0.6.1",
+    "js-yaml": "^3.8.1",
+    "jshint-stylish": "^2.1.0",
+    "stylint": "^1.5.9"
+  }
+}

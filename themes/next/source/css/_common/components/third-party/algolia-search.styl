@@ -1,0 +1,135 @@
+// fix bug using algolia search's CDN
+.ais-search-box--magnifier svg {
+  display: none !important;
+}
+.ais-search-box--reset svg {
+  display: none !important;
+}
+
+.algolia-pop-overlay
+  position: fixed
+  width: 100%
+  height: 100%
+  top: 0
+  left: 0
+  z-index: 2080
+  background-color: rgba(0, 0, 0, 0.3)
+  +mobile()
+    hide();
+
+.algolia-popup
+  overflow: hidden
+  padding: 0
+  display: none
+  position: fixed
+  top: 10%
+  left: 50%
+  width: 700px
+  height: 80%
+  margin-left: -350px
+  background: #fff
+  color: #333
+  z-index: 9999
+  border-radius: 5px
+  +mobile()
+    padding: 0
+    top: 0
+    left: 0
+    margin: 0
+    width: 100%
+    height: 100%
+    border-radius: 0
+
+  .popup-btn-close
+    position: absolute
+    right: 14px
+    color: #4EBD79
+    font-size: 14px
+    font-weight: bold
+    text-transform: uppercase
+    cursor: pointer
+    padding-left: 15px
+    border-left: 1px solid #eee
+    top: 10px
+    .fa
+      color: $grey-dark
+      font-size: 18px
+    &:hover .fa
+      color: $black-deep
+
+.algolia-search
+  padding: 10px 15px 5px
+  max-height: 50px
+  border-bottom: 1px solid #ccc
+  background: $whitesmoke
+  border-top-left-radius: 5px
+  border-top-right-radius: 5px
+
+.algolia-search-input-icon
+  display: inline-block
+  width: 20px
+  .fa
+    font-size: 18px
+
+.algolia-search-input
+  display: inline-block
+  width: calc(90% - 20px)
+  input
+    padding: 5px 0
+    width: 100%
+    outline: none
+    border: none
+    background: transparent
+
+.algolia-powered
+  float: right
+  img
+    display: inline-block
+    height: 18px
+    vertical-align: middle
+
+.algolia-results
+  position: relative
+  overflow: auto
+  padding: 10px 30px
+  height: calc(100% - 50px)
+
+  hr
+    margin: 10px 0
+
+  .highlight
+    font-style: normal
+    margin: 0
+    padding: 0 2px
+    font-size: inherit
+    color: red
+
+.algolia-hits
+  margin-top: 20px
+
+.algolia-hit-item
+  margin: 15px 0
+
+.algolia-hit-item-link
+  display: block
+  border-bottom: 1px dashed #ccc
+  the-transition()
+
+.algolia-pagination
+  .pagination
+    margin: 40px 0px
+    border-top: none
+    padding: 0
+    opacity: 1
+  .pagination-item
+    display: inline-block
+  .page-number
+    border-top: none
+    &:hover
+      border-bottom: 1px solid $black-deep
+
+  .current .page-number
+    @extend .pagination .page-number.current
+
+  .disabled-item
+    visibility: hidden

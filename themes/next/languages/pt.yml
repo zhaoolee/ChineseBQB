@@ -1,0 +1,98 @@
+---
+title:
+  archive: Arquivo
+  category: Categoria
+  tag: Tag
+  schedule: Schedule
+menu:
+  home: Home
+  archives: Arquivos
+  categories: Categorias
+  tags: Tags
+  about: Sobre
+  search: Pesquisa
+  schedule: Schedule
+  sitemap: Sitemap
+  commonweal: Commonweal 404
+sidebar:
+  overview: Visão Geral
+  toc: Tabela de Conteúdo
+post:
+  posted: Postado em
+  edited: Edited on
+  created: Post created
+  modified: Updated at
+  edit: Edit this post
+  in: Em
+  more: more
+  read_more: Ler mais
+  untitled: Sem título
+  sticky: Sticky
+  toc_empty: Esta publicação não possui uma tabela de conteúdo
+  views: Views
+  comments_count: Comments
+  related_posts: Related Posts
+  copy_button: Copy
+  copy_success: Copied
+  copy_failure: Copy failed
+  copyright:
+    author: Post author
+    link: Post link
+    license_title: Copyright Notice
+    license_content: "All articles in this blog are licensed under %s unless stating additionally."
+page:
+  totally: Totalmente
+  tags: tags
+footer:
+  powered: "Desenvolvido com amor com %s"
+  theme: Tema
+  total_views: Total Views
+  total_visitors: Total Visitors
+counter:
+  tag_cloud:
+    zero: Sem tags
+    one: 1 tag no total
+    other: "%d tags no total"
+  categories:
+    zero: Sem categorias
+    one: 1 categoria no total
+    other: "%d categorias no total"
+  archive_posts:
+    zero: Sem publicações.
+    one: 1 post.
+    other: "%d publicações no total."
+state:
+  posts: publicações
+  pages: páginas
+  tags: tags
+  categories: categorias
+search:
+  placeholder: Searching...
+cheers:
+  um: Um..
+  ok: OK
+  nice: Legal
+  good: Bom
+  great: Grandioso
+  excellent: Excelente
+keep_on: Mantenha-se publicando!
+symbol:
+  comma: ", "
+  period: ". "
+  colon: ": "
+reward:
+  donate: Donate
+  wechatpay: WeChat Pay
+  alipay: Alipay
+  bitcoin: Bitcoin
+gitmentbutton: Show comments from Gitment
+accessibility:
+  nav_toggle: Toggle navigation bar
+  prev_page: Página anterior
+  next_page: Página seguinte
+symbols_count_time:
+  count: Symbols count in article
+  count_total: Symbols count total
+  time: Reading time
+  time_total: Reading time total
+  time_minutes: mins.

@@ -1,0 +1,78 @@
+.site-nav {
+  +mobile() {
+    position: absolute;
+    left: 0;
+    top: 52px;
+    margin: 0;
+    width: 100%;
+    padding: 0;
+    background: white;
+    border-bottom: 1px solid $gray-lighter;
+    z-index: $zindex-3;
+  }
+}
+
+.menu {
+  +mobile() { text-align: left; }
+}
+
+.menu-item-active a {
+  border-bottom-color: $menu-link-hover-border !important;
+  color: $black-deep;
+
+  +mobile() {
+    border-bottom: 1px dotted $gray-lighter !important;
+  }
+}
+
+.menu .menu-item {
+  +mobile() {
+    show();
+    margin: 0 10px;
+    vertical-align: top;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 1px 4px;
+    margin-left: 5px;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    background-color: $gainsboro;
+    +mobile() {
+      float: right;
+      margin: 0.35em 0 0 0;
+    }
+  }
+
+  br {
+    +mobile() { display: none; }
+  }
+
+  a, span.exturl {
+    +mobile() {
+      padding: 5px 10px;
+    }
+
+    &:hover {
+      @extend .menu-item-active a;
+    }
+
+    // To prevent hover on external links with touch devices after click.
+    @media (hover:none) {
+      &:hover {
+        border-bottom-color: transparent !important;
+      }
+    }
+  }
+  .fa {
+    +tablet() {
+      width: 100%;
+    }
+    +desktop() {
+      width: 100%;
+    }
+  }
+}
