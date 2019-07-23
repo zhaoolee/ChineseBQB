@@ -1,6 +1,6 @@
 ## Chinese sticker pack / 中国的表情包
 
-## 表情包目录(共收录3030张表情包)Emoticon package directory (commonly included 3030 emoticon pack)
+## 表情包目录(共收录3044张表情包)Emoticon package directory (commonly included 3044 emoticon pack)
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/001Funny_滑稽大佬😏BQB/0.gif /> | [001Funny_滑稽大佬😏BQB(已收录37张)](https://zhaoolee.github.io/ChineseBQB/001Funny_滑稽大佬😏BQB/) |
@@ -51,6 +51,7 @@
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/046WhatToWear_穿什么BQB/0.gif /> | [046WhatToWear_穿什么BQB(已收录119张)](https://zhaoolee.github.io/ChineseBQB/046WhatToWear_穿什么BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/047ShowSword亮剑BQB/0.gif /> | [047ShowSword亮剑BQB(已收录18张)](https://zhaoolee.github.io/ChineseBQB/047ShowSword亮剑BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/048SpongeBob_海绵宝宝BQB/0.jpg /> | [048SpongeBob_海绵宝宝BQB(已收录12张)](https://zhaoolee.github.io/ChineseBQB/048SpongeBob_海绵宝宝BQB/) |
+| <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/049CuteLittleFox_可爱小狐狸BQB/0.JPG /> | [049CuteLittleFox_可爱小狐狸BQB(已收录14张)](https://zhaoolee.github.io/ChineseBQB/049CuteLittleFox_可爱小狐狸BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/100UCAS_中国科学院BQB/0.jpg /> | [100UCAS_中国科学院BQB(已收录8张)](https://zhaoolee.github.io/ChineseBQB/100UCAS_中国科学院BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/101HU_海南大学BQB/0.gif /> | [101HU_海南大学BQB(已收录1张)](https://zhaoolee.github.io/ChineseBQB/101HU_海南大学BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/微信网友贡献表情包_暂存_有时间慢慢整理BQB/0.png /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://zhaoolee.github.io/ChineseBQB/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) |
@@ -164,6 +165,15 @@ git clone --depth 1 https://github.com/zhaoolee/ChineseBQB
 
 - If you are an sticker author, you can also contact me. This warehouse can help you promote stickers and enhance your visibility.
 - 如果你是表情包作者, 也可以联系我, 这个仓库可以帮你推广表情包, 提升你的知名度
+
+
+## Where can this ChineseBQB help you? / 这个项目可以在哪里帮到你?
+
+- 可以在你项目的README.md里面加几个表情包,让你的项目变得非常有趣~ (示例项目: [前端娱乐圈是本书!](https://github.com/zhaoolee/FrontEndClubIsBook))
+
+
+![](https://user-images.githubusercontent.com/15868458/61675086-63bb6280-ad29-11e9-9eff-ed8d77ed0fa2.png)
+
 
 
 
