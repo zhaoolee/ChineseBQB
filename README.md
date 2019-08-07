@@ -57,7 +57,7 @@
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/101HU_海南大学BQB/0.gif /> | [101HU_海南大学BQB(已收录1张)](https://zhaoolee.github.io/ChineseBQB/101HU_海南大学BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/微信网友贡献表情包_暂存_有时间慢慢整理BQB/0.png /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://zhaoolee.github.io/ChineseBQB/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/斗图之王BQB/0.gif /> | [斗图之王BQB(已收录19张)](https://zhaoolee.github.io/ChineseBQB/斗图之王BQB/) |
-> 数据生成时间: 2019-08-03
+> 数据生成时间: 2019-08-07
 
 BQBEND
 
@@ -89,6 +89,10 @@ BQBEND
 ![](https://user-images.githubusercontent.com/15868458/61185261-cce80980-a689-11e9-9f5e-2774faba3339.png)
 
 
+## 又一个表情包小程序
+
+> 感谢小伙伴[Smallfly](https://github.com/iostalks)的开发~
+> ![](https://user-images.githubusercontent.com/15868458/62586005-31476300-b8ee-11e9-8bd2-5b7c3b3fba2f.png)
 
 ## 更新信息
 
