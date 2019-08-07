@@ -89,7 +89,7 @@ BQBEND
 ![](https://user-images.githubusercontent.com/15868458/61185261-cce80980-a689-11e9-9f5e-2774faba3339.png)
 
 
-## 又一个表情包小程序
+## 又一个表情包小程序(豆笔表情)
 
 > 感谢小伙伴[Smallfly](https://github.com/iostalks)的开发~
 > ![](https://user-images.githubusercontent.com/15868458/62586005-31476300-b8ee-11e9-8bd2-5b7c3b3fba2f.png)
