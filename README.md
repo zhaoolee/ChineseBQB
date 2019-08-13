@@ -1,4 +1,4 @@
-[https://img.shields.io/badge/ChineseBQB-READEME-brightgreen](https://github.com/zhaoolee/ChineseBQB)
+[![](https://img.shields.io/badge/ChineseBQB-READEME-brightgreen)](https://github.com/zhaoolee/ChineseBQB)
 
 ## Chinese sticker pack / 中国的表情包
 
@@ -178,7 +178,7 @@ git clone --depth 1 https://github.com/zhaoolee/ChineseBQB
 
 ## Where can this ChineseBQB help you? / 这个项目可以在哪里帮到你?
 
-- 可以在你项目的README.md里面加几个表情包,让你的项目变得非常有趣~ (示例项目: [前端娱乐圈是本书!](https://github.com/zhaoolee/FrontEndClubIsBook)) ,如果你喜欢这个想法, 可以将图标[https://img.shields.io/badge/ChineseBQB-READEME-brightgreen](https://github.com/zhaoolee/ChineseBQB)挂到你的项目里面
+- 可以在你项目的README.md里面加几个表情包,让你的项目变得非常有趣~ (示例项目: [前端娱乐圈是本书!](https://github.com/zhaoolee/FrontEndClubIsBook)) ,如果你喜欢这个想法, 可以将图标[![](https://img.shields.io/badge/ChineseBQB-READEME-brightgreen)](https://github.com/zhaoolee/ChineseBQB)挂到你的项目里面
 
 
 ![](https://user-images.githubusercontent.com/15868458/61675086-63bb6280-ad29-11e9-9eff-ed8d77ed0fa2.png)
