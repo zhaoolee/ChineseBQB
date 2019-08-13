@@ -1,3 +1,5 @@
+[https://img.shields.io/badge/ChineseBQB-READEME-brightgreen](https://github.com/zhaoolee/ChineseBQB)
+
 ## Chinese sticker pack / 中国的表情包
 
 ## 表情包目录(共收录3319张表情包)Emoticon package directory (commonly included 3319 emoticon pack)
@@ -59,7 +61,7 @@
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/101HU_海南大学BQB/0.gif /> | [101HU_海南大学BQB(已收录1张)](https://zhaoolee.github.io/ChineseBQB/101HU_海南大学BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/微信网友贡献表情包_暂存_有时间慢慢整理BQB/0.png /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://zhaoolee.github.io/ChineseBQB/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/斗图之王BQB/0.gif /> | [斗图之王BQB(已收录19张)](https://zhaoolee.github.io/ChineseBQB/斗图之王BQB/) |
-> 数据生成时间: 2019-08-12
+> 数据生成时间: 2019-08-13
 
 BQBEND
 
@@ -176,7 +178,7 @@ git clone --depth 1 https://github.com/zhaoolee/ChineseBQB
 
 ## Where can this ChineseBQB help you? / 这个项目可以在哪里帮到你?
 
-- 可以在你项目的README.md里面加几个表情包,让你的项目变得非常有趣~ (示例项目: [前端娱乐圈是本书!](https://github.com/zhaoolee/FrontEndClubIsBook))
+- 可以在你项目的README.md里面加几个表情包,让你的项目变得非常有趣~ (示例项目: [前端娱乐圈是本书!](https://github.com/zhaoolee/FrontEndClubIsBook)) ,如果你喜欢这个想法, 可以将图标[https://img.shields.io/badge/ChineseBQB-READEME-brightgreen](https://github.com/zhaoolee/ChineseBQB)挂到你的项目里面
 
 
 ![](https://user-images.githubusercontent.com/15868458/61675086-63bb6280-ad29-11e9-9eff-ed8d77ed0fa2.png)
