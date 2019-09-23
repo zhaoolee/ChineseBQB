@@ -5,6 +5,8 @@
 
 ![](https://user-images.githubusercontent.com/15868458/65401793-e7aecb00-ddfc-11e9-96e3-4122a5c14300.jpg)
 
+本仓库VI由方圆STU创始人[老罗巴扎嘿](https://huaban.com/syy946795671/muse_boards/)独立设计
+
 ## Chinese sticker pack / 中国的表情包
 
 ## 表情包目录(共收录3442张表情包)Emoticon package directory (commonly included 3442 emoticon pack)
@@ -71,18 +73,21 @@
 
 BQBEND
 
-## PP制造计划([老罗巴扎嘿](https://github.com/LuoJiangYong))
-
-![](https://user-images.githubusercontent.com/15868458/65401787-e54c7100-ddfc-11e9-9ad9-854c3158b068.jpg)
+## 中国人的表情包之 PP制造计划 (VI设计 [老罗巴扎嘿](https://github.com/LuoJiangYong))
 
 
-![](https://user-images.githubusercontent.com/15868458/65401781-e41b4400-ddfc-11e9-9518-4df402b66ecc.jpg)
+> 昭昭(zhaoolee)最开始和老罗说，他打算在Github上搭建一个表情包的开源仓库的时候，老罗是觉得非常惊讶的（两眼直瞪），一是因为它看起来太不Github了，二是它太平常了，但是昭昭一句话说服了老罗，“这就是我们”，是啊，社交年代，表情包承载了太多我们的“原意”，曾经，喜怒哀乐，跃然脸上，曾经，车马邮件都慢，但如今，空间维度变得简单，但是社交又复杂了谁?  [原文链接](https://mp.weixin.qq.com/s/lCyluzJd7ObGTYqZP54Wtg)
 
 ![](https://user-images.githubusercontent.com/15868458/65401790-e7163480-ddfc-11e9-89bf-32f7a3f68aac.jpg)
 
 ![](https://user-images.githubusercontent.com/15868458/65401788-e5e50780-ddfc-11e9-9d40-f4303705e8f0.jpg)
 
 ![](https://user-images.githubusercontent.com/15868458/65401789-e67d9e00-ddfc-11e9-941f-fd97ffac90fe.jpg)
+
+
+![](https://user-images.githubusercontent.com/15868458/65401781-e41b4400-ddfc-11e9-9518-4df402b66ecc.jpg)
+
+
 
 ## 本项目相关文章(Related introduction)
 
@@ -269,6 +274,5 @@ ChineseBQB是一个比较"异类"的仓库, 而Github是一个兼容并包的地
 
 
 ![](https://raw.githubusercontent.com/zhaoolee/GraphBed/master/zhaoolee_images000002/2fb086ddf146e0e437fc8a0d4e9db341.png)
-
 
 
