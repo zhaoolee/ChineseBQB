@@ -1,5 +1,10 @@
 [![](https://img.shields.io/badge/ChineseBQB-READEME-brightgreen)](https://github.com/zhaoolee/ChineseBQB)
 
+
+![](https://user-images.githubusercontent.com/15868458/65401784-e4b3da80-ddfc-11e9-9675-19b5ab0ec875.jpg)
+
+![](https://user-images.githubusercontent.com/15868458/65401793-e7aecb00-ddfc-11e9-96e3-4122a5c14300.jpg)
+
 ## Chinese sticker pack / 中国的表情包
 
 ## 表情包目录(共收录3442张表情包)Emoticon package directory (commonly included 3442 emoticon pack)
@@ -65,6 +70,19 @@
 > 数据生成时间: 2019-08-26
 
 BQBEND
+
+## PP制造计划([老罗巴扎嘿](https://github.com/LuoJiangYong))
+
+![](https://user-images.githubusercontent.com/15868458/65401787-e54c7100-ddfc-11e9-9ad9-854c3158b068.jpg)
+
+
+![](https://user-images.githubusercontent.com/15868458/65401781-e41b4400-ddfc-11e9-9518-4df402b66ecc.jpg)
+
+![](https://user-images.githubusercontent.com/15868458/65401790-e7163480-ddfc-11e9-89bf-32f7a3f68aac.jpg)
+
+![](https://user-images.githubusercontent.com/15868458/65401788-e5e50780-ddfc-11e9-9d40-f4303705e8f0.jpg)
+
+![](https://user-images.githubusercontent.com/15868458/65401789-e67d9e00-ddfc-11e9-941f-fd97ffac90fe.jpg)
 
 ## 本项目相关文章(Related introduction)
 
@@ -251,3 +269,6 @@ ChineseBQB是一个比较"异类"的仓库, 而Github是一个兼容并包的地
 
 
 ![](https://raw.githubusercontent.com/zhaoolee/GraphBed/master/zhaoolee_images000002/2fb086ddf146e0e437fc8a0d4e9db341.png)
+
+
+
