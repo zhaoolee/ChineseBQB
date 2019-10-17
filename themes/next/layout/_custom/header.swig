@@ -9,3 +9,13 @@
      });
 </script>
 <script data-ad-client="ca-pub-4504000699134547" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="fluid"
+     data-ad-layout-key="-gw-3+1f-3d+2z"
+     data-ad-client="ca-pub-4504000699134547"
+     data-ad-slot="2251771396"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
