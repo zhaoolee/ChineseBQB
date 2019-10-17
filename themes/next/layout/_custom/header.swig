@@ -8,3 +8,4 @@
           enable_page_level_ads: true
      });
 </script>
+<script data-ad-client="ca-pub-4504000699134547" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
