@@ -1225,3 +1225,9 @@ since: 2017
 topindex_generator:
   per_page: 100
   order_by: -date
+
+
+lazyload:
+  enable: true
+  onlypost: false
+  loadingImg: /images/loading.png
