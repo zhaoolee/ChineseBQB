@@ -92,10 +92,5 @@ search:
 plugins: hexo-generator-sitemap
 
 
-
-
 lazyload:
-  enable: true 
-  onlypost: false
-  loadingImg: https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/themes/next/source/images/loading.png
-
+  enable: true
