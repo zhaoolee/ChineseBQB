@@ -93,9 +93,7 @@ plugins: hexo-generator-sitemap
 
 
 
-
 lazyload:
-  enable: true 
+  enable: true
   onlypost: false
-  loadingImg: # eg ./images/loading.gif
-
+  loadingImg: /images/loading.png
