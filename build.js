@@ -120,7 +120,7 @@ function image_to_md_info(images){
     let all_md_info = "";
     images.map((image_info, image_index)=>{
 
-        let md_info = `<img height='200px' style='height:200px;'  src='/images/loading.png' data-original=${image_info} /><br/>`;
+        let md_info = `<img height='200px' style='height:200px;'  src='/ChineseBQB/images/loading.png' data-original=${image_info} /><br/>`;
         md_info = md_info + `<h6>下载地址: [${image_info}](${image_info})</h6><hr/>`;
 
         all_md_info = all_md_info+md_info;
