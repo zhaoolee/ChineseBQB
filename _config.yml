@@ -96,4 +96,4 @@ plugins: hexo-generator-sitemap
 lazyload:
   enable: true
   onlypost: false
-  loadingImg: /images/loading.png
+  loadingImg: /ChineseBQB/images/loading.png
