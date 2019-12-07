@@ -70,8 +70,6 @@
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/055AllHeart_全是心心BQB/0.jpg /> | [055AllHeart_全是心心BQB(已收录66张)](https://zhaoolee.github.io/ChineseBQB/055AllHeart_全是心心BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/056Doraemon_哆啦A梦BQB/0.png /> | [056Doraemon_哆啦A梦BQB(已收录33张)](https://zhaoolee.github.io/ChineseBQB/056Doraemon_哆啦A梦BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/057HappyDuck_开心鸭BQB/0.jpg /> | [057HappyDuck_开心鸭BQB(已收录49张)](https://zhaoolee.github.io/ChineseBQB/057HappyDuck_开心鸭BQB/) |
-| <img height='100px' style='height:100px;' src= /> | [100UCAS_中国科学院BQB(已收录0张)](https://zhaoolee.github.io/ChineseBQB/100UCAS_中国科学院BQB/) |
-| <img height='100px' style='height:100px;' src= /> | [101HU_海南大学BQB(已收录0张)](https://zhaoolee.github.io/ChineseBQB/101HU_海南大学BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/微信网友贡献表情包_暂存_有时间慢慢整理BQB/0.png /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://zhaoolee.github.io/ChineseBQB/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/斗图之王BQB/0.gif /> | [斗图之王BQB(已收录19张)](https://zhaoolee.github.io/ChineseBQB/斗图之王BQB/) |
 > 数据生成时间: 2019-12-07
