@@ -91,6 +91,15 @@ BQBEND
 ![](https://user-images.githubusercontent.com/15868458/65401781-e41b4400-ddfc-11e9-9518-4df402b66ecc.jpg)
 
 
+## 同步本项目内容的公众号
+
+![](https://user-images.githubusercontent.com/15868458/71708607-94054200-2e2d-11ea-88cf-5b3d61153f38.jpeg)
+
+
+公众号 `jikeweikan` 由项目作者zhaoolee运营, 在2020年会同步更新ChineseBQB (中国人的表情包 PP制造计划) ,  也会放一些zhaoolee自认为有趣的内容, 欢迎关注~
+
+
+
 
 ## 本项目相关文章(Related introduction)
 
