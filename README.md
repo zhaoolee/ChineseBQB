@@ -9,7 +9,7 @@
 
 ## Chinese sticker pack / 中国的表情包
 
-## 表情包目录(共收录3541张表情包)Emoticon package directory (commonly included 3541 emoticon pack)
+## 表情包目录(共收录3565张表情包)Emoticon package directory (commonly included 3565 emoticon pack)
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/001Funny_滑稽大佬😏BQB/0.gif /> | [001Funny_滑稽大佬😏BQB(已收录37张)](https://zhaoolee.github.io/ChineseBQB/001Funny_滑稽大佬😏BQB/) |
@@ -70,6 +70,7 @@
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/056Doraemon_哆啦A梦BQB/0.png /> | [056Doraemon_哆啦A梦BQB(已收录33张)](https://zhaoolee.github.io/ChineseBQB/056Doraemon_哆啦A梦BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/057HappyDuck_开心鸭BQB/0.jpg /> | [057HappyDuck_开心鸭BQB(已收录49张)](https://zhaoolee.github.io/ChineseBQB/057HappyDuck_开心鸭BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/058_2020Coronavirus_冠状病毒BQB/0.jpg /> | [058_2020Coronavirus_冠状病毒BQB(已收录14张)](https://zhaoolee.github.io/ChineseBQB/058_2020Coronavirus_冠状病毒BQB/) |
+| <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/059_Couple_Head_沙雕情侣头像BQB/0.png /> | [059_Couple_Head_沙雕情侣头像BQB(已收录24张)](https://zhaoolee.github.io/ChineseBQB/059_Couple_Head_沙雕情侣头像BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/微信网友贡献表情包_暂存_有时间慢慢整理BQB/0.png /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://zhaoolee.github.io/ChineseBQB/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/斗图之王BQB/0.gif /> | [斗图之王BQB(已收录19张)](https://zhaoolee.github.io/ChineseBQB/斗图之王BQB/) |
 > 数据生成时间: 2020-01-23
