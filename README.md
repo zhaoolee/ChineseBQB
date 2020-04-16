@@ -143,9 +143,9 @@ BQBEND
 ## 使用了本仓库表情包的app
 
 
-https://apps.apple.com/cn/app/%E5%9B%BE%E5%9D%8A/id1491581956
+下载链接: [https://apps.apple.com/cn/app/%E5%9B%BE%E5%9D%8A/id1491581956](https://apps.apple.com/cn/app/%E5%9B%BE%E5%9D%8A/id1491581956)
 
-![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/tufang.png)
+![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/READMEIMG/tufang.png)
 
 
 ## 更新信息
