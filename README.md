@@ -9,7 +9,7 @@
 
 ## Chinese sticker pack / 中国的表情包
 
-## 表情包目录(共收录3801张表情包)Emoticon package directory (commonly included 3801 emoticon pack)
+## 表情包目录(共收录3813张表情包)Emoticon package directory (commonly included 3813 emoticon pack)
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/001Funny_滑稽大佬😏BQB/0.gif /> | [001Funny_滑稽大佬😏BQB(已收录37张)](https://zhaoolee.github.io/ChineseBQB/001Funny_滑稽大佬😏BQB/) |
@@ -77,6 +77,7 @@
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/063WebBrowser_浏览器BQB/0.gif /> | [063WebBrowser_浏览器BQB(已收录6张)](https://zhaoolee.github.io/ChineseBQB/063WebBrowser_浏览器BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/064Trump_特朗普BQB/0.png /> | [064Trump_特朗普BQB(已收录5张)](https://zhaoolee.github.io/ChineseBQB/064Trump_特朗普BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/065TravelFrog_旅行青蛙🐸BQB/0.jpg /> | [065TravelFrog_旅行青蛙🐸BQB(已收录9张)](https://zhaoolee.github.io/ChineseBQB/065TravelFrog_旅行青蛙🐸BQB/) |
+| <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/066Makeding_马克丁🐎BQB/0.jpg /> | [066Makeding_马克丁🐎BQB(已收录12张)](https://zhaoolee.github.io/ChineseBQB/066Makeding_马克丁🐎BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/微信网友贡献表情包_暂存_有时间慢慢整理BQB/0.png /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://zhaoolee.github.io/ChineseBQB/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/斗图之王BQB/0.gif /> | [斗图之王BQB(已收录19张)](https://zhaoolee.github.io/ChineseBQB/斗图之王BQB/) |
 > 数据生成时间: 2020-04-16
@@ -138,6 +139,14 @@ BQBEND
 
 > 感谢小伙伴[Smallfly](https://github.com/iostalks)的开发~
 > ![](https://user-images.githubusercontent.com/15868458/62586005-31476300-b8ee-11e9-8bd2-5b7c3b3fba2f.png)
+
+## 使用了本仓库表情包的app
+
+
+https://apps.apple.com/cn/app/%E5%9B%BE%E5%9D%8A/id1491581956
+
+![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/tufang.png)
+
 
 ## 更新信息
 
