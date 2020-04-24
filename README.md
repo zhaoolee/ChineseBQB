@@ -9,7 +9,7 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录3814张表情包)Emoticon package directory (commonly included 3814 emoticon pack)
+## 表情包目录(共收录3845张表情包)Emoticon package directory (commonly included 3845 emoticon pack)
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/001Funny_滑稽大佬😏BQB/0.gif /> | [001Funny_滑稽大佬😏BQB(已收录37张)](https://zhaoolee.github.io/ChineseBQB/001Funny_滑稽大佬😏BQB/) |
@@ -78,6 +78,7 @@
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/064Trump_特朗普BQB/0.png /> | [064Trump_特朗普BQB(已收录5张)](https://zhaoolee.github.io/ChineseBQB/064Trump_特朗普BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/065TravelFrog_旅行青蛙🐸BQB/0.jpg /> | [065TravelFrog_旅行青蛙🐸BQB(已收录9张)](https://zhaoolee.github.io/ChineseBQB/065TravelFrog_旅行青蛙🐸BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/066Makeding_马克丁🐎BQB/0.jpg /> | [066Makeding_马克丁🐎BQB(已收录12张)](https://zhaoolee.github.io/ChineseBQB/066Makeding_马克丁🐎BQB/) |
+| <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/067NegroCarryingACoffin_黑人抬棺⚰BQB/0.jpg /> | [067NegroCarryingACoffin_黑人抬棺⚰BQB(已收录31张)](https://zhaoolee.github.io/ChineseBQB/067NegroCarryingACoffin_黑人抬棺⚰BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/微信网友贡献表情包_暂存_有时间慢慢整理BQB/0.png /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://zhaoolee.github.io/ChineseBQB/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) |
 | <img height='100px' style='height:100px;' src=https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/斗图之王BQB/0.gif /> | [斗图之王BQB(已收录19张)](https://zhaoolee.github.io/ChineseBQB/斗图之王BQB/) |
 > 数据生成时间: 2020-04-24
@@ -101,7 +102,7 @@ BQBEND
 
 ## 同步本项目内容的公众号
 
-![](https://user-images.githubusercontent.com/15868458/71973717-aaa30300-324a-11ea-8677-9260ca2c4b1f.png)
+![jikemijiqr](https://user-images.githubusercontent.com/15868458/80181798-1c575f00-8638-11ea-80d6-4dfc027cd6e1.png)
 公众号 「0加1」 由本项目作者 zhaoolee 运营, 在 2020 年会同步更新 ChineseBQB (中国人的表情包 PP制造计划) ,  也会放一些 zhaoolee 自认为有趣的内容, 欢迎关注~
 
 
