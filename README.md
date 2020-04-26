@@ -250,7 +250,7 @@ git clone --depth 1 https://github.com/zhaoolee/ChineseBQB
 Remember, when you send an sticker
 记住，当你传递一张表情包的时候
 
-You are not send an old meme.
+You don't just send an old meme.
 你不是在传递一张发绿的老梗
 
 What you just sent
@@ -262,7 +262,7 @@ is the last torch of the classical Internet spirit!
 
 
 
-## ChineseBQB in the meaning of Github / ChineseBQB存在于Github的意义
+## ChineseBQB in the meaning of Github / ChineseBQB 存在于 Github 的意义
 
 ```
 When people see ChineseBQB, someone will say that "People can play GitHub like this?"
