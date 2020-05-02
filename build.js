@@ -207,14 +207,23 @@ class ReadmeContents{
         let all_row_data = "";
         let tmp_dir_name = "";
 
-        for(let n = 0; n<this.state.readme_contents_info.length; n++){
+
+        // 正序
+        // for(let n = 0; n<this.state.readme_contents_info.length; n++){
+        //     let dir_name = [...(this.state.readme_contents_info[n].readme_contents_info_href.split("/"))].reverse()[1];
+        //     console.log(dir_name);
+        //     let data_row = `| <img height='100px' style='height:100px;' src=${this.state.readme_contents_info[n].readme_contents_info_img} /> | [${dir_name}(已收录${this.state.readme_contents_info[n].images_number}张)](${this.state.readme_contents_info[n].readme_contents_info_href}) |${"\n"}`;
+        //     all_row_data+=data_row;
+        // }
+
+
+        // 倒序
+
+        for(let n = (this.state.readme_contents_info.length)-1; n>-1; n--){
             let dir_name = [...(this.state.readme_contents_info[n].readme_contents_info_href.split("/"))].reverse()[1];
             console.log(dir_name);
             let data_row = `| <img height='100px' style='height:100px;' src=${this.state.readme_contents_info[n].readme_contents_info_img} /> | [${dir_name}(已收录${this.state.readme_contents_info[n].images_number}张)](${this.state.readme_contents_info[n].readme_contents_info_href}) |${"\n"}`;
-
             all_row_data+=data_row;
-
-
         }
 
 
