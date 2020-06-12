@@ -210,6 +210,8 @@ git clone --depth 1 https://github.com/zhaoolee/ChineseBQB
 
 
 ## Contribution method  / 贡献方法
+
+
 - If you are a GIF/sticker warriors and have a github account, welcome to contribute your stickers to the root of the `https://github.com/zhaoolee/ChineseBQB/tree/master/000Contribution_%E8%B4%A1%E7%8C%AE%F0%9F%87%A8%F0%9F%87%B3`
 - 如果你是斗图大佬, 又有 github 账号, 欢迎将表情包贡献到项目`https://github.com/zhaoolee/ChineseBQB`根目录下的`000Contribution_贡献🇨🇳`
 
