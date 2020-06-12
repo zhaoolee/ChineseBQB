@@ -338,17 +338,12 @@ function post_get_id(md_filename_id_dic, md_file_name_title_content) {
 
   let id = md_filename_id_dic[encodeURI(md_file_name).toLowerCase()];
 
-  console.log("dic==>>", md_filename_id_dic);
-
-  console.log("md_file_name==>>", encodeURI(md_file_name), md_file_name, "==打印id=>>", id);
 
   if (typeof id === "undefined") {
     console.log("要新增==>1==>>", id);
     id = "";
     
   }
-
-  console.log("=TT=dic=>>", Object.keys(md_filename_id_dic), Object.keys(md_filename_id_dic).length, Object.keys(md_filename_id_dic).indexOf(encodeURI(md_file_name)));
 
   return id;
 }
