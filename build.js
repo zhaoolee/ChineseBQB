@@ -74,10 +74,6 @@ async function create_bqb_md(){
 
     });
 
-
-
-
-
 }
 
 
@@ -102,7 +98,7 @@ function get_images_src(md_name){
     images = [];
     files.map((file_name, file_index)=> {
         if(file_name.endsWith(".jpg")||file_name.endsWith(".gif")||file_name.endsWith(".png")||file_name.endsWith(".JPG")||file_name.endsWith(".GIF")||file_name.endsWith(".PNG")||file_name.endsWith(".webp")){
-            let image_src = "https://raw.githubusercontent.com/"+user_name+"/"+repo_name+"/master/"+ dir_name+"/"+file_name;
+            let image_src = "https://www.v2fy.com/asset/0i/"+repo_name+"/"+ dir_name+"/"+file_name;
             images.push(image_src);
         }
     });
@@ -120,7 +116,7 @@ function image_to_md_info(images){
     let all_md_info = "";
     images.map((image_info, image_index)=>{
 
-        let md_info = `<img height='200px' style='height:200px;'  src='/ChineseBQB/images/loading.png' data-original=${image_info} /><br/>`;
+        let md_info = `<img height='200px' style='height:200px;'  src='/ChineseBQB/images/loading.png' data-original='${image_info}' /><br/>`;
         md_info = md_info + `<h6>下载地址: [${image_info}](${image_info})</h6><hr/>`;
 
         all_md_info = all_md_info+md_info;
@@ -199,7 +195,7 @@ class ReadmeContents{
         // 定义标题行
 
         let title_row = `${
-            "\n"}| Example(示例)  |  链接(Entrance link)  | ${
+            "\n\n"}| Example(示例)  |  链接(Entrance link)  | ${
             "\n"}| :---: | :---: |${
             "\n"}`;
 
@@ -251,7 +247,7 @@ class ReadmeContents{
     async update_readme(){
 
         // 获取README中需要被替换的部分
-        let readme_content = fs.readFileSync("./README.md").toString();
+        let readme_content = fs.readFileSync(path.join(__dirname, "chinesebqb-md", "000readme-chinesebqb.md")).toString();
         let start_index = readme_content.indexOf("表情包目录");
         let end_index = readme_content.indexOf("BQBEND");
         let old_content = readme_content.slice(start_index, end_index);
@@ -267,7 +263,9 @@ class ReadmeContents{
 
 
 
-        await fs.writeFileSync("./README.md", readme_content);
+        // await fs.writeFileSync("./chinesebqb-md/000readme-chinesebqb.md", readme_content);
+
+        await fs.writeFileSync(path.join(__dirname, "chinesebqb-md", "000readme-chinesebqb.md"), readme_content)
 
         console.log("README生成成功");
 
