@@ -147,7 +147,9 @@ async function main() {
 
   let index_info = create_index_info(title_and_filename_list);
 
-  await replace_index_info(index_info);
+  // 不替换了
+
+  // await replace_index_info(index_info);
 }
 
 main();
