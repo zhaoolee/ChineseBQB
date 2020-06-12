@@ -42,8 +42,8 @@ async function create_bqb_md(){
                     "\n"}title: ${md_dir_list[i]}${
                     "\n"}---${
                     "\n"}${
-                    "\n"}${
                     "\n"}------${
+                    "\n"}${
                     "## 以下为收录的表情包库"}${
                     "\n"}${
                     "\n"}<!-- more -->${

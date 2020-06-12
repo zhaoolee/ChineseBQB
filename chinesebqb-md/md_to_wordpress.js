@@ -215,6 +215,7 @@ async function sync_md_content_to_wordpress(
   // console.log(id);
 
   if (id === "") {
+    console.log("新增文章-id", id)
     // 如果不存在则创建文章
     await create_new_post(
       wordpress_token,
@@ -226,6 +227,7 @@ async function sync_md_content_to_wordpress(
   // 如果存在则更新文章
 
   if (id !== "") {
+    console.log("更新文章-id", id)
     md_file_name_title_content["id"] = id;
     await update_post(
       wordpress_token,
@@ -259,7 +261,6 @@ async function update_post(
     status: "publish"
   };
 
-  // console.log("更新信息", data);
   let res = await axios({
     method: "post",
     url: "https://www.v2fy.com/wp-json/wp/v2/posts/" + id,
@@ -335,13 +336,19 @@ function post_get_id(md_filename_id_dic, md_file_name_title_content) {
 
   let md_file_name = md_file_name_title_content["md_file_name"];
 
-  let id = md_filename_id_dic[md_file_name];
+  let id = md_filename_id_dic[encodeURI(md_file_name).toLowerCase()];
+
+  console.log("dic==>>", md_filename_id_dic);
+
+  console.log("md_file_name==>>", encodeURI(md_file_name), md_file_name, "==打印id=>>", id);
 
   if (typeof id === "undefined") {
+    console.log("要新增==>1==>>", id);
     id = "";
+    
   }
 
-  // console.log(":id:", id);
+  console.log("=TT=dic=>>", Object.keys(md_filename_id_dic), Object.keys(md_filename_id_dic).length, Object.keys(md_filename_id_dic).indexOf(encodeURI(md_file_name)));
 
   return id;
 }

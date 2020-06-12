@@ -3,6 +3,7 @@ title: 047ShowSword亮剑BQB
 ---
 
 ------
+## 以下为收录的表情包库
 
 <!-- more -->
 
