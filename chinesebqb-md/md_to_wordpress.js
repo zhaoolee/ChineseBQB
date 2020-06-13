@@ -344,7 +344,6 @@ function post_get_id(md_filename_id_dic, md_file_name_title_content) {
     id = "";
     
   }
-
   return id;
 }
 
