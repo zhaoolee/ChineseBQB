@@ -187,7 +187,7 @@ async function create_index() {
 async function main() {
   await create_index();
   await cp_readme_md();
-  // await md_to_wordpress();
+  await md_to_wordpress();
 }
 
 main();
