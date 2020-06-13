@@ -300,11 +300,11 @@ async function main(){
 
         for (let i = 0; i<images.length; i++){
             let file_name = [...(images[i].split("/"))].pop();
-            if(file_name.startsWith("0.")){
+            if(file_name.startsWith("000000")){
                 readme_contents_info_obj.readme_contents_info_img = images[i];
             }
             // 如果没有以0.命名的图片, 则按照默认排序, 取第一张
-            if((i === images.length-1)&&(file_name.startsWith("0.")===false)){
+            if((i === images.length-1)&&(file_name.startsWith("000000")===false)){
                 readme_contents_info_obj.readme_contents_info_img = images[0];
             }
 

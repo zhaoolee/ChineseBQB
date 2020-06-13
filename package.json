@@ -6,11 +6,10 @@
     "version": "3.9.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node rsync.js && node build_2.js && node push.js",
     "dev": "hexo server -p 5000",
     "build": "node build.js && hexo clean && hexo g",
     "push": "node rsync.js && node build_2.js && node push.js &&  git add . && git commit -m 'zhaoolee commit' && git push",
-    "test-push": "node push.js",
     "clean": "hexo clean",
     "start": "hexo server",
     "new": "hexo new post article-$(date '+%Y-%m-%d-%H-%M-%S')"
