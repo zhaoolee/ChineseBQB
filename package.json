@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "axios": "^0.19.0",
+    "chmodr": "^1.2.0",
     "download": "^7.1.0",
     "fs-extra": "^8.1.0",
     "hexo": "^3.9.0",
