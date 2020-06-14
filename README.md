@@ -9,7 +9,7 @@
 
 ## 最新动态
 
-2020-06-14  为了让国内用户愉快访问ChinseBQB, zhaoolee将本项目在阿里云做了一个镜像,现在可以通过 https://v2fy.com/ChinseBQB 所有表情包了, 并且可以评论哦
+为了让国内用户愉快访问ChinseBQB, zhaoolee将本项目在阿里云做了一个镜像,现在可以通过 [https://v2fy.com/ChineseBQB](https://v2fy.com/ChineseBQB/) 所有表情包了, 并且可以评论哦
 
 
 

@@ -1,4 +1,14 @@
+
+
 [![](https://img.shields.io/badge/ChineseBQB-READEME-brightgreen)](https://github.com/zhaoolee/ChineseBQB)
+
+
+
+## 最新动态
+
+zhaoolee将本项目在阿里云做了一个镜像,现在可以通过 [https://v2fy.com/ChineseBQB](https://v2fy.com/ChineseBQB/) 访问所有表情包了, 还可以评论哦~
+
+
 
 
 ![](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/65401784-e4b3da80-ddfc-11e9-9675-19b5ab0ec875.jpg)
@@ -7,9 +17,7 @@
 
 本仓库VI由方圆STU创始人[老罗巴扎嘿](https://huaban.com/syy946795671/muse_boards/)独立设计
 
-## 最新动态
 
-2020-06-14  为了让国内用户愉快访问ChinseBQB, zhaoolee将本项目在阿里云做了一个镜像,现在可以通过 https://v2fy.com/ChinseBQB 所有表情包了, 并且可以评论哦
 
 
 
@@ -17,7 +25,7 @@
 
 ## 表情包目录(共收录3915张表情包)Emoticon package directory (commonly included 3915 emoticon pack)
 
-| Example(示例)  |  链接(Entrance link)  | 
+| Example(示例)  |  链接(Entrance link)  |
 | :---: | :---: |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/斗图之王BQB/000000doutuzhiwang.jpg' /> | [斗图之王BQB(已收录28张)](https://www.v2fy.com/p/斗图之王BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/微信网友贡献表情包_暂存_有时间慢慢整理BQB/0.png' /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://www.v2fy.com/p/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) |
