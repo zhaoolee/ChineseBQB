@@ -1,4 +1,14 @@
+
+
 [![](https://img.shields.io/badge/ChineseBQB-READEME-brightgreen)](https://github.com/zhaoolee/ChineseBQB)
+
+
+
+## 最新动态
+
+zhaoolee将本项目在阿里云做了一个镜像,现在可以通过 [https://v2fy.com/ChineseBQB](https://v2fy.com/ChineseBQB/) 访问所有表情包了, 还可以评论哦~
+
+
 
 
 ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/65401784-e4b3da80-ddfc-11e9-9675-19b5ab0ec875.jpg)
@@ -7,9 +17,7 @@
 
 本仓库VI由方圆STU创始人[老罗巴扎嘿](https://huaban.com/syy946795671/muse_boards/)独立设计
 
-## 最新动态
 
-为了让国内用户愉快访问ChinseBQB, zhaoolee将本项目在阿里云做了一个镜像,现在可以通过 [https://v2fy.com/ChineseBQB](https://v2fy.com/ChineseBQB/) 所有表情包了, 并且可以评论哦
 
 
 
