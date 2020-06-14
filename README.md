@@ -6,9 +6,9 @@
 
 ## 最新动态
 
-zhaoolee将本项目在阿里云做了一个镜像,现在可以通过 [https://v2fy.com/ChineseBQB](https://v2fy.com/ChineseBQB/) 访问所有表情包了, 还可以评论哦~
+1. zhaoolee为本项目(ChineseBQB)在阿里云做了一个镜像,现在可以通过 [https://v2fy.com/ChineseBQB](https://v2fy.com/ChineseBQB/) 访问所有表情包了, 还可以评论哦~
 
-zhaoolee将在2020年6月份进行**表情包背景文化补全计划**, 在表情包单页添加表情包的背景故事[001滑稽大佬实例页面](https://www.v2fy.com/p/001Funny_%E6%BB%91%E7%A8%BD%E5%A4%A7%E4%BD%AC%F0%9F%98%8FBQB/)
+2. zhaoolee将在2020年6月份进行**表情包背景文化补全计划**, 在表情包单页添加表情包的背景故事[001滑稽大佬实例页面](https://www.v2fy.com/p/001Funny_%E6%BB%91%E7%A8%BD%E5%A4%A7%E4%BD%AC%F0%9F%98%8FBQB/)
 
 ![image-20200614202409677](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/image-20200614202409677.png)
 
