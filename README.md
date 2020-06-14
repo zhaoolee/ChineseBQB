@@ -7,6 +7,11 @@
 
 本仓库VI由方圆STU创始人[老罗巴扎嘿](https://huaban.com/syy946795671/muse_boards/)独立设计
 
+## 最新动态
+
+2020-06-14  为了让国内用户愉快访问ChinseBQB, zhaoolee将本项目在阿里云做了一个镜像,现在可以通过 https://v2fy.com/ChinseBQB 所有表情包了, 并且可以评论哦
+
+
 
 ## Chinese stickers / 中国的表情包
 
@@ -295,19 +300,10 @@ ChineseBQB是一个比较"异类"的仓库, 而 Github 是一个兼容并包的�
 ```
 
 
-
-
-
-
 ## 欢迎赞助本项目(微信赞赏)
 
-- 收到的赞助, 未来将用于购买服务器, 存放本项目的资源
+- 收到的赞助, 将用于购买阿里云服务器, 存放本项目的资源
 - 通过赞赏请作者喝杯咖啡,也是可以的~
 - 赞助越多,表情包更新的越快越好 [手动滑稽]
 
 ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/ba5b30723b85810c5a8a42be8ead4161.jpeg)
-
-
-![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/2fb086ddf146e0e437fc8a0d4e9db341.png)
-
-
