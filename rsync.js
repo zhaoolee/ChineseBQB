@@ -87,6 +87,8 @@ function get_md_file_list() {
 
 // 将md文件内容替换为https内容
 function local_file_href_2_https_href(md_file_name) {
+
+  console.log("分析md==>>", md_file_name);
   const whole_md_file_path = path.join(__dirname, md_dir_name, md_file_name);
 
   let file_content = fs.readFileSync(whole_md_file_path).toString();
@@ -165,7 +167,6 @@ async function main() {
   // 改权限
 
   await md_and_img_chmodr(path.join(__dirname, md_dir_name));
-  await md_and_img_chmodr(path.join(__dirname, "*BQB"))
   
 
   // 先同步数据到服务端
@@ -173,7 +174,7 @@ async function main() {
 
   // console.log("执行完成")
 
-  local_href_2_https_href();
+  await local_href_2_https_href();
 }
 
 main();
