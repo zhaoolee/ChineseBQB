@@ -164,7 +164,8 @@ async function main() {
 
   // 改权限
 
-  await md_and_img_chmodr(path.join(__dirname, md_dir_name))
+  await md_and_img_chmodr(path.join(__dirname, md_dir_name));
+  await md_and_img_chmodr(path.join(__dirname))
   
 
   // 先同步数据到服务端
