@@ -10,12 +10,13 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录3866张表情包)Emoticon package directory (commonly included 3866 emoticon pack)
+## 表情包目录(共收录3871张表情包)Emoticon package directory (commonly included 3871 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/斗图之王BQB/0000000doutu.gif' /> | [斗图之王BQB(已收录19张)](https://www.v2fy.com/p/斗图之王BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/微信网友贡献表情包_暂存_有时间慢慢整理BQB/0.png' /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://www.v2fy.com/p/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) |
+| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/069Waves后浪🌊BQB/000000069.gif' /> | [069Waves后浪🌊BQB(已收录5张)](https://www.v2fy.com/p/069Waves后浪🌊BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/068Aqua阿库娅BQB/000000068.jpg' /> | [068Aqua阿库娅BQB(已收录21张)](https://www.v2fy.com/p/068Aqua阿库娅BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/067NegroCarryingACoffin_黑人抬棺⚰BQB/000000067.jpg' /> | [067NegroCarryingACoffin_黑人抬棺⚰BQB(已收录31张)](https://www.v2fy.com/p/067NegroCarryingACoffin_黑人抬棺⚰BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/066Makeding_马克丁🐎BQB/000000066.jpg' /> | [066Makeding_马克丁🐎BQB(已收录12张)](https://www.v2fy.com/p/066Makeding_马克丁🐎BQB/) |
