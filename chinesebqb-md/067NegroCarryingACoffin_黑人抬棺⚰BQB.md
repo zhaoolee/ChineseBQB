@@ -4,6 +4,21 @@ title: 067NegroCarryingACoffin_黑人抬棺⚰BQB
 
 ## 关于黑人抬棺
 
+黑人抬棺专业团队（英语：Dancing Pallbearers）是一支来自非洲加纳共和国阿散蒂地区的护柩者团队。2020年4月，其抬棺舞（Dancing Coffin）在全球网络爆红。
+
+
+
+抬棺团队不止一家, 建议选经验丰富的专业团队: 曾有团队在抬棺起舞时不慎将棺材滑落，逝者被甩出[手动狗头]
+
+
+
+走红视频地址: [https://www.bilibili.com/video/BV1NZ4y1j7nw](https://www.bilibili.com/video/BV1NZ4y1j7nw)
+
+![zhuanye2](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/067NegroCarryingACoffin_%E9%BB%91%E4%BA%BA%E6%8A%AC%E6%A3%BA%E2%9A%B0BQB.assets/zhuanye2.gif)
+
+
+
+剪辑所选音乐《Astronomia》
 
 
 
