@@ -29,7 +29,7 @@
 
 ## 表情包目录(共收录3915张表情包)Emoticon package directory (commonly included 3915 emoticon pack)
 
-| Example(示例)  |  链接(Entrance link)  | 
+| Example(示例)  |  链接(Entrance link)  |
 | :---: | :---: |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/斗图之王BQB/000000doutuzhiwang.jpg' /> | [斗图之王BQB(已收录28张)](https://www.v2fy.com/p/斗图之王BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/微信网友贡献表情包_暂存_有时间慢慢整理BQB/0.png' /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://www.v2fy.com/p/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) |
@@ -134,7 +134,7 @@ BQBEND
 
 
 
-**食堂泼辣酱! 砸瓦鲁多!**
+**赛高泥High铁鸭子哒！(我真的嗨到不行啦!)**
 
 JOJO于1987年开始在少年JUMP连载, 描述了JOJO与DIO及其后继者长达百年以上的对决, 至2016年全系列累计发行一亿册, JOJO作品中出现了大量超自然元素, 各种设定脑洞极大
 
@@ -179,6 +179,18 @@ JOJO于1987年开始在少年JUMP连载, 描述了JOJO与DIO及其后继者长�
 抬棺团队不止一家, 建议选经验丰富的专业团队: 曾有团队在抬棺起舞时不慎将棺材滑落，逝者被甩出[手动狗头]
 
 
+
+#### [066Makeding_马克丁🐎BQB](https://www.v2fy.com/p/066Makeding_马克丁🐎BQB/)
+
+![4c929964ly1fxovzne920j20te09rgno](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/4c929964ly1fxovzne920j20te09rgno.jpg)
+
+
+
+苏杰马克丁完全就是集中国特色流氓软件之大成，使用该公司的**正版授权**软件，您将获得：高于正版数倍的价格，盗版中的盗版的体验。
+
+苏杰马克丁是**正版界大佬**!（呵呵呵呵呵呵呵）
+
+苏杰马克丁是**举报界一哥**（这个倒是真得不能再真）
 
 ## 中国人的表情包之 PP 制造计划 (VI设计 [老罗巴扎嘿](https://github.com/LuoJiangYong))
 

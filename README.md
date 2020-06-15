@@ -180,6 +180,18 @@ JOJO于1987年开始在少年JUMP连载, 描述了JOJO与DIO及其后继者长�
 
 
 
+#### [066Makeding_马克丁🐎BQB](https://www.v2fy.com/p/066Makeding_马克丁🐎BQB/)
+
+![4c929964ly1fxovzne920j20te09rgno](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/4c929964ly1fxovzne920j20te09rgno.jpg)
+
+
+
+苏杰马克丁完全就是集中国特色流氓软件之大成，使用该公司的**正版授权**软件，您将获得：高于正版数倍的价格，盗版中的盗版的体验。
+
+苏杰马克丁是**正版界大佬**!（呵呵呵呵呵呵呵）
+
+苏杰马克丁是**举报界一哥**（这个倒是真得不能再真）
+
 ## 中国人的表情包之 PP 制造计划 (VI设计 [老罗巴扎嘿](https://github.com/LuoJiangYong))
 
 
