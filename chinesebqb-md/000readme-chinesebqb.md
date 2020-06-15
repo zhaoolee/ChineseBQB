@@ -3,12 +3,11 @@
 [![](https://img.shields.io/badge/ChineseBQB-READEME-brightgreen)](https://github.com/zhaoolee/ChineseBQB)
 
 
-
 ## 最新动态(2020年6月14日更新)
 
 1. [ChineseBQB国内版](https://v2fy.com/ChineseBQB/)发布成功!  可以通过 [https://v2fy.com/ChineseBQB](https://v2fy.com/ChineseBQB/) 丝滑流畅浏览所有表情包了, 有好的建议,还可以在页面底部直接留言哦~
 
-   ![202006143933072](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/202006143933072.png)
+![202006143933072](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/202006143933072.png)
 
 2. zhaoolee将在2020年6月份进行**表情包背景文化补全计划**, 在表情包单页添加表情包的背景故事[001滑稽大佬实例页面](https://www.v2fy.com/p/001Funny_%E6%BB%91%E7%A8%BD%E5%A4%A7%E4%BD%AC%F0%9F%98%8FBQB/)
 
@@ -21,8 +20,10 @@
 
 ![](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/65401793-e7aecb00-ddfc-11e9-96e3-4122a5c14300.jpg)
 
-本仓库VI由方圆STU创始人[老罗巴扎嘿](https://huaban.com/syy946795671/muse_boards/)独立设计
+本项目VI由方圆STU创始人[老罗巴扎嘿](https://huaban.com/syy946795671/muse_boards/)独立设计
 
+
+#### 本项目Github永久开源地址: [https://github.com/zhaoolee/ChineseBQB](https://github.com/zhaoolee/ChineseBQB)
 
 
 ## Chinese stickers / 中国的表情包
