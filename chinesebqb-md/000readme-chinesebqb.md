@@ -29,7 +29,7 @@
 
 ## 表情包目录(共收录3915张表情包)Emoticon package directory (commonly included 3915 emoticon pack)
 
-| Example(示例)  |  链接(Entrance link)  | 
+| Example(示例)  |  链接(Entrance link)  |
 | :---: | :---: |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/斗图之王BQB/000000doutuzhiwang.jpg' /> | [斗图之王BQB(已收录28张)](https://www.v2fy.com/p/斗图之王BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/微信网友贡献表情包_暂存_有时间慢慢整理BQB/0.png' /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://www.v2fy.com/p/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) |
@@ -104,9 +104,61 @@
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/003CuteBoy_可爱男孩纸👶BQB/000000003.gif' /> | [003CuteBoy_可爱男孩纸👶BQB(已收录28张)](https://www.v2fy.com/p/003CuteBoy_可爱男孩纸👶BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/002CuteGirl_可爱的女孩纸👧BQB/000000002.gif' /> | [002CuteGirl_可爱的女孩纸👧BQB(已收录192张)](https://www.v2fy.com/p/002CuteGirl_可爱的女孩纸👧BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/001Funny_滑稽大佬😏BQB/000000001.gif' /> | [001Funny_滑稽大佬😏BQB(已收录37张)](https://www.v2fy.com/p/001Funny_滑稽大佬😏BQB/) |
-> 数据生成时间: 2020-06-14
+> 数据生成时间: 2020-06-15
 
 BQBEND
+
+
+
+## 表情包文化背景故事(绝赞更新中...)
+
+
+
+####  [071辉夜大小姐🎀BQB](https://www.v2fy.com/p/071辉夜大小姐🎀BQB/)
+
+![2020-06-14-3414726](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/2020-06-14-3414726-2177797.png)
+
+
+
+辉夜大小姐取自 **辉夜大小姐想让我告白~ 天才们的恋爱头脑战~ ** 是一部学院云恋爱番剧, B站评分9.9,  与JOJO自造梗不同, 辉夜大小姐善假于物, 利用与其它作品的梦幻联动, 来表达思想, 提升作品品质
+
+
+
+#### [070JOJO的奇妙冒险BQB](https://www.v2fy.com/p/070JOJO的奇妙冒险BQB/)
+
+![image-20200614163632497](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/image-20200614163632497.png)
+
+
+
+
+
+JOJO于1987年开始在少年JUMP连载, 描述了JOJO与DIO及其后继者长达百年以上的对决, 至2016年全系列累计发行一亿册, JOJO作品中出现了大量超自然元素, 各种设定脑洞极大
+
+与龙珠这类一个主角贯穿整个故事不同, JOJO每一部都会换主角, 但作品热度不会因为换主角减弱, 第三代主角**空条承太郎**一度成为**古典英雄主义**(性格冷静，头脑聪明，外冷内热，富有正义感的代名词(有空就去健身房, 总能打过承太郎)
+
+
+
+#### [069Waves后浪🌊BQB](https://www.v2fy.com/p/069waves后浪🌊bqb/)
+
+![img](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/497cc64b62f934ff.jpg)
+
+
+
+视频讲述的，基本是接班人和接盘人的矛盾。
+
+
+
+#### [068Aqua阿库娅BQB](https://www.v2fy.com/p/068Aqua阿库娅BQB/)
+
+
+
+
+
+
+
+
+
+
 
 ## 中国人的表情包之 PP 制造计划 (VI设计 [老罗巴扎嘿](https://github.com/LuoJiangYong))
 
