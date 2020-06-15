@@ -120,6 +120,8 @@ BQBEND
 
 
 
+**Love is War! 恋爱即战争!  ~~天才~~段友们的恋爱头脑战!**
+
 辉夜大小姐取自 **辉夜大小姐想让我告白~ 天才们的恋爱头脑战~ ** 是一部学院云恋爱番剧, B站评分9.9,  与JOJO自造梗不同, 辉夜大小姐善假于物, 利用与其它作品的梦幻联动, 来表达思想, 提升作品品质
 
 
@@ -132,6 +134,8 @@ BQBEND
 
 
 
+**食堂泼辣酱! 砸瓦鲁多!**
+
 JOJO于1987年开始在少年JUMP连载, 描述了JOJO与DIO及其后继者长达百年以上的对决, 至2016年全系列累计发行一亿册, JOJO作品中出现了大量超自然元素, 各种设定脑洞极大
 
 与龙珠这类一个主角贯穿整个故事不同, JOJO每一部都会换主角, 但作品热度不会因为换主角减弱, 第三代主角**空条承太郎**一度成为**古典英雄主义**(性格冷静，头脑聪明，外冷内热，富有正义感的代名词(有空就去健身房, 总能打过承太郎)
@@ -142,15 +146,37 @@ JOJO于1987年开始在少年JUMP连载, 描述了JOJO与DIO及其后继者长�
 
 ![img](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/497cc64b62f934ff.jpg)
 
-
+**加班吧! 后浪程序员!**
 
 视频讲述的，基本是接班人和接盘人的矛盾。
 
 
 
+#### [068Aqua阿库娅BQB](https://www.v2fy.com/p/068Aqua阿库娅BQB/)
 
 
 
+![img](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000068.jpg)
+
+**不得不说她这个智障角色塑造得相当深入人心!**
+
+因为阿库娅施法的法阵就是9, **微软和Apple为了避免自己的产品看起来很沙雕,更新版本时,特地跳过了9这个数字**, 所以不存在Win9, 也不存在iPhone9
+
+
+
+#### [067NegroCarryingACoffin_黑人抬棺⚰BQB](https://www.v2fy.com/p/067NegroCarryingACoffin_黑人抬棺⚰BQB/)
+
+
+
+![img](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/zhuanye2.gif)
+
+
+
+**黑哥一笑,生死难料; 棺材一抬,世间白来!**
+
+黑人抬棺专业团队（英语：Dancing Pallbearers）是一支来自非洲加纳共和国阿散蒂地区的护柩者团队。2020年4月，其抬棺舞（Dancing Coffin）在全球网络爆红。
+
+抬棺团队不止一家, 建议选经验丰富的专业团队: 曾有团队在抬棺起舞时不慎将棺材滑落，逝者被甩出[手动狗头]
 
 
 
