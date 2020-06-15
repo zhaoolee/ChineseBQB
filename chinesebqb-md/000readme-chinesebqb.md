@@ -3,7 +3,7 @@
 [![](https://img.shields.io/badge/ChineseBQB-READEME-brightgreen)](https://github.com/zhaoolee/ChineseBQB)
 
 
-## 最新动态(2020年6月14日更新)
+## 最新动态(2020年6月15日大更新)
 
 1. [ChineseBQB国内版](https://v2fy.com/ChineseBQB/)发布成功!  可以通过 [https://v2fy.com/ChineseBQB](https://v2fy.com/ChineseBQB/) 丝滑流畅浏览所有表情包了, 有好的建议,还可以在页面底部直接留言哦~
 
