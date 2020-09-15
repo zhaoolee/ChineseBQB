@@ -252,8 +252,7 @@ JOJO于1987年开始在少年JUMP连载, 描述了JOJO与DIO及其后继者长�
 
 ## 又一个小程序[个人超级工具箱]新增本仓库表情包模块
 
-> ![img](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/8050326b38094069b0657de63ea6b686~tplv-k3u1fbpfcp-zoom-1.image)
-> 
+![cat-programmer](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/cat-programmer.jpg)
 
 ## 使用了本仓库表情包的app
 
