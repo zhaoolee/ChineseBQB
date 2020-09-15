@@ -28,7 +28,7 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录4042张表情包)Emoticon package directory (commonly included 4042 emoticon pack)
+## 表情包目录(共收录4046张表情包)Emoticon package directory (commonly included 4046 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
@@ -111,8 +111,8 @@
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000003.gif' /> | [003CuteBoy_可爱男孩纸👶BQB(已收录28张)](https://www.v2fy.com/p/003CuteBoy_可爱男孩纸👶BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000002.gif' /> | [002CuteGirl_可爱的女孩纸👧BQB(已收录192张)](https://www.v2fy.com/p/002CuteGirl_可爱的女孩纸👧BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000001.gif' /> | [001Funny_滑稽大佬😏BQB(已收录43张)](https://www.v2fy.com/p/001Funny_滑稽大佬😏BQB/) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000000.gif' /> | [000Contribution_贡献🇨🇳BQB(已收录14张)](https://www.v2fy.com/p/000Contribution_贡献🇨🇳BQB/) |
-> 数据生成时间: 2020-08-27
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000000.gif' /> | [000Contribution_贡献🇨🇳BQB(已收录18张)](https://www.v2fy.com/p/000Contribution_贡献🇨🇳BQB/) |
+> 数据生成时间: 2020-09-15
 
 BQBEND
 
@@ -250,10 +250,10 @@ JOJO于1987年开始在少年JUMP连载, 描述了JOJO与DIO及其后继者长�
 ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/61185261-cce80980-a689-11e9-9f5e-2774faba3339.png)
 
 
-## 又一个表情包小程序(豆笔表情)
+## 又一个小程序[个人超级工具箱]新增本仓库表情包模块
 
-> 感谢小伙伴 [Smallfly](https://github.com/iostalks) 的开发~
-> ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/62586005-31476300-b8ee-11e9-8bd2-5b7c3b3fba2f.png)
+> ![img](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/8050326b38094069b0657de63ea6b686~tplv-k3u1fbpfcp-zoom-1.image)
+> 
 
 ## 使用了本仓库表情包的app
 
