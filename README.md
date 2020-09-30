@@ -28,7 +28,7 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录4046张表情包)Emoticon package directory (commonly included 4046 emoticon pack)
+## 表情包目录(共收录4044张表情包)Emoticon package directory (commonly included 4044 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
@@ -110,9 +110,9 @@
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000004.jpg' /> | [004SmirkBoy_假笑男孩👦BQB(已收录27张)](https://www.v2fy.com/p/004SmirkBoy_假笑男孩👦BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000003.gif' /> | [003CuteBoy_可爱男孩纸👶BQB(已收录28张)](https://www.v2fy.com/p/003CuteBoy_可爱男孩纸👶BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000002.gif' /> | [002CuteGirl_可爱的女孩纸👧BQB(已收录192张)](https://www.v2fy.com/p/002CuteGirl_可爱的女孩纸👧BQB/) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000001.gif' /> | [001Funny_滑稽大佬😏BQB(已收录43张)](https://www.v2fy.com/p/001Funny_滑稽大佬😏BQB/) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000001.gif' /> | [001Funny_滑稽大佬😏BQB(已收录41张)](https://www.v2fy.com/p/001Funny_滑稽大佬😏BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000000.gif' /> | [000Contribution_贡献🇨🇳BQB(已收录18张)](https://www.v2fy.com/p/000Contribution_贡献🇨🇳BQB/) |
-> 数据生成时间: 2020-09-15
+> 数据生成时间: 2020-09-30
 
 BQBEND
 
