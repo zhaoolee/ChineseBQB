@@ -28,7 +28,7 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录4042张表情包)Emoticon package directory (commonly included 4042 emoticon pack)
+## 表情包目录(共收录4039张表情包)Emoticon package directory (commonly included 4039 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
@@ -38,7 +38,7 @@
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/076Moe可爱萝莉_BQB/0000000076.gif' /> | [076Moe可爱萝莉_BQB(已收录3张)](https://www.v2fy.com/p/076Moe可爱萝莉_BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/075Vtuber_虚拟youtuberBQB/0000000075.gif' /> | [075Vtuber_虚拟youtuberBQB(已收录8张)](https://www.v2fy.com/p/075Vtuber_虚拟youtuberBQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/074BrotherGui_兄贵哲学BQB/0000000074.gif' /> | [074BrotherGui_兄贵哲学BQB(已收录10张)](https://www.v2fy.com/p/074BrotherGui_兄贵哲学BQB/) |
-| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/073腾讯与老千妈BQB/0000000073.jpg' /> | [073腾讯与老千妈BQB(已收录33张)](https://www.v2fy.com/p/073腾讯与老千妈BQB/) |
+| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/073腾讯与老千妈BQB/0000000073.jpg' /> | [073腾讯与老千妈BQB(已收录31张)](https://www.v2fy.com/p/073腾讯与老千妈BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/072PaiYiPai_微信拍一拍👋BQB/0000000072.jpg' /> | [072PaiYiPai_微信拍一拍👋BQB(已收录8张)](https://www.v2fy.com/p/072PaiYiPai_微信拍一拍👋BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/071辉夜大小姐🎀BQB/000000071.gif' /> | [071辉夜大小姐🎀BQB(已收录19张)](https://www.v2fy.com/p/071辉夜大小姐🎀BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/070JOJO的奇妙冒险BQB/000000070.jpg' /> | [070JOJO的奇妙冒险BQB(已收录20张)](https://www.v2fy.com/p/070JOJO的奇妙冒险BQB/) |
@@ -101,7 +101,7 @@
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/013PigPecs_小猪佩奇👑BQB/000000013.gif' /> | [013PigPecs_小猪佩奇👑BQB(已收录21张)](https://www.v2fy.com/p/013PigPecs_小猪佩奇👑BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/012Parrot_鹦鹉🐦BQB/000000012.gif' /> | [012Parrot_鹦鹉🐦BQB(已收录16张)](https://www.v2fy.com/p/012Parrot_鹦鹉🐦BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/011Dog_狗🐶BQB/000000011.gif' /> | [011Dog_狗🐶BQB(已收录53张)](https://www.v2fy.com/p/011Dog_狗🐶BQB/) |
-| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/010Cat_是喵星人啦🐱BQB/000000010.jpg' /> | [010Cat_是喵星人啦🐱BQB(已收录173张)](https://www.v2fy.com/p/010Cat_是喵星人啦🐱BQB/) |
+| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/010Cat_是喵星人啦🐱BQB/000000010.jpg' /> | [010Cat_是喵星人啦🐱BQB(已收录172张)](https://www.v2fy.com/p/010Cat_是喵星人啦🐱BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/009KumamotoBear_熊本熊🐻BQB/000000009.gif' /> | [009KumamotoBear_熊本熊🐻BQB(已收录31张)](https://www.v2fy.com/p/009KumamotoBear_熊本熊🐻BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/008HappyDuck_开心鸭🐥BQB/000000008.gif' /> | [008HappyDuck_开心鸭🐥BQB(已收录14张)](https://www.v2fy.com/p/008HappyDuck_开心鸭🐥BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/007Tiger_胖虎🐯BQB/000000007.gif' /> | [007Tiger_胖虎🐯BQB(已收录22张)](https://www.v2fy.com/p/007Tiger_胖虎🐯BQB/) |
