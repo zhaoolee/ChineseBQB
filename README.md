@@ -28,7 +28,7 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录4038张表情包)Emoticon package directory (commonly included 4038 emoticon pack)
+## 表情包目录(共收录4040张表情包)Emoticon package directory (commonly included 4040 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
@@ -105,8 +105,8 @@
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000009.gif' /> | [009KumamotoBear_熊本熊🐻BQB(已收录31张)](https://www.v2fy.com/p/009KumamotoBear_熊本熊🐻BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000008.gif' /> | [008HappyDuck_开心鸭🐥BQB(已收录13张)](https://www.v2fy.com/p/008HappyDuck_开心鸭🐥BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000007.gif' /> | [007Tiger_胖虎🐯BQB(已收录21张)](https://www.v2fy.com/p/007Tiger_胖虎🐯BQB/) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000006.gif' /> | [006Hamster_仓鼠🐹BQB(已收录3张)](https://www.v2fy.com/p/006Hamster_仓鼠🐹BQB/) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000005.gif' /> | [005ShowerheadBoy_莲蓬头男孩👲BQB(已收录14张)](https://www.v2fy.com/p/005ShowerheadBoy_莲蓬头男孩👲BQB/) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000006.gif' /> | [006Hamster_仓鼠🐹BQB(已收录4张)](https://www.v2fy.com/p/006Hamster_仓鼠🐹BQB/) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000005.gif' /> | [005ShowerheadBoy_莲蓬头男孩👲BQB(已收录15张)](https://www.v2fy.com/p/005ShowerheadBoy_莲蓬头男孩👲BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000004.jpg' /> | [004SmirkBoy_假笑男孩👦BQB(已收录28张)](https://www.v2fy.com/p/004SmirkBoy_假笑男孩👦BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000003.gif' /> | [003CuteBoy_可爱男孩纸👶BQB(已收录28张)](https://www.v2fy.com/p/003CuteBoy_可爱男孩纸👶BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000002.gif' /> | [002CuteGirl_可爱的女孩纸👧BQB(已收录185张)](https://www.v2fy.com/p/002CuteGirl_可爱的女孩纸👧BQB/) |
