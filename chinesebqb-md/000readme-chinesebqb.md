@@ -28,7 +28,7 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录4035张表情包)Emoticon package directory (commonly included 4035 emoticon pack)
+## 表情包目录(共收录4037张表情包)Emoticon package directory (commonly included 4037 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
@@ -39,8 +39,8 @@
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/075Vtuber_虚拟youtuberBQB/0000000075.gif' /> | [075Vtuber_虚拟youtuberBQB(已收录8张)](https://www.v2fy.com/p/075Vtuber_虚拟youtuberBQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/074BrotherGui_兄贵哲学BQB/0000000074.gif' /> | [074BrotherGui_兄贵哲学BQB(已收录10张)](https://www.v2fy.com/p/074BrotherGui_兄贵哲学BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/073腾讯与老千妈BQB/0000000073.jpg' /> | [073腾讯与老千妈BQB(已收录31张)](https://www.v2fy.com/p/073腾讯与老千妈BQB/) |
-| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/072PaiYiPai_微信拍一拍👋BQB/0000000072.jpg' /> | [072PaiYiPai_微信拍一拍👋BQB(已收录8张)](https://www.v2fy.com/p/072PaiYiPai_微信拍一拍👋BQB/) |
-| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/071辉夜大小姐🎀BQB/000000071.gif' /> | [071辉夜大小姐🎀BQB(已收录19张)](https://www.v2fy.com/p/071辉夜大小姐🎀BQB/) |
+| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/072PaiYiPai_微信拍一拍👋BQB/0000000072.jpg' /> | [072PaiYiPai_微信拍一拍👋BQB(已收录9张)](https://www.v2fy.com/p/072PaiYiPai_微信拍一拍👋BQB/) |
+| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/071辉夜大小姐🎀BQB/000000071.gif' /> | [071辉夜大小姐🎀BQB(已收录20张)](https://www.v2fy.com/p/071辉夜大小姐🎀BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/070JOJO的奇妙冒险BQB/000000070.jpg' /> | [070JOJO的奇妙冒险BQB(已收录20张)](https://www.v2fy.com/p/070JOJO的奇妙冒险BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/069Waves后浪🌊BQB/000000069.gif' /> | [069Waves后浪🌊BQB(已收录5张)](https://www.v2fy.com/p/069Waves后浪🌊BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/068Aqua阿库娅BQB/000000068.jpg' /> | [068Aqua阿库娅BQB(已收录21张)](https://www.v2fy.com/p/068Aqua阿库娅BQB/) |
