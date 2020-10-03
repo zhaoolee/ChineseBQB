@@ -28,7 +28,7 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录4037张表情包)Emoticon package directory (commonly included 4037 emoticon pack)
+## 表情包目录(共收录4034张表情包)Emoticon package directory (commonly included 4034 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
@@ -90,7 +90,7 @@
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000024.png' /> | [024Programmer_程序员👨‍💻‍BQB(已收录53张)](https://www.v2fy.com/p/024Programmer_程序员👨‍💻‍BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000023.JPG' /> | [023Emoji_表情符号BQB(已收录122张)](https://www.v2fy.com/p/023Emoji_表情符号BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000022.gif' /> | [022SuDaqiang_苏大强👴BQB(已收录26张)](https://www.v2fy.com/p/022SuDaqiang_苏大强👴BQB/) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000021.jpg' /> | [021TongfuInn_同福客栈🏫BQB(已收录105张)](https://www.v2fy.com/p/021TongfuInn_同福客栈🏫BQB/) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000021.jpg' /> | [021TongfuInn_同福客栈🏫BQB(已收录102张)](https://www.v2fy.com/p/021TongfuInn_同福客栈🏫BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000020.gif' /> | [020TATAN🤷‍♂️BQB(已收录31张)](https://www.v2fy.com/p/020TATAN🤷‍♂️BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000019.gif' /> | [019Green_Hat绿帽子🖼BQB(已收录24张)](https://www.v2fy.com/p/019Green_Hat绿帽子🖼BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000018.gif' /> | [018WangEgg_汪蛋🥚BQB(已收录45张)](https://www.v2fy.com/p/018WangEgg_汪蛋🥚BQB/) |
