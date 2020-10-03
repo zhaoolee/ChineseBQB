@@ -28,7 +28,7 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录4039张表情包)Emoticon package directory (commonly included 4039 emoticon pack)
+## 表情包目录(共收录4038张表情包)Emoticon package directory (commonly included 4038 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
@@ -100,7 +100,7 @@
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000014.gif' /> | [014Pig_猪🐖BQB(已收录20张)](https://www.v2fy.com/p/014Pig_猪🐖BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000013.gif' /> | [013PigPecs_小猪佩奇👑BQB(已收录21张)](https://www.v2fy.com/p/013PigPecs_小猪佩奇👑BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000012.gif' /> | [012Parrot_鹦鹉🐦BQB(已收录16张)](https://www.v2fy.com/p/012Parrot_鹦鹉🐦BQB/) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000011.gif' /> | [011Dog_狗🐶BQB(已收录53张)](https://www.v2fy.com/p/011Dog_狗🐶BQB/) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000011.gif' /> | [011Dog_狗🐶BQB(已收录52张)](https://www.v2fy.com/p/011Dog_狗🐶BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000010.jpg' /> | [010Cat_是喵星人啦🐱BQB(已收录172张)](https://www.v2fy.com/p/010Cat_是喵星人啦🐱BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000009.gif' /> | [009KumamotoBear_熊本熊🐻BQB(已收录31张)](https://www.v2fy.com/p/009KumamotoBear_熊本熊🐻BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000008.gif' /> | [008HappyDuck_开心鸭🐥BQB(已收录14张)](https://www.v2fy.com/p/008HappyDuck_开心鸭🐥BQB/) |
@@ -112,7 +112,7 @@
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000002.gif' /> | [002CuteGirl_可爱的女孩纸👧BQB(已收录185张)](https://www.v2fy.com/p/002CuteGirl_可爱的女孩纸👧BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000001.gif' /> | [001Funny_滑稽大佬😏BQB(已收录40张)](https://www.v2fy.com/p/001Funny_滑稽大佬😏BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000000.gif' /> | [000Contribution_贡献🇨🇳BQB(已收录18张)](https://www.v2fy.com/p/000Contribution_贡献🇨🇳BQB/) |
-> 数据生成时间: 2020-10-02
+> 数据生成时间: 2020-10-03
 
 BQBEND
 
