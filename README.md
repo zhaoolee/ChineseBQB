@@ -28,7 +28,7 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录4035张表情包)Emoticon package directory (commonly included 4035 emoticon pack)
+## 表情包目录(共收录4037张表情包)Emoticon package directory (commonly included 4037 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
@@ -94,8 +94,8 @@
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000020.gif' /> | [020TATAN🤷‍♂️BQB(已收录31张)](https://www.v2fy.com/p/020TATAN🤷‍♂️BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000019.gif' /> | [019Green_Hat绿帽子🖼BQB(已收录23张)](https://www.v2fy.com/p/019Green_Hat绿帽子🖼BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000018.gif' /> | [018WangEgg_汪蛋🥚BQB(已收录48张)](https://www.v2fy.com/p/018WangEgg_汪蛋🥚BQB/) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000017.gif' /> | [017Playing_演奏🎻BQB(已收录23张)](https://www.v2fy.com/p/017Playing_演奏🎻BQB/) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000016.jpg' /> | [016spray_喷雾🚿BQB(已收录15张)](https://www.v2fy.com/p/016spray_喷雾🚿BQB/) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000017.gif' /> | [017Playing_演奏🎻BQB(已收录24张)](https://www.v2fy.com/p/017Playing_演奏🎻BQB/) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000016.jpg' /> | [016spray_喷雾🚿BQB(已收录16张)](https://www.v2fy.com/p/016spray_喷雾🚿BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000015.jpg' /> | [015Golden_Curator_Panda金馆长熊猫🐼BQB(已收录291张)](https://www.v2fy.com/p/015Golden_Curator_Panda金馆长熊猫🐼BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000014.gif' /> | [014Pig_猪🐖BQB(已收录21张)](https://www.v2fy.com/p/014Pig_猪🐖BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000013.gif' /> | [013PigPecs_小猪佩奇👑BQB(已收录22张)](https://www.v2fy.com/p/013PigPecs_小猪佩奇👑BQB/) |
