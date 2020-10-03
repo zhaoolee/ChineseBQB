@@ -28,7 +28,7 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录4038张表情包)Emoticon package directory (commonly included 4038 emoticon pack)
+## 表情包目录(共收录4032张表情包)Emoticon package directory (commonly included 4032 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
@@ -96,7 +96,7 @@
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/018WangEgg_汪蛋🥚BQB/000000018.gif' /> | [018WangEgg_汪蛋🥚BQB(已收录48张)](https://www.v2fy.com/p/018WangEgg_汪蛋🥚BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/017Playing_演奏🎻BQB/000000017.gif' /> | [017Playing_演奏🎻BQB(已收录23张)](https://www.v2fy.com/p/017Playing_演奏🎻BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/016spray_喷雾🚿BQB/000000016.jpg' /> | [016spray_喷雾🚿BQB(已收录15张)](https://www.v2fy.com/p/016spray_喷雾🚿BQB/) |
-| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/015Golden_Curator_Panda金馆长熊猫🐼BQB/000000015.jpg' /> | [015Golden_Curator_Panda金馆长熊猫🐼BQB(已收录297张)](https://www.v2fy.com/p/015Golden_Curator_Panda金馆长熊猫🐼BQB/) |
+| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/015Golden_Curator_Panda金馆长熊猫🐼BQB/000000015.jpg' /> | [015Golden_Curator_Panda金馆长熊猫🐼BQB(已收录291张)](https://www.v2fy.com/p/015Golden_Curator_Panda金馆长熊猫🐼BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/014Pig_猪🐖BQB/000000014.gif' /> | [014Pig_猪🐖BQB(已收录20张)](https://www.v2fy.com/p/014Pig_猪🐖BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/013PigPecs_小猪佩奇👑BQB/000000013.gif' /> | [013PigPecs_小猪佩奇👑BQB(已收录21张)](https://www.v2fy.com/p/013PigPecs_小猪佩奇👑BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/012Parrot_鹦鹉🐦BQB/000000012.gif' /> | [012Parrot_鹦鹉🐦BQB(已收录16张)](https://www.v2fy.com/p/012Parrot_鹦鹉🐦BQB/) |
