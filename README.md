@@ -28,7 +28,7 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录4034张表情包)Emoticon package directory (commonly included 4034 emoticon pack)
+## 表情包目录(共收录4042张表情包)Emoticon package directory (commonly included 4042 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
@@ -41,14 +41,14 @@
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000073.jpg' /> | [073腾讯与老千妈BQB(已收录31张)](https://www.v2fy.com/p/073腾讯与老千妈BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000072.jpg' /> | [072PaiYiPai_微信拍一拍👋BQB(已收录9张)](https://www.v2fy.com/p/072PaiYiPai_微信拍一拍👋BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000071.gif' /> | [071辉夜大小姐🎀BQB(已收录20张)](https://www.v2fy.com/p/071辉夜大小姐🎀BQB/) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000070.jpg' /> | [070JOJO的奇妙冒险BQB(已收录20张)](https://www.v2fy.com/p/070JOJO的奇妙冒险BQB/) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000069.gif' /> | [069Waves后浪🌊BQB(已收录5张)](https://www.v2fy.com/p/069Waves后浪🌊BQB/) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000068.jpg' /> | [068Aqua阿库娅BQB(已收录21张)](https://www.v2fy.com/p/068Aqua阿库娅BQB/) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000067.jpg' /> | [067NegroCarryingACoffin_黑人抬棺⚰BQB(已收录31张)](https://www.v2fy.com/p/067NegroCarryingACoffin_黑人抬棺⚰BQB/) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000066.jpg' /> | [066Makeding_马克丁🐎BQB(已收录16张)](https://www.v2fy.com/p/066Makeding_马克丁🐎BQB/) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000065.jpg' /> | [065TravelFrog_旅行青蛙🐸BQB(已收录9张)](https://www.v2fy.com/p/065TravelFrog_旅行青蛙🐸BQB/) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000064.jpg' /> | [064Trump_特朗普BQB(已收录7张)](https://www.v2fy.com/p/064Trump_特朗普BQB/) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000063.gif' /> | [063WebBrowser_浏览器BQB(已收录6张)](https://www.v2fy.com/p/063WebBrowser_浏览器BQB/) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000070.jpg' /> | [070JOJO的奇妙冒险BQB(已收录21张)](https://www.v2fy.com/p/070JOJO的奇妙冒险BQB/) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000069.gif' /> | [069Waves后浪🌊BQB(已收录6张)](https://www.v2fy.com/p/069Waves后浪🌊BQB/) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000068.jpg' /> | [068Aqua阿库娅BQB(已收录22张)](https://www.v2fy.com/p/068Aqua阿库娅BQB/) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000067.jpg' /> | [067NegroCarryingACoffin_黑人抬棺⚰BQB(已收录32张)](https://www.v2fy.com/p/067NegroCarryingACoffin_黑人抬棺⚰BQB/) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000066.jpg' /> | [066Makeding_马克丁🐎BQB(已收录17张)](https://www.v2fy.com/p/066Makeding_马克丁🐎BQB/) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000065.jpg' /> | [065TravelFrog_旅行青蛙🐸BQB(已收录10张)](https://www.v2fy.com/p/065TravelFrog_旅行青蛙🐸BQB/) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000064.jpg' /> | [064Trump_特朗普BQB(已收录8张)](https://www.v2fy.com/p/064Trump_特朗普BQB/) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000063.gif' /> | [063WebBrowser_浏览器BQB(已收录7张)](https://www.v2fy.com/p/063WebBrowser_浏览器BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000062.gif' /> | [062CaiXvKun_蔡徐坤🏀BQB(已收录10张)](https://www.v2fy.com/p/062CaiXvKun_蔡徐坤🏀BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000061.jpg' /> | [061KeNan_柯南🕵️‍♂️BQB(已收录165张)](https://www.v2fy.com/p/061KeNan_柯南🕵️‍♂️BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000060.jpg' /> | [060MurCat_Mur猫😺BQB(已收录22张)](https://www.v2fy.com/p/060MurCat_Mur猫😺BQB/) |
@@ -112,7 +112,7 @@
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000002.gif' /> | [002CuteGirl_可爱的女孩纸👧BQB(已收录185张)](https://www.v2fy.com/p/002CuteGirl_可爱的女孩纸👧BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000001.gif' /> | [001Funny_滑稽大佬😏BQB(已收录40张)](https://www.v2fy.com/p/001Funny_滑稽大佬😏BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000000.gif' /> | [000Contribution_贡献🇨🇳BQB(已收录18张)](https://www.v2fy.com/p/000Contribution_贡献🇨🇳BQB/) |
-> 数据生成时间: 2020-10-03
+> 数据生成时间: 2020-10-04
 
 BQBEND
 
