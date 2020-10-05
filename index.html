@@ -68,38 +68,59 @@
     <!-- 数据源https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb_v2fy.json -->
 
     <script>
+      function debounce(fn, wait) {
+        var timer = null;
+        return function() {
+          var context = this;
+          var args = arguments;
+          if (timer) {
+            clearTimeout(timer);
+            timer = null;
+          }
+          timer = setTimeout(function() {
+            fn.apply(context, args);
+          }, wait);
+        };
+      }
+
       async function change_img(key_val, chinesebqb_v2fy) {
 
-
-        if (key_val !== "") {
           key_val_img_info_list = [];
+        if (key_val !== "") {
 
-        }
+          var chinesebqb_v2fy_data = chinesebqb_v2fy.data;
 
-        var chinesebqb_v2fy_data = chinesebqb_v2fy.data;
+          let img_inner_html = "";
 
-        let img_inner_html = "";
+          for (
+            var m = 0,
+              chinesebqb_v2fy_data_length = chinesebqb_v2fy_data.length;
+            m < chinesebqb_v2fy_data_length;
+            m++
+          ) {
+            if (chinesebqb_v2fy_data[m]["name"].indexOf(key_val) !== -1) {
+              var img_html = `<div class="card" style="width: 18rem;">
+      <img src='${chinesebqb_v2fy_data[m]["url"]}' class="card-img-top" alt='${
+                chinesebqb_v2fy_data[m]["url"]
+              }'>
+      <div class="card-body">
+      <h5 class="card-title">${chinesebqb_v2fy_data[m]["name"]}</h5>
+      </div>
+    </div>`;
 
-        for (
-          var m = 0, chinesebqb_v2fy_data_length = chinesebqb_v2fy_data.length;
-          m < chinesebqb_v2fy_data_length;
-          m++
-        ) {
-          if (chinesebqb_v2fy_data[m]["name"].indexOf(key_val) !== -1) {
-
-
-            var img_html = `<div class="card" style="width: 18rem;">
-              <img src='${chinesebqb_v2fy_data[m]["url"]}' class="card-img-top" alt='${chinesebqb_v2fy_data[m]["url"]}'>
-              <div class="card-body">
-              <h5 class="card-title">${chinesebqb_v2fy_data[m]["name"]}</h5>
-              </div>
-            </div>`;
-
-            img_inner_html += img_html;
+              img_inner_html += img_html;
+            }
           }
-        }
 
-        $("#imgs_container").html(img_inner_html);
+          $("#imgs_container").html(img_inner_html);
+        } else {
+          $("#imgs_container").html("");
+
+
+
+
+
+        }
       }
 
       jQuery.get("./chinesebqb_v2fy.json", chinesebqb_v2fy => {
@@ -113,11 +134,12 @@
 
           var key_val = $("#bqb_key").val();
 
-
-
-          change_img(key_val, chinesebqb_v2fy);
+          debounce(change_img(key_val, chinesebqb_v2fy), 2000);
         });
       });
+
+      // 聚焦
+      document.getElementById("bqb_key").focus()
     </script>
   </body>
 </html>
