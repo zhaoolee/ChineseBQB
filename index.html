@@ -71,9 +71,6 @@
       async function change_img(key_val, chinesebqb_v2fy) {
 
 
-
-
-        
         if (key_val !== "") {
           key_val_img_info_list = [];
 
@@ -92,11 +89,11 @@
 
 
             var img_html = `<div class="card" style="width: 18rem;">
-  <img src="${chinesebqb_v2fy_data[m]["url"]}" class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">"${chinesebqb_v2fy_data[m]["name"]}"</h5>
-  </div>
-</div>`;
+              <img src='${chinesebqb_v2fy_data[m]["url"]}' class="card-img-top" alt='${chinesebqb_v2fy_data[m]["url"]}'>
+              <div class="card-body">
+              <h5 class="card-title">${chinesebqb_v2fy_data[m]["name"]}</h5>
+              </div>
+            </div>`;
 
             img_inner_html += img_html;
           }

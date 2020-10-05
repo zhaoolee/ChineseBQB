@@ -44,7 +44,7 @@ function get_json_data(bqb_dir_list, prefix){
     for(let n = 0, file_list_length = file_list.length; n < file_list_length; n++){
 
 
-      let tmp_img_url = path.join(prefix ,bqb_dir_list[i] ,file_list[n]);
+      let tmp_img_url = prefix + path.join(bqb_dir_list[i] ,file_list[n]);
 
       console.log(tmp_img_url)
 
