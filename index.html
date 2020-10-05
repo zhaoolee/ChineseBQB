@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -63,7 +63,7 @@
       />
     </div>
 
-    <div id="imgs_container"></div>
+    <div id="imgs_container">暂无匹配的表情包</div>
 
     <!-- 数据源https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb_v2fy.json -->
 
@@ -114,7 +114,7 @@
 
           $("#imgs_container").html(img_inner_html);
         } else {
-          $("#imgs_container").html("");
+          $("#imgs_container").html("暂无匹配的表情包");
 
 
 
@@ -127,7 +127,6 @@
         console.log("chinesebqb_v2fy==>>", chinesebqb_v2fy);
 
         let key_val_img_info_list = [];
-
         // 监听input内容变化
         $("#bqb_key").bind("input propertychange", function(event) {
           console.log($("#bqb_key").val());
