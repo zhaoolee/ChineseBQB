@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="./icon.png">
+    <link rel="shortcut icon" href="./icon.png" />
     <title>PP制造计划 开源表情包</title>
   </head>
 
@@ -16,15 +16,9 @@
     crossorigin="anonymous"
   />
 
-  <link
-    rel="stylesheet"
-    href="./cdn/material.indigo-pink.min.css"
-  />
+  <link rel="stylesheet" href="./cdn/material.indigo-pink.min.css" />
   <script src="./cdn/material.min.js"></script>
-  <link
-    rel="stylesheet"
-    href="./cdn/MaterialIcons.css"
-  />
+  <link rel="stylesheet" href="./cdn/MaterialIcons.css" />
 
   <!-- 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -38,33 +32,53 @@
       <div class="mdl-layout__drawer">
         <!-- <span class="mdl-layout-title">目录</span> -->
         <div style="text-align: center;">
-
           <div style="height: 20px"></div>
 
           <img
-          src="./icon.png"
-          width="100"
-          height="100"
-          class="d-inline-block align-top lazyload"
-          alt=""
-         /> 
-
-
+            src="./icon.png"
+            width="100"
+            height="100"
+            class="d-inline-block align-top lazyload"
+            alt=""
+          />
         </div>
 
         <nav class="mdl-navigation">
           <a class="mdl-navigation__link" href="https://v2fy.com/">V2方圆</a>
-          <a class="mdl-navigation__link" href="https://github.com/zhaoolee/ChineseBQB">ChineseBQB 开源地址</a>
-          <a class="mdl-navigation__link" href="https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/chinesebqb_github.json">ChineseBQB 开放数据源</a>
+          <a
+            class="mdl-navigation__link"
+            href="https://github.com/zhaoolee/ChineseBQB"
+            >ChineseBQB 开源地址</a
+          >
+          <a
+            class="mdl-navigation__link"
+            href="https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/chinesebqb_github.json"
+            >ChineseBQB 开放数据源</a
+          >
 
-          <a class="mdl-navigation__link" href="https://v2fy.com/ChineseBQB/">ChineseBQB 留言板</a>
-          <a class="mdl-navigation__link" href="mailto:info@gaotengasset.com">联系作者，贡献表情包!</a>
-          <a class="mdl-navigation__link" href="https://github.com/zhaoolee/ChineseBQB/graphs/contributors">贡献者列表</a>
-          <a class="mdl-navigation__link" href="https://fangyuanstu.com/">图标设计:老罗巴扎嘿</a>
-          <a class="mdl-navigation__link" href="http://www.beian.miit.gov.cn/">琼ICP备18002320号-2</a>
+          <a class="mdl-navigation__link" href="https://v2fy.com/ChineseBQB/"
+            >ChineseBQB 留言板</a
+          >
+          <a class="mdl-navigation__link" href="mailto:info@gaotengasset.com"
+            >联系作者，贡献表情包!</a
+          >
+          <a
+            class="mdl-navigation__link"
+            href="https://github.com/zhaoolee/ChineseBQB/graphs/contributors"
+            >贡献者列表</a
+          >
+          <a class="mdl-navigation__link" href="https://fangyuanstu.com/"
+            >图标设计:老罗巴扎嘿</a
+          >
+          <a class="mdl-navigation__link" href="http://www.beian.miit.gov.cn/"
+            >琼ICP备18002320号-2</a
+          >
 
-          <a class="mdl-navigation__link" href="https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/ba5b30723b85810c5a8a42be8ead4161.jpeg">捐赠</a>
-          
+          <a
+            class="mdl-navigation__link"
+            href="https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/ba5b30723b85810c5a8a42be8ead4161.jpeg"
+            >捐赠</a
+          >
         </nav>
       </div>
 
@@ -126,19 +140,18 @@
         font-size: 0.6rem;
       }
 
-
-      .no_bqb{
+      .no_bqb {
         border: 1px solid #dddddd;
         border-radius: 6px;
         height: 300px;
 
-        line-height:300px;
+        line-height: 300px;
         width: 100%;
 
         text-align: center;
         color: #111111;
 
-        font-size:20px;
+        font-size: 20px;
       }
     </style>
 
@@ -158,13 +171,10 @@
     <!-- 数据源https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb_v2fy.json -->
 
     <script>
+      function imgs_container_is_null() {
+        var bqb_html = `<div class="no_bqb">暂无匹配的表情包</div>`;
 
-      function imgs_container_is_null(){
-
-        var  bqb_html = `<div class="no_bqb">暂无匹配的表情包</div>`;
-        
         $("#imgs_container").html(bqb_html);
-
       }
 
       function bqb_lazyload() {
@@ -178,8 +188,8 @@
           effect: "fadeIn"
         });
 
-                  // 聚焦
-                  $("#bqb_key").focus();
+        // 聚焦
+        $("#bqb_key").focus();
       }
 
       function debounce(fn, wait) {
@@ -199,21 +209,20 @@
 
       async function change_img(key_val, chinesebqb_v2fy) {
         key_val_img_info_list = [];
-        if (key_val !== "")  {
+        if (key_val !== "") {
           var chinesebqb_v2fy_data = chinesebqb_v2fy.data;
 
           let img_inner_html = "";
 
-          if(chinesebqb_v2fy_data.length !==0){
-
+          if (chinesebqb_v2fy_data.length !== 0) {
             for (
-            var m = 0,
-              chinesebqb_v2fy_data_length = chinesebqb_v2fy_data.length;
-            m < chinesebqb_v2fy_data_length;
-            m++
-          ) {
-            if (chinesebqb_v2fy_data[m]["name"].indexOf(key_val) !== -1) {
-              var img_html = `<div class="card" style="margin-top: 1rem; width: 10rem;">
+              var m = 0,
+                chinesebqb_v2fy_data_length = chinesebqb_v2fy_data.length;
+              m < chinesebqb_v2fy_data_length;
+              m++
+            ) {
+              if (chinesebqb_v2fy_data[m]["name"].indexOf(key_val) !== -1) {
+                var img_html = `<div class="card" style="margin-top: 1rem; width: 10rem;">
       <img 
 
       class="lazy card-img-top"
@@ -231,44 +240,26 @@
       </div>
     </div>`;
 
-              img_inner_html += img_html;
+                img_inner_html += img_html;
+              }
+            }
+
+            if (img_inner_html.length === 0) {
+              imgs_container_is_null();
+            } else {
+              $("#imgs_container").html(img_inner_html);
+
+              // 重新加懒加载
+
+              bqb_lazyload();
             }
           }
-
-
-          if(img_inner_html.length === 0) {
-
-            imgs_container_is_null(); 
-
-
-
-          }else{
-
-            $("#imgs_container").html(img_inner_html);
-
-            // 重新加懒加载
-
-            bqb_lazyload();
-
-
-
-          }
-
-
-
-
-
-          }
           // 如果表情包仓库被清空，则会执行以下语句
-          else{
-
-            console.log("表情包仓库居然被清空了！是谁这样丧心病狂？")
+          else {
+            console.log("表情包仓库居然被清空了！是谁这样丧心病狂？");
 
             imgs_container_is_null();
-
           }
-
-
         } else {
           imgs_container_is_null();
         }
@@ -278,7 +269,6 @@
       // document.getElementById("bqb_key").focus()
 
       $(function() {
-
         imgs_container_is_null();
 
         // 读取localStorage key_val 并写入input
@@ -312,11 +302,17 @@
             debounce(change_img($("#bqb_key").val(), chinesebqb_v2fy), 2000);
           }
 
-
-
           bqb_lazyload();
         });
       });
+
+      // 初始化聚焦
+      window.οnlοad = function() {
+        //要初始化的东西
+
+        // 聚焦
+        $("#bqb_key").focus();
+      };
     </script>
 
     <!-- 百度统计 -->
