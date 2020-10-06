@@ -175,6 +175,8 @@
         var bqb_html = `<div class="no_bqb">暂无匹配的表情包</div>`;
 
         $("#imgs_container").html(bqb_html);
+
+
       }
 
       function bqb_lazyload() {
@@ -277,6 +279,8 @@
 
         // 写入
         $("#bqb_key").val(key_val);
+        // 写入后聚焦
+        $("#bqb_key").focus();
 
         // 完成初始化
         jQuery.get("./chinesebqb_v2fy.json", chinesebqb_v2fy => {
@@ -307,12 +311,17 @@
       });
 
       // 初始化聚焦
-      window.οnlοad = function() {
+      window.onload = function() {
         //要初始化的东西
 
         // 聚焦
         $("#bqb_key").focus();
       };
+
+      $(document).ready = ()=>{
+          $("#bqb_key").focus(); 
+        };
+      
     </script>
 
     <!-- 百度统计 -->
