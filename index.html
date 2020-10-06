@@ -235,15 +235,34 @@
             }
           }
 
-          $("#imgs_container").html(img_inner_html);
 
-          // 重新加懒加载
+          if(img_inner_html.length === 0) {
 
-          bqb_lazyload();
+            imgs_container_is_null(); 
 
 
 
           }else{
+
+            $("#imgs_container").html(img_inner_html);
+
+            // 重新加懒加载
+
+            bqb_lazyload();
+
+
+
+          }
+
+
+
+
+
+          }
+          // 如果表情包仓库被清空，则会执行以下语句
+          else{
+
+            console.log("表情包仓库居然被清空了！是谁这样丧心病狂？")
 
             imgs_container_is_null();
 
