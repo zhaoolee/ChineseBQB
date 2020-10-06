@@ -177,6 +177,9 @@
           placeholder: "img/loading.jpg",
           effect: "fadeIn"
         });
+
+                  // 聚焦
+                  $("#bqb_key").focus();
       }
 
       function debounce(fn, wait) {
@@ -290,8 +293,7 @@
             debounce(change_img($("#bqb_key").val(), chinesebqb_v2fy), 2000);
           }
 
-          // 聚焦
-          $("#bqb_key").focus();
+
 
           bqb_lazyload();
         });
