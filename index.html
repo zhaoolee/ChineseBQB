@@ -9,6 +9,12 @@
 
   <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
+  <script src="./cdn/clipboard.min.js"></script>
+
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous"></script>
+
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"
@@ -20,11 +26,15 @@
   <script src="./cdn/material.min.js"></script>
   <link rel="stylesheet" href="./cdn/MaterialIcons.css" />
 
-  <!-- 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script> -->
 
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>  -->
+
+
+<script src="./cdn/zepto.min.js"></script>
+<link rel="stylesheet" type="text/css" href="./cdn/dialog.css">
+<script type="text/javascript" src="./cdn/dialog.bundle.js"></script>
   <body>
     <!-- 抽屉 -->
 
@@ -112,6 +122,12 @@
             />
           </div>
 
+
+
+
+
+          
+
           <div id="imgs_container">暂无匹配的表情包</div>
         </div>
       </main>
@@ -121,9 +137,29 @@
         margin: 0px;
         background-color: #f5efe0;
       }
+
+
+
+
+      .modal-backdrop{z-index:0;}
+
+      .modal-dialog{
+        z-index: 1000000 !important;
+      }
+
+
+
       .page-content {
         padding-left: 18px;
         padding-right: 18px;
+      }
+
+      .modal-header{
+
+        
+        padding-top: 0;
+        padding-bottom: 0;
+        border: 0;
       }
 
       #imgs_container {
@@ -153,6 +189,10 @@
 
         font-size: 20px;
       }
+
+      .card-body > .btn-container {
+        text-align: center;
+      }
     </style>
 
     <!-- <nav class="navbar navbar-light bg-light">
@@ -171,12 +211,49 @@
     <!-- 数据源https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb_v2fy.json -->
 
     <script>
+      // 复制函数
+
+      function to_copy() {
+        var clipboard = new ClipboardJS(".btn");
+
+        clipboard.on("success", function(e) {
+          console.info("Action:", e.action);
+          console.info("Text:", e.text);
+          console.info("Trigger:", e.trigger);
+
+          popup({type:'success',msg:"粘贴到朋友圈评论区吧~",delay:1800,callBack:function(){
+              
+           }});
+
+
+
+
+
+
+          // e.clearSelection();
+
+          // // $("#exampleModal").modal('toggle');
+
+          // setTimeout(function(){
+
+          //   // $("#exampleModal").modal("hide");
+
+          // }, 2000)
+
+
+
+        });
+
+        clipboard.on("error", function(e) {
+          console.error("Action:", e.action);
+          console.error("Trigger:", e.trigger);
+        });
+      }
+
       function imgs_container_is_null() {
         var bqb_html = `<div class="no_bqb">暂无匹配的表情包</div>`;
 
         $("#imgs_container").html(bqb_html);
-
-
       }
 
       function bqb_lazyload() {
@@ -210,9 +287,10 @@
       }
 
       async function change_img(key_val, chinesebqb_v2fy) {
+        var chinesebqb_v2fy_data = chinesebqb_v2fy.data;
         key_val_img_info_list = [];
         if (key_val !== "") {
-          var chinesebqb_v2fy_data = chinesebqb_v2fy.data;
+          
 
           let img_inner_html = "";
 
@@ -235,10 +313,24 @@
 
 
       
-      alt='${chinesebqb_v2fy_data[m]["url"]}' >
+      alt='${chinesebqb_v2fy_data[m]["url"]}'>
 
       <div class="card-body">
+        <div class="btn-container">
+
+
+        <button  type="button" style="font-size: 0.6rem" class="btn btn-success" id='${chinesebqb_v2fy_data[m]["url"]}'  data-clipboard-text='${chinesebqb_v2fy_data[m]["url"]}' >
+            复制到朋友圈
+        </button>
+
+
+
+
+          
+          </div>
+
       <h5 class="card-title">${chinesebqb_v2fy_data[m]["name"]}</h5>
+
       </div>
     </div>`;
 
@@ -246,10 +338,42 @@
               }
             }
 
+
+            // let tmp_id = "#"+chinesebqb_v2fy_data[m]["url"];
+
+// $(tmp_id).popover({
+
+//   "content": "复制成功"+chinesebqb_v2fy_data[m]["url"],
+//   "placement": "bottom"
+
+// })
+
+
+            $("button").onclick = function(){
+              toastr.success('Have fun storming the castle!', 'Miracle Max Says')
+            }
+
             if (img_inner_html.length === 0) {
               imgs_container_is_null();
             } else {
               $("#imgs_container").html(img_inner_html);
+
+
+
+
+              
+              
+              // $("button").popover({
+              //   "html":true,
+              //   "content": "<div>复制成功!<br/>可粘贴到朋友圈评论区</div>",
+              //   "placement": "bottom"
+              // })
+
+
+              
+
+
+
 
               // 重新加懒加载
 
@@ -265,6 +389,13 @@
         } else {
           imgs_container_is_null();
         }
+
+
+
+
+        // 初始化粘贴板
+
+        to_copy();
       }
 
       // 聚焦
@@ -318,10 +449,11 @@
         $("#bqb_key").focus();
       };
 
-      $(document).ready = ()=>{
-          $("#bqb_key").focus(); 
-        };
-      
+      $(document).ready = () => {
+        $("#bqb_key").focus();
+      };
+
+
     </script>
 
     <!-- 百度统计 -->
