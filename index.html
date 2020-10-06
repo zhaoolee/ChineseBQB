@@ -75,19 +75,15 @@
 
       function bqb_lazyload(){
 
-                  //  启用lazyload
-
+          //  启用lazyload
           $("img.lazy").lazyload({
             // 可以代替img里面src属性中的值
             // placehoder:"img/viper_1.jpg"
             //
             // 图片载入时的效果
-            placeholder:"loading.jpg",
+            placeholder:"img/loading.jpg",
             effect: "fadeIn"
           });
-
-
-
 
       }
 
@@ -128,7 +124,7 @@
 
       data-src='${chinesebqb_v2fy_data[m]["url"]}'
 
-      
+      src='img/loading.jpg'
 
 
       
@@ -166,7 +162,6 @@
         $("#bqb_key").val(key_val);
 
         // 完成初始化
-
         jQuery.get("./chinesebqb_v2fy.json", chinesebqb_v2fy => {
           console.log("chinesebqb_v2fy==>>", chinesebqb_v2fy);
 
