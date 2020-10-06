@@ -7,7 +7,7 @@
   </head>
 
   <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"
@@ -30,21 +30,25 @@
         display: flex;
         width: 100%;
         flex-wrap: wrap;
+        justify-content: space-between;
       }
       .bqb_img {
         height: 100px;
+      }
+
+      .card-title {
+        font-size: 0.6rem;
       }
     </style>
 
     <nav class="navbar navbar-light bg-light">
       <a class="navbar-brand" href="#">
         <img
-          src="https://www.v2fy.com/asset/0i/ChineseBQB/031Penguin_%E6%B2%99%E9%9B%95%E4%BC%81%E9%B9%85%F0%9F%90%A7BQB/000000031.gif"
+          src="https://www.v2fy.com/asset/0i/ChineseBQB/icon.jpg"
           width="30"
           height="30"
-          class="d-inline-block align-top"
+          class="d-inline-block align-top lazyload"
           alt=""
-          loading="lazy"
         />
         PP制造计划开源表情包
       </a>
@@ -68,6 +72,26 @@
     <!-- 数据源https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb_v2fy.json -->
 
     <script>
+
+      function bqb_lazyload(){
+
+                  //  启用lazyload
+
+          $("img.lazy").lazyload({
+            // 可以代替img里面src属性中的值
+            // placehoder:"img/viper_1.jpg"
+            //
+            // 图片载入时的效果
+            placeholder:"loading.jpg",
+            effect: "fadeIn"
+          });
+
+
+
+
+      }
+
+
       function debounce(fn, wait) {
         var timer = null;
         return function() {
@@ -84,10 +108,8 @@
       }
 
       async function change_img(key_val, chinesebqb_v2fy) {
-
-          key_val_img_info_list = [];
+        key_val_img_info_list = [];
         if (key_val !== "") {
-
           var chinesebqb_v2fy_data = chinesebqb_v2fy.data;
 
           let img_inner_html = "";
@@ -99,10 +121,19 @@
             m++
           ) {
             if (chinesebqb_v2fy_data[m]["name"].indexOf(key_val) !== -1) {
-              var img_html = `<div class="card" style="width: 18rem;">
-      <img src='${chinesebqb_v2fy_data[m]["url"]}' class="card-img-top" alt='${
-                chinesebqb_v2fy_data[m]["url"]
-              }'>
+              var img_html = `<div class="card" style="margin-top: 1rem; width: 10rem;">
+      <img 
+
+      class="lazy card-img-top"
+
+      data-src='${chinesebqb_v2fy_data[m]["url"]}'
+
+      
+
+
+      
+      alt='${chinesebqb_v2fy_data[m]["url"]}' >
+
       <div class="card-body">
       <h5 class="card-title">${chinesebqb_v2fy_data[m]["name"]}</h5>
       </div>
@@ -113,43 +144,69 @@
           }
 
           $("#imgs_container").html(img_inner_html);
+
+
+          // 重新加懒加载
+
+          bqb_lazyload();
         } else {
           $("#imgs_container").html("暂无匹配的表情包");
-
-
-
-
-
         }
       }
 
-      jQuery.get("./chinesebqb_v2fy.json", chinesebqb_v2fy => {
-        console.log("chinesebqb_v2fy==>>", chinesebqb_v2fy);
+      // 聚焦
+      // document.getElementById("bqb_key").focus()
 
-        let key_val_img_info_list = [];
-        // 监听input内容变化
-        $("#bqb_key").bind("input propertychange", function(event) {
-          console.log($("#bqb_key").val());
+      $(function() {
+        // 读取localStorage key_val 并写入input
 
-          var key_val = $("#bqb_key").val();
+        var key_val = localStorage.getItem("key_val");
 
-          debounce(change_img(key_val, chinesebqb_v2fy), 2000);
+        // 写入
+        $("#bqb_key").val(key_val);
+
+        // 完成初始化
+
+        jQuery.get("./chinesebqb_v2fy.json", chinesebqb_v2fy => {
+          console.log("chinesebqb_v2fy==>>", chinesebqb_v2fy);
+
+          let key_val_img_info_list = [];
+          // 监听input内容变化
+          $("#bqb_key").bind("input propertychange", function(event) {
+            console.log($("#bqb_key").val());
+
+            var key_val = $("#bqb_key").val();
+
+            // 将数据存入localStorage
+
+            localStorage.setItem("key_val", key_val);
+
+            debounce(change_img(key_val, chinesebqb_v2fy), 2000);
+          });
+
+          // 如果初始化不为空则直接请求
+
+          if ($("#bqb_key").val()) {
+            debounce(change_img($("#bqb_key").val(), chinesebqb_v2fy), 2000);
+          }
+
+          // 聚焦
+          $("#bqb_key").focus();
+
+            bqb_lazyload();
         });
       });
-
-      // 聚焦
-      document.getElementById("bqb_key").focus()
     </script>
 
-<!-- 百度统计 -->
-<script>
-  var _hmt = _hmt || [];
-  (function() {
-    var hm = document.createElement("script");
-    hm.src = "https://hm.baidu.com/hm.js?34564f2837e4e2fb61052ac26a09b689";
-    var s = document.getElementsByTagName("script")[0]; 
-    s.parentNode.insertBefore(hm, s);
-  })();
-  </script>
+    <!-- 百度统计 -->
+    <script>
+      var _hmt = _hmt || [];
+      (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?34564f2837e4e2fb61052ac26a09b689";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
   </body>
 </html>
