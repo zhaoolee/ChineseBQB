@@ -11,13 +11,11 @@
 
 **表情包发送给朋友**
 
-
 ![2020-09-29-friend](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/2020-09-29-friend.gif)
 
 **表情包发送到朋友圈**
 
 ![2020-09-29-pengyouquan](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/2020-09-29-pengyouquan.gif)
-
 
 2. 表情包标注数据开源了！[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/chinesebqb_github.json](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/chinesebqb_github.json) 有表情包标注数据的支持，开发者可以通过关键词获取相应的表情包.
 
