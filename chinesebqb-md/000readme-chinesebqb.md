@@ -8,9 +8,31 @@
 
 1. 表情包可以通过关键词查找了！查找页面：[https://www.v2fy.com/asset/0i/ChineseBQB/](https://www.v2fy.com/asset/0i/ChineseBQB/)
 
-2. 表情包标注数据开源了！[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/chinesebqb_github.json](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/chinesebqb_github.json) 有表情包标注数据的支持，开发者可以通过关键词获取相应的表情包，示例网页 [https://www.v2fy.com/asset/0i/ChineseBQB/](https://www.v2fy.com/asset/0i/ChineseBQB/)
+![公众号预览图.001](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/%E5%85%AC%E4%BC%97%E5%8F%B7%E9%A2%84%E8%A7%88%E5%9B%BE.001.jpeg)
 
-3. [ChineseBQB国内版](https://v2fy.com/ChineseBQB/)发布成功!  可以通过 [https://v2fy.com/ChineseBQB](https://v2fy.com/ChineseBQB/) 丝滑流畅浏览所有表情包了, 有好的建议,还可以在页面底部直接留言哦~
+**表情包发送给朋友**
+
+![2020-09-29-friend](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/2020-09-29-friend.gif)
+
+**表情包发送到朋友圈**
+
+![2020-09-29-pengyouquan](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/2020-09-29-pengyouquan.gif)
+
+
+2. 表情包标注数据开源了！[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/chinesebqb_github.json](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/chinesebqb_github.json) 有表情包标注数据的支持，开发者可以通过关键词获取相应的表情包.
+ 
+示例网页展示效果：
+
+[https://www.v2fy.com/asset/0i/ChineseBQB/](https://www.v2fy.com/asset/0i/ChineseBQB/) 
+
+示例网页开源地址：
+
+[https://github.com/zhaoolee/ChineseBQB/blob/master/index.html](https://github.com/zhaoolee/ChineseBQB/blob/master/index.html)
+
+
+
+
+3. [ChineseBQB国内版](https://v2fy.com/ChineseBQB/)发布成功!  可以通过 [https://v2fy.com/ChineseBQB](https://v2fy.com/ChineseBQB/) 丝滑流畅浏览所有表情包了, 有好的建议,还可以在页面底部直接留言，有好的表情包可以在评论区直接上传~
 
 ![202006143933072](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/202006143933072.png)
 
@@ -33,11 +55,11 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录3965张表情包)Emoticon package directory (commonly included 3965 emoticon pack)
+## 表情包目录(共收录3966张表情包)Emoticon package directory (commonly included 3966 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
-| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/斗图之王BQB/000000doutuzhiwang.jpg' /> | [斗图之王BQB(已收录28张)](https://www.v2fy.com/p/斗图之王BQB/) |
+| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/斗图之王BQB/000000doutuzhiwang.jpg' /> | [斗图之王BQB(已收录29张)](https://www.v2fy.com/p/斗图之王BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/微信网友贡献表情包_暂存_有时间慢慢整理BQB/0.png' /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://www.v2fy.com/p/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/077TuHi_土嗨_BQB/0000000077.gif' /> | [077TuHi_土嗨_BQB(已收录3张)](https://www.v2fy.com/p/077TuHi_土嗨_BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/076Moe可爱萝莉_BQB/0000000076.gif' /> | [076Moe可爱萝莉_BQB(已收录3张)](https://www.v2fy.com/p/076Moe可爱萝莉_BQB/) |
