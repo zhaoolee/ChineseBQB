@@ -7,7 +7,7 @@
 
 1. 表情包可以通过关键词查找了！查找页面：[https://www.v2fy.com/asset/0i/ChineseBQB/](https://www.v2fy.com/asset/0i/ChineseBQB/)
 
-![公众号预览图.001](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/%E5%85%AC%E4%BC%97%E5%8F%B7%E9%A2%84%E8%A7%88%E5%9B%BE.001.jpeg)
+![公众号预览图](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/gongzhonghao233.jpeg)
 
 **表情包发送给朋友**
 
