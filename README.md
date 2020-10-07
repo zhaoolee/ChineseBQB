@@ -2,8 +2,7 @@
 
 [![](https://img.shields.io/badge/ChineseBQB-READEME-brightgreen)](https://github.com/zhaoolee/ChineseBQB)
 
-
-## 最新动态(2020年10月06日大更新)
+## 最新动态(2020年10月07日大更新)
 
 
 1. 表情包可以通过关键词查找了！查找页面：[https://www.v2fy.com/asset/0i/ChineseBQB/](https://www.v2fy.com/asset/0i/ChineseBQB/)
@@ -20,7 +19,7 @@
 
 
 2. 表情包标注数据开源了！[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/chinesebqb_github.json](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/chinesebqb_github.json) 有表情包标注数据的支持，开发者可以通过关键词获取相应的表情包.
- 
+
 示例网页展示效果：
 
 [https://www.v2fy.com/asset/0i/ChineseBQB/](https://www.v2fy.com/asset/0i/ChineseBQB/) 
