@@ -28,8 +28,6 @@
 [https://github.com/zhaoolee/ChineseBQB/blob/master/index.html](https://github.com/zhaoolee/ChineseBQB/blob/master/index.html)
 
 
-
-
 3. [ChineseBQB国内版](https://v2fy.com/ChineseBQB/)发布成功!  可以通过 [https://v2fy.com/ChineseBQB](https://v2fy.com/ChineseBQB/) 丝滑流畅浏览所有表情包了, 有好的建议,还可以在页面底部直接留言，有好的表情包可以在评论区直接上传~
 
 ![202006143933072](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/202006143933072.png)
