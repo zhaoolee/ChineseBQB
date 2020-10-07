@@ -11,6 +11,7 @@
 
 **表情包发送给朋友**
 
+
 ![2020-09-29-friend](https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/2020-09-29-friend.gif)
 
 **表情包发送到朋友圈**
