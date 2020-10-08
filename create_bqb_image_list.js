@@ -113,7 +113,7 @@ function main() {
 
   };
   
-  let chinesebqb_v2fy_json_data = get_json_data(bqb_dir, "https://www.v2fy.com/asset/0i/ChineseBQB/")
+  let chinesebqb_v2fy_json_data = get_json_data(bqb_dir, "v2fy.com/asset/0i/ChineseBQB/")
 
   let chinesebqb_v2fy_json = {
 
