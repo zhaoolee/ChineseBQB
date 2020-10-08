@@ -11,9 +11,17 @@
   <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
   <script src="./cdn/clipboard.min.js"></script>
 
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
+    integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
+    crossorigin="anonymous"
+  />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+    integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+    crossorigin="anonymous"
+  ></script>
 
   <link
     rel="stylesheet"
@@ -26,16 +34,71 @@
   <script src="./cdn/material.min.js"></script>
   <link rel="stylesheet" href="./cdn/MaterialIcons.css" />
 
-
-<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>  -->
 
-
-<script src="./cdn/zepto.min.js"></script>
-<link rel="stylesheet" type="text/css" href="./cdn/dialog.css">
-<script type="text/javascript" src="./cdn/dialog.bundle.js"></script>
+  <script src="./cdn/zepto.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="./cdn/dialog.css" />
+  <script type="text/javascript" src="./cdn/dialog.bundle.js"></script>
   <body>
+    <style>
+      body {
+        margin: 0px;
+        background-color: #f5efe0;
+      }
+
+      .share_div {
+        text-align: right;
+      }
+
+      .modal-backdrop {
+        z-index: 0;
+      }
+      .page-content {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .modal-header {
+        padding-top: 0;
+        padding-bottom: 0;
+        border: 0;
+      }
+
+      #imgs_container {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+      .bqb_img {
+        height: 100px;
+      }
+
+      .card-title {
+        font-size: 0.6rem;
+      }
+
+      .no_bqb {
+        border: 1px solid #dddddd;
+        border-radius: 6px;
+        height: 300px;
+
+        line-height: 300px;
+        width: 100%;
+
+        text-align: center;
+        color: #111111;
+
+        font-size: 20px;
+      }
+
+      .card-body > .btn-container {
+        text-align: center;
+      }
+    </style>
+
     <!-- 抽屉 -->
 
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
@@ -54,16 +117,17 @@
         </div>
 
         <nav class="mdl-navigation">
-          <a class="mdl-navigation__link" href="https://www.v2fy.com/p/2020-10-07-link/"
-          >如何贡献表情包？</a
-        >
-        <a
-          class="mdl-navigation__link"
-          href="https://github.com/zhaoolee/ChineseBQB/graphs/contributors"
-          >贡献者列表</a
-        >
+          <a
+            class="mdl-navigation__link"
+            href="https://www.v2fy.com/p/2020-10-07-link/"
+            >如何贡献表情包？</a
+          >
+          <a
+            class="mdl-navigation__link"
+            href="https://github.com/zhaoolee/ChineseBQB/graphs/contributors"
+            >贡献者列表</a
+          >
 
-         
           <a
             class="mdl-navigation__link"
             href="https://github.com/zhaoolee/ChineseBQB"
@@ -75,16 +139,17 @@
             >ChineseBQB 开放数据源</a
           >
 
-
-          <a class="mdl-navigation__link" href="https://v2fy.com/ChineseBQB/"
-            > ChineseBQB 资源库 | 可留言</a
+          <a class="mdl-navigation__link" href="https://v2fy.com/ChineseBQB/">
+            ChineseBQB 资源库 | 可留言</a
           >
-         
-          <a class="mdl-navigation__link" href="https://v2fy.com/">更多好玩 | V2方圆</a>
+
+          <a class="mdl-navigation__link" href="https://v2fy.com/"
+            >更多好玩 | V2方圆</a
+          >
 
           <a class="mdl-navigation__link" href="https://fangyuanstu.com/"
-          >图标设计 | 老罗巴扎嘿</a
-        >
+            >图标设计 | 老罗巴扎嘿</a
+          >
 
           <a class="mdl-navigation__link" href="http://www.beian.miit.gov.cn/"
             >琼ICP备18002320号-2</a
@@ -126,80 +191,37 @@
               aria-label="Recipient's usernam"
               aria-describedby="button-addon2"
             />
+
+            <div class="input-group-append">
+              <button
+                type="button"
+                class="btn btn-success share-page-with-key-val"
+              >
+                分享
+                <svg
+                  width="1em"
+                  height="1em"
+                  viewBox="0 0 16 16"
+                  class="bi bi-share-fill"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"
+                  ></path>
+                </svg>
+              </button>
+            </div>
           </div>
 
-
-
-
-
-          
-
           <div id="imgs_container">暂无匹配的表情包</div>
+
+          <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
         </div>
       </main>
     </div>
-    <style>
-      body {
-        margin: 0px;
-        background-color: #f5efe0;
-      }
-
-
-
-
-      .modal-backdrop{z-index:0;}
-
-      .modal-dialog{
-        z-index: 1000000 !important;
-      }
-
-
-
-      .page-content {
-        padding-left: 18px;
-        padding-right: 18px;
-      }
-
-      .modal-header{
-
-        
-        padding-top: 0;
-        padding-bottom: 0;
-        border: 0;
-      }
-
-      #imgs_container {
-        display: flex;
-        width: 100%;
-        flex-wrap: wrap;
-        justify-content: space-between;
-      }
-      .bqb_img {
-        height: 100px;
-      }
-
-      .card-title {
-        font-size: 0.6rem;
-      }
-
-      .no_bqb {
-        border: 1px solid #dddddd;
-        border-radius: 6px;
-        height: 300px;
-
-        line-height: 300px;
-        width: 100%;
-
-        text-align: center;
-        color: #111111;
-
-        font-size: 20px;
-      }
-
-      .card-body > .btn-container {
-        text-align: center;
-      }
-    </style>
 
     <!-- <nav class="navbar navbar-light bg-light">
       <a class="navbar-brand" href="#">
@@ -217,39 +239,36 @@
     <!-- 数据源https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb_v2fy.json -->
 
     <script>
-
       // 获取参数
 
-
-      function getQueryVariable(variable)
-{
-       var query = window.location.search.substring(1);
-       var vars = query.split("&");
-       for (var i=0;i<vars.length;i++) {
-               var pair = vars[i].split("=");
-               if(pair[0] == variable){return pair[1];}
-       }
-       return(false);
-}
+      function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+          var pair = vars[i].split("=");
+          if (pair[0] == variable) {
+            return pair[1];
+          }
+        }
+        return false;
+      }
 
       // 复制函数
 
       function to_copy() {
-        var clipboard = new ClipboardJS(".btn");
+        var clipboard = new ClipboardJS(".copy-to-url");
 
         clipboard.on("success", function(e) {
           console.info("Action:", e.action);
           console.info("Text:", e.text);
           console.info("Trigger:", e.trigger);
 
-          popup({type:'success',msg:"粘贴到朋友圈评论区吧~",delay:1800,callBack:function(){
-              
-           }});
-
-
-
-
-
+          popup({
+            type: "success",
+            msg: "粘贴到朋友圈评论区吧~",
+            delay: 1800,
+            callBack: function() {}
+          });
 
           // e.clearSelection();
 
@@ -260,9 +279,6 @@
           //   // $("#exampleModal").modal("hide");
 
           // }, 2000)
-
-
-
         });
 
         clipboard.on("error", function(e) {
@@ -311,17 +327,20 @@
         var chinesebqb_v2fy_data = chinesebqb_v2fy.data;
         key_val_img_info_list = [];
         if (key_val !== "") {
-          
-
           let img_inner_html = "";
 
           if (chinesebqb_v2fy_data.length !== 0) {
             for (
-              var chinesebqb_v2fy_data_length = chinesebqb_v2fy_data.length, m = chinesebqb_v2fy_data_length - 1;
+              var chinesebqb_v2fy_data_length = chinesebqb_v2fy_data.length,
+                m = chinesebqb_v2fy_data_length - 1;
               m >= 0;
-              m --
+              m--
             ) {
-              if (((chinesebqb_v2fy_data[m]["name"]).toLowerCase()).indexOf(key_val.toLowerCase()) !== -1) {
+              if (
+                chinesebqb_v2fy_data[m]["name"]
+                  .toLowerCase()
+                  .indexOf(key_val.toLowerCase()) !== -1
+              ) {
                 var img_html = `<div class="card" style="margin-top: 1rem; width: 10rem;">
       <img 
 
@@ -339,7 +358,9 @@
         <div class="btn-container">
 
 
-        <button  type="button" style="font-size: 0.6rem" class="btn btn-success" id='${chinesebqb_v2fy_data[m]["url"]}'  data-clipboard-text='${encodeURI(chinesebqb_v2fy_data[m]["url"])}' >
+        <button  type="button" style="font-size: 0.6rem" class="btn btn-success copy-to-url" id='${
+          chinesebqb_v2fy_data[m]["url"]
+        }'  data-clipboard-text='${encodeURI(chinesebqb_v2fy_data[m]["url"])}' >
             复制到朋友圈
         </button>
 
@@ -358,42 +379,85 @@
               }
             }
 
-
             // let tmp_id = "#"+chinesebqb_v2fy_data[m]["url"];
 
-// $(tmp_id).popover({
+            // $(tmp_id).popover({
 
-//   "content": "复制成功"+chinesebqb_v2fy_data[m]["url"],
-//   "placement": "bottom"
+            //   "content": "复制成功"+chinesebqb_v2fy_data[m]["url"],
+            //   "placement": "bottom"
 
-// })
+            // })
+
+            // $(".copy-to-url").onclick = function() {
+            //   toastr.success(
+            //     "Have fun storming the castle!",
+            //     "Miracle Max Says"
+            //   );
+            // };
+
+            // 分享关键词按钮
+
+            // $(".").onclick = function() {
+            //   popup({
+            //     type: "success",
+            //     msg: "分享给朋友吧~",
+            //     delay: 1800,
+            //     callBack: function() {}
+            //   });
+            // };
+
+            var share_page_with_key_val = new ClipboardJS(
+              ".share-page-with-key-val",
+              {
+                text: function() {
 
 
-            $("button").onclick = function(){
-              toastr.success('Have fun storming the castle!', 'Miracle Max Says')
-            }
+
+
+                  let share_page_with_key_url_text = encodeURI(window.location.protocol+"//"+window.location.host+window.location.pathname + "?key_val="+localStorage.getItem("key_val"));
+
+                  if(localStorage.getItem("key_val").length === 0){
+
+                    share_page_with_key_url_text = encodeURI(window.location.protocol+"//"+window.location.host+window.location.pathname);
+                  }
+                  return share_page_with_key_url_text;
+                }
+              }
+            );
+
+            share_page_with_key_val.on("success", function(e) {
+          console.info("Action:", e.action);
+          console.info("Text:", e.text);
+          console.info("Trigger:", e.trigger);
+
+          popup({
+            type: "success",
+            msg: "粘贴分享给朋友吧~",
+            delay: 1800,
+            callBack: function() {}
+          });
+
+          // e.clearSelection();
+
+          // // $("#exampleModal").modal('toggle');
+
+          // setTimeout(function(){
+
+          //   // $("#exampleModal").modal("hide");
+
+          // }, 2000)
+        });
 
             if (img_inner_html.length === 0) {
               imgs_container_is_null();
             } else {
               $("#imgs_container").html(img_inner_html);
 
-
-
-
-              
-              
               // $("button").popover({
               //   "html":true,
               //   "content": "<div>复制成功!<br/>可粘贴到朋友圈评论区</div>",
               //   "placement": "bottom"
               // })
-
-
-              
-
-
-
 
               // 重新加懒加载
 
@@ -409,9 +473,6 @@
         } else {
           imgs_container_is_null();
         }
-
-
-
 
         // 初始化粘贴板
 
@@ -432,15 +493,13 @@
 
         var url_key_val = getQueryVariable("key_val");
 
-        if(url_key_val !== false){
-
-          key_val = decodeURI(url_key_val)
+        if (url_key_val !== false) {
+          key_val = decodeURI(url_key_val);
 
           // 重新设置localStorage
 
           localStorage.setItem("key_val", key_val);
         }
-
 
         // 写入
         $("#bqb_key").val(key_val);
@@ -486,8 +545,6 @@
       $(document).ready = () => {
         $("#bqb_key").focus();
       };
-
-
     </script>
 
     <!-- 百度统计 -->
