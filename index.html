@@ -217,6 +217,21 @@
     <!-- 数据源https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb_v2fy.json -->
 
     <script>
+
+      // 获取参数
+
+
+      function getQueryVariable(variable)
+{
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return(false);
+}
+
       // 复制函数
 
       function to_copy() {
@@ -412,6 +427,20 @@
         // 读取localStorage key_val 并写入input
 
         var key_val = localStorage.getItem("key_val");
+
+        // 如果url自带key_value则使用url自带的
+
+        var url_key_val = getQueryVariable("key_val");
+
+        if(url_key_val !== false){
+
+          key_val = decodeURI(url_key_val)
+
+          // 重新设置localStorage
+
+          localStorage.setItem("key_val", key_val);
+        }
+
 
         // 写入
         $("#bqb_key").val(key_val);
