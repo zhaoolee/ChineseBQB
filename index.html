@@ -302,10 +302,10 @@
 
           if (chinesebqb_v2fy_data.length !== 0) {
             for (
-              var m = 0,
-                chinesebqb_v2fy_data_length = chinesebqb_v2fy_data.length;
-              m < chinesebqb_v2fy_data_length;
-              m++
+              var 
+                chinesebqb_v2fy_data_length = chinesebqb_v2fy_data.length, m = chinesebqb_v2fy_data_length;
+              m >= 0;
+              m --
             ) {
               if (((chinesebqb_v2fy_data[m]["name"]).toLowerCase()).indexOf(key_val.toLowerCase()) !== -1) {
                 var img_html = `<div class="card" style="margin-top: 1rem; width: 10rem;">
