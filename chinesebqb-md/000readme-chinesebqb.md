@@ -51,12 +51,13 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录3934张表情包)Emoticon package directory (commonly included 3934 emoticon pack)
+## 表情包目录(共收录4349张表情包)Emoticon package directory (commonly included 4349 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/斗图之王BQB/000000doutuzhiwang.jpg' /> | [斗图之王BQB(已收录29张)](https://www.v2fy.com/p/斗图之王BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/微信网友贡献表情包_暂存_有时间慢慢整理BQB/0.png' /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://www.v2fy.com/p/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) |
+| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/078BeiFang_北方栖姬_BQB/0000000078.jpg' /> | [078BeiFang_北方栖姬_BQB(已收录415张)](https://www.v2fy.com/p/078BeiFang_北方栖姬_BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/077TuHi_土嗨_BQB/0000000077.gif' /> | [077TuHi_土嗨_BQB(已收录3张)](https://www.v2fy.com/p/077TuHi_土嗨_BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/076Moe可爱萝莉_BQB/0000000076.gif' /> | [076Moe可爱萝莉_BQB(已收录3张)](https://www.v2fy.com/p/076Moe可爱萝莉_BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/075Vtuber_虚拟youtuberBQB/0000000075.gif' /> | [075Vtuber_虚拟youtuberBQB(已收录8张)](https://www.v2fy.com/p/075Vtuber_虚拟youtuberBQB/) |
