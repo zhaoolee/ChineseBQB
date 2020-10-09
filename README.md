@@ -17,9 +17,9 @@
 
 
 
-## 《ChineseBQB在线搜图斗图工具》
+## [《ChineseBQB 在线搜图斗图工具》]((https://www.v2fy.com/asset/0i/ChineseBQB/))
 
-[《ChineseBQB在线搜图斗图工具》直达地址: https://www.v2fy.com/asset/0i/ChineseBQB/](https://www.v2fy.com/asset/0i/ChineseBQB/)
+[《ChineseBQB在线搜图斗图工具》直达链接: https://www.v2fy.com/asset/0i/ChineseBQB/](https://www.v2fy.com/asset/0i/ChineseBQB/)
 
 
 
@@ -39,9 +39,9 @@
 
 ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/t037-003.gif)
 
-[《ChineseBQB在线搜图斗图工具》详细说明](https://www.v2fy.com/p/t037-chinesebqb-2020-10-09/)
+[《ChineseBQB在线搜图斗图工具》详细介绍](https://www.v2fy.com/p/t037-chinesebqb-2020-10-09/)
 
-## 开放数据源
+## ChineseBQB 开放数据源
 
 [https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/chinesebqb_github.json](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/chinesebqb_github.json)
 
