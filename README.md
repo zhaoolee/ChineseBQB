@@ -26,8 +26,8 @@
 
 <table>
     <tr>
-        <td> <div style="text-align: center;font-weight: 600;">功能1: 表情包发送给朋友</div> </td>
-        <td style="text-align: center;font-weight: 600;">功能2: 表情包发送到朋友圈 </td>
+        <td> <div style="text-align: center;font-weight: 600;">功能1<br>长按表情包发送给好友</div> </td>
+        <td><div  style="text-align: center;font-weight: 600;">功能2<br>一键复制单个表情包链接，粘贴到朋友圈</div></td>
     </tr>
     <tr>
         <td> <img src="https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/2020-09-29-friend.gif"></img> </td>
@@ -35,7 +35,7 @@
     </tr>
 </table>
 
-**功能3: 分享搜索结果**
+**功能3: 批量分享！一键分享表情包关键词搜索页面**
 
 ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/t037-003.gif)
 

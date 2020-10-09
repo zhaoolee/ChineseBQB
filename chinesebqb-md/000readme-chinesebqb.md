@@ -22,12 +22,12 @@
 [《ChineseBQB在线搜图斗图工具》直达地址: https://www.v2fy.com/asset/0i/ChineseBQB/](https://www.v2fy.com/asset/0i/ChineseBQB/)
 
 
-[《ChineseBQB在线搜图斗图工具》教程](https://www.v2fy.com/p/t037-chinesebqb-2020-10-09/)
+
 
 <table>
     <tr>
-        <td> <div style="text-align: center;font-weight: 600;">功能1:<br>长按表情包发送给好友</div> </td>
-        <td style="text-align: center;font-weight: 600;">功能2: <br>一键复制单个表情包链接，粘贴到朋友圈 </td>
+        <td> <div style="text-align: center;font-weight: 600;">功能1<br>长按表情包发送给好友</div> </td>
+        <td><div  style="text-align: center;font-weight: 600;">功能2<br>一键复制表情包链接，粘贴到朋友圈</div></td>
     </tr>
     <tr>
         <td> <img src="https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/2020-09-29-friend.gif"></img> </td>
@@ -38,6 +38,8 @@
 **功能3: 批量分享！一键分享表情包关键词搜索页面**
 
 ![](https://www.v2fy.com/asset/0i/OnlineToolsBook/OnlineToolsBookMD/T037-chinesebqb-2020-10-09.assets/t037-003.gif)
+
+[《ChineseBQB在线搜图斗图工具》详细说明](https://www.v2fy.com/p/t037-chinesebqb-2020-10-09/)
 
 ## 开放数据源
 
