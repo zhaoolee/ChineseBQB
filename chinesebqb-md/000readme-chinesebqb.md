@@ -51,7 +51,7 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录4339张表情包)Emoticon package directory (commonly included 4339 emoticon pack)
+## 表情包目录(共收录4346张表情包)Emoticon package directory (commonly included 4346 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
@@ -106,7 +106,7 @@
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/032FamousPerson_名人明星BQB/FamousPerson00001.gif' /> | [032FamousPerson_名人明星BQB(已收录7张)](https://www.v2fy.com/p/032FamousPerson_名人明星BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/031Penguin_沙雕企鹅🐧BQB/000000031.gif' /> | [031Penguin_沙雕企鹅🐧BQB(已收录157张)](https://www.v2fy.com/p/031Penguin_沙雕企鹅🐧BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/030AntennaBaby_天线宝宝👶BQB/000000030.gif' /> | [030AntennaBaby_天线宝宝👶BQB(已收录3张)](https://www.v2fy.com/p/030AntennaBaby_天线宝宝👶BQB/) |
-| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/029Pigeon_鸽子🕊BQB/000000029.jpg' /> | [029Pigeon_鸽子🕊BQB(已收录12张)](https://www.v2fy.com/p/029Pigeon_鸽子🕊BQB/) |
+| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/029Pigeon_鸽子🕊BQB/000000029.jpg' /> | [029Pigeon_鸽子🕊BQB(已收录19张)](https://www.v2fy.com/p/029Pigeon_鸽子🕊BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/028JohnRomero_罗永浩🔨BQB/000000028.gif' /> | [028JohnRomero_罗永浩🔨BQB(已收录5张)](https://www.v2fy.com/p/028JohnRomero_罗永浩🔨BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/027Turtle_乌龟🐢BQB/000000027.jpg' /> | [027Turtle_乌龟🐢BQB(已收录20张)](https://www.v2fy.com/p/027Turtle_乌龟🐢BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/026Chicken_小幺鸡🐔BQB/000000026.jpg' /> | [026Chicken_小幺鸡🐔BQB(已收录130张)](https://www.v2fy.com/p/026Chicken_小幺鸡🐔BQB/) |
