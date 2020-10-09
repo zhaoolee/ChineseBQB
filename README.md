@@ -2,39 +2,6 @@
 
 [![](https://img.shields.io/badge/ChineseBQB-READEME-brightgreen)](https://github.com/zhaoolee/ChineseBQB)
 
-## 最新动态(2020年10月07日大更新)
-
-
-1. 表情包可以通过关键词查找了！查找页面：[https://www.v2fy.com/asset/0i/ChineseBQB/](https://www.v2fy.com/asset/0i/ChineseBQB/)
-
-![公众号预览图](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/gongzhonghao233.jpeg)
-
-**表情包发送给朋友**
-
-![2020-09-29-friend](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/2020-09-29-friend.gif)
-
-**表情包发送到朋友圈**
-
-![2020-09-29-pengyouquan](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/2020-09-29-pengyouquan.gif)
-
-2. 表情包标注数据开源了！[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/chinesebqb_github.json](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/chinesebqb_github.json) 有表情包标注数据的支持，开发者可以通过关键词获取相应的表情包.
-
-示例网页展示效果：
-
-[https://www.v2fy.com/asset/0i/ChineseBQB/](https://www.v2fy.com/asset/0i/ChineseBQB/) 
-
-示例网页开源地址：
-
-[https://github.com/zhaoolee/ChineseBQB/blob/master/index.html](https://github.com/zhaoolee/ChineseBQB/blob/master/index.html)
-
-
-3. [ChineseBQB国内版](https://v2fy.com/ChineseBQB/)发布成功!  可以通过 [https://v2fy.com/ChineseBQB](https://v2fy.com/ChineseBQB/) 丝滑流畅浏览所有表情包了, 有好的建议,还可以在页面底部直接留言，有好的表情包可以在评论区直接上传~
-
-![202006143933072](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/202006143933072.png)
-
-4. zhaoolee将在2020年6月份进行**表情包背景文化补全计划**, 在表情包单页添加表情包的背景故事[001滑稽大佬实例页面](https://www.v2fy.com/p/001Funny_%E6%BB%91%E7%A8%BD%E5%A4%A7%E4%BD%AC%F0%9F%98%8FBQB/)
-
-![image-20200614202409677](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/image-20200614202409677.png)
 
 
 
@@ -47,6 +14,36 @@
 
 
 #### 本项目Github永久开源地址: [https://github.com/zhaoolee/ChineseBQB](https://github.com/zhaoolee/ChineseBQB)
+
+
+
+## 《ChineseBQB在线搜图斗图工具》
+
+[《ChineseBQB在线搜图斗图工具》直达地址: https://www.v2fy.com/asset/0i/ChineseBQB/](https://www.v2fy.com/asset/0i/ChineseBQB/)
+
+
+[《ChineseBQB在线搜图斗图工具》教程](https://www.v2fy.com/p/t037-chinesebqb-2020-10-09/)
+
+<table>
+    <tr>
+        <td> <div style="text-align: center;font-weight: 600;">功能1: 表情包发送给朋友</div> </td>
+        <td style="text-align: center;font-weight: 600;">功能2: 表情包发送到朋友圈 </td>
+    </tr>
+    <tr>
+        <td> <img src="https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/2020-09-29-friend.gif"></img> </td>
+        <td> <img src="https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/2020-09-29-pengyouquan.gif"></img> </td>
+    </tr>
+</table>
+
+**功能3: 分享搜索结果**
+
+![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/t037-003.gif)
+
+## 开放数据源
+
+[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/chinesebqb_github.json](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/chinesebqb_github.json)
+
+表情包图片和标注数据完全开源，对编程感兴趣的小伙伴，可以用开放数据源开发微信小程序，制作爬虫Demo，作为机器学习数据源，都是可以的！
 
 
 ## Chinese stickers / 中国的表情包
@@ -149,7 +146,6 @@ BQBEND
 ####  [071辉夜大小姐🎀BQB](https://www.v2fy.com/p/071辉夜大小姐🎀BQB/)
 
 ![2020-06-14-3414726](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/2020-06-14-3414726-2177797.png)
-
 
 
 **Love is War! 恋爱即战争!  ~~天才~~段友们的恋爱头脑战!**
@@ -333,16 +329,24 @@ git clone --depth 1 https://github.com/zhaoolee/ChineseBQB
 ## Contribution method  / 贡献方法
 
 
+
+
 - If you are a GIF/sticker warriors and have a github account, welcome to contribute your stickers to the root of the `https://github.com/zhaoolee/ChineseBQB/tree/master/000Contribution_%E8%B4%A1%E7%8C%AE%F0%9F%87%A8%F0%9F%87%B3`
 - 如果你是斗图大佬, 又有 github 账号, 欢迎将表情包贡献到项目`https://github.com/zhaoolee/ChineseBQB`根目录下的`000Contribution_贡献🇨🇳`
 
 
-- If you are a GIF/sticker warriors, but don't have a github account, please send the stickers via email, zhaoolee@gmail.com, title **Contribute stickers **
-- 如果你是斗图大佬, 没有github账号, 欢迎将表情包发到我的邮箱 zhaoolee@gmail.com , 来信注明 **贡献表情包**
+- If you are a GIF/sticker warriors, but don't have a github account, please send the stickers via email, <zhaoolee@gmail.com> , title **Contribute stickers **
+- 如果你是斗图大佬, 没有github账号, 欢迎将表情包发到我的邮箱 <zhaoolee@gmail.com> , 来信注明 **贡献表情包**
 
 
-- If you feel that the two methods above are difficult for you, and just want to make friends with the author, welcome to add me to your contact list on wechat (WeChat): `jianzhao111`, after the friend passes, you can send me the sticker package directly~ (Crystal: `BQB`), After the stickers is included, your avatar will be shown in the 'Contributor List'. If you want to sign the project, you can leave a message `I want to sign in the project`, I will sign it for you.~
-- 如果你感觉前两种方法太麻烦, 只是想和作者交个朋友, 欢迎加我 wechat(微信): `jianzhao111` , 好友通过后, 可以直接把表情包发我哦~ (暗号: `BQB`),表情包被收录后,您的头像将会出现在项目主页中的`贡献值列表中`, 如果您希望在项目中署名，可以给我留言`希望在项目中署名`，我会在项目中为您署名~
+- Go to the webpage https://www.v2fy.com/p/000readme-chinesebqb/ to upload the emoticon picture in the comment area, it can be included soon, and the system will automatically notify you by email after inclusion~
+-  前往网页 https://www.v2fy.com/p/000readme-chinesebqb/ 评论区上传表情包图片，可以很快被收录，收录后系统会自动邮件通知您~
+
+- If you feel that the three methods above are difficult for you, and just want to make friends with the author, welcome to add me to your contact list on wechat (WeChat): `jianzhao111`, after the friend passes, you can send me the sticker package directly~ (Crystal: `BQB`), After the stickers is included, your avatar will be shown in the 'Contributor List'. If you want to sign the project, you can leave a message `I want to sign in the project`, I will sign it for you.~
+
+
+- 如果你感觉前三种方法太麻烦, 只是想和作者交个朋友, 欢迎加我 wechat(微信): `jianzhao111` , 好友通过后, 可以直接把表情包发我哦~ (暗号: `BQB`),表情包被收录后,您的头像将会出现在项目主页中的`贡献值列表中`, 如果您希望在项目中署名，可以给我留言`希望在项目中署名`，我会在项目中为您署名~
+
 
 
 | Handing cola to the master / 给大佬递可乐 | Giving tea to the master / 给大佬端茶 | Give a cigarette to the master / 给大佬点烟 |
