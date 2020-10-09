@@ -17,9 +17,9 @@
 
 
 
-## 《ChineseBQB在线搜图斗图工具》
+## [《ChineseBQB在线搜图斗图工具》]((https://www.v2fy.com/asset/0i/ChineseBQB/))
 
-[《ChineseBQB在线搜图斗图工具》直达地址: https://www.v2fy.com/asset/0i/ChineseBQB/](https://www.v2fy.com/asset/0i/ChineseBQB/)
+[《ChineseBQB在线搜图斗图工具》直达链接: https://www.v2fy.com/asset/0i/ChineseBQB/](https://www.v2fy.com/asset/0i/ChineseBQB/)
 
 
 
@@ -27,7 +27,7 @@
 <table>
     <tr>
         <td> <div style="text-align: center;font-weight: 600;">功能1<br>长按表情包发送给好友</div> </td>
-        <td><div  style="text-align: center;font-weight: 600;">功能2<br>一键复制表情包链接，粘贴到朋友圈</div></td>
+        <td><div  style="text-align: center;font-weight: 600;">功能2<br>复制表情包链接，粘贴到朋友圈</div></td>
     </tr>
     <tr>
         <td> <img src="https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/2020-09-29-friend.gif"></img> </td>
@@ -39,7 +39,7 @@
 
 ![](https://www.v2fy.com/asset/0i/OnlineToolsBook/OnlineToolsBookMD/T037-chinesebqb-2020-10-09.assets/t037-003.gif)
 
-[《ChineseBQB在线搜图斗图工具》详细说明](https://www.v2fy.com/p/t037-chinesebqb-2020-10-09/)
+[《ChineseBQB在线搜图斗图工具》详细介绍](https://www.v2fy.com/p/t037-chinesebqb-2020-10-09/)
 
 ## 开放数据源
 
@@ -142,7 +142,6 @@ BQBEND
 
 
 ## 表情包文化背景故事(绝赞更新中...)
-
 
 
 ####  [071辉夜大小姐🎀BQB](https://www.v2fy.com/p/071辉夜大小姐🎀BQB/)
