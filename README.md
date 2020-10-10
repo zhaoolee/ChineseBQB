@@ -50,7 +50,7 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录4347张表情包)Emoticon package directory (commonly included 4347 emoticon pack)
+## 表情包目录(共收录4349张表情包)Emoticon package directory (commonly included 4349 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
@@ -64,7 +64,7 @@
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000073.jpg' /> | [073腾讯与老千妈BQB(已收录31张)](https://www.v2fy.com/p/073腾讯与老千妈BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000072.jpg' /> | [072PaiYiPai_微信拍一拍👋BQB(已收录9张)](https://www.v2fy.com/p/072PaiYiPai_微信拍一拍👋BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000071.gif' /> | [071辉夜大小姐🎀BQB(已收录20张)](https://www.v2fy.com/p/071辉夜大小姐🎀BQB/) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000070.jpg' /> | [070JOJO的奇妙冒险BQB(已收录21张)](https://www.v2fy.com/p/070JOJO的奇妙冒险BQB/) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000070.jpg' /> | [070JOJO的奇妙冒险BQB(已收录22张)](https://www.v2fy.com/p/070JOJO的奇妙冒险BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000069.gif' /> | [069Waves后浪🌊BQB(已收录6张)](https://www.v2fy.com/p/069Waves后浪🌊BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000068.jpg' /> | [068Aqua阿库娅BQB(已收录22张)](https://www.v2fy.com/p/068Aqua阿库娅BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000067.jpg' /> | [067NegroCarryingACoffin_黑人抬棺⚰BQB(已收录32张)](https://www.v2fy.com/p/067NegroCarryingACoffin_黑人抬棺⚰BQB/) |
@@ -102,13 +102,13 @@
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000035.gif' /> | [035TomAndJerry_猫和老鼠BQB(已收录287张)](https://www.v2fy.com/p/035TomAndJerry_猫和老鼠BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000034.jpg' /> | [034WhiteVillain_白色小人👶🏻BQB(已收录839张)](https://www.v2fy.com/p/034WhiteVillain_白色小人👶🏻BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000033.jpg' /> | [033Eat_吃🍔BQB(已收录7张)](https://www.v2fy.com/p/033Eat_吃🍔BQB/) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/FamousPerson00001.gif' /> | [032FamousPerson_名人明星BQB(已收录7张)](https://www.v2fy.com/p/032FamousPerson_名人明星BQB/) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/FamousPerson00001.gif' /> | [032FamousPerson_名人明星BQB(已收录8张)](https://www.v2fy.com/p/032FamousPerson_名人明星BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000031.gif' /> | [031Penguin_沙雕企鹅🐧BQB(已收录157张)](https://www.v2fy.com/p/031Penguin_沙雕企鹅🐧BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000030.gif' /> | [030AntennaBaby_天线宝宝👶BQB(已收录3张)](https://www.v2fy.com/p/030AntennaBaby_天线宝宝👶BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000029.jpg' /> | [029Pigeon_鸽子🕊BQB(已收录19张)](https://www.v2fy.com/p/029Pigeon_鸽子🕊BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000028.gif' /> | [028JohnRomero_罗永浩🔨BQB(已收录5张)](https://www.v2fy.com/p/028JohnRomero_罗永浩🔨BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000027.jpg' /> | [027Turtle_乌龟🐢BQB(已收录20张)](https://www.v2fy.com/p/027Turtle_乌龟🐢BQB/) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000026.jpg' /> | [026Chicken_小幺鸡🐔BQB(已收录130张)](https://www.v2fy.com/p/026Chicken_小幺鸡🐔BQB/) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000026.jpg' /> | [026Chicken_小幺鸡🐔BQB(已收录129张)](https://www.v2fy.com/p/026Chicken_小幺鸡🐔BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000025.jpg' /> | [025SuperHeroes_超级英雄们👤BQB(已收录11张)](https://www.v2fy.com/p/025SuperHeroes_超级英雄们👤BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000024.png' /> | [024Programmer_程序员👨‍💻‍BQB(已收录47张)](https://www.v2fy.com/p/024Programmer_程序员👨‍💻‍BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000023.JPG' /> | [023Emoji_表情符号BQB(已收录84张)](https://www.v2fy.com/p/023Emoji_表情符号BQB/) |
@@ -119,7 +119,7 @@
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000018.gif' /> | [018WangEgg_汪蛋🥚BQB(已收录45张)](https://www.v2fy.com/p/018WangEgg_汪蛋🥚BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000017.gif' /> | [017Playing_演奏🎻BQB(已收录24张)](https://www.v2fy.com/p/017Playing_演奏🎻BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000016.jpg' /> | [016spray_喷雾🚿BQB(已收录16张)](https://www.v2fy.com/p/016spray_喷雾🚿BQB/) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000015.jpg' /> | [015Golden_Curator_Panda金馆长熊猫🐼BQB(已收录291张)](https://www.v2fy.com/p/015Golden_Curator_Panda金馆长熊猫🐼BQB/) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000015.jpg' /> | [015Golden_Curator_Panda金馆长熊猫🐼BQB(已收录292张)](https://www.v2fy.com/p/015Golden_Curator_Panda金馆长熊猫🐼BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000014.gif' /> | [014Pig_猪🐖BQB(已收录21张)](https://www.v2fy.com/p/014Pig_猪🐖BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000013.gif' /> | [013PigPecs_小猪佩奇👑BQB(已收录22张)](https://www.v2fy.com/p/013PigPecs_小猪佩奇👑BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000012.gif' /> | [012Parrot_鹦鹉🐦BQB(已收录17张)](https://www.v2fy.com/p/012Parrot_鹦鹉🐦BQB/) |
@@ -135,7 +135,7 @@
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000002.gif' /> | [002CuteGirl_可爱的女孩纸👧BQB(已收录185张)](https://www.v2fy.com/p/002CuteGirl_可爱的女孩纸👧BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000001.gif' /> | [001Funny_滑稽大佬😏BQB(已收录40张)](https://www.v2fy.com/p/001Funny_滑稽大佬😏BQB/) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000000.gif' /> | [000Contribution_贡献🇨🇳BQB(已收录24张)](https://www.v2fy.com/p/000Contribution_贡献🇨🇳BQB/) |
-> 数据生成时间: 2020-10-09
+> 数据生成时间: 2020-10-10
 
 BQBEND
 
