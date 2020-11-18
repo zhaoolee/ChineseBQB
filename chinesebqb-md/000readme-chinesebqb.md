@@ -50,7 +50,7 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录4353张表情包)Emoticon package directory (commonly included 4353 emoticon pack)
+## 表情包目录(共收录4371张表情包)Emoticon package directory (commonly included 4371 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
@@ -70,7 +70,7 @@
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/067NegroCarryingACoffin_黑人抬棺⚰BQB/000000067.jpg' /> | [067NegroCarryingACoffin_黑人抬棺⚰BQB(已收录32张)](https://www.v2fy.com/p/067NegroCarryingACoffin_黑人抬棺⚰BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/066Makeding_马克丁🐎BQB/000000066.jpg' /> | [066Makeding_马克丁🐎BQB(已收录17张)](https://www.v2fy.com/p/066Makeding_马克丁🐎BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/065TravelFrog_旅行青蛙🐸BQB/000000065.jpg' /> | [065TravelFrog_旅行青蛙🐸BQB(已收录10张)](https://www.v2fy.com/p/065TravelFrog_旅行青蛙🐸BQB/) |
-| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/064Trump_特朗普BQB/000000064.jpg' /> | [064Trump_特朗普BQB(已收录8张)](https://www.v2fy.com/p/064Trump_特朗普BQB/) |
+| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/064Trump_特朗普BQB/000000064.jpg' /> | [064Trump_特朗普BQB(已收录26张)](https://www.v2fy.com/p/064Trump_特朗普BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/063WebBrowser_浏览器BQB/000000063.gif' /> | [063WebBrowser_浏览器BQB(已收录7张)](https://www.v2fy.com/p/063WebBrowser_浏览器BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/062CaiXvKun_蔡徐坤🏀BQB/000000062.gif' /> | [062CaiXvKun_蔡徐坤🏀BQB(已收录11张)](https://www.v2fy.com/p/062CaiXvKun_蔡徐坤🏀BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/061KeNan_柯南🕵️‍♂️BQB/000000061.jpg' /> | [061KeNan_柯南🕵️‍♂️BQB(已收录164张)](https://www.v2fy.com/p/061KeNan_柯南🕵️‍♂️BQB/) |
@@ -135,7 +135,7 @@
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/002CuteGirl_可爱的女孩纸👧BQB/000000002.gif' /> | [002CuteGirl_可爱的女孩纸👧BQB(已收录185张)](https://www.v2fy.com/p/002CuteGirl_可爱的女孩纸👧BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/001Funny_滑稽大佬😏BQB/000000001.gif' /> | [001Funny_滑稽大佬😏BQB(已收录40张)](https://www.v2fy.com/p/001Funny_滑稽大佬😏BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/000Contribution_贡献🇨🇳BQB/000000000.gif' /> | [000Contribution_贡献🇨🇳BQB(已收录28张)](https://www.v2fy.com/p/000Contribution_贡献🇨🇳BQB/) |
-> 数据生成时间: 2020-10-12
+> 数据生成时间: 2020-11-18
 
 BQBEND
 
