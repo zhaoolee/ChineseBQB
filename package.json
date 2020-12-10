@@ -12,7 +12,8 @@
     "push": "chmod -R 777 *BQB &&node create_bqb_image_list.js && node rsync.js && node build_2.js && node push.js  &&  git add . && git commit -m 'zhaoolee commit' && git push",
     "clean": "hexo clean",
     "start": "hexo server",
-    "new": "hexo new post article-$(date '+%Y-%m-%d-%H-%M-%S')"
+    "new": "hexo new post article-$(date '+%Y-%m-%d-%H-%M-%S')",
+    "install": "npm i --no-bin-links"
   },
   "dependencies": {
     "axios": "^0.19.0",
