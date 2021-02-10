@@ -1,12 +1,5 @@
 {
-  "name": "ChineseBQB",
-  "version": "1.0.0",
-  "description": "[![](https://img.shields.io/badge/ChineseBQB-READEME-brightgreen)](https://github.com/zhaoolee/ChineseBQB)",
-  "main": "build.js",
-  "directories": {
-    "doc": "docs"
-  },
-  "devDependencies": {},
+  "name": "chinese-bqb",
   "scripts": {
     "test": "node rsync.js",
     "dev": "hexo server -p 5000",
@@ -26,15 +19,7 @@
     "rsync": "0.6.1",
     "showdown": "1.9.1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/zhaoolee/ChineseBQB.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/zhaoolee/ChineseBQB/issues"
-  },
-  "homepage": "https://github.com/zhaoolee/ChineseBQB#readme"
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
+  }
 }
