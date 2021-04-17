@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title id="page_title">正在跳转</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"/>
+	<script type="text/javascript">
+    var ret = 0;
+    var type =  1 ;
+    var param = "010102000102000429c0722c";
+    var sid =  2 ;
+    var rawuin =  700477996 ;
+    var qsig = "tencent:\/\/groupwpa\/?subcmd=all\x26param=7B2267726F757055696E223A3730303437373939362C2274696D655374616D70223A313631383637303631342C22617574684B6579223A22222C2261757468223A22227D";    
+	</script>
+</head>
+    <style type="text/css">
+        html {
+            height: 100%;
+        }
+        body {
+            font-family: 微软雅黑;
+            background: rgb(230, 230, 230);
+            height: 100%;
+            overflow: hidden;
+        }
+
+        p {
+            margin: 0;
+            line-height: 24px;
+        }
+
+        a {
+            color: rgb(33, 141, 226);
+            text-decoration: none;
+        }
+
+        #tips_area {
+            display: none;
+        }
+
+        #tips_area, #tips_area_pc{
+            width: 370px;
+            height: 420px;
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            margin-left: -185px;
+            margin-top: -210px;
+        }
+
+        #logo {
+            background: url('data:image/png;base64,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');
+            width: 93px;
+            height: 145px;
+             
+            margin: 50px auto 0;
+            position: relative;
+            display: none;
+
+        }
+
+        .update_text {
+            text-align: center;
+            margin: 24px 0 35px 0;
+            font-size: 18px;
+
+        }
+
+        #wording, #m_wording {
+            display: none;
+            text-align: center;
+        }
+
+        #wording {
+            line-height: 33px;
+            color: rgb(88, 88, 88);
+        }
+
+        #wording > strong {
+            color: black;
+        }
+
+        #m_wording > p:first-child {
+            margin-top: 14px;
+        }
+
+        .avatars {
+            height: 170px;
+            position: relative;
+        }
+
+        .avatar {
+            border-radius: 100px;
+            overflow: hidden;
+            width: 94px;
+            height: 94px;
+            border: #FFF solid 3px;
+            position: absolute;
+            behavior: url('PIE.htc');
+        }
+
+        .avatar img {
+            border-radius: 100px;
+            width: 94px;
+            height: 94px;
+            behavior: url('PIE.htc');
+        }
+
+        .avatars5 .avatar {
+            width: 70px;
+            height: 70px;
+        }
+        .avatars5  img {
+            width: 70px;
+            height: 70px;
+        }
+
+        .avatar.avatar0 {
+            left: 93px;
+            top: 38px;
+            z-index: 5;
+        }
+
+        .avatar.avatar1 {
+            left: 147px;
+            top: 0;
+            z-index: 6;
+        }
+
+        .avatar.avatar2 {
+            top: 38px;
+            left: 200px;
+            z-index: 7;
+        }
+
+        .avatar.avatar3 {
+            top: 103px;
+            left: 180px;
+            z-index: 7;
+        }
+
+        .avatar.avatar4 {
+            top: 103px;
+            left: 112px;
+            z-index: 7;
+        }
+
+        .avatars1 .avatar.avatar0 {
+            top: 35px;
+            left: 135px;
+        }
+
+        .avatars2 .avatar.avatar0 {
+            top: 35px;
+            left: 110px;
+        }
+
+        .avatars2 .avatar.avatar1 {
+            top: 80px;
+            left: 180px;
+        }
+
+        .avatars3 .avatar0 {
+            left: 97px;
+            top: 72px;
+            z-index: 5;
+        }
+
+        .avatars3 .avatar1 {
+            left: 135px;
+            top: 0;
+            z-index: 6;
+        }
+
+        .avatars3 .avatar2 {
+            top: 72px;
+            left: 180px;
+            z-index: 7;
+        }
+
+        .avatars4 .avatar0 {
+            left: 101px;
+            top: 0;
+            z-index: 7;
+        }
+        .avatars4 .avatar1 {
+            top: 0;
+            left: 180px;
+            z-index: 7;
+        }
+        .avatars4 .avatar2 {
+            top: 85px;
+            left: 180px;
+            z-index: 7;
+        }
+        .avatars4 .avatar3 {
+            top: 85px;
+            left: 101px;
+            z-index: 7;
+        }
+
+        #close-tip {
+            position: absolute;
+            left: 0;
+            right: 0;
+            font-size: 16px;
+            color: #777;
+            top: 389px;
+            text-align: center;
+            height: 18px;
+            line-height: 18px;
+            display: none;
+
+        }
+
+
+
+        #discussName {
+            font-size: 28px;
+            position: absolute;
+            width: 740px;
+            text-align: center;
+            left: -185px;
+            top: 190px;
+            color: #000;
+        }
+
+        .button {
+            width: 378px;
+            height: 89px;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXoAAABZCAIAAAC/jXjrAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MjlDNjEzRjI1QUUxMTFFNzlDNjdBMDk1NjEzRTQzNjUiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MjlDNjEzRjM1QUUxMTFFNzlDNjdBMDk1NjEzRTQzNjUiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoyOUM2MTNGMDVBRTExMUU3OUM2N0EwOTU2MTNFNDM2NSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoyOUM2MTNGMTVBRTExMUU3OUM2N0EwOTU2MTNFNDM2NSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PmlLaswAAATOSURBVHja7N09bxxFHMDhmb2z5SjhRaGDIERLRb4AUOQT0NNQUKB09HwKGjoo+RQ0SIgeEaFUSBQRNLzFIY53ht2d3b312bIT315snOfR5rK3duXip//M7tkx5xxCaP8N8vQNwLnEODkvrzmv8rIWmvGt/gBnxOWkykzfNv/HNERlFZfc92U8kRzgaWITu77EtdCMJyU3pTWlL31ljp4LDnBaauKkNd1rFdeL0+ZmvTU5pPF1rUEAx3ITJ60plSmv4/VSnFinPLamr0wKddeaOvVX6iw3wGm5WQyJWVTdebXqTjXOOCU3aZhomsTcf/Dk6+8e//QgHBzGyQYQwJnytd387q3w8XvXXn91UaIzrqra3Iyrp8MUfvz14LNvDg7i9VgJDXCu5KT0yuLhFx9du/XacjldWzW5ScPSqcnNp1/9/fMfL8XKTwzYoDh1ev+t/c8/vLGs2uVVmXGqsjdcBpw/9/O93xfRWANsJlbVD7/0y6bxIZt2jMnD3s1f/6bmu2zXABv3JuwfVnXd3+Au3elXTe371B4Ac6mHfeF+uknlLnjqCwQwlzx5hiaF6XSTTTfArNNNeXYv9QPO5BZUDmoDzDzdTD7/VE0/rODBYWBGaxPMcjLchHz0rhXARqNNt5IKi+OLKYBtkhtAbgC5AZAb4PJaTt/kENwNB2aRT89N9y1Rb4Bt9MZiCnhO5AaQG+BqWT7FggvgmWXTDWAxBbxoiykP3gDbWU2ZboALmm4MN8B2hhvTDfC8yA0gN8DV4s4UsB05npEbtQHmqY3FFHBR5AaQG+BqObZ30/1RTYANZR9iACymALkBkBvgf+SErWLP+QGbs1UMWEwBcgMwixM+ogmwOR/RBC7NdNMWKfmxAPOPN6Yb4DmRG+CCFlO2ioFZJNMNYDEFvGCLKb8bHZhFdGcKuCzTTVIgYA62ioELIzeA3ABXiztTwHa4MwVciukmG26ArTHdAHIDXAFxkpsY27fjAbCF1KxNN1FugFlzE4/MMdUYoSq2XwOYMTdV15vSlqpcKqPNwk4OMJ9F7AecMtMsx7PYfSGnE/7UJsCzamJS1kzjsqmfZ6pu5rm+W3rjBwVsGJuwt5Orqk1MmWZCf2dqOG7eqN6+eWi6ATYebfLtN+vpdNPu44Rh37gMOHfv7IZ6vxlxzDjA+eaaXOfd+PCTD/YWVbdVPEQmHqbcjDOpOVJ4Uoc6he/vH3z57eN7vy1itHUMPJsY0u036rt39t65tbNchGVTnGrYxCm56YuTw5PDUOe2O48Owj+Pc1OfcrTNMu8Ax/vSdKTbo2lmmeZ4eS/u7YQmNDuL/kr7nE03usQ697lpjrqbcQ5TN+l0r02A6m7vWGuA04oz5KY/Yn9STXaH29w03526+aV5rcdJpzsvI4/RBjgzN+WhviY0ZfVUbkuVuWY13ZSalKCU0DSn9fAATh5iFGwfA2uhGU6qatgPjv0Cqn0d7kn1J81SqsRkWpxxeRUmv059vAKwmmsmT/Gt7nnH9dZUJTfjr9TKeZWV6RWAp6xPmHxK4ciVkptxlbS2JWycAc497IRw5ANTYcxNmOzLjKMNwDm7E1bdGfuzyk04thNstAHOt56adiecmJsTowNwvgFn/Uo+dYaRHmCTxEz9J8AAF5Ycadh+/3cAAAAASUVORK5CYII=');
+            background-repeat: no-repeat;
+
+            color: #FFF;
+            line-height: 85px;
+            text-align: center;
+            font-size: 30px;
+            
+            position: absolute;
+            top: 300px;
+            left: -4px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            opacity: 0.8;
+        }
+
+        .bottom-tips {
+            position: absolute;
+            top: 400px;
+            left: -11px;
+            right: 0;
+            text-align: center;
+            width: 410px;
+            color: #777;
+        }
+
+        .bottom-tips > a {
+            color: #12b7f5;
+        }
+
+        #createMsg {
+            font-size: 20px;
+            text-align: center;
+            color: #777;
+            position: absolute;
+            top: 232px;
+            left: 0;
+            right: 0;
+        }
+
+        .tips {
+            position: absolute;
+            left: 0;
+            right: 0;
+             
+            top: 50px;
+            margin: auto;
+             
+            width: 209px;
+            height: 160px;
+            display: none;
+        }
+
+        .tips .logo {
+            background: transparent url('//p.qpic.cn/qqconadmin/0/b095d8d0ad144de3943f5dcba95a9624/0') no-repeat;
+            background-size: cover;
+            filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='//p.qpic.cn/qqconadmin/0/b095d8d0ad144de3943f5dcba95a9624/0', sizingMethod='scale');
+            width: 209px;
+            height: 100px;
+            overflow: hidden;
+        }
+
+        .desc {
+            margin-top: 15px;
+            margin-left: -10px;
+            font-size: 28px;
+            color: #6B6B6B;
+        }
+
+        .box {
+            width: 12px;
+            height: 12px;
+            line-height: 12px;
+            position: absolute;
+            overflow: hidden;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .radius {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 11px dotted;
+             
+            margin: 0 0 1px 1px;
+            border-width: 0vw;
+            margin: 0vw;
+            background-color: currentColor;
+        }
+
+        .first-round {
+            left: 0;
+        }
+
+        .second-round {
+            left: 25px;
+
+        }
+
+        .third-round {
+            left: 50px;
+        }
+
+        .first-round .radius {
+            color: #888;
+        }
+
+        .second-round .radius {
+            color: #BEBEBE;
+        }
+
+        .third-round .radius {
+            color: #D5D5D5;
+        }
+
+        .loading {
+            margin-left: 6px;
+            position: relative;
+
+        }
+
+        .mobile-tips {
+            width: 120px;
+        }
+
+        .mobile-tips .logo {
+            width: 120px;
+            height: 56px;
+            background: transparent url('//p.qpic.cn/qqconadmin/0/b095d8d0ad144de3943f5dcba95a9624/0') no-repeat;
+            background-size: cover;
+            filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='//p.qpic.cn/qqconadmin/0/b095d8d0ad144de3943f5dcba95a9624/0', sizingMethod='scale');
+        }
+
+        .qim.mobile-tips .logo {
+            width: 120px;
+            height: 120px;
+            background: transparent url('//p.qpic.cn/qqconadmin/0/7a5e387108084542861fdd048c6a4748/0') no-repeat;
+            background-size: cover;
+        }
+
+        .mobile-tips .desc {
+            font-size: 18px;
+            margin-left: -4px;
+        }
+
+        .mobile-tips .box {
+            width: 8px;
+            height: 8px;
+            line-height: 8px;
+        }
+
+        .mobile-tips .first-round {
+            left: 0;
+        }
+
+        .mobile-tips .second-round {
+            left: 15px;
+        }
+
+        .mobile-tips .third-round {
+            left: 30px;
+        }
+        .wakeUp {
+            font-size: 12px;
+            margin: 0 -40px;
+            margin-top: 10px;
+            margin-left: -30px;
+            line-height: 18 px;
+            height: 18px;
+            text-align: center;
+            color: #777;
+        }
+        #update_link {
+            color: #12b7f5;
+        }
+        .agree {
+            position: absolute;
+            width: 378px;
+            height: 89px;
+            line-height: 85px;
+            text-align: center;
+            font-size: 30px;
+            top: 300px;
+            left: -4px;
+            display: none;
+        }
+        .agree img {
+            position: absolute;
+            left: 65px;
+            top: 0;
+        }
+        .agree p {
+            position: absolute;
+            right: 85px;
+            top: 20px;
+            font-weight: 550;
+        }
+    </style>
+<body>
+<div class="tips" id="m_container">
+    <div class="logo"></div>
+    <div class="desc  clearfix"><span id="going_wording">正在前往QQ</span>
+        <span class="loading">
+				<div class="box first-round">
+					<i class="radius"></i>
+				</div>
+				<div class="box second-round">
+					<i class="radius"></i>
+				</div>
+				<div class="box third-round">
+					<i class="radius"></i>
+				</div>
+			</span>
+    </div>
+    <p class="wakeUp" >若无法正常跳转，请先<a id="update_link" href = "javascript:">升级QQ</a>。</p>
+</div>
+<script type="text/javascript">
+   
+       	var startTime = Date.now();
+	    var wechatInfo = navigator.userAgent.match(/MicroMessenger\/([\d\.]+)/i);
+        var isWxWork = /\bwxwork\/([\d\.]+)/.test(navigator.userAgent);
+	    
+	    
+	    
+	    
+		var getUrlParam = function(name, href, noDecode) {
+		    var re = new RegExp("(?:\\?|#|&)" + name + "=([^&]*)(?:$|&|#)", "i"),
+		    m = re.exec(href);
+		    var ret = m ? m[1] : "";
+		    return ! noDecode ? decodeURIComponent(ret) : ret
+		};
+
+		var jump_from = getUrlParam("jump_from", location.href);
+		var auth_key = getUrlParam("auth", location.href);
+		var app_name = getUrlParam("app_name", location.href);
+        
+        var auth_sig = getUrlParam("authKey", location.href);
+        
+        var isQR = getUrlParam("qr", location.href) === '1';
+		var isQim = app_name === 'qim';
+
+       if(isQim){
+           document.getElementById('update_link').innerHTML = '升级DOV';
+           document.getElementById('going_wording').innerHTML = '正在前往DOV';
+
+           document.title = 'DOV-无乐不作';
+
+           var m_container = document.getElementById('m_container');
+
+           m_container.setAttribute('class',m_container.getAttribute('class') + ' qim');
+       }
+
+
+		var reportData = function(nvalue, error) {
+		    var img = new Image();
+		    var str = "//cgi.pub.qq.com/report/bnl?data=" + 0 + "," + nvalue + "," + (error || 0) + "," + p;
+		    img.src = str
+		};
+		var speed = {
+		    report: function(f1, f2, f3, f4, time) {
+		        var ISD_REPORT_URL = "//isdspeed.qq.com/cgi-bin/r.cgi?";
+		        var isdTransport = new Image();
+		        var reportData = f4 + "=" + time;
+		        var url = ISD_REPORT_URL + "flag1=" + f1 + "&flag2=" + f2 + "&flag3=" + f3 + "&" + reportData;
+		        isdTransport.src = url
+		    }
+		};
+
+
+
+        
+        function animateRound(dom, initialState, max_top, min_top, speed) {
+            dom.style.top = initialState + 'px';
+            var isUp = true;
+            setInterval(function () {
+                var top = parseInt(dom.style.top);
+                if (isUp) {
+                    if (max_top < top) {
+                        top -= 1;
+                    } else {
+                        isUp = false;
+                        top += 1;
+                    }
+                } else {
+                    if (min_top > top) {
+                        top += 1;
+                    } else {
+                        isUp = true;
+                        top -= 1;
+                    }
+                }
+                dom.style.top = top + 'px';
+            }, speed);
+        }
+
+
+		var ua = navigator.userAgent;
+		var p;
+		var REGEXP_IOS_QQ = /(iPad|iPhone|iPod).*? QQ\/([\d\.]+)/;
+		var isiOSMQ = REGEXP_IOS_QQ.test(ua);
+       if(ua.indexOf('QIM') > -1 || ua.indexOf('DOV') > -1){
+           isiOSMQ = false;
+       }
+		var isSafari = ua.indexOf("Safari") > -1;
+		
+		var mobile_q_jump = {
+			android:"//im.qq.com",
+			ios:"itms-apps://itunes.apple.com/cn/app/qq-2011/id444934666?mt=8",
+			winphone:"//www.windowsphone.com/zh-cn/store/app/qq/b45f0a5f-13d8-422b-9be5-c750af531762",
+			pc:"//mobile.qq.com/index.html"
+		};
+
+       if(isQim){
+           mobile_q_jump = {
+               android:"http://dov.qq.com",
+               ios:"itms-apps://itunes.apple.com/cn/app/dov/id1334674854?mt=8",
+               winphone:"http://dov.qq.com",
+               pc:"http://dov.qq.com"
+           };
+       }
+
+		if(typeof type == "undefined") type = 1;
+
+		if(ua.indexOf("Android")>-1){
+			p = "android";
+		}
+		else if(ua.indexOf("iPhone")>-1 || ua.indexOf("iPad")>-1 || ua.indexOf("iPod")>-1){
+			p = "ios";
+		}
+		else if(ua.indexOf("Windows Phone") > -1 || ua.indexOf("WPDesktop") > -1){
+			p = "winphone";
+		}
+		else {
+			p = "pc";
+		}
+		
+		if(p == "ios"){
+			
+			if(history.pushState && !isiOSMQ)
+				history.pushState({},"t","#");
+		}
+		else if(p == "pc" && qsig != "undefined"){
+			window.open(qsig + "&jump_from=" + jump_from,"_self");
+		}
+
+       function checkWechat(version){
+           var v = version.split('.');
+
+           var version656 = (6 * 1000 * 1000) + (5 * 1000 ) + 6;
+
+           var newVersion = (v[0] * 1000000) + (v[1] * 1000) + (v[2]);
+
+           return newVersion >= version656;
+       }
+
+        
+
+        
+            document.querySelector('.tips').classList.add('mobile-tips')
+            document.querySelector('.tips').style.display = "block"
+            var rounds = document.querySelectorAll('.box');
+            for (var i = 0, len = rounds.length; i < len; i++) {
+                var aspeed = 50;
+                (function (i) {
+                    setTimeout(function () {
+                        animateRound(rounds[i], 2, -1, 5, aspeed);
+                    }, 5 * (i + 1) * (aspeed - 10));
+                })(i);
+            }            
+        
+
+        document.getElementById("update_link").onclick = function(){
+            var jumpUrl = mobile_q_jump[p]; 
+            if(jumpUrl) window.open(jumpUrl,"_self");
+        }        
+
+		if(wechatInfo && checkWechat(wechatInfo[1]) && !isWxWork){
+			var doLaunch = function () { 
+			     setTimeout(function() {  
+			     	var url = '';
+					if(p == "ios" && sid == 2){
+                        var scheme = 'mqqapi';
+                        if(isQim){
+                            scheme = 'qimapi';
+                        }
+						url = scheme + "://card/show_pslcard?src_type=internal&version=1&uin="+ rawuin +"&card_type=group&source=qrcode&jump_from=" + jump_from + "&auth=" + auth_key +"&authSig=" + auth_sig + "&source_id=" + (isQR ? '2_40002' : '2_40001');
+					} else if(p !== "pc"){
+						var url = window.location.href.split("&");
+						var kParam = getUrlParam("k", location.href);
+                        var scheme = 'mqqopensdkapi';
+                        if(isQim){
+                            scheme = 'qimopensdkapi';
+                        }
+						if(p=='ios'){
+							url = scheme  + "://bizAgent/qm/qr?url=" + encodeURIComponent("http://qm.qq.com/cgi-bin/qm/qr?k=" + kParam+"&jump_from=" + jump_from + "&auth=" + auth_key+ "&app_name=" + app_name+"&authSig=" + auth_sig + "&source_id=" + (isQR ? '2_40002' : '2_40001')) ;
+						}else{
+							url = scheme + "://bizAgent/qm/qr?url=" + encodeURIComponent("https://qm.qq.com/cgi-bin/qm/qr?k=" + kParam+"&jump_from=" + jump_from + "&auth=" + auth_key+ "&app_name=" + app_name+"&authSig=" + auth_sig + "&source_id=" + (isQR ? '3_40002' : '3_40001')) ;
+						}
+					}
+
+			        WeixinJSBridge.invoke('launchApplication', { 
+			             "schemeUrl" : url
+			        }, function (res) {
+                        if(res && res.err_msg === 'launchApplication:fail'){
+                            var jumpUrl = mobile_q_jump[p];
+
+                            reportData(11780, 1);
+
+                            if(jumpUrl) {
+                                setTimeout(function(){
+                                    window.open(jumpUrl,"_self");
+                                },0);
+                            }
+                        }
+			        });
+			    },500); 
+			}
+
+			if(window.WeixinJSBridge){
+				doLaunch();
+			}else{
+				document.addEventListener('WeixinJSBridgeReady', function (){
+					doLaunch();
+				});
+			}
+		}else if(type == 1){
+			var isSuccess = true;
+
+			var f = document.createElement("iframe");
+			f.style.display = "none";
+			document.body.appendChild(f);
+
+			reportData(11780);
+
+			f.onload = function(){
+				isSuccess = false;
+			};
+			setTimeout(function(){
+				if(p == "ios" && sid == 2){
+                    var scheme = 'mqqapi';
+                    if(isQim){
+                        scheme = 'qimapi';
+                    }
+
+					var iosUrl = scheme + "://card/show_pslcard?src_type=internal&version=1&uin="+ rawuin +"&card_type=group&source=qrcode&jump_from=" + jump_from + "&auth=" + auth_key+"&authSig=" + auth_sig + "&source_id=" + (isQR ? '2_40002' : '2_40001');
+
+					
+					if(isSafari){
+						location.href = iosUrl;
+					}
+					else{
+						f.src = iosUrl;				
+					}
+
+				}
+				else if(p != "pc"){
+					var url = window.location.href.split("&");
+					var kParam = getUrlParam("k", location.href);
+                    var scheme = 'mqqopensdkapi';
+                    if(isQim){
+                        scheme = 'qimopensdkapi';
+                    }
+					if(p=='ios'){
+						f.src = scheme + "://bizAgent/qm/qr?url=" + encodeURIComponent("http://qm.qq.com/cgi-bin/qm/qr?k=" + kParam+"&jump_from=" + jump_from + "&auth=" + auth_key+ "&app_name=" + app_name+"&authSig=" + auth_sig + "&source_id=" + (isQR ? '2_40002' : '2_40001')) ;
+					}else{
+						f.src = scheme + "://bizAgent/qm/qr?url=" + encodeURIComponent("https://qm.qq.com/cgi-bin/qm/qr?k=" + kParam+"&jump_from=" + jump_from + "&auth=" + auth_key + "&app_name=" + app_name+"&authSig=" + auth_sig + "&source_id=" + (isQR ? '3_40002' : '3_40001')) ;
+					}
+					
+				}
+				
+				if(sid == 2 && p != "pc" && !isQim){
+					document.title = "申请加入QQ群";
+					document.getElementById("m_container").style.display = "block";
+				}
+
+				var now = Date.now();
+				setTimeout( function(){
+					if((p == "ios" && (!isiOSMQ || isQim) && Date.now() - now < 2000) || (p == "android" && (!isSuccess || isQim)) || ((p == "winphone" && Date.now() - now < 2000))){
+						var jumpUrl = mobile_q_jump[p]; 
+
+						reportData(11780, 1);
+
+						if(jumpUrl) {
+							setTimeout(function(){
+								window.open(jumpUrl,"_self");
+							},800);
+						}
+					}
+				} , 1500);
+			},1500);
+			
+		}
+		speed.report("7832", "19", "2", "1", Date.now() - window.startTime);
+	
+</script>
+</body>
+</html>
