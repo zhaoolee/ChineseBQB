@@ -48,6 +48,14 @@
 表情包图片和标注数据完全开源，对编程感兴趣的小伙伴，可以用开放数据源开发微信小程序，制作爬虫Demo，作为机器学习数据源，都是可以的！
 
 
+## 斗图QQ群(先到先得管理员)
+
+| 主题  | QQ群号  |
+| ---  | --- |
+| 奥特曼斗图群(2021年04月17日创建) |  <a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=nKuo9NOE7CD2LJ-KppazQbcdWeJleweP&jump_from=webapi">700477996</a> |
+
+
+
 ## Chinese stickers / 中国的表情包
 
 ## 表情包目录(共收录4588张表情包)Emoticon package directory (commonly included 4588 emoticon pack)
@@ -145,12 +153,6 @@
 
 BQBEND
 
-
-## 斗图QQ群(先到先得管理员)
-
-| 主题  | QQ群号  |
-| ---  | --- |
-| 奥特曼斗图群 |  <a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=nKuo9NOE7CD2LJ-KppazQbcdWeJleweP&jump_from=webapi">700477996</a> |
 
 
 ## 表情包文化背景故事(绝赞更新中...)
