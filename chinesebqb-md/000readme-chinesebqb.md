@@ -52,7 +52,7 @@
 
 | 主题  | QQ群号  |
 | ---  | --- |
-| 奥特曼斗图群(2021年04月17日创建) |  <a target="_blank" style="font-size:22px; line-height:22px;display:inline-block;" href="https://qm.qq.com/cgi-bin/qm/qr?k=nKuo9NOE7CD2LJ-KppazQbcdWeJleweP&jump_from=webapi"><img border="0" src="https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/000readme-chinesebqb.assets/group.png"/>&nbsp;<span>700477996</span></a> |
+| 奥特曼斗图群(2021年04月17日创建) |  700477996 |
 
 
 
