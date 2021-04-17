@@ -146,6 +146,12 @@
 BQBEND
 
 
+## 斗图QQ群(先到先得管理员)
+
+| 主题  | QQ群号  |
+| ---  | --- |
+| 奥特曼斗图群 |  <a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=nKuo9NOE7CD2LJ-KppazQbcdWeJleweP&jump_from=webapi">700477996</a> |
+
 
 ## 表情包文化背景故事(绝赞更新中...)
 
