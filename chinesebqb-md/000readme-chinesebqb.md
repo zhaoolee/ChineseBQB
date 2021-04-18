@@ -58,7 +58,7 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录4645张表情包)Emoticon package directory (commonly included 4645 emoticon pack)
+## 表情包目录(共收录4646张表情包)Emoticon package directory (commonly included 4646 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link)  | 
 | :---: | :---: |
@@ -106,7 +106,7 @@
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/046WhatToWear_穿什么BQB/000000046.gif' /> | [046WhatToWear_穿什么BQB(已收录119张)](https://www.v2fy.com/p/046WhatToWear_穿什么BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/045MatchstickMen_火柴人BQB/000000045.gif' /> | [045MatchstickMen_火柴人BQB(已收录7张)](https://www.v2fy.com/p/045MatchstickMen_火柴人BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/044YouLe_魔仙王子游乐BQB/000000044.jpg' /> | [044YouLe_魔仙王子游乐BQB(已收录15张)](https://www.v2fy.com/p/044YouLe_魔仙王子游乐BQB/) |
-| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/043Altman_奥特曼BQB/000000043.jpg' /> | [043Altman_奥特曼BQB(已收录56张)](https://www.v2fy.com/p/043Altman_奥特曼BQB/) |
+| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/043Altman_奥特曼BQB/000000043.jpg' /> | [043Altman_奥特曼BQB(已收录57张)](https://www.v2fy.com/p/043Altman_奥特曼BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/042HanZhang_张翰BQB/000000042.jpg' /> | [042HanZhang_张翰BQB(已收录9张)](https://www.v2fy.com/p/042HanZhang_张翰BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/041ChenguoCui表情包三巨头_崔成国BQB/000000041.jpg' /> | [041ChenguoCui表情包三巨头_崔成国BQB(已收录7张)](https://www.v2fy.com/p/041ChenguoCui表情包三巨头_崔成国BQB/) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/040HanazawaKana表情包三巨头_花泽香菜BQB/000000040.jpg' /> | [040HanazawaKana表情包三巨头_花泽香菜BQB(已收录4张)](https://www.v2fy.com/p/040HanazawaKana表情包三巨头_花泽香菜BQB/) |
