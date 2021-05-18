@@ -10,7 +10,7 @@
   <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
   <script src="./cdn/clipboard.min.js"></script>
-  <script data-ad-client="ca-pub-4504000699134547" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- <script data-ad-client="ca-pub-4504000699134547" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
@@ -103,6 +103,10 @@
 
       .card-body > .btn-container {
         text-align: center;
+      }
+      .use_desc{
+        font-size: 12px;
+        color: #111111;
       }
     </style>
 
@@ -219,6 +223,7 @@
               </button>
             </div>
           </div>
+          <div className="use_desc">在QQ或微信内，长按表情包图片，即可发送给好友</div>
 
           <div id="imgs_container">暂无匹配的表情包</div>
 
