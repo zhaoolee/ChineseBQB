@@ -254,7 +254,7 @@ class ReadmeContents {
         for (let n = (this.state.readme_contents_info.length) - 1; n > -1; n--) {
             let dir_name = [...(this.state.readme_contents_info[n].readme_contents_info_href.split("/"))].reverse()[1];
             console.log(dir_name);
-            let data_row = `| <img height='100px' style='height:100px;' src='${this.state.readme_contents_info[n].readme_contents_info_img}' /> | [${dir_name}(已收录${this.state.readme_contents_info[n].images_number}张)](${this.state.readme_contents_info[n].readme_contents_info_href}) | [下载地址](https://www.v2fy.com/asset/0i/ChineseBQB/${dir_name}.zip) |${"\n"}`;
+            let data_row = `| <img height='100px' style='height:100px;' src='${this.state.readme_contents_info[n].readme_contents_info_img}' /> | [${dir_name}(已收录${this.state.readme_contents_info[n].images_number}张)](${this.state.readme_contents_info[n].readme_contents_info_href}) | [下载地址](https://cdn.jsdelivr.net/gh/zhaoolee/ChineseBQB/${dir_name}.zip) |${"\n"}`;
             all_row_data += data_row;
         }
 
