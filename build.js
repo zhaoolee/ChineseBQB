@@ -97,7 +97,7 @@ function get_images_src(md_name){
     files  = fs.readdirSync(path.join(__dirname, "./"+dir_name));
     images = [];
     files.map((file_name, file_index)=> {
-        if(file_name.endsWith(".jpg")||file_name.endsWith(".gif")||file_name.endsWith(".png")||file_name.endsWith(".JPG")||file_name.endsWith(".GIF")||file_name.endsWith(".PNG")||file_name.endsWith(".webp")){
+        if(file_name.endsWith(".jpeg")||file_name.endsWith(".JPEG")||file_name.endsWith(".jpg")||file_name.endsWith(".gif")||file_name.endsWith(".png")||file_name.endsWith(".JPG")||file_name.endsWith(".GIF")||file_name.endsWith(".PNG")||file_name.endsWith(".webp")){
             let image_src = "https://www.v2fy.com/asset/0i/"+repo_name+"/"+ dir_name+"/"+file_name;
             images.push(image_src);
         }
