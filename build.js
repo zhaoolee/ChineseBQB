@@ -233,7 +233,7 @@ class ReadmeContents {
 
         // 定义标题行
 
-        let title_row = `${"\n\n"}| Example(示例)  |  链接(Entrance link) | 下载地址  | ${"\n"}| :---: | :---: | :---: |${"\n"}`;
+        let title_row = `${"\n\n"}| Example(示例)  |  链接(Entrance link) | 下载系列表情包合集(Download)  | ${"\n"}| :---: | :---: | :---: |${"\n"}`;
 
         // 定义单行数据  图片样式/链接样式
         let all_row_data = "";
@@ -254,7 +254,7 @@ class ReadmeContents {
         for (let n = (this.state.readme_contents_info.length) - 1; n > -1; n--) {
             let dir_name = [...(this.state.readme_contents_info[n].readme_contents_info_href.split("/"))].reverse()[1];
             console.log(dir_name);
-            let data_row = `| <img height='100px' style='height:100px;' src='${this.state.readme_contents_info[n].readme_contents_info_img}' /> | [${dir_name}(已收录${this.state.readme_contents_info[n].images_number}张)](${this.state.readme_contents_info[n].readme_contents_info_href}) | [下载地址](https://github.com/zhaoolee/ChineseBQB/raw/master/${dir_name}.zip) |${"\n"}`;
+            let data_row = `| <img height='100px' style='height:100px;' src='${this.state.readme_contents_info[n].readme_contents_info_img}' /> | [${dir_name}(已收录${this.state.readme_contents_info[n].images_number}张)](${this.state.readme_contents_info[n].readme_contents_info_href}) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/${dir_name}.zip) |${"\n"}`;
             all_row_data += data_row;
         }
 
