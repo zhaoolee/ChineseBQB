@@ -58,12 +58,13 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录5050张表情包)Emoticon package directory (commonly included 5050 emoticon pack)
+## 表情包目录(共收录5061张表情包)Emoticon package directory (commonly included 5061 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link) | 下载系列表情包合集(Download)  | 
 | :---: | :---: | :---: |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000doutuzhiwang.jpg' /> | [斗图之王BQB(已收录29张)](https://www.v2fy.com/p/斗图之王BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/斗图之王BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0.png' /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://www.v2fy.com/p/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/微信网友贡献表情包_暂存_有时间慢慢整理BQB.zip) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000089.gif' /> | [089TeaBoy_饮茶哥_BQB(已收录11张)](https://www.v2fy.com/p/089TeaBoy_饮茶哥_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/089TeaBoy_饮茶哥_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000088.jpg' /> | [088YuanLongping_袁隆平_BQB(已收录16张)](https://www.v2fy.com/p/088YuanLongping_袁隆平_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/088YuanLongping_袁隆平_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000087.gif' /> | [087AgeOfAwakening_觉醒年代_BQB(已收录24张)](https://www.v2fy.com/p/087AgeOfAwakening_觉醒年代_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/087AgeOfAwakening_觉醒年代_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000086.jpg' /> | [086Yangchaoyue_杨超越_BQB(已收录53张)](https://www.v2fy.com/p/086Yangchaoyue_杨超越_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/086Yangchaoyue_杨超越_BQB.zip) |
