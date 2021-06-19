@@ -58,7 +58,7 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录5212张表情包)Emoticon package directory (commonly included 5212 emoticon pack)
+## 表情包目录(共收录5231张表情包)Emoticon package directory (commonly included 5231 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link) | 下载系列表情包合集(Download)  | 
 | :---: | :---: | :---: |
@@ -66,7 +66,7 @@
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0.png' /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://www.v2fy.com/p/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/微信网友贡献表情包_暂存_有时间慢慢整理BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000092.jpg' /> | [092LuoXiang_罗翔_BQB(已收录47张)](https://www.v2fy.com/p/092LuoXiang_罗翔_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/092LuoXiang_罗翔_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000091.gif' /> | [091LetTheBulletsFly_让子弹飞_BQB(已收录15张)](https://www.v2fy.com/p/091LetTheBulletsFly_让子弹飞_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/091LetTheBulletsFly_让子弹飞_BQB.zip) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000090.gif' /> | [090SailorMoon_美少女战士_BQB(已收录69张)](https://www.v2fy.com/p/090SailorMoon_美少女战士_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/090SailorMoon_美少女战士_BQB.zip) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000090.gif' /> | [090SailorMoon_美少女战士_BQB(已收录88张)](https://www.v2fy.com/p/090SailorMoon_美少女战士_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/090SailorMoon_美少女战士_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000089.gif' /> | [089TeaBoy_饮茶哥_BQB(已收录11张)](https://www.v2fy.com/p/089TeaBoy_饮茶哥_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/089TeaBoy_饮茶哥_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000088.jpg' /> | [088YuanLongping_袁隆平_BQB(已收录16张)](https://www.v2fy.com/p/088YuanLongping_袁隆平_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/088YuanLongping_袁隆平_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000087.gif' /> | [087AgeOfAwakening_觉醒年代_BQB(已收录24张)](https://www.v2fy.com/p/087AgeOfAwakening_觉醒年代_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/087AgeOfAwakening_觉醒年代_BQB.zip) |
