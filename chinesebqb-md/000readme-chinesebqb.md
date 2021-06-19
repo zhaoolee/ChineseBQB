@@ -58,7 +58,7 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录5192张表情包)Emoticon package directory (commonly included 5192 emoticon pack)
+## 表情包目录(共收录5212张表情包)Emoticon package directory (commonly included 5212 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link) | 下载系列表情包合集(Download)  | 
 | :---: | :---: | :---: |
@@ -113,7 +113,7 @@
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/046WhatToWear_穿什么BQB/000000046.gif' /> | [046WhatToWear_穿什么BQB(已收录123张)](https://www.v2fy.com/p/046WhatToWear_穿什么BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/046WhatToWear_穿什么BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/045MatchstickMen_火柴人BQB/000000045.gif' /> | [045MatchstickMen_火柴人BQB(已收录7张)](https://www.v2fy.com/p/045MatchstickMen_火柴人BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/045MatchstickMen_火柴人BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/044YouLe_魔仙王子游乐BQB/000000044.jpg' /> | [044YouLe_魔仙王子游乐BQB(已收录15张)](https://www.v2fy.com/p/044YouLe_魔仙王子游乐BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/044YouLe_魔仙王子游乐BQB.zip) |
-| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/043Altman_奥特曼BQB/000000043.jpg' /> | [043Altman_奥特曼BQB(已收录282张)](https://www.v2fy.com/p/043Altman_奥特曼BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/043Altman_奥特曼BQB.zip) |
+| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/043Altman_奥特曼BQB/000000043.jpg' /> | [043Altman_奥特曼BQB(已收录302张)](https://www.v2fy.com/p/043Altman_奥特曼BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/043Altman_奥特曼BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/042HanZhang_张翰BQB/000000042.jpg' /> | [042HanZhang_张翰BQB(已收录9张)](https://www.v2fy.com/p/042HanZhang_张翰BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/042HanZhang_张翰BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/041ChenguoCui表情包三巨头_崔成国BQB/000000041.jpg' /> | [041ChenguoCui表情包三巨头_崔成国BQB(已收录7张)](https://www.v2fy.com/p/041ChenguoCui表情包三巨头_崔成国BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/041ChenguoCui表情包三巨头_崔成国BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/040HanazawaKana表情包三巨头_花泽香菜BQB/000000040.jpg' /> | [040HanazawaKana表情包三巨头_花泽香菜BQB(已收录4张)](https://www.v2fy.com/p/040HanazawaKana表情包三巨头_花泽香菜BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/040HanazawaKana表情包三巨头_花泽香菜BQB.zip) |
@@ -157,7 +157,7 @@
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/002CuteGirl_可爱的女孩纸👧BQB/000000002.gif' /> | [002CuteGirl_可爱的女孩纸👧BQB(已收录185张)](https://www.v2fy.com/p/002CuteGirl_可爱的女孩纸👧BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/002CuteGirl_可爱的女孩纸👧BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/001Funny_滑稽大佬😏BQB/000000001.gif' /> | [001Funny_滑稽大佬😏BQB(已收录40张)](https://www.v2fy.com/p/001Funny_滑稽大佬😏BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/001Funny_滑稽大佬😏BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/000Contribution_贡献🇨🇳BQB/000000000.gif' /> | [000Contribution_贡献🇨🇳BQB(已收录57张)](https://www.v2fy.com/p/000Contribution_贡献🇨🇳BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/000Contribution_贡献🇨🇳BQB.zip) |
-> 数据生成时间: 2021-06-15
+> 数据生成时间: 2021-06-19
 
 BQBEND
 
