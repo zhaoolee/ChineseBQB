@@ -17,7 +17,7 @@
 
 
 
-## [《ChineseBQB 在线搜图斗图工具》]((https://www.v2fy.com/asset/0i/ChineseBQB/))
+## [《ChineseBQB 在线搜图斗图工具》](https://www.v2fy.com/asset/0i/ChineseBQB/)
 
 [《ChineseBQB在线搜图斗图工具》直达链接: https://www.v2fy.com/asset/0i/ChineseBQB/](https://www.v2fy.com/asset/0i/ChineseBQB/)
 
@@ -47,8 +47,11 @@
 
 表情包图片和标注数据完全开源，对编程感兴趣的小伙伴，可以用开放数据源开发微信小程序，制作爬虫Demo，作为机器学习数据源，都是可以的！
 
+## ChineseBQB交流论坛(可上传表情包,交流表情包相关话题)
 
-## 斗图QQ群(先到先得管理员)
+[https://bbs.v2fy.com/c/chinesebqb/](https://bbs.v2fy.com/c/chinesebqb/)
+
+## ChineseBQB交流QQ群
 
 | 主题  | QQ群号  |
 | ---  | --- |
@@ -157,7 +160,7 @@
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/002CuteGirl_可爱的女孩纸👧BQB/000000002.gif' /> | [002CuteGirl_可爱的女孩纸👧BQB(已收录185张)](https://www.v2fy.com/p/002CuteGirl_可爱的女孩纸👧BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/002CuteGirl_可爱的女孩纸👧BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/001Funny_滑稽大佬😏BQB/000000001.gif' /> | [001Funny_滑稽大佬😏BQB(已收录40张)](https://www.v2fy.com/p/001Funny_滑稽大佬😏BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/001Funny_滑稽大佬😏BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/000Contribution_贡献🇨🇳BQB/000000000.gif' /> | [000Contribution_贡献🇨🇳BQB(已收录57张)](https://www.v2fy.com/p/000Contribution_贡献🇨🇳BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/000Contribution_贡献🇨🇳BQB.zip) |
-> 数据生成时间: 2021-06-19
+> 数据生成时间: 2021-06-22
 
 BQBEND
 
