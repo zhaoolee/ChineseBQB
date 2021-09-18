@@ -62,12 +62,13 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录5272张表情包)Emoticon package directory (commonly included 5272 emoticon pack)
+## 表情包目录(共收录5328张表情包)Emoticon package directory (commonly included 5328 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link) | 下载系列表情包合集(Download)  | 
 | :---: | :---: | :---: |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/斗图之王BQB/000000doutuzhiwang.jpg' /> | [斗图之王BQB(已收录29张)](https://www.v2fy.com/p/斗图之王BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/斗图之王BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/微信网友贡献表情包_暂存_有时间慢慢整理BQB/0.png' /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://www.v2fy.com/p/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/微信网友贡献表情包_暂存_有时间慢慢整理BQB.zip) |
+| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/095GenShin_原神_BQB/0000000095.jpg' /> | [095GenShin_原神_BQB(已收录56张)](https://www.v2fy.com/p/095GenShin_原神_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/095GenShin_原神_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/094TeacherWang_夏洛特烦恼王老师_BQB/0000000094.gif' /> | [094TeacherWang_夏洛特烦恼王老师_BQB(已收录13张)](https://www.v2fy.com/p/094TeacherWang_夏洛特烦恼王老师_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/094TeacherWang_夏洛特烦恼王老师_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/093LiAn_李安_BQB/0000000093.jpg' /> | [093LiAn_李安_BQB(已收录28张)](https://www.v2fy.com/p/093LiAn_李安_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/093LiAn_李安_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/092LuoXiang_罗翔_BQB/0000000092.jpg' /> | [092LuoXiang_罗翔_BQB(已收录47张)](https://www.v2fy.com/p/092LuoXiang_罗翔_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/092LuoXiang_罗翔_BQB.zip) |
