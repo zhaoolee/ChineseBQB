@@ -57,7 +57,7 @@
 | ---  | --- |
 | 奥特曼斗图群(2021年04月17日创建) |  700477996 |
 
-![广告位招租](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/1631234205295EK3AQi6j.png)
+![广告位招租](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/zhaoolee-link.png)
 
 
 ## Chinese stickers / 中国的表情包
