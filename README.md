@@ -47,6 +47,10 @@
 
 表情包图片和标注数据完全开源，对编程感兴趣的小伙伴，可以用开放数据源开发微信小程序，制作爬虫Demo，作为机器学习数据源，都是可以的！
 
+## 感谢名单
+
+感谢 [jmzdd](https://github.com/jmzdd) 通过邮箱贡献的滑稽大佬表情包~ 
+
 ## ChineseBQB交流论坛(可上传表情包,交流表情包相关话题)
 
 [https://bbs.v2fy.com/c/chinesebqb/](https://bbs.v2fy.com/c/chinesebqb/)
@@ -57,12 +61,12 @@
 | ---  | --- |
 | 奥特曼斗图群(2021年04月17日创建) |  700477996 |
 
-![广告位招租](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/zhaoolee-link.png)
+![广告位招租](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/1631234205295EK3AQi6j.png)
 
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录5366张表情包)Emoticon package directory (commonly included 5366 emoticon pack)
+## 表情包目录(共收录5454张表情包)Emoticon package directory (commonly included 5454 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link) | 下载系列表情包合集(Download)  | 
 | :---: | :---: | :---: |
@@ -163,9 +167,9 @@
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000004.jpg' /> | [004SmirkBoy_假笑男孩👦BQB(已收录28张)](https://www.v2fy.com/p/004SmirkBoy_假笑男孩👦BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/004SmirkBoy_假笑男孩👦BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000003.gif' /> | [003CuteBoy_可爱男孩纸👶BQB(已收录28张)](https://www.v2fy.com/p/003CuteBoy_可爱男孩纸👶BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/003CuteBoy_可爱男孩纸👶BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000002.gif' /> | [002CuteGirl_可爱的女孩纸👧BQB(已收录185张)](https://www.v2fy.com/p/002CuteGirl_可爱的女孩纸👧BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/002CuteGirl_可爱的女孩纸👧BQB.zip) |
-| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000001.gif' /> | [001Funny_滑稽大佬😏BQB(已收录40张)](https://www.v2fy.com/p/001Funny_滑稽大佬😏BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/001Funny_滑稽大佬😏BQB.zip) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000001.gif' /> | [001Funny_滑稽大佬😏BQB(已收录128张)](https://www.v2fy.com/p/001Funny_滑稽大佬😏BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/001Funny_滑稽大佬😏BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000000.gif' /> | [000Contribution_贡献🇨🇳BQB(已收录57张)](https://www.v2fy.com/p/000Contribution_贡献🇨🇳BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/000Contribution_贡献🇨🇳BQB.zip) |
-> 数据生成时间: 2021-09-30
+> 数据生成时间: 2021-10-10
 
 BQBEND
 
