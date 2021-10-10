@@ -66,7 +66,7 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录5454张表情包)Emoticon package directory (commonly included 5454 emoticon pack)
+## 表情包目录(共收录5451张表情包)Emoticon package directory (commonly included 5451 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link) | 下载系列表情包合集(Download)  | 
 | :---: | :---: | :---: |
@@ -167,7 +167,7 @@
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/004SmirkBoy_假笑男孩👦BQB/000000004.jpg' /> | [004SmirkBoy_假笑男孩👦BQB(已收录28张)](https://www.v2fy.com/p/004SmirkBoy_假笑男孩👦BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/004SmirkBoy_假笑男孩👦BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/003CuteBoy_可爱男孩纸👶BQB/000000003.gif' /> | [003CuteBoy_可爱男孩纸👶BQB(已收录28张)](https://www.v2fy.com/p/003CuteBoy_可爱男孩纸👶BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/003CuteBoy_可爱男孩纸👶BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/002CuteGirl_可爱的女孩纸👧BQB/000000002.gif' /> | [002CuteGirl_可爱的女孩纸👧BQB(已收录185张)](https://www.v2fy.com/p/002CuteGirl_可爱的女孩纸👧BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/002CuteGirl_可爱的女孩纸👧BQB.zip) |
-| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/001Funny_滑稽大佬😏BQB/000000001.gif' /> | [001Funny_滑稽大佬😏BQB(已收录128张)](https://www.v2fy.com/p/001Funny_滑稽大佬😏BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/001Funny_滑稽大佬😏BQB.zip) |
+| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/001Funny_滑稽大佬😏BQB/000000001.gif' /> | [001Funny_滑稽大佬😏BQB(已收录125张)](https://www.v2fy.com/p/001Funny_滑稽大佬😏BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/001Funny_滑稽大佬😏BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/000Contribution_贡献🇨🇳BQB/000000000.gif' /> | [000Contribution_贡献🇨🇳BQB(已收录57张)](https://www.v2fy.com/p/000Contribution_贡献🇨🇳BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/000Contribution_贡献🇨🇳BQB.zip) |
 > 数据生成时间: 2021-10-10
 
