@@ -13,7 +13,7 @@
 本项目VI由方圆STU创始人[老罗巴扎嘿](https://huaban.com/syy946795671/muse_boards/)独立设计
 
 
-#### 本项目Github永久开源地址: [https://github.com/zhaoolee/ChineseBQB](https://github.com/zhaoolee/ChineseBQB)
+#### 本项目GitHub永久开源地址: [https://github.com/zhaoolee/ChineseBQB](https://github.com/zhaoolee/ChineseBQB)
 
 
 
@@ -259,7 +259,7 @@ JOJO于1987年开始在少年JUMP连载, 描述了JOJO与DIO及其后继者长�
 ## 中国人的表情包之 PP 制造计划 (VI设计 [老罗巴扎嘿](https://github.com/LuoJiangYong))
 
 
-> 昭昭(zhaoolee)最开始和老罗说，他打算在 Github 上搭建一个表情包的开源仓库的时候，老罗是觉得非常惊讶的（两眼直瞪），一是因为它看起来太不 Github 了，二是它太平常了，但是昭昭一句话说服了老罗，“这就是我们”，是啊，社交年代，表情包承载了太多我们的“原意”，曾经，喜怒哀乐，跃然脸上，曾经，车马邮件都慢，但如今，空间维度变得简单，但是社交又复杂了谁?  [原文链接](https://mp.weixin.qq.com/s/lCyluzJd7ObGTYqZP54Wtg)
+> 昭昭(zhaoolee)最开始和老罗说，他打算在 GitHub 上搭建一个表情包的开源仓库的时候，老罗是觉得非常惊讶的（两眼直瞪），一是因为它看起来太不 GitHub 了，二是它太平常了，但是昭昭一句话说服了老罗，“这就是我们”，是啊，社交年代，表情包承载了太多我们的“原意”，曾经，喜怒哀乐，跃然脸上，曾经，车马邮件都慢，但如今，空间维度变得简单，但是社交又复杂了谁?  [原文链接](https://mp.weixin.qq.com/s/lCyluzJd7ObGTYqZP54Wtg)
 
 ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/65401790-e7163480-ddfc-11e9-89bf-32f7a3f68aac.jpg)
 
@@ -350,8 +350,8 @@ JOJO于1987年开始在少年JUMP连载, 描述了JOJO与DIO及其后继者长�
 
 
 
-> - GitZip for github 使用方法: [《GitZip for github》从Github批量下载表情包](https://zhaoolee.gitbooks.io/chrome/content/040gitzip-for-github.html) 
-> - GitZip for github instruction: [GitZip for github downloads stickers from Github in bulk] (https://zhaoolee.gitbooks.io/chrome/content/040gitzip-for-github.html)
+> - GitZip for github 使用方法: [《GitZip for github》从GitHub批量下载表情包](https://zhaoolee.gitbooks.io/chrome/content/040gitzip-for-github.html) 
+> - GitZip for github instruction: [GitZip for github downloads stickers from GitHub in bulk] (https://zhaoolee.gitbooks.io/chrome/content/040gitzip-for-github.html)
 
 > - 通过 git 获取全部表情包 
 > - Get all stickers via git
@@ -367,12 +367,12 @@ git clone --depth 1 https://github.com/zhaoolee/ChineseBQB
 
 
 
-- If you are a GIF/sticker warriors and have a github account, welcome to contribute your stickers to the root of the `https://github.com/zhaoolee/ChineseBQB/tree/master/000Contribution_%E8%B4%A1%E7%8C%AE%F0%9F%87%A8%F0%9F%87%B3`
-- 如果你是斗图大佬, 又有 github 账号, 欢迎将表情包贡献到项目`https://github.com/zhaoolee/ChineseBQB`根目录下的`000Contribution_贡献🇨🇳`
+- If you are a GIF/sticker warriors and have a GitHub account, welcome to contribute your stickers to the root of the `https://github.com/zhaoolee/ChineseBQB/tree/master/000Contribution_%E8%B4%A1%E7%8C%AE%F0%9F%87%A8%F0%9F%87%B3`
+- 如果你是斗图大佬, 又有 GitHub 账号, 欢迎将表情包贡献到项目`https://github.com/zhaoolee/ChineseBQB`根目录下的`000Contribution_贡献🇨🇳`
 
 
-- If you are a GIF/sticker warriors, but don't have a github account, please send the stickers via email, <zhaoolee@gmail.com> , title **Contribute stickers **
-- 如果你是斗图大佬, 没有github账号, 欢迎将表情包发到我的邮箱 <zhaoolee@gmail.com> , 来信注明 **贡献表情包**
+- If you are a GIF/sticker warriors, but don't have a GitHub account, please send the stickers via email, <zhaoolee@gmail.com> , title **Contribute stickers **
+- 如果你是斗图大佬, 没有GitHub账号, 欢迎将表情包发到我的邮箱 <zhaoolee@gmail.com> , 来信注明 **贡献表情包**
 
 
 - Go to the webpage https://www.v2fy.com/p/000readme-chinesebqb/ to upload the emoticon picture in the comment area, it can be included soon, and the system will automatically notify you by email after inclusion~
@@ -428,28 +428,28 @@ is the last torch of the classical Internet spirit!
 
 
 
-## ChineseBQB in the meaning of Github / ChineseBQB 存在于 Github 的意义
+## ChineseBQB in the meaning of GitHub / ChineseBQB 存在于 GitHub 的意义
 
 ```
 When people see ChineseBQB, someone will say that "People can play GitHub like this?"
-很多人见到ChineseBQB的第一眼, 会有"Github还能这么玩"的感叹!
+很多人见到ChineseBQB的第一眼, 会有"GitHub还能这么玩"的感叹!
 
 Good ideas should be respected, good ideas can also be realized ~
 好的想法应该被尊重, 好的想法也可以去实现 ~
 
-The author zhaoolee hopes that ChineseBQB can extend the boundaries of github. Github is not just a platform for managing code, but also can manage stickers.
-作者 zhaoolee 希望 ChineseBQB 能够扩充 github 的边界, github 不只是管理代码的平台, 也可以管理表情包~
+The author zhaoolee hopes that ChineseBQB can extend the boundaries of GitHub. GitHub is not just a platform for managing code, but also can manage stickers.
+作者 zhaoolee 希望 ChineseBQB 能够扩充 GitHub 的边界, GitHub 不只是管理代码的平台, 也可以管理表情包~
 
 ChineseBQB is a "cultural" repository, and Zhaoolee hopes to use ChineseBQB to introduce jade and make a better "cultural" repository.
 ChineseBQB是一个"文化类"仓库, zhaoolee希望能通过ChineseBQB抛砖引玉, 引出更优质的"文化类"仓库~
 
 
 ChineseBQB uses GitHub Pages. From the feedback received, we know the page service is very stable, you can rest assured to use ~
-ChineseBQB使用了 github 提供的 page空间, 从收到的反馈来看, page 空间服务是非常稳定的, 大家可以放心食用~
+ChineseBQB使用了 GitHub 提供的 page空间, 从收到的反馈来看, page 空间服务是非常稳定的, 大家可以放心食用~
 
 
-ChineseBQB is a relatively "heterogeneous" repository, and Github is a compatible and packaged place. ChineseBQB is respected here~
-ChineseBQB是一个比较"异类"的仓库, 而 Github 是一个兼容并包的地方, ChineseBQB 在这里得到了尊重~
+ChineseBQB is a relatively "heterogeneous" repository, and GitHub is a compatible and packaged place. ChineseBQB is respected here~
+ChineseBQB是一个比较"异类"的仓库, 而 GitHub 是一个兼容并包的地方, ChineseBQB 在这里得到了尊重~
 ```
 
 
