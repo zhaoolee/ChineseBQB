@@ -66,12 +66,13 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录5595张表情包)Emoticon package directory (commonly included 5595 emoticon pack)
+## 表情包目录(共收录5621张表情包)Emoticon package directory (commonly included 5621 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link) | 下载系列表情包合集(Download)  | 
 | :---: | :---: | :---: |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000doutuzhiwang.jpg' /> | [斗图之王BQB(已收录29张)](https://www.v2fy.com/p/斗图之王BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/斗图之王BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0.png' /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://www.v2fy.com/p/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/微信网友贡献表情包_暂存_有时间慢慢整理BQB.zip) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000099.png' /> | [099p5r_女神异闻录_BQB(已收录26张)](https://www.v2fy.com/p/099p5r_女神异闻录_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/099p5r_女神异闻录_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000098.jpg' /> | [098spyxfamily_间谍过家家_BQB(已收录21张)](https://www.v2fy.com/p/098spyxfamily_间谍过家家_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/098spyxfamily_间谍过家家_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000097.jpg' /> | [097Tu_那年那兔那些事_BQB(已收录21张)](https://www.v2fy.com/p/097Tu_那年那兔那些事_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/097Tu_那年那兔那些事_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000096.jpg' /> | [096NationalDay_国庆节_BQB(已收录38张)](https://www.v2fy.com/p/096NationalDay_国庆节_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/096NationalDay_国庆节_BQB.zip) |
