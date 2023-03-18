@@ -66,12 +66,14 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录5625张表情包)Emoticon package directory (commonly included 5625 emoticon pack)
+## 表情包目录(共收录5647张表情包)Emoticon package directory (commonly included 5647 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link) | 下载系列表情包合集(Download)  | 
 | :---: | :---: | :---: |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/斗图之王BQB/000000doutuzhiwang.jpg' /> | [斗图之王BQB(已收录29张)](https://www.v2fy.com/p/斗图之王BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/斗图之王BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/微信网友贡献表情包_暂存_有时间慢慢整理BQB/0.png' /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://www.v2fy.com/p/微信网友贡献表情包_暂存_有时间慢慢整理BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/微信网友贡献表情包_暂存_有时间慢慢整理BQB.zip) |
+| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/101ChainsawMan_电锯人_BQB/0000000101.png' /> | [101ChainsawMan_电锯人_BQB(已收录5张)](https://www.v2fy.com/p/101ChainsawMan_电锯人_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/101ChainsawMan_电锯人_BQB.zip) |
+| <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/100TheGegenerate_不良人_BQB/0000000100.png' /> | [100TheGegenerate_不良人_BQB(已收录17张)](https://www.v2fy.com/p/100TheGegenerate_不良人_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/100TheGegenerate_不良人_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/099p5r_女神异闻录_BQB/0000000099.png' /> | [099p5r_女神异闻录_BQB(已收录30张)](https://www.v2fy.com/p/099p5r_女神异闻录_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/099p5r_女神异闻录_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/098spyxfamily_间谍过家家_BQB/0000000098.jpg' /> | [098spyxfamily_间谍过家家_BQB(已收录21张)](https://www.v2fy.com/p/098spyxfamily_间谍过家家_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/098spyxfamily_间谍过家家_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://www.v2fy.com/asset/0i/ChineseBQB/097Tu_那年那兔那些事_BQB/0000000097.jpg' /> | [097Tu_那年那兔那些事_BQB(已收录21张)](https://www.v2fy.com/p/097Tu_那年那兔那些事_BQB/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/097Tu_那年那兔那些事_BQB.zip) |
