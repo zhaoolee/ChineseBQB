@@ -354,7 +354,7 @@ async function main() {
         // 页面链接获取
         let dir_name = md_name_value.slice(0, md_name_value.length - 3);
 
-        let readme_contents_info_href = "https://www.v2fy.com/p/" + dir_name + "/";
+        let readme_contents_info_href = "https://www.v2fy.com/p/" + dir_name + "/?post_category=中国人的表情包-pp制造计划-chinesebqb";
         readme_contents_info_obj.readme_contents_info_href = readme_contents_info_href;
 
 

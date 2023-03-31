@@ -91,7 +91,7 @@ function create_index_info(title_and_filename_list) {
       title_and_filename_list[m]["title"] +
       "](https://www.v2fy.com/p/" +
       filename_no_md +
-      "/?post_category=中国人的表情包-pp制造计划-chinesebqb)\n\n";
+      "/)\n\n";
     index_info = index_info + index_info_atom;
   }
 
