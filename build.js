@@ -137,7 +137,7 @@ function get_images_src(md_name) {
     images = [];
     files.map((file_name, file_index) => {
         if (file_name.endsWith(".jpeg") || file_name.endsWith(".jpg") || file_name.endsWith(".gif") || file_name.endsWith(".png") || file_name.endsWith(".JPEG") || file_name.endsWith(".JPG") || file_name.endsWith(".GIF") || file_name.endsWith(".PNG") || file_name.endsWith(".webp")) {
-            let image_src = "https://www.v2fy.com/asset/0i/" + repo_name + "/" + dir_name + "/" + file_name;
+            let image_src = "https://v2fy.com/asset/0i/" + repo_name + "/" + dir_name + "/" + file_name;
             images.push(image_src);
         }
     });
@@ -354,7 +354,7 @@ async function main() {
         // 页面链接获取
         let dir_name = md_name_value.slice(0, md_name_value.length - 3);
 
-        let readme_contents_info_href = "https://www.v2fy.com/p/" + dir_name + "/?post_category=中国人的表情包-pp制造计划-chinesebqb";
+        let readme_contents_info_href = "https://v2fy.com/p/" + dir_name + "/?post_category=中国人的表情包-pp制造计划-chinesebqb";
         readme_contents_info_obj.readme_contents_info_href = readme_contents_info_href;
 
 

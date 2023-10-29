@@ -20,12 +20,12 @@ const exclude_md_files = [];
 
 // 自定义
 const target_url =
-  "https://www.v2fy.com/asset/0i/" + main_dir_name + "/" + md_dir_name + "/";
+  "https://v2fy.com/asset/0i/" + main_dir_name + "/" + md_dir_name + "/";
 
 console.log("target_url::", target_url);
 const target_path = "/usr/share/nginx/v2fy.com/asset/0i";
 
-// 将本目录同步服务器
+// 将本目录同步服务器
 async function update_data() {
   await new Promise((resolve, reject) => {
     // Build the command
@@ -88,7 +88,7 @@ function get_md_file_list() {
 // 将md文件内容替换为https内容
 function local_file_href_2_https_href(md_file_name) {
 
-  console.log("分析md==>>", md_file_name);
+  // console.log("分析md==>>", md_file_name);
   const whole_md_file_path = path.join(__dirname, md_dir_name, md_file_name);
 
   let file_content = fs.readFileSync(whole_md_file_path).toString();
@@ -115,7 +115,7 @@ function local_file_href_2_https_href(md_file_name) {
 
       file_content = file_content.replace(tmp_md_img_addr, new_tmp_md_img_addr);
 
-      console.log("准备替换==>", tmp_md_img_addr, "为==>>", new_tmp_md_img_addr)
+      // console.log("准备替换==>", tmp_md_img_addr, "为==>>", new_tmp_md_img_addr)
     }else{
       console.log("略过==>>", img_addr);
 
@@ -123,7 +123,7 @@ function local_file_href_2_https_href(md_file_name) {
     }
   }
 
-  console.log(file_content);
+  // console.log(file_content);
 
   fs.writeFileSync(whole_md_file_path, file_content, {encoding: "utf8"})
 
