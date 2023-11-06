@@ -88,7 +88,7 @@ async function create_bqb_md() {
                     }
                     console.log("top::", top);
                     // 构建内容
-                    let content = `---${"\n"}title: ${md_dir_list[i]}${"\n"}---${"\n"}${"\n"}------${"\n"}${"## 以下为收录的表情包库"}${"\n"}${"\n"}<!-- more -->${"\n"}`;
+                    let content = `---${"\n"}title: ${md_dir_list[i]}${"\n"}categories:${"\n"}- 中国人的表情包-PP制造计划-ChineseBQB${"\n"}---${"\n"}${"\n"}------${"\n"}${"## 以下为收录的表情包库"}${"\n"}${"\n"}<!-- more -->${"\n"}`;
                     // 去创建文件
                     fs.writeFileSync(tmp_md_path, content);
                     console.log(tmp_md_path, "创建完成");

@@ -1,5 +1,7 @@
 ---
 title: 012Parrot_鹦鹉🐦BQB
+categories:
+- 中国人的表情包-PP制造计划-ChineseBQB
 ---
 
 ------

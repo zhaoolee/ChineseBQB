@@ -1,0 +1,5 @@
+{
+    "USERNAME": "填写登录后台的用户名",
+    "PASSWORD": "填写登录后台的密码",
+    "XMLRPC_PHP": "填写xmlrpc地址信息，如 https://fangyuanxiaozhan.com/xmlrpc.php"
+}

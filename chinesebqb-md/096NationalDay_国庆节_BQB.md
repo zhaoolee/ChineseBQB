@@ -1,5 +1,7 @@
 ---
 title: 096NationalDay_国庆节_BQB
+categories:
+- 中国人的表情包-PP制造计划-ChineseBQB
 ---
 
 ------

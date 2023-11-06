@@ -1,34 +1,8 @@
 ---
 title: 067NegroCarryingACoffin_黑人抬棺⚰BQB
+categories:
+- 中国人的表情包-PP制造计划-ChineseBQB
 ---
-
-## 关于黑人抬棺
-
-黑人抬棺专业团队（英语：Dancing Pallbearers）是一支来自非洲加纳共和国阿散蒂地区的护柩者团队。2020年4月，其抬棺舞（Dancing Coffin）在全球网络爆红。抬棺团队不止一家, 建议选经验丰富的专业团队: 曾有团队在抬棺起舞时不慎将棺材滑落，逝者被甩出[手动狗头]
-
-
-
-走红视频地址: [https://www.bilibili.com/video/BV1NZ4y1j7nw](https://www.bilibili.com/video/BV1NZ4y1j7nw)
-
-![zhuanye2](https://v2fy.com/asset/0i/ChineseBQB/chinesebqb-md/067NegroCarryingACoffin_%E9%BB%91%E4%BA%BA%E6%8A%AC%E6%A3%BA%E2%9A%B0BQB.assets/zhuanye2.gif)
-
-
-
-剪辑所选音乐《Astronomia》
-
-
-
-## 段子永不眠
-
-黑哥一笑,生死难料; 棺材一抬,世间白来;
-
-
-
-## 小结
-
-手脚麻利的几位抬棺人成为了新一代的死神代言人，见到他们的脸基本就等于宣告了死刑。因为视频中有七个人，也被网友们亲切的称为**亡下七武海**, **史莱克七怪**
-
-
 
 ------
 ## 以下为收录的表情包库

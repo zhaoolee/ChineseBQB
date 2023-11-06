@@ -1,5 +1,7 @@
 ---
 title: 039YaoMing表情包三巨头_姚明BQB
+categories:
+- 中国人的表情包-PP制造计划-ChineseBQB
 ---
 
 ------

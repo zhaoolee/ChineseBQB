@@ -1,5 +1,7 @@
 ---
 title: 023Emoji_表情符号BQB
+categories:
+- 中国人的表情包-PP制造计划-ChineseBQB
 ---
 
 ------

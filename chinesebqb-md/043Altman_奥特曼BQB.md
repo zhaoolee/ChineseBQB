@@ -1,22 +1,8 @@
 ---
 title: 043Altman_奥特曼BQB
+categories:
+- 中国人的表情包-PP制造计划-ChineseBQB
 ---
-
-
-ChineseBQB奥特曼表情包交流鹅群: 700477996
-
-奥特曼表情交流群，优质表情包会被收录到开源项目https://github.com/zhaoolee/ChineseBQB 中，如果想主动贡献表情包，可以将表情包上传到700477996的群空间，也可以前往网页 [https://v2fy.com/p/043altman_%e5%a5%a5%e7%89%b9%e6%9b%bcbqb/](https://v2fy.com/p/043altman_%e5%a5%a5%e7%89%b9%e6%9b%bcbqb/) 的评论区上传～
-
-奥特曼表情包在线获取地址：[https://v2fy.com/asset/0i/ChineseBQB/?key_val=%E5%A5%A5%E7%89%B9%E6%9B%BC](https://v2fy.com/asset/0i/ChineseBQB/?key_val=%E5%A5%A5%E7%89%B9%E6%9B%BC)
-
-
-
-
-
-
-
-
-
 
 ------
 ## 以下为收录的表情包库

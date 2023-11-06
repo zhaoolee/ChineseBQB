@@ -1,5 +1,7 @@
 ---
 title: 028JohnRomero_罗永浩🔨BQB
+categories:
+- 中国人的表情包-PP制造计划-ChineseBQB
 ---
 
 ------

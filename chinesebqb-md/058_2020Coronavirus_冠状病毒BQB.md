@@ -1,5 +1,7 @@
 ---
 title: 058_2020Coronavirus_冠状病毒BQB
+categories:
+- 中国人的表情包-PP制造计划-ChineseBQB
 ---
 
 ------

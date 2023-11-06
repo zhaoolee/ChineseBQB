@@ -1,5 +1,7 @@
 ---
 title: 052Squirtle_杰尼龟BQB
+categories:
+- 中国人的表情包-PP制造计划-ChineseBQB
 ---
 
 ------

@@ -1,0 +1,18 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[scripts]
+push = "git add _posts && git commit -m '更新文章' && git push"
+build = "python main.py"
+
+[packages]
+markdown = "3.4"
+python-wordpress-xmlrpc = "2.3"
+python-frontmatter = "0.5.0"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

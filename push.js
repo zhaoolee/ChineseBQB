@@ -144,9 +144,7 @@ async function change_img_url(file_name) {
 }
 
 async function md_to_wordpress() {
-  const run_build = spawn("node", ["md_to_wordpress.js"], {
-    cwd: path.join(__dirname, zhaoolee_md_dir)
-  });
+  const run_build = spawn("python", ["../md_to_wordpress.py"]);
 
   run_build.stdout.on("data", async data => {
     console.log(`stdout: ${data}`);
