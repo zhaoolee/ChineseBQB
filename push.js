@@ -144,7 +144,9 @@ async function change_img_url(file_name) {
 }
 
 async function md_to_wordpress() {
-  const run_build = spawn("python", ["../md_to_wordpress.py"]);
+  const run_build = spawn("python", ["md_to_wordpress.py"], {
+    cwd: __dirname
+  });
 
   run_build.stdout.on("data", async data => {
     console.log(`stdout: ${data}`);
