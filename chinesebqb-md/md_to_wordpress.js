@@ -72,7 +72,7 @@ async function get_md_filename_id_dic() {
   // 获取总页码数量
   let x_wp_totalpages = await axios({
     method: "get",
-    url: "https://v2fy.com/wp-json/wp/v2/posts?page=1"
+    url: "https://v2fy.com/wp-json/wp/v2/posts?per_page=100&page=1"
   }).then(res => {
     return new Promise((resolve, reject) => {
       resolve(parseInt(res.headers["x-wp-totalpages"]));
@@ -84,7 +84,7 @@ async function get_md_filename_id_dic() {
   for (let i = 1; i <= x_wp_totalpages; i++) {
     await axios({
       method: "get",
-      url: "https://v2fy.com/wp-json/wp/v2/posts?page=" + i
+      url: "https://v2fy.com/wp-json/wp/v2/posts?per_page=100&page=" + i
     }).then(res => {
       let res_data = res.data;
 

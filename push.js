@@ -182,7 +182,7 @@ async function create_index() {
   });
 }
 
-// 进入项目名加MD文件夹,执行md_to_wordpress
+// 进入项目名加MD文件夹,执行md_to_wordpress
 
 async function main() {
   await create_index();
