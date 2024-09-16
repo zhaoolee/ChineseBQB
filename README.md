@@ -66,12 +66,13 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录5726张表情包)Emoticon package directory (commonly included 5726 emoticon pack)
+## 表情包目录(共收录5748张表情包)Emoticon package directory (commonly included 5748 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link) | 下载系列表情包合集(Download)  | 
 | :---: | :---: | :---: |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000doutuzhiwang.jpg' /> | [斗图之王BQB(已收录29张)](https://v2fy.com/p/斗图之王BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/斗图之王BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0.png' /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://v2fy.com/p/微信网友贡献表情包_暂存_有时间慢慢整理BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/微信网友贡献表情包_暂存_有时间慢慢整理BQB.zip) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000105.png' /> | [105_BlackMythWuKong_黑神话悟空🐒_BQB(已收录22张)](https://v2fy.com/p/105_BlackMythWuKong_黑神话悟空🐒_BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/105_BlackMythWuKong_黑神话悟空🐒_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000104.gif' /> | [104JensenHuang_黄仁勋🧩_BQB(已收录14张)](https://v2fy.com/p/104JensenHuang_黄仁勋🧩_BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/104JensenHuang_黄仁勋🧩_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000103.gif' /> | [103EmpressesInThePalace_甄嬛传💃_BQB(已收录31张)](https://v2fy.com/p/103EmpressesInThePalace_甄嬛传💃_BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/103EmpressesInThePalace_甄嬛传💃_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000102.gif' /> | [102Friends_老友记⛲️_BQB(已收录34张)](https://v2fy.com/p/102Friends_老友记⛲️_BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/102Friends_老友记⛲️_BQB.zip) |
