@@ -66,7 +66,7 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录5748张表情包)Emoticon package directory (commonly included 5748 emoticon pack)
+## 表情包目录(共收录5749张表情包)Emoticon package directory (commonly included 5749 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link) | 下载系列表情包合集(Download)  | 
 | :---: | :---: | :---: |
@@ -81,7 +81,7 @@
 | <img height='100px' style='height:100px;' src='https://v2fy.com/asset/0i/ChineseBQB/099p5r_女神异闻录_BQB/0000000099.png' /> | [099p5r_女神异闻录_BQB(已收录30张)](https://v2fy.com/p/099p5r_女神异闻录_BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/099p5r_女神异闻录_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://v2fy.com/asset/0i/ChineseBQB/098spyxfamily_间谍过家家_BQB/0000000098.jpg' /> | [098spyxfamily_间谍过家家_BQB(已收录21张)](https://v2fy.com/p/098spyxfamily_间谍过家家_BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/098spyxfamily_间谍过家家_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://v2fy.com/asset/0i/ChineseBQB/097Tu_那年那兔那些事_BQB/0000000097.jpg' /> | [097Tu_那年那兔那些事_BQB(已收录21张)](https://v2fy.com/p/097Tu_那年那兔那些事_BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/097Tu_那年那兔那些事_BQB.zip) |
-| <img height='100px' style='height:100px;' src='https://v2fy.com/asset/0i/ChineseBQB/096NationalDay_国庆节_BQB/0000000096.jpg' /> | [096NationalDay_国庆节_BQB(已收录38张)](https://v2fy.com/p/096NationalDay_国庆节_BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/096NationalDay_国庆节_BQB.zip) |
+| <img height='100px' style='height:100px;' src='https://v2fy.com/asset/0i/ChineseBQB/096NationalDay_国庆节_BQB/0000000096.jpg' /> | [096NationalDay_国庆节_BQB(已收录39张)](https://v2fy.com/p/096NationalDay_国庆节_BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/096NationalDay_国庆节_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://v2fy.com/asset/0i/ChineseBQB/095GenShin_原神_BQB/0000000095.jpg' /> | [095GenShin_原神_BQB(已收录117张)](https://v2fy.com/p/095GenShin_原神_BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/095GenShin_原神_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://v2fy.com/asset/0i/ChineseBQB/094TeacherWang_夏洛特烦恼王老师_BQB/0000000094.gif' /> | [094TeacherWang_夏洛特烦恼王老师_BQB(已收录13张)](https://v2fy.com/p/094TeacherWang_夏洛特烦恼王老师_BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/094TeacherWang_夏洛特烦恼王老师_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://v2fy.com/asset/0i/ChineseBQB/093LiAn_李安_BQB/0000000093.jpg' /> | [093LiAn_李安_BQB(已收录28张)](https://v2fy.com/p/093LiAn_李安_BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/093LiAn_李安_BQB.zip) |
@@ -178,7 +178,7 @@
 | <img height='100px' style='height:100px;' src='https://v2fy.com/asset/0i/ChineseBQB/002CuteGirl_可爱的女孩纸👧BQB/000000002.gif' /> | [002CuteGirl_可爱的女孩纸👧BQB(已收录185张)](https://v2fy.com/p/002CuteGirl_可爱的女孩纸👧BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/002CuteGirl_可爱的女孩纸👧BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://v2fy.com/asset/0i/ChineseBQB/001Funny_滑稽大佬😏BQB/000000001.gif' /> | [001Funny_滑稽大佬😏BQB(已收录125张)](https://v2fy.com/p/001Funny_滑稽大佬😏BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/001Funny_滑稽大佬😏BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://v2fy.com/asset/0i/ChineseBQB/000Contribution_贡献🇨🇳BQB/000000000.gif' /> | [000Contribution_贡献🇨🇳BQB(已收录57张)](https://v2fy.com/p/000Contribution_贡献🇨🇳BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/000Contribution_贡献🇨🇳BQB.zip) |
-> 数据生成时间: 2024-09-16
+> 数据生成时间: 2024-09-29
 
 BQBEND
 
