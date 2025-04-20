@@ -1,0 +1,11 @@
+[project]
+name = "chinesebqb"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = "==3.9.6"
+dependencies = [
+    "markdown==3.4",
+    "python-frontmatter==0.5.0",
+    "python-wordpress-xmlrpc>=2.3",
+]
