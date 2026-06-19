@@ -58,12 +58,13 @@
 
 ## Chinese stickers / 中国的表情包
 
-## 表情包目录(共收录5802张表情包)Emoticon package directory (commonly included 5802 emoticon pack)
+## 表情包目录(共收录5834张表情包)Emoticon package directory (commonly included 5834 emoticon pack)
 
 | Example(示例)  |  链接(Entrance link) | 下载系列表情包合集(Download)  | 
 | :---: | :---: | :---: |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000doutuzhiwang.jpg' /> | [斗图之王BQB(已收录29张)](https://v2fy.com/p/斗图之王BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/斗图之王BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0.png' /> | [微信网友贡献表情包_暂存_有时间慢慢整理BQB(已收录36张)](https://v2fy.com/p/微信网友贡献表情包_暂存_有时间慢慢整理BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/微信网友贡献表情包_暂存_有时间慢慢整理BQB.zip) |
+| <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000109.png' /> | [109_Opossum_负鼠_BQB(已收录32张)](https://v2fy.com/p/109_Opossum_负鼠_BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/109_Opossum_负鼠_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000108.gif' /> | [108_Pingu_企鹅家族_BQB(已收录11张)](https://v2fy.com/p/108_Pingu_企鹅家族_BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/108_Pingu_企鹅家族_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000107.gif' /> | [107_FLittleBrother_葫芦兄弟_BQB(已收录24张)](https://v2fy.com/p/107_FLittleBrother_葫芦兄弟_BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/107_FLittleBrother_葫芦兄弟_BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/0000000106.gif' /> | [106_Frieren_芙莉莲🪄_BQB(已收录18张)](https://v2fy.com/p/106_Frieren_芙莉莲🪄_BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/106_Frieren_芙莉莲🪄_BQB.zip) |
@@ -173,7 +174,7 @@
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000002.gif' /> | [002CuteGirl_可爱的女孩纸👧BQB(已收录185张)](https://v2fy.com/p/002CuteGirl_可爱的女孩纸👧BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/002CuteGirl_可爱的女孩纸👧BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000001.gif' /> | [001Funny_滑稽大佬😏BQB(已收录125张)](https://v2fy.com/p/001Funny_滑稽大佬😏BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/001Funny_滑稽大佬😏BQB.zip) |
 | <img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/000000000.gif' /> | [000Contribution_贡献🇨🇳BQB(已收录57张)](https://v2fy.com/p/000Contribution_贡献🇨🇳BQB/?post_category=中国人的表情包-pp制造计划-chinesebqb) | [直链下载](https://github.com/zhaoolee/ChineseBQB/raw/master/000Contribution_贡献🇨🇳BQB.zip) |
-> 数据生成时间: 2026-05-01
+> 数据生成时间: 2026-06-19
 
 BQBEND
 
