@@ -185,7 +185,7 @@
     const category = document.createElement('a');
     category.className = 'search-category';
     category.href = asset(item.categoryUrl);
-    category.textContent = `${item.categoryTitle} ↗`;
+    category.textContent = item.categoryTitle;
     card.append(link, caption, category);
     return card;
   }
@@ -200,7 +200,8 @@
     const request = ++sequence, query = input.value.trim();
     resultsNode.replaceChildren();
     $('#load-more').hidden = true;
-    if (!query) { status.textContent = '输入关键词，找一张恰到好处的表情。'; return; }
+    status.hidden = !query;
+    if (!query) { status.textContent = ''; return; }
     status.textContent = '正在翻找表情包…';
     try {
       if (!searchIndex) {

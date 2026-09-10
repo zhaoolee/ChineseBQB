@@ -1,9 +1,8 @@
-<div class="section-heading" id="collections"><div><p class="eyebrow">THE COLLECTIONS</p><h2>翻翻表情包</h2></div><span>{{ len hugo.Data.catalog.categories }} 个分类 · 按编号从新到旧</span></div>
-<div class="category-grid">
+<div class="category-grid" id="collections">
   {{ range hugo.Data.catalog.categories }}
   <a class="collection-card" href="{{ .url | relURL }}">
-    <div class="collection-cover">{{ with .cover }}{{ $src := .thumb }}{{ if .animated }}{{ $src = .src }}{{ end }}<img src="{{ $src | relURL }}" alt="{{ .label }}" loading="lazy" width="360" height="300">{{ else }}<span class="empty-cover">等你来填满</span>{{ end }}<span class="collection-index">{{ .number | default "BQB" }}</span></div>
-    <div class="collection-info"><h3>{{ .title }}</h3><p><span>{{ .count }} 张表情包</span><span aria-hidden="true">↗</span></p></div>
+    <div class="collection-cover">{{ with .cover }}{{ $src := .thumb }}{{ if .animated }}{{ $src = .src }}{{ end }}<img src="{{ $src | relURL }}" alt="{{ .label }}" loading="lazy" width="360" height="300">{{ else }}<span class="empty-cover">等你来填满</span>{{ end }}</div>
+    <div class="collection-info"><h3>{{ with .number }}{{ . }} {{ end }}{{ .title }}</h3><p>{{ .count }} 张表情包</p></div>
   </a>
   {{ end }}
 </div>

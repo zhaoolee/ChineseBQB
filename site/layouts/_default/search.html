@@ -1,8 +1,6 @@
 {{ define "main" }}
-  <nav class="breadcrumbs" aria-label="当前位置"><a href="{{ "" | relURL }}">全部分类</a><span>/</span><span>搜索</span></nav>
-  <header class="search-header"><p class="eyebrow">FIND YOUR EXPRESSION</p><h1>今天，用哪张表情？</h1><p>搜索分类、图片名称或关键词。</p></header>
-  <form class="main-search" id="search-form" action="{{ .RelPermalink }}" role="search"><span aria-hidden="true">⌕</span><input type="search" name="q" id="search-query" placeholder="输入关键词，例如：程序员" aria-label="搜索表情包"><button type="submit">搜索 ↗</button></form>
-  <p class="search-status" id="search-status" role="status">输入关键词，找一张恰到好处的表情。</p>
+  <form class="main-search" id="search-form" action="{{ .RelPermalink }}" role="search"><span aria-hidden="true">⌕</span><input type="search" name="q" id="search-query" placeholder="输入关键词，例如：程序员" aria-label="搜索表情包"><button type="submit">搜索</button></form>
+  <p class="search-status" id="search-status" role="status" hidden></p>
   <div class="image-grid" id="search-results"></div>
   <button class="button load-more" id="load-more" hidden>再看一些 ↓</button>
   <noscript><p class="empty-state">搜索需要启用 JavaScript。你也可以<a href="{{ "" | relURL }}">按分类浏览全部表情包</a>。</p></noscript>

@@ -3,7 +3,7 @@
   {{ $category := index (where hugo.Data.catalog.categories "slug" $slug) 0 }}
   {{ $images := index hugo.Data.galleries $slug }}
   <nav class="breadcrumbs" aria-label="当前位置"><a href="{{ "" | relURL }}">全部分类</a><span>/</span><span>{{ .Title }}</span></nav>
-  <header class="gallery-header"><p class="eyebrow">COLLECTION {{ $category.number | default "BQB" }}</p><h1>{{ .Title }}</h1><p>{{ $category.count }} 张表情包 · 点击放大，喜欢就保存</p><div class="gallery-actions"><button class="button primary" id="download-pack" {{ if not $images }}disabled{{ end }}>打包下载 ↓</button><button class="button" id="share-category">分享这个分类 ↗</button></div></header>
+  <header class="gallery-header"><p class="eyebrow">COLLECTION {{ $category.number | default "BQB" }}</p><h1>{{ .Title }}</h1><p>{{ $category.count }} 张表情包 · 点击放大，喜欢就保存</p><div class="gallery-actions"><button class="button primary" id="download-pack" {{ if not $images }}disabled{{ end }}>打包下载 ↓</button><button class="button" id="share-category">分享这个分类</button></div></header>
   {{ if $images }}
     <div class="gallery-toolbar"><label class="filter-field"><span aria-hidden="true">⌕</span><input type="search" id="gallery-filter" placeholder="在这个分类里找一找…" aria-label="搜索当前分类"></label><span id="gallery-count" role="status">{{ len $images }} 张图片</span></div>
     <div class="image-grid" id="image-grid">
