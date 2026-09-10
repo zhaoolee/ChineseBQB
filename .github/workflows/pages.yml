@@ -20,7 +20,6 @@ jobs:
     env:
       HUGO_VERSION: 0.162.1
       HUGO_ENVIRONMENT: production
-      HUGO_CACHEDIR: ${{ runner.temp }}/hugo-cache
       TZ: Asia/Shanghai
     steps:
       - name: Checkout source
