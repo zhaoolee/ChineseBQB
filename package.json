@@ -33,5 +33,28 @@
   "bugs": {
     "url": "https://github.com/zhaoolee/ChineseBQB/issues"
   },
-  "homepage": "https://github.com/zhaoolee/ChineseBQB#readme"
+  "homepage": "https://github.com/zhaoolee/ChineseBQB#readme",
+  "overrides": {
+    "ansi-regex": {
+      "ansi-regex": "6.0.1"
+    },
+    "cliui": {
+      "ansi-regex": "6.0.1"
+    },
+    "showdown": {
+      "ansi-regex": "6.0.1"
+    },
+    "string-width": {
+      "ansi-regex": "6.0.1"
+    },
+    "strip-ansi": {
+      "ansi-regex": "6.0.1"
+    },
+    "wrap-ansi": {
+      "ansi-regex": "6.0.1"
+    },
+    "yargs": {
+      "ansi-regex": "6.0.1"
+    }
+  }
 }
