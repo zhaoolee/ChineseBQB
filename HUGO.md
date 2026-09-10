@@ -71,7 +71,9 @@ python scripts/build_site.py build
 python scripts/verify_site.py
 ```
 
-激活环境后也可使用 `npm run dev`、`npm run build`、`npm test`。`package.json` 只提供这三个快捷命令，没有 npm 依赖，无需 `npm install`。Python 依赖统一在 `requirements-site.txt` 中维护，目前仅有 Pillow。Node 仅用于浏览器 ZIP 格式测试；GitHub runner 已提供 Node。
+构建和预览直接使用上面的 Python 命令；Python 依赖统一在 `requirements-site.txt` 中维护，目前仅有 Pillow。
+
+网页仍使用 `site/assets/js/site.js` 实现搜索、图片预览、分享、下载和手机菜单，使用 `site/assets/js/zip.js` 在浏览器中生成 ZIP。它们都是原生 JavaScript，由 Hugo 合并、压缩并输出，不需要 npm 依赖或 `package.json`。Node.js 仅用于测试浏览器 ZIP 生成逻辑；GitHub runner 已提供 Node，本地未安装 Node 时会跳过这一项测试。
 
 ## GitHub Pages 设置
 
@@ -95,7 +97,9 @@ python scripts/verify_site.py
 ## 项目结构
 
 ```text
+*BQB/                    表情包原图，日常维护的数据源
 hugo.toml                 Hugo 配置及 /ChineseBQB/ 路径
+requirements-site.txt     Python 图片处理依赖
 scripts/build_site.py      从 BQB 目录提取内容、生成缩略图、构建及预览
 scripts/verify_site.py     检查产物、子目录链接、搜索数据及图片
 scripts/update_readme.py   生成 README 分类目录，按标记更新手写文档
@@ -104,6 +108,8 @@ site/layouts/             Hugo 模板
 site/assets/              样式和浏览器交互
 site/static/assets/       从参考站复用的背景、字体及本项目图标
 tests/                    目录生命周期、GIF 和 ZIP 的回归验证
+README/                   README 正文使用的图片资料
+memory/                   本项目的维护流程与经验
 .hugo-generated/          自动生成的内容、数据、图片、ZIP（不提交）
 .hugo-cache/              缩略图缓存（不提交）
 public-hugo/              唯一的 Pages 发布目录（不提交）
@@ -115,6 +121,10 @@ UI 复用 `zhaoolee.github.io` 的 OPPOSans、木纹背景、暖白纸张、双�
 
 开放数据使用网站自动生成的 `catalog/index.json`（分类目录）和 `catalog/search.json`（完整图片索引）。其中的相对路径以 Hugo `baseURL` 为起点解析，与网页和 README 同步更新。
 
-`chinesebqb-md` 中的文章及插图、旧 Hexo 的配置/主题/`docs` 和旧 JSON 文件仅作为历史资料，不参与构建。日常维护只需提交 BQB 图片目录，静态站生成结果不需要提交，README 目录由工作流自动写回，不作为网站的数据源。
+旧 Hexo 配置、主题、`source`、`docs`、旧前端库和入口页、`chinesebqb-md` 导出、旧 JSON 索引、根目录旧 ZIP 及 npm 清单已从当前版本移除，历史资料仍可从 Git 历史找回。README 正文图片和 BQB 原图保留。
+
+`.gitignore` 排除了自动产物、旧站导出、旧 ZIP、本地虚拟环境、旧 `node_modules` 和私有发布配置，避免它们再次随 `git add .` 提交。本地已有的被忽略文件不参与构建或发布。
+
+日常维护只需提交 BQB 图片目录，静态站生成结果不需要提交，README 目录由工作流自动写回，不作为网站的数据源。完整日常 Git 流程见 [项目经验](memory/README.md)。
 
 参考：[Hugo 的 GitHub Pages 部署说明](https://gohugo.io/host-and-deploy/host-on-github-pages/)、[GitHub Pages 容量限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)。

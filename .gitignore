@@ -1,42 +1,37 @@
-./_config.yml
+# macOS and local editor files.
 .DS_Store
 .idea/
-node_modules/
-
-# Hugo site: generated entirely from *BQB source folders.
-.hugo-generated/
-.hugo-cache/
-.hugo_build.lock
-public-hugo/
-.venv-site/
-__pycache__/
-
-
-
-# Build and Release Folders
-bin-debug/
-bin-release/
-[Oo]bj/
-[Bb]in/
-
-# Other files and folders
 .settings/
 
-# Executables
-*.swf
-*.air
-*.ipa
-*.apk
+# Hugo output and image cache; regenerate from the BQB source folders.
+/.hugo-generated/
+/.hugo-cache/
+/.hugo_build.lock
+/public-hugo/
 
+# Local Python environments and caches.
+/.venv/
+/.venv-site/
+__pycache__/
+*.py[cod]
+
+# Retired local npm dependencies and private publishing settings.
+node_modules/
+/diy_config.txt
 up.js
 
-
-.DS_Store
-
-
-diy_config.txt
-
-
-# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
-# should NOT be excluded as they contain compiler settings and other important
-# information for Eclipse / Flash Builder.
+# Retired exports and legacy site paths must not return via git add .
+/*[Bb][Qq][Bb].zip
+/_config.yml
+/CNAME
+/index.html
+/db.json
+/chinesebqb_github.json
+/chinesebqb_v2fy.json
+/chinesebqb-md/
+/themes/
+/source/
+/scaffolds/
+/docs/
+/cdn/
+/static/
