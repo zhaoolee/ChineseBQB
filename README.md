@@ -68,13 +68,13 @@
 
 <!-- BQB-DIRECTORY:START -->
 
-## 表情包目录（共收录 5855 张表情包） / Sticker directory
+## 表情包目录（共收录 5858 张表情包） / Sticker directory
 
 > 根据 BQB 文件夹自动更新，共 113 个分类。点击“直链下载”即可获取该分类的 ZIP 合集。
 
 | 示例 / Preview | 分类入口 / Browse | 下载 / Download |
 | :---: | :---: | :---: |
-| <img src="https://zhaoolee.com/ChineseBQB/thumbs/1ed9c1978421f7ba51534eba926262930f1a4bebd6ecfceb8b86a33de4b45ffa.webp" height="100" alt="人工智能" /> | [110\_AI\_人工智能\_BQB（8 张）](https://zhaoolee.com/ChineseBQB/110_ai_%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD_bqb/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/releases/download/bqb-downloads/bqb-110-6440605484c9840e.zip) |
+| <img src="https://zhaoolee.com/ChineseBQB/media/3aecfad8a20030e916a804b3e881e140916a7583ed5a584db083eb5abb1d8c8d.gif" height="100" alt="人工智能" /> | [110\_AI\_人工智能\_BQB（11 张）](https://zhaoolee.com/ChineseBQB/110_ai_%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD_bqb/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/releases/download/bqb-downloads/bqb-110-7a447361ed2dd273.zip) |
 | <img src="https://zhaoolee.com/ChineseBQB/thumbs/9ebf76f2076be1d94f8142aff4784baf1b5fe60f3bf61a855b1442212d2da972.webp" height="100" alt="负鼠" /> | [109\_Opossum\_负鼠\_BQB（32 张）](https://zhaoolee.com/ChineseBQB/109_opossum_%E8%B4%9F%E9%BC%A0_bqb/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/releases/download/bqb-downloads/bqb-109-b5418ebb5d545c14.zip) |
 | <img src="https://zhaoolee.com/ChineseBQB/media/e9e9fa91b5853cf9f10d5292672f91951162fba4e1c531479e303574519f18ea.gif" height="100" alt="企鹅家族" /> | [108\_Pingu\_企鹅家族\_BQB（11 张）](https://zhaoolee.com/ChineseBQB/108_pingu_%E4%BC%81%E9%B9%85%E5%AE%B6%E6%97%8F_bqb/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/releases/download/bqb-downloads/bqb-108-ee478ab554b72f66.zip) |
 | <img src="https://zhaoolee.com/ChineseBQB/media/2ff009cabe9ddce615f797ea99d1c76681fb220d0f69c287dc82165e8093d7e9.gif" height="100" alt="葫芦兄弟" /> | [107\_FLittleBrother\_葫芦兄弟\_BQB（24 张）](https://zhaoolee.com/ChineseBQB/107_flittlebrother_%E8%91%AB%E8%8A%A6%E5%85%84%E5%BC%9F_bqb/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/releases/download/bqb-downloads/bqb-107-ded861ea4cbcd970.zip) |
