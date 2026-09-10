@@ -14,6 +14,9 @@ ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("builder", ROOT / "scripts/build_site.py")
 builder = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(builder)
+readme_spec = importlib.util.spec_from_file_location("readme", ROOT / "scripts/update_readme.py")
+readme = importlib.util.module_from_spec(readme_spec)
+readme_spec.loader.exec_module(readme)
 
 
 class FolderLifecycleTests(unittest.TestCase):
@@ -109,6 +112,58 @@ class FolderLifecycleTests(unittest.TestCase):
         self.assertEqual(data['animated'], 1)
         image = json.loads((self.root / '.hugo-generated/static/catalog/bqb-001.json').read_text())[0]
         self.assertEqual((self.root / '.hugo-generated/static' / image['src']).read_bytes(), source.read_bytes())
+
+    def test_readme_tracks_add_rename_delete_and_preserves_manual_content(self):
+        base = 'https://zhaoolee.com/ChineseBQB/'
+        self.picture('109_Opossum_负鼠_BQB/1.png')
+        self.picture('110_AI_人工智能_BQB/1.png')
+        self.picture('110_AI_人工智能_BQB/2.png', 'blue')
+        prefix, suffix = '# 手写介绍\n\n', '\n\n## 背景故事\n原样保留。\n'
+        original = prefix + readme.START + '\n旧表格\n' + readme.END + suffix
+        first = readme.render_directory(builder.generate(self.root), base)
+        updated = readme.apply_directory(original, first)
+        self.assertTrue(updated.startswith(prefix + readme.START))
+        self.assertTrue(updated.endswith(readme.END + suffix))
+        self.assertIn('共收录 3 张表情包', updated)
+        self.assertIn('共 2 个分类', updated)
+        self.assertIn('110_ai_人工智能_bqb/', unquote(updated))
+        self.assertLess(updated.index('110_ai_'), updated.index('109_opossum_'))
+        self.assertIn('/thumbs/', updated)
+        self.assertIn('#download-pack', updated)
+        self.assertNotIn('.zip)', updated)
+        self.assertNotIn('post_category', updated)
+        self.assertEqual(readme.apply_directory(updated, first), updated)
+        (self.root / '110_AI_人工智能_BQB').rename(self.root / '110_AI_新名字_BQB')
+        shutil.rmtree(self.root / '109_Opossum_负鼠_BQB')
+        second = readme.render_directory(builder.generate(self.root), base)
+        final = readme.apply_directory(updated, second)
+        self.assertIn('共收录 2 张表情包', final)
+        self.assertIn('110_ai_新名字_bqb/', unquote(final))
+        self.assertNotIn('110_ai_人工智能_bqb/', unquote(final))
+        self.assertNotIn('109_opossum_', final)
+        self.assertTrue(final.startswith(prefix + readme.START))
+        self.assertTrue(final.endswith(readme.END + suffix))
+
+    def test_readme_empty_category_and_special_characters(self):
+        (self.root / '112_[图]|<script>_BQB').mkdir()
+        text = readme.render_directory(builder.generate(self.root), 'https://zhaoolee.com/ChineseBQB/')
+        self.assertIn('共收录 0 张表情包', text)
+        self.assertIn('暂无图片', text)
+        self.assertIn('\\[图\\]&#124;&lt;script&gt;', text)
+        self.assertNotIn('<script>', text)
+
+
+class ReadmeBoundaryTests(unittest.TestCase):
+    def test_invalid_markers_fail_without_replacing_manual_content(self):
+        for original in ('手写正文', readme.START + '缺少结束',
+                         readme.START + readme.START + readme.END,
+                         readme.END + readme.START):
+            with self.subTest(original=original), self.assertRaises(ValueError):
+                readme.apply_directory(original, '新目录')
+
+    def test_preview_address_is_rejected_for_readme(self):
+        with self.assertRaisesRegex(ValueError, '正式 HTTPS'):
+            readme.render_directory({'categories': [], 'total': 0}, 'http://localhost:1313/ChineseBQB/')
 
 
 class DownloadTests(unittest.TestCase):

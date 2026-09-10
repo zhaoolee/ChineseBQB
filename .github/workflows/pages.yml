@@ -50,6 +50,15 @@ jobs:
         run: python scripts/build_site.py build
       - name: Verify every page and image reference
         run: python scripts/verify_site.py
+      - name: Upload README directory
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: readme-directory
+          path: .hugo-generated/readme-directory.md
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v4
@@ -70,3 +79,46 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  update-readme:
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout README updater
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            README.md
+            scripts/update_readme.py
+          sparse-checkout-cone-mode: false
+      - name: Download deployed README directory
+        uses: actions/download-artifact@v4
+        with:
+          name: readme-directory
+          path: ${{ runner.temp }}/readme-directory
+      - name: Update README after successful deployment
+        run: |
+          git fetch --depth=1 origin master
+          if [ "$(git rev-parse FETCH_HEAD)" != "$GITHUB_SHA" ]; then
+            echo "A newer source commit exists; its deployment will update README."
+            exit 0
+          fi
+          python scripts/update_readme.py apply --directory "$RUNNER_TEMP/readme-directory/readme-directory.md"
+          git add README.md
+          if git diff --cached --quiet; then
+            echo "README is already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Update README directory from published BQB folders"
+          if ! git push origin HEAD:master; then
+            git fetch --depth=1 origin master
+            if [ "$(git rev-parse FETCH_HEAD)" != "$GITHUB_SHA" ]; then
+              echo "Source changed during the update; the next deployment will refresh README."
+              exit 0
+            fi
+            exit 1
+          fi

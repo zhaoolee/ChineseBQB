@@ -170,6 +170,11 @@ def build(root=ROOT, base_url=None):
     print(f"发布目录：{destination}（{size / 1024**2:.1f} MiB）", flush=True)
     if size >= 1_000_000_000:
         raise ValueError("站点超过 GitHub Pages 1 GB 限制，请先减少图片体积。")
+    config = json.loads(subprocess.check_output(
+        ["hugo", "config", "--source", str(root), "--format", "json"], text=True))
+    # README always links to production, even when building a local preview base URL.
+    subprocess.run([sys.executable, str(root / "scripts/update_readme.py"), "generate",
+                    "--base-url", config["baseurl"]], cwd=root, check=True)
 
 
 def snapshot(root):

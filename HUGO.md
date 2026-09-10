@@ -19,6 +19,8 @@ ChineseBQB/
 
 也可以在 GitHub 网页上上传图片。文件进入 `master` 后，等待仓库 Actions 中的 **Build and deploy ChineseBQB** 完成，网页就会更新。
 
+README 的分类目录也会自动更新：页面部署成功后，Actions 将本次发布的目录写回 `README.md`，由 `github-actions[bot]` 提交到 `master`。日常只需管理 BQB 文件夹及图片。
+
 - **分类**：自动扫描根目录中以 `BQB` 结尾的文件夹（大小写均可），不需要额外维护列表、Markdown、封面配置或 JSON。
 - **标题**：自动去掉开头编号、用下划线分开的英文前缀和末尾 `BQB`，保留中文、emoji 及 `JOJO的奇妙冒险` 这类中英混合名称。没有中文时使用剩余名称。
 - **排序**：编号越大越靠前，无编号的社区分类放在后面。
@@ -28,6 +30,22 @@ ChineseBQB/
 - **删除**：删除目录或图片并推送后，对应页面、索引和图片会从新发布内容中移除；空目录只有提交了占位文件才能被 Git 跟踪，空分类显示等待图片的提示。
 - **搜索**：按分类名及图片文件名搜索，也支持多个以空格分隔的关键词。不会识别图片中的文字，建议给图片起有意义的名字。
 - **下载**：单图下载保留原文件内容；分类 ZIP 点击时在浏览器中生成，支持中文文件名和子目录。GIF 在列表中显示首帧缩略图，预览和下载保留动图。
+
+## README 自动生成规则
+
+- 与网站共用同一份分类数据，自动更新分类顺序、封面、分类数量、图片总数和完整文件夹路由，新增、更名、删除都会同步。
+- 封面使用本次发布的 GitHub Pages 缩略图；分类链接使用 `hugo.toml` 中的正式 `baseURL`，英文转小写、保留中文和 emoji，不添加旧站参数或兼容路径。
+- “进入分类下载”链接定位到分类页的打包下载按钮，合集由浏览器即时生成，不依赖仓库中历史 ZIP 文件。
+- 仅替换 `<!-- BQB-DIRECTORY:START -->` 与 `<!-- BQB-DIRECTORY:END -->` 之间的内容；可自由编辑标记之外的介绍和故事，请保留这两个标记。
+- 内容相同不产生新提交，不按日期制造变化。构建或部署失败时不更新 README；如果分支已有更新，旧构建不覆盖新提交，由下一次发布同步目录。自动提交使用工作流自身的 `GITHUB_TOKEN`，不需要额外密钥。
+
+本地 `build` 会生成 `.hugo-generated/readme-directory.md`，供检查本次将发布的 README 目录。要在本地提前应用这份目录，构建后运行：
+
+```bash
+python scripts/update_readme.py apply
+```
+
+生产流程在部署成功后自动执行这一步。写回权限仅授予 `update-readme` 工作，不会在外部贡献者的 PR 构建中提交修改。
 
 ## 本地预览
 
@@ -78,6 +96,7 @@ python scripts/verify_site.py
 hugo.toml                 Hugo 配置及 /ChineseBQB/ 路径
 scripts/build_site.py      从 BQB 目录提取内容、生成缩略图、构建及预览
 scripts/verify_site.py     检查产物、子目录链接、搜索数据及图片
+scripts/update_readme.py   生成 README 分类目录，按标记更新手写文档
 site/layouts/             Hugo 模板
 site/assets/              样式和浏览器交互
 site/static/assets/       从参考站复用的背景、字体及本项目图标
@@ -91,6 +110,6 @@ UI 复用 `zhaoolee.github.io` 的 OPPOSans、木纹背景、暖白纸张、双�
 
 旧项目中的 `build.js` 负责压缩 ZIP、生成 `chinesebqb-md` 并更新 README；`create_bqb_image_list.js` 生成 GitHub / v2fy 两套数据源；`rsync.js` / `push.js` 负责旧服务器同步；Hexo 配置、主题及 `docs` 则用于旧静态站。此前 Pages 发布的是 `master:/docs`。
 
-这些旧文件保留作历史参考，新工作流不读取、不运行、不修改它们。旧命令更名为 `npm run legacy:build` 和 `npm run legacy:push`；旧 push 命令会同步服务器并提交全部变化，仅在明确需要旧流程时手动使用。日常维护只需提交 BQB 图片目录，生成结果不需要提交，README 的旧目录表也不再作为新网站数据源。
+这些旧文件保留作历史参考，新工作流不读取、不运行、不修改它们。旧命令更名为 `npm run legacy:build` 和 `npm run legacy:push`；旧 push 命令会同步服务器并覆盖 README、提交全部变化，仅在明确需要旧流程时手动使用。日常维护只需提交 BQB 图片目录，静态站生成结果不需要提交，README 目录由新工作流自动写回，不作为网站的数据源。
 
 参考：[Hugo 的 GitHub Pages 部署说明](https://gohugo.io/host-and-deploy/host-on-github-pages/)、[GitHub Pages 容量限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)。
