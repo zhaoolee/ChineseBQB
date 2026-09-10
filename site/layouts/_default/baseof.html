@@ -23,12 +23,10 @@
   <div class="site-shell">
     {{ partial "sidebar.html" . }}
     <main class="site-main" id="main">
-      <div class="topline"><a href="{{ "" | relURL }}">中国人的表情包</a><div><a href="https://zhaoolee.com/">zhaoolee 的自留地 ↗</a><a href="{{ site.Params.repository }}">GitHub ↗</a></div></div>
       <section class="reader-sheet">
         <span class="sheet-corner corner-tl" aria-hidden="true"></span><span class="sheet-corner corner-tr" aria-hidden="true"></span><span class="sheet-corner corner-bl" aria-hidden="true"></span><span class="sheet-corner corner-br" aria-hidden="true"></span>
         {{ block "main" . }}{{ end }}
       </section>
-      <footer class="site-footer"><span>ChineseBQB · 把快乐分享出去</span><a href="{{ site.Params.repository }}">由社区一起收集 ↗</a></footer>
     </main>
   </div>
   <dialog id="preview" aria-labelledby="preview-title">
