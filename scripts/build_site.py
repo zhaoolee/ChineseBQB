@@ -13,6 +13,7 @@ import shutil
 import subprocess
 import sys
 import time
+import zipfile
 from urllib.parse import quote
 
 from PIL import Image, ImageOps
@@ -20,6 +21,8 @@ from PIL import Image, ImageOps
 ROOT = Path(__file__).resolve().parents[1]
 EXTENSIONS = {".jpg", ".jpeg", ".jfif", ".png", ".gif", ".webp", ".avif", ".bmp"}
 FORMATS = {"JPEG": "jpg", "PNG": "png", "GIF": "gif", "WEBP": "webp", "AVIF": "avif", "BMP": "bmp"}
+DOWNLOAD_TAG = "bqb-downloads"
+DEFAULT_REPOSITORY = "https://github.com/zhaoolee/ChineseBQB"
 
 
 def natural_key(value):
@@ -104,7 +107,22 @@ def prepare_image(args):
             "bytes": source.stat().st_size}
 
 
-def generate(root=ROOT):
+def create_download(images, slug, output):
+    """Byte-stable ZIPs: preserve original names/content, ignore filesystem dates."""
+    temporary = output / "downloads" / f"{slug}.zip"
+    with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_STORED) as archive:
+        for image in images:
+            info = zipfile.ZipInfo(image["path"], date_time=(1980, 1, 1, 0, 0, 0))
+            info.create_system = 3
+            info.external_attr = 0o100644 << 16
+            archive.writestr(info, (output / "static" / image["src"]).read_bytes())
+    digest = hashlib.sha256(temporary.read_bytes()).hexdigest()
+    name = f"{slug}-{digest[:16]}.zip"
+    temporary.rename(temporary.with_name(name))
+    return {"name": name, "sha256": digest, "size": temporary.with_name(name).stat().st_size}
+
+
+def generate(root=ROOT, repository=DEFAULT_REPOSITORY):
     output = root / ".hugo-generated"
     cache = root / ".hugo-cache" / "thumbs-v1"
     cache.mkdir(parents=True, exist_ok=True)
@@ -113,7 +131,8 @@ def generate(root=ROOT):
         shutil.rmtree(output)
     for name in ("media", "thumbs", "catalog"):
         (output / "static" / name).mkdir(parents=True, exist_ok=True)
-    categories, all_images, seen, routes = [], [], set(), set()
+    (output / "downloads").mkdir()
+    categories, all_images, downloads, seen, routes = [], [], [], set(), set()
     for folder in folders(root):
         slug, number, title = category_identity(folder.name)
         if slug in seen:
@@ -133,6 +152,12 @@ def generate(root=ROOT):
         category = {"slug": slug, "number": number, "title": title, "folder": folder.name,
                     "count": len(images), "cover": cover, "url": category_url,
                     "bytes": sum(i["bytes"] for i in images)}
+        if images:
+            archive = create_download(images, slug, output)
+            archive["label"] = folder.name + ".zip"
+            archive["url"] = f"{repository.rstrip('/')}/releases/download/{DOWNLOAD_TAG}/{archive['name']}"
+            category["download"] = archive["url"]
+            downloads.append(archive)
         categories.append(category)
         write_json(output / "data" / "galleries" / f"{slug}.json", images)
         write_json(output / "static" / "catalog" / f"{slug}.json", images)
@@ -149,6 +174,9 @@ def generate(root=ROOT):
     write_json(output / "data" / "catalog.json", catalog)
     write_json(output / "static" / "catalog" / "index.json", catalog)
     write_json(output / "static" / "catalog" / "search.json", all_images)
+    write_json(output / "downloads" / "manifest.json",
+               {"repository": repository.removeprefix("https://github.com/").rstrip("/"),
+                "tag": DOWNLOAD_TAG, "assets": downloads})
     page(output / "content" / "_index.md", {"title": "中国人的表情包"})
     page(output / "content" / "search.md", {"title": "搜索表情包", "layout": "search"})
     (output / "static" / ".nojekyll").touch()
@@ -157,7 +185,9 @@ def generate(root=ROOT):
 
 
 def build(root=ROOT, base_url=None):
-    generate(root)
+    config = json.loads(subprocess.check_output(
+        ["hugo", "config", "--source", str(root), "--format", "json"], text=True))
+    generate(root, repository=config["params"]["repository"])
     destination = root / "public-hugo"
     if destination.exists():
         shutil.rmtree(destination)
@@ -170,8 +200,6 @@ def build(root=ROOT, base_url=None):
     print(f"发布目录：{destination}（{size / 1024**2:.1f} MiB）", flush=True)
     if size >= 1_000_000_000:
         raise ValueError("站点超过 GitHub Pages 1 GB 限制，请先减少图片体积。")
-    config = json.loads(subprocess.check_output(
-        ["hugo", "config", "--source", str(root), "--format", "json"], text=True))
     # README always links to production, even when building a local preview base URL.
     subprocess.run([sys.executable, str(root / "scripts/update_readme.py"), "generate",
                     "--base-url", config["baseurl"]], cwd=root, check=True)

@@ -29,7 +29,7 @@ def render_directory(catalog, base_url):
     lines = [
         f"## 表情包目录（共收录 {catalog['total']} 张表情包） / Sticker directory",
         "",
-        f"> 根据 BQB 文件夹自动更新，共 {len(categories)} 个分类。进入分类页面后，点击“打包下载”获取合集。",
+        f"> 根据 BQB 文件夹自动更新，共 {len(categories)} 个分类。点击“直链下载”即可获取该分类的 ZIP 合集。",
         "",
         "| 示例 / Preview | 分类入口 / Browse | 下载 / Download |",
         "| :---: | :---: | :---: |",
@@ -43,7 +43,7 @@ def render_directory(catalog, base_url):
                    f'height="100" alt="{escape(category["title"], quote=True).replace("|", "&#124;")}" />'
                    if cover else "暂无图片")
         label = markdown_text(category["folder"])
-        download = f"[进入分类下载]({url}#download-pack)" if category["count"] else "暂无图片"
+        download = f"[直链下载]({category['download']})" if category["count"] else "暂无图片"
         lines.append(f"| {preview} | [{label}（{category['count']} 张）]({url}) | {download} |")
     return "\n".join(lines) + "\n"
 

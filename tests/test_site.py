@@ -1,10 +1,13 @@
 import importlib.util
+import base64
 import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
 import tempfile
 import unittest
+from unittest.mock import patch
 import zipfile
 from urllib.parse import unquote
 
@@ -17,6 +20,9 @@ spec.loader.exec_module(builder)
 readme_spec = importlib.util.spec_from_file_location("readme", ROOT / "scripts/update_readme.py")
 readme = importlib.util.module_from_spec(readme_spec)
 readme_spec.loader.exec_module(readme)
+publisher_spec = importlib.util.spec_from_file_location("publisher", ROOT / "scripts/publish_downloads.py")
+publisher = importlib.util.module_from_spec(publisher_spec)
+publisher_spec.loader.exec_module(publisher)
 
 
 class FolderLifecycleTests(unittest.TestCase):
@@ -129,8 +135,9 @@ class FolderLifecycleTests(unittest.TestCase):
         self.assertIn('110_ai_人工智能_bqb/', unquote(updated))
         self.assertLess(updated.index('110_ai_'), updated.index('109_opossum_'))
         self.assertIn('/thumbs/', updated)
-        self.assertIn('#download-pack', updated)
-        self.assertNotIn('.zip)', updated)
+        self.assertNotIn('#download-pack', updated)
+        self.assertIn('[直链下载](https://github.com/zhaoolee/ChineseBQB/releases/download/bqb-downloads/', updated)
+        self.assertEqual(updated.count('.zip)'), 2)
         self.assertNotIn('post_category', updated)
         self.assertEqual(readme.apply_directory(updated, first), updated)
         (self.root / '110_AI_人工智能_BQB').rename(self.root / '110_AI_新名字_BQB')
@@ -143,6 +150,33 @@ class FolderLifecycleTests(unittest.TestCase):
         self.assertNotIn('109_opossum_', final)
         self.assertTrue(final.startswith(prefix + readme.START))
         self.assertTrue(final.endswith(readme.END + suffix))
+
+    def test_direct_zip_original_bytes_names_and_stable_content_versions(self):
+        file = self.picture('111_AI_新分类_BQB/子目录/你好 #?&"🍉.PNG')
+        another = self.picture('111_AI_新分类_BQB/2.jpg', 'blue')
+        first = builder.generate(self.root)
+        directory = self.root / '.hugo-generated/downloads'
+        manifest = json.loads((directory / 'manifest.json').read_text())
+        asset = manifest['assets'][0]
+        self.assertEqual(first['categories'][0]['download'], asset['url'])
+        archive = directory / asset['name']
+        original_zip = archive.read_bytes()
+        with zipfile.ZipFile(archive) as package:
+            self.assertIsNone(package.testzip())
+            self.assertEqual(set(package.namelist()), {'子目录/你好 #?&"🍉.PNG', '2.jpg'})
+            self.assertEqual(package.read('子目录/你好 #?&"🍉.PNG'), file.read_bytes())
+            self.assertEqual(package.read('2.jpg'), another.read_bytes())
+        os.utime(file, (1_600_000_000, 1_600_000_000))
+        repeated = builder.generate(self.root)
+        self.assertEqual(repeated['categories'][0]['download'], asset['url'])
+        self.assertEqual(archive.read_bytes(), original_zip)
+        self.picture('111_AI_新分类_BQB/2.jpg', 'green')
+        changed = builder.generate(self.root)
+        self.assertNotEqual(changed['categories'][0]['download'], asset['url'])
+        self.assertFalse(archive.exists())
+        shutil.rmtree(file.parents[1])
+        builder.generate(self.root)
+        self.assertEqual(list(directory.glob('*.zip')), [])
 
     def test_readme_empty_category_and_special_characters(self):
         (self.root / '112_[图]|<script>_BQB').mkdir()
@@ -167,6 +201,29 @@ class ReadmeBoundaryTests(unittest.TestCase):
 
 
 class DownloadTests(unittest.TestCase):
+    def test_cleanup_preserves_current_readme_and_unmanaged_assets(self):
+        current, readme_only, obsolete = [f'bqb-00{i}-' + str(i) * 16 + '.zip' for i in (1, 2, 3)]
+        manifest = {'repository': 'example/gallery', 'tag': 'bqb-downloads', 'assets': [{'name': current}]}
+        text = f'[直链下载](https://github.com/example/gallery/releases/download/bqb-downloads/{readme_only})'
+        assets = {name: {'id': index} for index, name in enumerate(
+            [current, readme_only, obsolete, 'manual-backup.zip'])}
+        with patch.object(publisher, 'api', side_effect=[{'id': 20}, {'content': base64.b64encode(text.encode()).decode()}]), \
+             patch.object(publisher, 'list_assets', return_value=assets), patch.object(publisher, 'gh') as gh:
+            publisher.prune(manifest)
+        gh.assert_called_once_with('api', '--method', 'DELETE', 'repos/example/gallery/releases/assets/2')
+
+    def test_corrupt_existing_asset_is_not_overwritten_or_accepted(self):
+        name = 'bqb-001-' + 'a' * 16 + '.zip'
+        asset = {'name': name, 'size': 5, 'sha256': 'a' * 64, 'url': 'https://example.com/archive.zip'}
+        remote = {'state': 'uploaded', 'size': 5, 'digest': 'sha256:' + 'b' * 64,
+                  'browser_download_url': asset['url']}
+        manifest = {'repository': 'example/gallery', 'tag': 'bqb-downloads', 'assets': [asset]}
+        with patch.object(publisher, 'api', return_value={'id': 20}), \
+             patch.object(publisher, 'list_assets', return_value={name: remote}), patch.object(publisher, 'gh') as gh:
+            with self.assertRaisesRegex(ValueError, '校验值不同'):
+                publisher.publish(manifest, Path('/unused'))
+        gh.assert_not_called()
+
     @unittest.skipUnless(shutil.which('node'), 'Node is needed for the browser ZIP writer test')
     def test_browser_zip_roundtrip_chinese_emoji_nested_and_binary(self):
         with tempfile.TemporaryDirectory() as directory:

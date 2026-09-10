@@ -55,8 +55,20 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: readme-directory
-          path: .hugo-generated/readme-directory.md
+          path: |
+            .hugo-generated/readme-directory.md
+            .hugo-generated/downloads/manifest.json
           include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
+      - name: Upload generated ZIP archives
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: bqb-downloads
+          path: .hugo-generated/downloads
+          include-hidden-files: true
+          compression-level: 0
           if-no-files-found: error
           retention-days: 7
       - name: Upload Pages artifact
@@ -65,9 +77,30 @@ jobs:
         with:
           path: public-hugo
 
-  deploy:
+  publish-downloads:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
     needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout ZIP publisher
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts/publish_downloads.py
+          sparse-checkout-cone-mode: false
+      - name: Download generated ZIP archives
+        uses: actions/download-artifact@v4
+        with:
+          name: bqb-downloads
+          path: ${{ runner.temp }}/bqb-downloads
+      - name: Publish and verify ZIP direct downloads
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/publish_downloads.py publish --manifest "$RUNNER_TEMP/bqb-downloads/manifest.json"
+
+  deploy:
+    needs: publish-downloads
     runs-on: ubuntu-latest
     permissions:
       pages: write
@@ -92,6 +125,7 @@ jobs:
           sparse-checkout: |
             README.md
             scripts/update_readme.py
+            scripts/publish_downloads.py
           sparse-checkout-cone-mode: false
       - name: Download deployed README directory
         uses: actions/download-artifact@v4
@@ -122,3 +156,7 @@ jobs:
             fi
             exit 1
           fi
+      - name: Remove unused generated ZIP archives
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/publish_downloads.py prune --manifest "$RUNNER_TEMP/readme-directory/downloads/manifest.json"
