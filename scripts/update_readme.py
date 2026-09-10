@@ -39,7 +39,8 @@ def render_directory(catalog, base_url):
             raise ValueError(f"分类路由与完整文件夹名不符：{category['folder']}")
         url = base_url + category["url"]
         cover = category["cover"]
-        preview = (f'<img src="{escape(base_url + cover["thumb"], quote=True)}" '
+        cover_src = (cover["src"] if cover["animated"] else cover["thumb"]) if cover else None
+        preview = (f'<img src="{escape(base_url + cover_src, quote=True)}" '
                    f'height="100" alt="{escape(category["title"], quote=True).replace("|", "&#124;")}" />'
                    if cover else "暂无图片")
         label = markdown_text(category["folder"])

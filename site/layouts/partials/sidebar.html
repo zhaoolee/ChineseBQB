@@ -1,6 +1,9 @@
 <aside class="sidebar" id="sidebar" aria-label="分类目录">
   <div class="sidebar-head">
-    <a class="site-brand" href="{{ "" | relURL }}"><img src="{{ "assets/icon.png" | relURL }}" width="42" height="42" alt=""><span>ChineseBQB<small>中国人的表情包</small></span></a>
+    <div class="sidebar-brand-row">
+      <a class="site-brand" href="{{ "" | relURL }}"><img src="{{ "assets/icon.png" | relURL }}" width="42" height="42" alt=""><span>ChineseBQB<small>中国人的表情包</small></span></a>
+      <a class="github-link" href="{{ site.Params.repository }}" target="_blank" rel="noopener noreferrer" aria-label="在 GitHub 查看 ChineseBQB 项目" title="在 GitHub 查看项目"><span aria-hidden="true"></span></a>
+    </div>
     <label class="sidebar-search"><span aria-hidden="true">⌕</span><input type="search" id="category-filter" placeholder="查找分类…" aria-label="查找分类"></label>
     <a class="all-categories {{ if .IsHome }}active{{ end }}" href="{{ "" | relURL }}"><span>▦ &nbsp; 全部表情包</span><span>{{ hugo.Data.catalog.total }}</span></a>
     <div class="sidebar-caption"><span>分类目录</span><span>{{ len hugo.Data.catalog.categories }} 个分类</span></div>

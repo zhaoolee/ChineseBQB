@@ -118,6 +118,11 @@ class FolderLifecycleTests(unittest.TestCase):
         self.assertEqual(data['animated'], 1)
         image = json.loads((self.root / '.hugo-generated/static/catalog/bqb-001.json').read_text())[0]
         self.assertEqual((self.root / '.hugo-generated/static' / image['src']).read_bytes(), source.read_bytes())
+        directory = readme.render_directory(data, 'https://zhaoolee.com/ChineseBQB/')
+        self.assertIn(f'<img src="https://zhaoolee.com/ChineseBQB/{image["src"]}"', directory)
+        self.assertNotIn(image['thumb'], directory)
+        with Image.open(self.root / '.hugo-generated/static' / image['src']) as published:
+            self.assertEqual(published.n_frames, 2)
 
     def test_readme_tracks_add_rename_delete_and_preserves_manual_content(self):
         base = 'https://zhaoolee.com/ChineseBQB/'

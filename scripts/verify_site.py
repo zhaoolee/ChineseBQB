@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def verify(public=ROOT / "public-hugo", base="https://zhaoolee.com/ChineseBQB/"):
     base_url = urlsplit(base)
     references = set()
+    home_images = set()
     errors = []
 
     def check(value, page_url=base):
@@ -41,6 +42,8 @@ def verify(public=ROOT / "public-hugo", base="https://zhaoolee.com/ChineseBQB/")
             self.url = url
 
         def handle_starttag(self, tag, attrs):
+            if tag == "img" and self.url == urljoin(base, "index.html"):
+                home_images.add(urljoin(base, dict(attrs).get("src", "")))
             for key, value in attrs:
                 if key in {"src", "href", "action", "data-src"}:
                     check(value, self.url)
@@ -59,6 +62,11 @@ def verify(public=ROOT / "public-hugo", base="https://zhaoolee.com/ChineseBQB/")
     download_images = {}
     for category in catalog["categories"]:
         check(category["url"])
+        cover = category["cover"]
+        if cover:
+            expected_cover = cover["src"] if cover["animated"] else cover["thumb"]
+            if urljoin(base, expected_cover) not in home_images:
+                errors.append(f"Incorrect homepage cover: {category['folder']}")
         if (public / "categories" / category["slug"]).exists():
             errors.append(f"Unexpected obsolete short route: {category['slug']}")
         images = json.loads((public / "catalog" / f"{category['slug']}.json").read_text())
