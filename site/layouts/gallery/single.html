@@ -10,7 +10,7 @@
     {{ range $images }}
       <article class="image-card" data-name="{{ .label }}">
         <a class="image-preview" href="{{ .src | relURL }}" data-preview data-name="{{ .name }}" data-src="{{ .src | relURL }}"><img src="{{ .thumb | relURL }}" width="360" height="300" alt="{{ .label }}" loading="lazy">{{ if .animated }}<span class="gif-badge">GIF · 动图</span>{{ end }}</a>
-        <div class="image-caption"><span title="{{ .label }}">{{ .label }}</span><a href="{{ .src | relURL }}" download="{{ .name }}" aria-label="保存 {{ .name }}">↓</a></div>
+        <div class="image-caption"><span title="{{ .label }}">{{ .label }}</span><a class="image-download" href="{{ .src | relURL }}" download="{{ .name }}" aria-label="保存 {{ .name }}" title="下载原图"></a></div>
       </article>
     {{ end }}
     </div>

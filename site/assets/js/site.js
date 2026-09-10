@@ -178,7 +178,8 @@
     const title = document.createElement('span');
     title.textContent = title.title = item.label;
     const download = document.createElement('a');
-    download.href = asset(item.src); download.download = item.name; download.textContent = '↓';
+    download.className = 'image-download';
+    download.href = asset(item.src); download.download = item.name; download.title = '下载原图';
     download.setAttribute('aria-label', `保存 ${item.name}`);
     caption.append(title, download);
     const category = document.createElement('a');
