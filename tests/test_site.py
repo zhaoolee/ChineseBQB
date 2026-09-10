@@ -201,6 +201,20 @@ class ReadmeBoundaryTests(unittest.TestCase):
 
 
 class DownloadTests(unittest.TestCase):
+    def test_upload_uses_github_supported_label_without_changing_manifest(self):
+        name = 'bqb-106-' + 'a' * 16 + '.zip'
+        asset = {'name': name, 'label': '106_Frieren_芙莉莲🪄_BQB.zip', 'size': 5,
+                 'sha256': 'a' * 64, 'url': 'https://example.com/archive.zip'}
+        remote = {'state': 'uploaded', 'size': 5, 'digest': 'sha256:' + 'a' * 64,
+                  'browser_download_url': asset['url']}
+        manifest = {'repository': 'example/gallery', 'tag': 'bqb-downloads', 'assets': [asset]}
+        with patch.object(publisher, 'api', return_value={'id': 20}), \
+             patch.object(publisher, 'list_assets', side_effect=[{}, {name: remote}]), patch.object(publisher, 'gh') as gh:
+            publisher.publish(manifest, Path('/archives'))
+        gh.assert_called_once_with('release', 'upload', 'bqb-downloads',
+                                   '/archives/' + name + '#106_Frieren_芙莉莲_BQB.zip', '--repo', 'example/gallery')
+        self.assertIn('🪄', asset['label'])
+
     def test_cleanup_preserves_current_readme_and_unmanaged_assets(self):
         current, readme_only, obsolete = [f'bqb-00{i}-' + str(i) * 16 + '.zip' for i in (1, 2, 3)]
         manifest = {'repository': 'example/gallery', 'tag': 'bqb-downloads', 'assets': [{'name': current}]}
@@ -214,7 +228,8 @@ class DownloadTests(unittest.TestCase):
 
     def test_corrupt_existing_asset_is_not_overwritten_or_accepted(self):
         name = 'bqb-001-' + 'a' * 16 + '.zip'
-        asset = {'name': name, 'size': 5, 'sha256': 'a' * 64, 'url': 'https://example.com/archive.zip'}
+        asset = {'name': name, 'label': '001_分类_BQB.zip', 'size': 5,
+                 'sha256': 'a' * 64, 'url': 'https://example.com/archive.zip'}
         remote = {'state': 'uploaded', 'size': 5, 'digest': 'sha256:' + 'b' * 64,
                   'browser_download_url': asset['url']}
         manifest = {'repository': 'example/gallery', 'tag': 'bqb-downloads', 'assets': [asset]}

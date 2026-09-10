@@ -14,6 +14,11 @@ import time
 MANAGED_NAME = re.compile(r"(?:bqb-\d+|collection-[0-9a-f]{12})-[0-9a-f]{16}\.zip\Z")
 
 
+def release_label(name):
+    # GitHub rejects four-byte Unicode in asset labels. ZIP entries retain all Unicode.
+    return "".join(char for char in name if ord(char) <= 0xFFFF and char not in "\ufe0f\u200d")
+
+
 def gh(*args):
     return subprocess.run(["gh", *args], check=True, capture_output=True, text=True).stdout
 
@@ -58,27 +63,29 @@ def publish(manifest, directory):
     existing = list_assets(repo, release["id"])
 
     def upload(asset):
+        label = release_label(asset["label"])
         remote = existing.get(asset["name"])
         if remote:
             if not matches(remote, asset):
                 raise ValueError(f"已存在的 ZIP 与校验值不同：{asset['name']}")
-            if remote.get("label") != asset["label"]:
+            if remote.get("label") != label:
                 gh("api", "--method", "PATCH", f"repos/{repo}/releases/assets/{remote['id']}",
-                   "-f", "label=" + asset["label"])
+                   "-f", "label=" + label)
             return
-        for attempt in range(3):
+        for attempt in range(4):
             try:
-                gh("release", "upload", tag, str(directory / asset["name"]) + "#" + asset["label"],
+                gh("release", "upload", tag, str(directory / asset["name"]) + "#" + label,
                    "--repo", repo)
                 print(f"已上传：{asset['label']}", flush=True)
                 return
-            except subprocess.CalledProcessError:
+            except subprocess.CalledProcessError as error:
                 # An upload may have succeeded despite an interrupted response.
                 if matches(list_assets(repo, release["id"]).get(asset["name"]), asset):
                     return
-                if attempt == 2:
+                if attempt == 3:
                     raise
-                time.sleep(2)
+                throttled = any(code in error.stderr for code in ("HTTP 403", "HTTP 429"))
+                time.sleep(60 if throttled else 2 ** (attempt + 1))
 
     with ThreadPoolExecutor(max_workers=4) as pool:
         list(pool.map(upload, manifest["assets"]))
