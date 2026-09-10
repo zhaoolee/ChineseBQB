@@ -22,32 +22,6 @@
   const normalize = (text) => text.normalize('NFKC').toLocaleLowerCase();
   const matches = (text, query) => normalize(query).trim().split(/\s+/).every(word => normalize(text).includes(word));
 
-  // Preserve the requested #/ entry and links shared by the original ?key_val= search.
-  async function legacyRoute() {
-    const query = new URLSearchParams(location.search);
-    if (query.has('key_val') && !location.pathname.endsWith('/search/')) {
-      location.replace(asset(`search/?q=${encodeURIComponent(query.get('key_val'))}`));
-      return;
-    }
-    const hash = location.hash.slice(1);
-    if (!hash.startsWith('/') || hash === '/') return;
-    const route = new URL(hash.slice(1), base);
-    if (route.origin !== base.origin || !route.pathname.startsWith(base.pathname)) return;
-    const path = route.pathname.slice(base.pathname.length).replace(/\/$/, '');
-    if (path === 'search') {
-      location.replace(asset(`search/?q=${encodeURIComponent(route.searchParams.get('q') || route.searchParams.get('key_val') || '')}`));
-    } else if (/^(?:category|categories)\//.test(path)) {
-      try {
-        const slug = decodeURIComponent(path.replace(/^(?:category|categories)\//, ''));
-        const catalog = await (await fetch(asset('catalog/index.json'))).json();
-        const category = catalog.categories.find(c => c.slug === slug || c.folder === slug);
-        if (category) location.replace(asset(category.url));
-      } catch { /* Native Hugo navigation remains available. */ }
-    }
-  }
-  legacyRoute();
-  window.addEventListener('hashchange', legacyRoute);
-
   const sidebar = $('#sidebar'), menu = $('#menu-button'), backdrop = $('#nav-backdrop');
   const mobile = matchMedia('(max-width: 800px)');
   function closeMenu() {
@@ -209,7 +183,7 @@
     caption.append(title, download);
     const category = document.createElement('a');
     category.className = 'search-category';
-    category.href = asset(`categories/${item.category}/`);
+    category.href = asset(item.categoryUrl);
     category.textContent = `${item.categoryTitle} ↗`;
     card.append(link, caption, category);
     return card;
@@ -251,7 +225,7 @@
     if (url.href !== location.href) history[push ? 'pushState' : 'replaceState'](null, '', url);
     search();
   }
-  input.value = new URLSearchParams(location.search).get('q') || new URLSearchParams(location.search).get('key_val') || '';
+  input.value = new URLSearchParams(location.search).get('q') || '';
   $('#search-form').addEventListener('submit', event => { event.preventDefault(); clearTimeout(debounce); updateQuery(true); });
   input.addEventListener('input', event => {
     clearTimeout(debounce);

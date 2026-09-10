@@ -13,6 +13,7 @@ import shutil
 import subprocess
 import sys
 import time
+from urllib.parse import quote
 
 from PIL import Image, ImageOps
 
@@ -28,7 +29,7 @@ def natural_key(value):
 
 def folders(root):
     return sorted((p for p in root.iterdir() if p.is_dir() and not p.is_symlink()
-                   and not p.name.startswith(".") and p.name.endswith("BQB")),
+                   and not p.name.startswith(".") and p.name.lower().endswith("bqb")),
                   key=lambda p: natural_key(p.name), reverse=True)
 
 
@@ -41,11 +42,11 @@ def image_files(folder):
 
 
 def category_identity(name):
-    # Numbered folders retain their URL when their descriptive name changes.
+    # A compact internal data key; public URLs always use the complete folder name.
     match = re.match(r"^(\d+)", name)
     number = match.group(1) if match else ""
     slug = f"bqb-{number}" if number else "collection-" + hashlib.sha256(name.encode()).hexdigest()[:12]
-    label = re.sub(r"BQB$", "", name).strip("_ ")
+    label = re.sub(r"BQB$", "", name, flags=re.IGNORECASE).strip("_ ")
     label = re.sub(r"^\d+[_ ]*", "", label)
     parts = re.split(r"[_ ]+", label)
     first_chinese = next((i for i, part in enumerate(parts) if re.search(r"[\u3400-\u9fff]", part)), None)
@@ -112,12 +113,17 @@ def generate(root=ROOT):
         shutil.rmtree(output)
     for name in ("media", "thumbs", "catalog"):
         (output / "static" / name).mkdir(parents=True, exist_ok=True)
-    categories, all_images, seen = [], [], set()
+    categories, all_images, seen, routes = [], [], set(), set()
     for folder in folders(root):
         slug, number, title = category_identity(folder.name)
         if slug in seen:
             raise ValueError(f"重复的分类编号 {number}：请为每个 BQB 文件夹使用不同编号。")
         seen.add(slug)
+        route_name = folder.name.lower()
+        if route_name in routes:
+            raise ValueError(f"分类路径重复：{route_name}")
+        routes.add(route_name)
+        category_url = quote(route_name, safe="") + "/"
         files = image_files(folder)
         with ThreadPoolExecutor(max_workers=min(8, os.cpu_count() or 2)) as executor:
             images = list(executor.map(prepare_image, ((f, folder, output, cache) for f in files)))
@@ -125,15 +131,17 @@ def generate(root=ROOT):
         cover = next((i for i in images if re.fullmatch(r"0*" + re.escape(number), Path(i["name"]).stem)
                       and number), images[0] if images else None)
         category = {"slug": slug, "number": number, "title": title, "folder": folder.name,
-                    "count": len(images), "cover": cover, "url": f"categories/{slug}/",
+                    "count": len(images), "cover": cover, "url": category_url,
                     "bytes": sum(i["bytes"] for i in images)}
         categories.append(category)
         write_json(output / "data" / "galleries" / f"{slug}.json", images)
         write_json(output / "static" / "catalog" / f"{slug}.json", images)
-        page(output / "content" / "categories" / slug / "index.md",
+        page(output / "content" / slug / "index.md",
              {"title": title, "type": "gallery", "slug": slug, "category": slug,
+              "url": f"/{route_name}/",
               "description": f"{title}，共 {len(images)} 张表情包。在线预览、保存原图或打包下载。"})
-        all_images.extend(dict(i, category=slug, categoryTitle=title, folder=folder.name) for i in images)
+        all_images.extend(dict(i, category=slug, categoryUrl=category_url,
+                               categoryTitle=title, folder=folder.name) for i in images)
     # Highest numeric prefix first, then named community collections.
     categories.sort(key=lambda c: (bool(c["number"]), int(c["number"] or 0)), reverse=True)
     catalog = {"categories": categories, "total": len(all_images),
@@ -142,7 +150,6 @@ def generate(root=ROOT):
     write_json(output / "static" / "catalog" / "index.json", catalog)
     write_json(output / "static" / "catalog" / "search.json", all_images)
     page(output / "content" / "_index.md", {"title": "中国人的表情包"})
-    page(output / "content" / "categories" / "_index.md", {"title": "全部分类", "layout": "categories"})
     page(output / "content" / "search.md", {"title": "搜索表情包", "layout": "search"})
     (output / "static" / ".nojekyll").touch()
     print(f"已生成 {len(categories)} 个分类、{len(all_images)} 张图片（{catalog['animated']} 张动图）。", flush=True)

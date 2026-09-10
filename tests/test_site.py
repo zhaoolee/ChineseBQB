@@ -6,6 +6,7 @@ import subprocess
 import tempfile
 import unittest
 import zipfile
+from urllib.parse import unquote
 
 from PIL import Image
 
@@ -29,13 +30,14 @@ class FolderLifecycleTests(unittest.TestCase):
         Image.new("RGB", (20, 30), color).save(file, "PNG")
         return file
 
-    def test_add_rename_remove_and_stable_numbered_url(self):
+    def test_add_rename_remove_and_folder_name_url(self):
         file = self.picture('111_AI_新分类_BQB/子目录/你好 #?&"🍉.PNG')
         original = file.read_bytes()
         first = builder.generate(self.root)
         self.assertEqual((len(first['categories']), first['total']), (1, 1))
         self.assertEqual(first['categories'][0]['title'], '新分类')
         self.assertEqual(first['categories'][0]['slug'], 'bqb-111')
+        self.assertEqual(unquote(first['categories'][0]['url']), '111_ai_新分类_bqb/')
         self.assertEqual(file.read_bytes(), original)
         old = self.root / '111_AI_新分类_BQB'
         new = self.root / '111_换个名字_BQB'
@@ -45,10 +47,14 @@ class FolderLifecycleTests(unittest.TestCase):
         self.assertEqual(second['total'], 2)
         renamed = next(c for c in second['categories'] if c['slug'] == 'bqb-111')
         self.assertEqual(renamed['title'], '换个名字')
+        self.assertEqual(unquote(renamed['url']), '111_换个名字_bqb/')
+        metadata = json.loads((self.root / '.hugo-generated/content/bqb-111/index.md').read_text())
+        self.assertEqual(metadata['url'], '/111_换个名字_bqb/')
+        self.assertNotIn('aliases', metadata)
         shutil.rmtree(new)
         third = builder.generate(self.root)
         self.assertEqual(third['total'], 1)
-        self.assertFalse((self.root / '.hugo-generated/content/categories/bqb-111').exists())
+        self.assertFalse((self.root / '.hugo-generated/content/bqb-111').exists())
         self.assertFalse((self.root / '.hugo-generated/static/catalog/bqb-111.json').exists())
         self.assertEqual(len(list((self.root / '.hugo-generated/static/media').iterdir())), 1)
 
@@ -78,6 +84,13 @@ class FolderLifecycleTests(unittest.TestCase):
     def test_mixed_language_names_are_not_truncated(self):
         self.assertEqual(builder.category_identity('070JOJO的奇妙冒险BQB')[2], 'JOJO的奇妙冒险')
         self.assertEqual(builder.category_identity('060MurCat_Mur猫😺BQB')[2], 'Mur猫😺')
+
+    def test_lowercase_folder_suffix_and_search_category_url(self):
+        self.picture('109_opossum_负鼠_bqb/开心.jpg')
+        data = builder.generate(self.root)
+        self.assertEqual(unquote(data['categories'][0]['url']), '109_opossum_负鼠_bqb/')
+        search = json.loads((self.root / '.hugo-generated/static/catalog/search.json').read_text())
+        self.assertEqual(search[0]['categoryUrl'], data['categories'][0]['url'])
 
     def test_corrupt_image_fails_instead_of_publishing_broken_gallery(self):
         directory = self.root / '001_损坏_BQB'

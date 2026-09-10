@@ -56,6 +56,8 @@ def verify(public=ROOT / "public-hugo", base="https://zhaoolee.com/ChineseBQB/")
     count = 0
     for category in catalog["categories"]:
         check(category["url"])
+        if (public / "categories" / category["slug"]).exists():
+            errors.append(f"Unexpected obsolete short route: {category['slug']}")
         images = json.loads((public / "catalog" / f"{category['slug']}.json").read_text())
         if len(images) != category["count"]:
             errors.append(f"Incorrect count: {category['slug']}")
@@ -64,6 +66,8 @@ def verify(public=ROOT / "public-hugo", base="https://zhaoolee.com/ChineseBQB/")
             check(image["src"])
             check(image["thumb"])
     search = json.loads((public / "catalog/search.json").read_text())
+    for image in search:
+        check(image["categoryUrl"])
     if count != catalog["total"] or len(search) != count:
         errors.append("Search index and category counts differ")
     if (public / "CNAME").exists():
