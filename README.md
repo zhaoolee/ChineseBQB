@@ -51,7 +51,7 @@
 
 ## ChineseBQB 开放数据源
 
-[https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/chinesebqb_github.json](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/chinesebqb_github.json)
+每次发布自动更新：[分类目录](https://zhaoolee.com/ChineseBQB/catalog/index.json)、[完整图片索引](https://zhaoolee.com/ChineseBQB/catalog/search.json)。索引中的图片和分类相对路径，以 `https://zhaoolee.com/ChineseBQB/` 为起点解析。
 
 表情包图片和标注数据完全开源，对编程感兴趣的小伙伴，可以用开放数据源开发微信小程序，制作爬虫Demo，作为机器学习数据源，都是可以的！
 

@@ -71,7 +71,7 @@ python scripts/build_site.py build
 python scripts/verify_site.py
 ```
 
-激活环境后也可使用 `npm run dev`、`npm run build`、`npm test`；新网站无需 `npm install`。Node 仅用于 ZIP 格式测试；GitHub runner 已提供 Node。
+激活环境后也可使用 `npm run dev`、`npm run build`、`npm test`。`package.json` 只提供这三个快捷命令，没有 npm 依赖，无需 `npm install`。Python 依赖统一在 `requirements-site.txt` 中维护，目前仅有 Pillow。Node 仅用于浏览器 ZIP 格式测试；GitHub runner 已提供 Node。
 
 ## GitHub Pages 设置
 
@@ -92,7 +92,7 @@ python scripts/verify_site.py
 
 每次构建先测试，再生成缩略图和静态页、检查全部本地链接与图片、最后上传并部署。原图按内容摘要存储，重复图片只占一份空间；缩略图有独立缓存。Pages 发布内容不能超过 1 GB，脚本会在到达上限时阻止发布，避免用不完整产物覆盖线上站点。
 
-## 项目结构与旧流程
+## 项目结构
 
 ```text
 hugo.toml                 Hugo 配置及 /ChineseBQB/ 路径
@@ -111,8 +111,10 @@ public-hugo/              唯一的 Pages 发布目录（不提交）
 
 UI 复用 `zhaoolee.github.io` 的 OPPOSans、木纹背景、暖白纸张、双边框与左侧目录，再针对表情包增加分类卡片和图片预览。字体及背景来自同一作者的参考项目。
 
-旧项目中的 `build.js` 负责压缩 ZIP、生成 `chinesebqb-md` 并更新 README；`create_bqb_image_list.js` 生成 GitHub / v2fy 两套数据源；`rsync.js` / `push.js` 负责旧服务器同步；Hexo 配置、主题及 `docs` 则用于旧静态站。此前 Pages 发布的是 `master:/docs`。
+发布流程统一为：BQB 文件夹 → Hugo 页面及图片索引 → GitHub Releases ZIP → GitHub Pages → README 自动目录。WordPress 的 Python/JavaScript 上传器、旧服务器同步、旧版打包及 README 覆写脚本、专用配置和依赖均已移除。
 
-这些旧文件保留作历史参考，新工作流不读取、不运行、不修改它们。旧命令更名为 `npm run legacy:build` 和 `npm run legacy:push`；旧 push 命令会同步服务器并覆盖 README、提交全部变化，仅在明确需要旧流程时手动使用。日常维护只需提交 BQB 图片目录，静态站生成结果不需要提交，README 目录由新工作流自动写回，不作为网站的数据源。
+开放数据使用网站自动生成的 `catalog/index.json`（分类目录）和 `catalog/search.json`（完整图片索引）。其中的相对路径以 Hugo `baseURL` 为起点解析，与网页和 README 同步更新。
+
+`chinesebqb-md` 中的文章及插图、旧 Hexo 的配置/主题/`docs` 和旧 JSON 文件仅作为历史资料，不参与构建。日常维护只需提交 BQB 图片目录，静态站生成结果不需要提交，README 目录由工作流自动写回，不作为网站的数据源。
 
 参考：[Hugo 的 GitHub Pages 部署说明](https://gohugo.io/host-and-deploy/host-on-github-pages/)、[GitHub Pages 容量限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)。
