@@ -97,7 +97,6 @@
     if (event.key === 'ArrowLeft') { event.preventDefault(); showPreview(previewIndex - 1); }
     if (event.key === 'ArrowRight') { event.preventDefault(); showPreview(previewIndex + 1); }
   });
-  $('#share-category')?.addEventListener('click', () => copy(location.origin + location.pathname));
   $('#gallery-filter')?.addEventListener('input', event => {
     let count = 0;
     document.querySelectorAll('#image-grid .image-card').forEach(card => {
@@ -135,7 +134,7 @@
       const link = document.createElement('a');
       const url = URL.createObjectURL(archive);
       link.href = url;
-      link.download = `${$('h1').textContent}.zip`;
+      link.download = button.dataset.filename;
       document.body.append(link);
       link.click();
       link.remove();
@@ -169,10 +168,6 @@
     image.width = 360;
     image.height = 300;
     link.append(image);
-    if (item.animated) {
-      const badge = document.createElement('span');
-      badge.className = 'gif-badge'; badge.textContent = 'GIF · 动图'; link.append(badge);
-    }
     const caption = document.createElement('div');
     caption.className = 'image-caption';
     const title = document.createElement('span');

@@ -25,7 +25,8 @@
     <main class="site-main" id="main">
       <section class="reader-sheet">
         <span class="sheet-corner corner-tl" aria-hidden="true"></span><span class="sheet-corner corner-tr" aria-hidden="true"></span><span class="sheet-corner corner-bl" aria-hidden="true"></span><span class="sheet-corner corner-br" aria-hidden="true"></span>
-        {{ block "main" . }}{{ end }}
+        <div class="page-content">{{ block "main" . }}{{ end }}</div>
+        {{ partial "footer.html" . }}
       </section>
     </main>
   </div>
