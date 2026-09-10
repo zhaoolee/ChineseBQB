@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{ .Description | default site.Params.description }}">
+  <meta name="theme-color" content="#fbf7ed">
+  <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · ChineseBQB{{ end }}</title>
+  <link rel="canonical" href="{{ .Permalink }}">
+  <link rel="icon" href="{{ "assets/icon.png" | relURL }}">
+  {{ with resources.Get "css/site.css" | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
+  {{ end }}
+  {{ $scripts := slice (resources.Get "js/zip.js") (resources.Get "js/site.js") }}
+  {{ with $scripts | resources.Concat "js/app.js" | minify | fingerprint }}
+    <script defer src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}"></script>
+  {{ end }}
+</head>
+<body data-base="{{ "" | relURL }}" data-category="{{ .Params.category }}" data-layout="{{ .Layout }}">
+  <a class="skip-link" href="#main">跳到内容</a>
+  <header class="mobile-bar"><button id="menu-button" aria-expanded="false" aria-controls="sidebar" aria-label="打开分类目录">☰</button><a href="{{ "" | relURL }}">ChineseBQB</a><a href="{{ "search/" | relURL }}" aria-label="搜索表情包">搜索</a></header>
+  <button class="nav-backdrop" id="nav-backdrop" aria-label="关闭分类目录" hidden></button>
+  <div class="site-shell">
+    {{ partial "sidebar.html" . }}
+    <main class="site-main" id="main">
+      <div class="topline"><a href="{{ "" | relURL }}">中国人的表情包</a><div><a href="https://zhaoolee.com/">zhaoolee 的自留地 ↗</a><a href="{{ site.Params.repository }}">GitHub ↗</a></div></div>
+      <section class="reader-sheet">
+        <span class="sheet-corner corner-tl" aria-hidden="true"></span><span class="sheet-corner corner-tr" aria-hidden="true"></span><span class="sheet-corner corner-bl" aria-hidden="true"></span><span class="sheet-corner corner-br" aria-hidden="true"></span>
+        {{ block "main" . }}{{ end }}
+      </section>
+      <footer class="site-footer"><span>ChineseBQB · 把快乐分享出去</span><a href="{{ site.Params.repository }}">由社区一起收集 ↗</a></footer>
+    </main>
+  </div>
+  <dialog id="preview" aria-labelledby="preview-title">
+    <div class="preview-head"><p id="preview-title"></p><button type="button" class="icon-button" id="preview-close" aria-label="关闭预览">×</button></div>
+    <div class="preview-stage"><button type="button" class="icon-button" id="preview-prev" aria-label="上一张">‹</button><img id="preview-image" alt=""><button type="button" class="icon-button" id="preview-next" aria-label="下一张">›</button></div>
+    <p class="preview-note" id="preview-position"></p>
+    <div class="preview-actions"><a class="button primary" id="preview-download" download>保存原图 ↓</a><button class="button" id="preview-copy">复制图片链接</button><a class="button" id="preview-original" target="_blank" rel="noopener">打开原图 ↗</a></div>
+    <p class="preview-note">手机可长按图片保存或分享 · 键盘 ← → 切换，Esc 关闭</p>
+  </dialog>
+  <p class="toast" id="toast" role="status" hidden></p>
+</body>
+</html>

@@ -1,4 +1,12 @@
+## Hugo 自动生成的表情包网站
 
+**在线浏览：[ChineseBQB 中国人的表情包](https://zhaoolee.com/ChineseBQB/#/)**
+
+只需维护仓库根目录下以 `BQB` 结尾的文件夹及图片，推送到 `master` 后，GitHub Actions 会自动生成分类、搜索索引、缩略图和 Hugo 静态页，并发布到 GitHub Pages。新增、更名、删除都会自动同步到网页。
+
+**[查看维护方式、本地预览和部署说明 → HUGO.md](HUGO.md)**
+
+以下保留项目原有介绍及历史目录。
 
 [![](https://img.shields.io/badge/ChineseBQB-READEME-brightgreen)](https://github.com/zhaoolee/ChineseBQB)
 

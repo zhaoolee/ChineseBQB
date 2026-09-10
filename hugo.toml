@@ -1,0 +1,22 @@
+baseURL = "https://zhaoolee.com/ChineseBQB/"
+title = "ChineseBQB · 中国人的表情包"
+locale = "zh-CN"
+hasCJKLanguage = true
+enableRobotsTXT = true
+disableKinds = ["taxonomy", "term", "RSS"]
+contentDir = ".hugo-generated/content"
+dataDir = ".hugo-generated/data"
+staticDir = ["site/static", ".hugo-generated/static"]
+layoutDir = "site/layouts"
+assetDir = "site/assets"
+resourceDir = ".hugo-generated/resources"
+publishDir = "public-hugo"
+
+[params]
+  description = "中国人的表情包。按分类找图，搜索、预览、保存，随时接住每一种情绪。"
+  repository = "https://github.com/zhaoolee/ChineseBQB"
+
+[outputs]
+  home = ["HTML"]
+  section = ["HTML"]
+  page = ["HTML"]

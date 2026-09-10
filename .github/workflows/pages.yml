@@ -1,0 +1,73 @@
+name: Build and deploy ChineseBQB
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.event_name == 'pull_request' && github.ref || 'production' }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      HUGO_VERSION: 0.162.1
+      HUGO_ENVIRONMENT: production
+      HUGO_CACHEDIR: ${{ runner.temp }}/hugo-cache
+      TZ: Asia/Shanghai
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-site.txt
+      - name: Install image tools
+        run: python -m pip install -r requirements-site.txt
+      - name: Install Hugo
+        run: |
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/hugo.tar.gz" "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-amd64.tar.gz"
+          mkdir -p "$RUNNER_TEMP/hugo-bin"
+          tar -xzf "$RUNNER_TEMP/hugo.tar.gz" -C "$RUNNER_TEMP/hugo-bin" hugo
+          echo "$RUNNER_TEMP/hugo-bin" >> "$GITHUB_PATH"
+      - name: Restore thumbnails
+        uses: actions/cache@v4
+        with:
+          path: .hugo-cache
+          key: bqb-thumbnails-v1-${{ runner.os }}-${{ github.sha }}
+          restore-keys: bqb-thumbnails-v1-${{ runner.os }}-
+      - name: Test folder lifecycle and downloads
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Generate and build site
+        run: python scripts/build_site.py build
+      - name: Verify every page and image reference
+        run: python scripts/verify_site.py
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: public-hugo
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

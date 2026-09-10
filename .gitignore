@@ -3,6 +3,14 @@
 .idea/
 node_modules/
 
+# Hugo site: generated entirely from *BQB source folders.
+.hugo-generated/
+.hugo-cache/
+.hugo_build.lock
+public-hugo/
+.venv-site/
+__pycache__/
+
 
 
 # Build and Release Folders

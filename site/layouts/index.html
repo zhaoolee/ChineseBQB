@@ -1,0 +1,12 @@
+{{ define "main" }}
+  <div class="hero">
+    <p class="eyebrow">CHINESE BIAO QING BAO / 表情包收藏夹</p>
+    <h1>有些话，<br>用<span>表情包</span>说。</h1>
+    <p class="hero-description">接住每一种情绪，承包每一次斗图。<br>从经典老梗到新鲜快乐，你想找的表情都在这里。</p>
+    <div class="stats"><span><strong>{{ hugo.Data.catalog.total | lang.FormatNumber 0 }}</strong> 张表情包</span><span><strong>{{ len hugo.Data.catalog.categories }}</strong> 个分类</span><span><strong>{{ hugo.Data.catalog.animated | lang.FormatNumber 0 }}</strong> 张动图</span></div>
+    <form class="main-search" action="{{ "search/" | relURL }}" role="search"><span aria-hidden="true">⌕</span><input type="search" name="q" required placeholder="搜一搜：开心、猫咪、程序员…" aria-label="搜索表情包"><button type="submit">找表情 ↗</button></form>
+    <div class="search-suggestions"><span>试试这些</span>{{ range slice "程序员" "猫" "开心" "人工智能" }}<a href="{{ "search/" | relURL }}?q={{ . | urlquery }}">{{ . }}</a>{{ end }}</div>
+  </div>
+  {{ partial "categories.html" . }}
+  <div class="end-note"><p>快乐不打烊。</p><span>点击分类浏览，点击图片放大。喜欢就保存，斗图时随手拿来。</span></div>
+{{ end }}
