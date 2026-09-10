@@ -11,14 +11,6 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => { node.hidden = true; }, 3200);
   }
-  async function copy(text) {
-    try {
-      await navigator.clipboard.writeText(text);
-      toast('链接已复制，去分享快乐吧。');
-    } catch {
-      toast('浏览器未允许复制，请长按图片，或打开原图后复制地址。');
-    }
-  }
   const normalize = (text) => text.normalize('NFKC').toLocaleLowerCase();
   const matches = (text, query) => normalize(query).trim().split(/\s+/).every(word => normalize(text).includes(word));
 
@@ -65,6 +57,7 @@
     previewIndex = (index + previewItems.length) % previewItems.length;
     const item = previewItems[previewIndex];
     $('#preview-title').textContent = item.dataset.name;
+    $('#preview-title').title = item.dataset.name;
     $('#preview-image').src = item.dataset.src;
     $('#preview-image').alt = item.dataset.name;
     $('#preview-download').href = item.dataset.src;
@@ -84,7 +77,6 @@
   $('#preview-close').addEventListener('click', () => preview.close());
   $('#preview-prev').addEventListener('click', () => showPreview(previewIndex - 1));
   $('#preview-next').addEventListener('click', () => showPreview(previewIndex + 1));
-  $('#preview-copy').addEventListener('click', () => copy($('#preview-image').src));
   $('#preview-image').addEventListener('error', () => { $('#preview-position').textContent = '原图加载失败，请检查网络后重新打开。'; });
   preview.addEventListener('close', () => { $('#preview-image').removeAttribute('src'); });
   preview.addEventListener('click', event => {
@@ -103,7 +95,6 @@
       card.hidden = !matches(card.dataset.name, event.target.value);
       if (!card.hidden) count++;
     });
-    $('#gallery-count').textContent = `${count} 张图片`;
     $('#gallery-empty').hidden = count > 0;
   });
 

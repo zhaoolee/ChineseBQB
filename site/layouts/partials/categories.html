@@ -2,7 +2,7 @@
   {{ range hugo.Data.catalog.categories }}
   <a class="collection-card" href="{{ .url | relURL }}">
     <div class="collection-cover">{{ with .cover }}{{ $src := .thumb }}{{ if .animated }}{{ $src = .src }}{{ end }}<img src="{{ $src | relURL }}" alt="{{ .label }}" loading="lazy" width="360" height="300">{{ else }}<span class="empty-cover">等你来填满</span>{{ end }}</div>
-    <div class="collection-info"><h3>{{ with .number }}{{ . }} {{ end }}{{ .title }}</h3><p>{{ .count }} 张表情包</p></div>
+    <div class="collection-info"><h3>{{ with .number }}{{ . }} {{ end }}{{ .title }}</h3></div>
   </a>
   {{ end }}
 </div>

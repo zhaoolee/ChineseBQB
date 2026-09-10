@@ -4,7 +4,7 @@
   <nav class="breadcrumbs" aria-label="当前位置"><a href="{{ "" | relURL }}">全部分类</a><span>/</span><span>{{ .Title }}</span></nav>
   <div class="gallery-actions"><button class="button primary" id="download-pack" data-filename="{{ .Title }}.zip" {{ if not $images }}disabled{{ end }}>打包下载 ↓</button></div>
   {{ if $images }}
-    <div class="gallery-toolbar"><label class="filter-field"><span aria-hidden="true">⌕</span><input type="search" id="gallery-filter" placeholder="在这个分类里找一找…" aria-label="搜索当前分类"></label><span id="gallery-count" role="status">{{ len $images }} 张图片</span></div>
+    <div class="gallery-toolbar"><label class="filter-field"><span aria-hidden="true">⌕</span><input type="search" id="gallery-filter" placeholder="在这个分类里找一找…" aria-label="搜索当前分类"></label></div>
     <div class="image-grid" id="image-grid">
     {{ range $images }}
       <article class="image-card" data-name="{{ .label }}">
@@ -13,6 +13,6 @@
       </article>
     {{ end }}
     </div>
-    <p class="empty-state" id="gallery-empty" hidden>没有找到这张表情包，换个词试试吧。</p>
+    <p class="empty-state" id="gallery-empty" role="status" hidden>没有找到这张表情包，换个词试试吧。</p>
   {{ else }}<p class="empty-state">这个分类还没有图片，快乐正在路上。</p>{{ end }}
 {{ end }}

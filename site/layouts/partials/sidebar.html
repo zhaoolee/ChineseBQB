@@ -10,8 +10,7 @@
   </div>
   <nav class="sidebar-nav"><ul>
   {{ range hugo.Data.catalog.categories }}
-    <li data-category-label="{{ .folder }} {{ .title }}"><a href="{{ .url | relURL }}" {{ if eq $.Params.category .slug }}aria-current="page"{{ end }}><span class="category-number">{{ .number | default "·" }}</span><span class="category-title">{{ .title }}</span><span class="category-count">{{ .count }}</span></a></li>
+    <li data-category-label="{{ .folder }} {{ .title }}"><a href="{{ .url | relURL }}" {{ if eq $.Params.category .slug }}aria-current="page"{{ end }}><span class="category-number">{{ .number | default "·" }}</span><span class="category-title">{{ .title }}</span></a></li>
   {{ end }}
   </ul><p id="no-categories" class="sidebar-empty" hidden>没有匹配的分类</p></nav>
-  <div class="sidebar-bottom">每一种情绪，都有一张表情包。</div>
 </aside>
