@@ -34,7 +34,6 @@
     backdrop.hidden = false;
     $('.site-main').inert = true;
     document.body.style.overflow = 'hidden';
-    $('#category-filter').focus();
   });
   backdrop.addEventListener('click', closeMenu);
   document.addEventListener('keydown', event => {
