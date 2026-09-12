@@ -2,7 +2,7 @@
 
 线上地址：<https://zhaoolee.com/ChineseBQB/#/>。
 
-本网站由 Hugo 生成，GitHub Actions 在 `master` 更新后自动构建和发布到 GitHub Pages。页面、图片、搜索索引、字体全部同源托管，不依赖 v2fy、WordPress、第三方图片 CDN 或数据库。
+本网站由 Hugo 生成，GitHub Actions 在 `master` 更新后自动构建和发布到 GitHub Pages。页面、图片、搜索索引、字体全部同源托管，不依赖 v2fy、WordPress、第三方图片 CDN 或数据库。`/v2fy/` 旧版搜索页镜像保留原始页面，搜索索引在构建时按当前分类自动生成，图片同样使用本站地址。
 
 ## 日常维护
 
@@ -88,6 +88,7 @@ python scripts/verify_site.py
 /ChineseBQB/109_opossum_负鼠_bqb/       负鼠分类
 /ChineseBQB/110_ai_人工智能_bqb/        人工智能分类
 /ChineseBQB/search/?q=人工智能         搜索
+/ChineseBQB/v2fy/                      旧版 v2fy 搜索页镜像
 ```
 
 不生成 `categories/bqb-109` 短路径，不生成旧路径别名或重定向，不处理 hash 路由或旧 `key_val` 搜索参数。首页 URL 末尾的 `#/` 只是浏览器片段，不参与路由。
@@ -107,6 +108,7 @@ scripts/publish_downloads.py 上传、校验及清理自动生成的 Release ZIP
 site/layouts/             Hugo 模板
 site/assets/              样式和浏览器交互
 site/static/assets/       从参考站复用的背景、字体及本项目图标
+site/static/v2fy/         旧版 v2fy 搜索页镜像（页面与脚本；索引构建时生成）
 tests/                    目录生命周期、GIF 和 ZIP 的回归验证
 README/                   README 正文使用的图片资料
 memory/                   本项目的维护流程与经验

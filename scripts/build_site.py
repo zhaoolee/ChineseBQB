@@ -23,6 +23,7 @@ EXTENSIONS = {".jpg", ".jpeg", ".jfif", ".png", ".gif", ".webp", ".avif", ".bmp"
 FORMATS = {"JPEG": "jpg", "PNG": "png", "GIF": "gif", "WEBP": "webp", "AVIF": "avif", "BMP": "bmp"}
 DOWNLOAD_TAG = "bqb-downloads"
 DEFAULT_REPOSITORY = "https://github.com/zhaoolee/ChineseBQB"
+DEFAULT_BASE_URL = "https://zhaoolee.com/ChineseBQB/"
 
 
 def natural_key(value):
@@ -122,7 +123,7 @@ def create_download(images, slug, output):
     return {"name": name, "sha256": digest, "size": temporary.with_name(name).stat().st_size}
 
 
-def generate(root=ROOT, repository=DEFAULT_REPOSITORY):
+def generate(root=ROOT, repository=DEFAULT_REPOSITORY, base_url=DEFAULT_BASE_URL):
     output = root / ".hugo-generated"
     cache = root / ".hugo-cache" / "thumbs-v1"
     cache.mkdir(parents=True, exist_ok=True)
@@ -174,6 +175,12 @@ def generate(root=ROOT, repository=DEFAULT_REPOSITORY):
     write_json(output / "data" / "catalog.json", catalog)
     write_json(output / "static" / "catalog" / "index.json", catalog)
     write_json(output / "static" / "catalog" / "search.json", all_images)
+    # Legacy /v2fy/ search page index: rebuilt from this build's catalog with same-origin URLs.
+    base = base_url.rstrip("/") + "/"
+    write_json(output / "static" / "v2fy" / "chinesebqb_v2fy.json",
+               {"status": 1000, "info": "ChineseBQB的V2方圆数据源",
+                "data": [{"name": image["name"], "category": image["folder"],
+                          "url": base + image["src"]} for image in all_images]})
     write_json(output / "downloads" / "manifest.json",
                {"repository": repository.removeprefix("https://github.com/").rstrip("/"),
                 "tag": DOWNLOAD_TAG, "assets": downloads})
@@ -187,7 +194,7 @@ def generate(root=ROOT, repository=DEFAULT_REPOSITORY):
 def build(root=ROOT, base_url=None):
     config = json.loads(subprocess.check_output(
         ["hugo", "config", "--source", str(root), "--format", "json"], text=True))
-    generate(root, repository=config["params"]["repository"])
+    generate(root, repository=config["params"]["repository"], base_url=config["baseurl"])
     destination = root / "public-hugo"
     if destination.exists():
         shutil.rmtree(destination)

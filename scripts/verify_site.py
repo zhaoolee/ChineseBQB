@@ -83,6 +83,17 @@ def verify(public=ROOT / "public-hugo", base="https://zhaoolee.com/ChineseBQB/")
         check(image["categoryUrl"])
     if count != catalog["total"] or len(search) != count:
         errors.append("Search index and category counts differ")
+    mirror = public / "v2fy" / "chinesebqb_v2fy.json"
+    mirror_count = 0
+    if not mirror.is_file():
+        errors.append("Missing: v2fy/chinesebqb_v2fy.json")
+    else:
+        mirror_items = json.loads(mirror.read_text())["data"]
+        mirror_count = len(mirror_items)
+        if mirror_count != count:
+            errors.append("v2fy mirror index and image counts differ")
+        for item in mirror_items:
+            check(item["url"])
     if (public / "CNAME").exists():
         errors.append("Project site must inherit the account domain; do not publish a CNAME")
     if any(path.is_symlink() for path in public.rglob("*")):
@@ -105,7 +116,7 @@ def verify(public=ROOT / "public-hugo", base="https://zhaoolee.com/ChineseBQB/")
                     errors.append(f"ZIP original image differs: {asset['name']} / {image['path']}")
     if errors:
         raise ValueError("\n".join(errors[:30]))
-    print(f"验证通过：{len(pages)} 个 HTML 页面、{len(catalog['categories'])} 个分类、{count} 张图片、{len(references)} 个本地引用、{len(manifest['assets'])} 个 ZIP 原图合集。")
+    print(f"验证通过：{len(pages)} 个 HTML 页面、{len(catalog['categories'])} 个分类、{count} 张图片、{len(references)} 个本地引用、{len(manifest['assets'])} 个 ZIP 原图合集、v2fy 镜像索引 {mirror_count} 条。")
 
 
 if __name__ == "__main__":

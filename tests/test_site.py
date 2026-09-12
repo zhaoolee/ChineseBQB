@@ -101,6 +101,25 @@ class FolderLifecycleTests(unittest.TestCase):
         search = json.loads((self.root / '.hugo-generated/static/catalog/search.json').read_text())
         self.assertEqual(search[0]['categoryUrl'], data['categories'][0]['url'])
 
+    def test_v2fy_mirror_index_is_regenerated_from_current_catalog(self):
+        self.picture('001_测试_BQB/你好🍉.PNG')
+        first = builder.generate(self.root)
+        mirror = self.root / '.hugo-generated/static/v2fy/chinesebqb_v2fy.json'
+        index = json.loads(mirror.read_text())
+        self.assertEqual(index['status'], 1000)
+        self.assertEqual(len(index['data']), first['total'])
+        entry = index['data'][0]
+        self.assertEqual(entry['name'], '你好🍉.PNG')
+        self.assertEqual(entry['category'], '001_测试_BQB')
+        search = json.loads((self.root / '.hugo-generated/static/catalog/search.json').read_text())
+        self.assertEqual(entry['url'], builder.DEFAULT_BASE_URL + search[0]['src'])
+        self.assertTrue((self.root / '.hugo-generated/static' / search[0]['src']).is_file())
+        self.picture('001_测试_BQB/晚安.jpg', 'blue')
+        second = builder.generate(self.root)
+        index = json.loads(mirror.read_text())
+        self.assertEqual(len(index['data']), second['total'])
+        self.assertEqual(second['total'], 2)
+
     def test_corrupt_image_fails_instead_of_publishing_broken_gallery(self):
         directory = self.root / '001_损坏_BQB'
         directory.mkdir()
