@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="./icon.png" />
+    <title>PP制造计划 开源表情包</title>
+  </head>
+
+  <script src="./cdn/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
+  <script src="./cdn/clipboard.min.js"></script>
+  <!-- <script data-ad-client="ca-pub-4504000699134547" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
+    integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
+    crossorigin="anonymous"
+  />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+    integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+    crossorigin="anonymous"
+  ></script>
+
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+    crossorigin="anonymous"
+  />
+
+  <link rel="stylesheet" href="./cdn/material.indigo-pink.min.css" />
+  <script src="./cdn/material.min.js"></script>
+  <link rel="stylesheet" href="./cdn/MaterialIcons.css" />
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>  -->
+
+  <script src="./cdn/zepto.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="./cdn/dialog.css" />
+  <script type="text/javascript" src="./cdn/dialog.bundle.js"></script>
+  <body>
+    <style>
+      body {
+        margin: 0px;
+        background-color: #f5efe0;
+      }
+
+      .busuanzi-bqb{
+        padding-top: 20px;
+        text-align: center;
+
+        color: #757575;
+      }
+
+      .share_div {
+        text-align: right;
+      }
+
+      .modal-backdrop {
+        z-index: 0;
+      }
+      .page-content {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .modal-header {
+        padding-top: 0;
+        padding-bottom: 0;
+        border: 0;
+      }
+
+      #imgs_container {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+      .bqb_img {
+        height: 100px;
+      }
+
+      .card-title {
+        font-size: 0.6rem;
+      }
+
+      .no_bqb {
+        border: 1px solid #dddddd;
+        border-radius: 6px;
+        height: 300px;
+
+        line-height: 300px;
+        width: 100%;
+
+        text-align: center;
+        color: #111111;
+
+        font-size: 20px;
+      }
+
+      .card-body > .btn-container {
+        text-align: center;
+      }
+      .use_desc{
+        font-size: 12px;
+        color: #111111;
+        margin-bottom: 10px;
+      }
+    </style>
+
+    <!-- 抽屉 -->
+
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
+      <div class="mdl-layout__drawer">
+        <!-- <span class="mdl-layout-title">目录</span> -->
+        <div style="text-align: center;">
+          <div style="height: 20px"></div>
+
+          <img
+            src="./icon.png"
+            width="100"
+            height="100"
+            class="d-inline-block align-top lazyload"
+            alt=""
+          />
+        </div>
+
+        <nav class="mdl-navigation">
+
+          <a
+            class="mdl-navigation__link"
+            href="https://github.com/zhaoolee/ChineseBQB"
+            >ChineseBQB 开源主页</a
+          >
+
+          <a class="mdl-navigation__link" href="https://v2fy.com/ChineseBQB/">
+            ChineseBQB 资源库 | 留言</a
+          >
+
+          <a class="mdl-navigation__link" href="https://v2fy.com/"
+            >更多好玩 | V2方圆</a
+          >
+
+          <a class="mdl-navigation__link" href="https://fangyuanstu.com/"
+            >图标设计 | 老罗巴扎嘿</a
+          >
+
+          <a target="_blank" class="mdl-navigation__link" href="https://qm.qq.com/cgi-bin/qm/qr?k=OoTOfclhOuIUp2RUr-t0NA70WMUZwSIx&jump_from=webapi">官方QQ群: 700477996</a>
+
+          <a class="mdl-navigation__link" href="http://www.beian.miit.gov.cn/"
+            >琼ICP备18002320号-2</a
+          >
+
+          <div style="text-align: center;"><image width="200px" src="https://cdn.fangyuanxiaozhan.com/assets/16213432399422P8pnQ7d.png"></image></div>
+
+        </nav>
+      </div>
+
+      <main class="mdl-layout__content">
+        <div class="page-content">
+          <div style="height: 50px"></div>
+
+          <nav class="navbar navbar-light bg-light">
+            <a class="navbar-brand" href="#" style="line-height: 30px;">
+              <img
+                src="./icon.png"
+                width="30"
+                height="30"
+                class="d-inline-block align-top lazyload"
+                alt=""
+              />
+              开源表情包 ChineseBQB
+            </a>
+          </nav>
+
+          <div style="height: 30px"></div>
+
+          <div class="input-group mb-3">
+            <input
+              type="text"
+              id="bqb_key"
+              class="form-control"
+              placeholder="请输入表情包关键词~"
+              aria-label="Recipient's usernam"
+              aria-describedby="button-addon2"
+            />
+
+            <div class="input-group-append">
+              <button
+                type="button"
+                class="btn btn-success share-page-with-key-val"
+              >
+                分享
+                <svg
+                  width="1em"
+                  height="1em"
+                  viewBox="0 0 16 16"
+                  class="bi bi-share-fill"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="use_desc">在QQ或微信内，长按表情包图片，即可发送给好友</div>
+
+          <div id="imgs_container">暂无匹配的表情包</div>
+
+          <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+          <div class="busuanzi-bqb">
+            <span id="busuanzi_container_site_pv">本页面总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+          </div>
+          
+        </div>
+      </main>
+    </div>
+
+    <!-- <nav class="navbar navbar-light bg-light">
+      <a class="navbar-brand" href="#">
+        <img
+          src="https://www.v2fy.com/asset/0i/ChineseBQB/icon.jpg"
+          width="30"
+          height="30"
+          class="d-inline-block align-top lazyload"
+          alt=""
+        />
+        PP制造计划开源表情包
+      </a>
+    </nav> -->
+
+    <!-- 数据源https://www.v2fy.com/asset/0i/ChineseBQB/chinesebqb_v2fy.json -->
+
+    <script>
+      // 获取参数
+
+      function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+          var pair = vars[i].split("=");
+          if (pair[0] == variable) {
+            return pair[1];
+          }
+        }
+        return false;
+      }
+
+      // 复制函数
+
+      function to_copy() {
+        var clipboard = new ClipboardJS(".copy-to-url");
+
+        clipboard.on("success", function(e) {
+          console.info("Action:", e.action);
+          console.info("Text:", e.text);
+          console.info("Trigger:", e.trigger);
+
+          popup({
+            type: "success",
+            msg: "粘贴到朋友圈评论区吧~",
+            delay: 1800,
+            callBack: function() {}
+          });
+
+
+        });
+
+        clipboard.on("error", function(e) {
+          console.error("Action:", e.action);
+          console.error("Trigger:", e.trigger);
+        });
+      }
+
+      function imgs_container_is_null() {
+        var bqb_html = `<div class="no_bqb">暂无匹配的表情包</div>`;
+
+        $("#imgs_container").html(bqb_html);
+      }
+
+      function bqb_lazyload() {
+        //  启用lazyload
+        $("img.lazy").lazyload({
+          // 可以代替img里面src属性中的值
+          // placehoder:"img/viper_1.jpg"
+          //
+          // 图片载入时的效果
+          placeholder: "img/loading.jpg",
+          effect: "fadeIn"
+        });
+
+        // 聚焦
+        $("#bqb_key").focus();
+      }
+
+      function debounce(fn, wait) {
+        var timer = null;
+        return function() {
+          var context = this;
+          var args = arguments;
+          if (timer) {
+            clearTimeout(timer);
+            timer = null;
+          }
+          timer = setTimeout(function() {
+            fn.apply(context, args);
+          }, wait);
+        };
+      }
+
+      async function change_img(key_val, chinesebqb_v2fy) {
+        var chinesebqb_v2fy_data = chinesebqb_v2fy.data;
+        key_val_img_info_list = [];
+        if (key_val !== "") {
+          let img_inner_html = "";
+
+          if (chinesebqb_v2fy_data.length !== 0) {
+            for (
+              var chinesebqb_v2fy_data_length = chinesebqb_v2fy_data.length,
+                m = chinesebqb_v2fy_data_length - 1;
+              m >= 0;
+              m--
+            ) {
+              if (
+                chinesebqb_v2fy_data[m]["name"]
+                  .toLowerCase()
+                  .indexOf(key_val.toLowerCase()) !== -1
+              ) {
+                var img_html = `<div class="card" style="margin-top: 1rem; width: 10rem;">
+      <img 
+
+      class="lazy card-img-top"
+
+      data-src='${chinesebqb_v2fy_data[m]["url"]}'
+
+      src='img/loading.jpg'
+
+
+      
+      alt='${chinesebqb_v2fy_data[m]["url"]}'>
+
+      <div class="card-body">
+        <div class="btn-container">
+
+
+        <button  type="button" style="font-size: 0.6rem" class="btn btn-success copy-to-url" id='${
+          chinesebqb_v2fy_data[m]["url"]
+        }'  data-clipboard-text='${encodeURI(chinesebqb_v2fy_data[m]["url"])}' >
+            复制到朋友圈
+        </button>
+
+
+
+
+          
+          </div>
+
+      <h5 class="card-title">${chinesebqb_v2fy_data[m]["name"]}</h5>
+
+      </div>
+    </div>`;
+
+                img_inner_html += img_html;
+              }
+            }
+
+
+
+            var share_page_with_key_val = new ClipboardJS(
+              ".share-page-with-key-val",
+              {
+                text: function() {
+
+
+
+
+                  let share_page_with_key_url_text = encodeURI(window.location.protocol+"//"+window.location.host+window.location.pathname + "?key_val="+localStorage.getItem("key_val"));
+
+                  if(localStorage.getItem("key_val").length === 0){
+
+                    share_page_with_key_url_text = encodeURI(window.location.protocol+"//"+window.location.host+window.location.pathname);
+                  }
+                  return share_page_with_key_url_text;
+                }
+              }
+            );
+
+            share_page_with_key_val.on("success", function(e) {
+          console.info("Action:", e.action);
+          console.info("Text:", e.text);
+          console.info("Trigger:", e.trigger);
+
+          popup({
+            type: "success",
+            msg: "粘贴分享给朋友吧~",
+            delay: 1800,
+            callBack: function() {}
+          });
+
+
+        });
+
+            if (img_inner_html.length === 0) {
+              imgs_container_is_null();
+            } else {
+              $("#imgs_container").html(img_inner_html);
+
+
+
+              // 重新加懒加载
+
+              bqb_lazyload();
+            }
+          }
+          // 如果表情包仓库被清空，则会执行以下语句
+          else {
+            console.log("表情包仓库居然被清空了！是谁这样丧心病狂？");
+
+            imgs_container_is_null();
+          }
+        } else {
+          imgs_container_is_null();
+        }
+
+        // 初始化粘贴板
+
+        to_copy();
+      }
+
+      // 聚焦
+      // document.getElementById("bqb_key").focus()
+
+      $(function() {
+        imgs_container_is_null();
+
+        // 读取localStorage key_val 并写入input
+
+        var key_val = localStorage.getItem("key_val");
+
+        // 如果url自带key_value则使用url自带的
+
+        var url_key_val = getQueryVariable("key_val");
+
+        if (url_key_val !== false) {
+          key_val = decodeURI(url_key_val);
+
+          // 重新设置localStorage
+
+          localStorage.setItem("key_val", key_val);
+        }
+
+        // 写入
+        $("#bqb_key").val(key_val);
+        // 写入后聚焦
+        $("#bqb_key").focus();
+
+        // 完成初始化
+        jQuery.get("./chinesebqb_v2fy.json", chinesebqb_v2fy => {
+          console.log("chinesebqb_v2fy==>>", chinesebqb_v2fy);
+
+          let key_val_img_info_list = [];
+          // 监听input内容变化
+          $("#bqb_key").bind("input propertychange", function(event) {
+            console.log($("#bqb_key").val());
+
+            var key_val = $("#bqb_key").val();
+
+            // 将数据存入localStorage
+
+            localStorage.setItem("key_val", key_val);
+
+            debounce(change_img(key_val, chinesebqb_v2fy), 2000);
+          });
+
+          // 如果初始化不为空则直接请求
+
+          if ($("#bqb_key").val()) {
+            debounce(change_img($("#bqb_key").val(), chinesebqb_v2fy), 2000);
+          }
+
+          bqb_lazyload();
+        });
+      });
+
+      // 初始化聚焦
+      window.onload = function() {
+        //要初始化的东西
+
+        // 聚焦
+        $("#bqb_key").focus();
+      };
+
+      $(document).ready = () => {
+        $("#bqb_key").focus();
+      };
+    </script>
+
+    <!-- 百度统计 -->
+    <script>
+      var _hmt = _hmt || [];
+      (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?34564f2837e4e2fb61052ac26a09b689";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  </body>
+</html>
