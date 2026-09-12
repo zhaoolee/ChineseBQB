@@ -17,9 +17,9 @@
 
 
 
-## [《ChineseBQB 在线搜图斗图工具》](https://zhaoolee.com/ChineseBQB/)
+## [《ChineseBQB 在线搜图斗图工具》](https://v2fy.com/asset/0i/ChineseBQB/)
 
-[《ChineseBQB在线搜图斗图工具》直达链接: https://zhaoolee.com/ChineseBQB/](https://zhaoolee.com/ChineseBQB/)
+[《ChineseBQB在线搜图斗图工具》直达链接: https://v2fy.com/asset/0i/ChineseBQB/](https://v2fy.com/asset/0i/ChineseBQB/)
 
 
 
