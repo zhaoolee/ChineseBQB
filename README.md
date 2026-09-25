@@ -3,9 +3,6 @@
 [![](https://img.shields.io/badge/ChineseBQB-READEME-brightgreen)](https://github.com/zhaoolee/ChineseBQB)
 
 
-
-
-
 ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/65401784-e4b3da80-ddfc-11e9-9675-19b5ab0ec875.jpg)
 
 ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/65401793-e7aecb00-ddfc-11e9-96e3-4122a5c14300.jpg)
@@ -40,6 +37,15 @@
 ![](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README/t037-003.gif)
 
 [《ChineseBQB在线搜图斗图工具》详细介绍](https://v2fy.com/p/t037-chinesebqb-2020-10-09/)
+
+## 用表情包学英语
+
+作者 zhaoolee 写了个「摄影学英语」App，可以用表情包图片学英语：[App Store 下载](https://apps.apple.com/cn/app/id6808490052)，欢迎体验。
+
+
+| 食用方法 | 我爱学习 |
+| --- | --- |
+| ![](./README.assets/4656afadfd24add68e99b56b9ed45b0a69cde83b84f6d233421d958e745afec1.gif) | ![](./README.assets/6f6411f3d2c6f5a2c9a73e709004215bac6220503bfbf3409b8b66b1bb9ad66f.jpg) |
 
 ## ChineseBQB 开放数据源
 
