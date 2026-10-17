@@ -8,6 +8,7 @@
 /.hugo-cache/
 /.hugo_build.lock
 /public-hugo/
+/maker/dist/
 
 # Local Python environments and caches.
 /.venv/

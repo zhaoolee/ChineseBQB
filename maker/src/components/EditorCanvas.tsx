@@ -1,0 +1,332 @@
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { cellAnchorPolygon, cellWasAdded } from '../lib/char-layout'
+import { freeTextBox, pointInTextBox, scaledFontSize, textBoxHandles, type TextHandleName } from '../lib/free-text-box'
+import { pointInPolygon, polygonBounds } from '../lib/geometry'
+import { segmentGraphemes } from '../lib/grapheme'
+import { collectPatches } from '../lib/plan'
+import { paintComposite, paintOverlay } from '../lib/paint'
+import {
+  beginGesture,
+  deleteFocusedCell,
+  endGesture,
+  moveFreeText,
+  resizeFreeText,
+  select,
+  updateManualPolygon,
+  editor,
+} from '../state/editor-store'
+import { useEditor } from './use-editor'
+import type { Point } from '../types'
+
+export function EditorCanvas() {
+  const state = useEditor()
+  const stageRef = useRef<HTMLDivElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [frame, setFrame] = useState({ width: 1, height: 1 })
+  const image = state.image
+  const present = state.history.present
+  const gifPreview = Boolean(image?.frames && image.frames.length > 1)
+
+  useEffect(() => {
+    const stage = stageRef.current
+    if (!stage) return
+    const observer = new ResizeObserver(() => {
+      setFrame({ width: stage.clientWidth, height: stage.clientHeight })
+    })
+    observer.observe(stage)
+    setFrame({ width: stage.clientWidth, height: stage.clientHeight })
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    const current = image
+    if (!canvas || !current?.imageData) return
+    const patches = collectPatches(present.blocks, current.imageData)
+    const texts = present.freeTexts
+    if (current.frames && current.frames.length > 1) {
+      const live = patches.length > 0 || texts.some((layer) => layer.text.length > 0)
+      if (!live) {
+        const context = canvas.getContext('2d')
+        if (canvas.width !== current.naturalWidth || canvas.height !== current.naturalHeight) {
+          canvas.width = current.naturalWidth
+          canvas.height = current.naturalHeight
+        } else {
+          context?.clearRect(0, 0, canvas.width, canvas.height)
+        }
+        return
+      }
+      paintOverlay(current.naturalWidth, current.naturalHeight, patches, texts, canvas, current.imageData)
+      return
+    }
+    paintComposite(current.imageData, patches, texts, canvas)
+  }, [image, present])
+
+  const deleteAnchor = useMemo(() => {
+    if (!image || !present.selectedId) return null
+    const block = present.blocks.find((item) => item.id === present.selectedId)
+    const focus = state.cellFocus?.id === present.selectedId ? state.cellFocus : null
+    if (focus && !cellIsCommitted(focus, block?.targetText ?? present.freeTexts.find((item) => item.id === present.selectedId)?.text ?? '')) return null
+    if (block) {
+      if (!focus || !cellWasAdded(block, focus.cells, focus.index, image.naturalWidth, image.naturalHeight)) return null
+      const polygon = cellAnchorPolygon(block, focus.cells, focus.index, image.naturalWidth, image.naturalHeight)
+      const bounds = polygonBounds(polygon)
+      const y = bounds.minY
+      return { x: (bounds.minX + bounds.maxX) / 2, y, below: y < image.naturalHeight * 0.14 }
+    }
+    const layer = present.freeTexts.find((item) => item.id === present.selectedId)
+    if (!layer) return null
+    const parts = segmentGraphemes(layer.text)
+    const graphemeIndex = focus ? focus.cells.slice(0, focus.index).filter((cell) => cell.length > 0).length : Math.floor((parts.length - 1) / 2)
+    const size = layer.textStyle.fontSize
+    const x = parts.length > 1 ? layer.x - ((parts.length - 1) * size) / 2 + graphemeIndex * size : layer.x
+    const y = layer.y - size * 0.7
+    return { x, y, below: y < image.naturalHeight * 0.14 }
+  }, [image, present, state.cellFocus])
+
+  const fitted = useMemo(() => {
+    if (!image?.naturalWidth || !image.naturalHeight) return { width: 0, height: 0 }
+    const fit = Math.min(frame.width / image.naturalWidth, frame.height / image.naturalHeight) || 1
+    return { width: image.naturalWidth * fit, height: image.naturalHeight * fit }
+  }, [frame, image])
+
+  if (!image) {
+    return (
+      <div className="stage empty-stage" ref={stageRef}>
+        <p>点顶部右侧的「图库」选一张表情包，也可以上传或直接粘贴图片。选中后会自动识别文字。</p>
+      </div>
+    )
+  }
+  if (image.source.animated && !image.imageData) {
+    return (
+      <div className="stage" ref={stageRef}>
+        <img className="animated-preview" src={image.previewUrl} alt={image.source.name} />
+        <p className="banner">这一帧读不出来，所以不能识别文字。</p>
+      </div>
+    )
+  }
+
+  function eventPoint(event: { clientX: number; clientY: number }): Point {
+    const canvas = canvasRef.current
+    const bounds = canvas?.getBoundingClientRect()
+    if (!bounds || !image) return { x: 0, y: 0 }
+    return {
+      x: ((event.clientX - bounds.left) / bounds.width) * image.naturalWidth,
+      y: ((event.clientY - bounds.top) / bounds.height) * image.naturalHeight,
+    }
+  }
+
+  return (
+    <div className="stage" ref={stageRef}>
+      <div
+        className="sheet"
+        style={{ width: fitted.width, height: fitted.height, transform: `translate(${state.view.panX}px, ${state.view.panY}px) scale(${state.view.scale})` }}
+        onPointerDown={(event) => {
+          const target = event.target as HTMLElement
+          if (target.dataset.handle || target.dataset.layer) return
+          const point = eventPoint(event)
+          const hit = [...present.blocks].reverse().find((block) => pointInPolygon(point, block.manualPolygon ?? block.polygon))
+          if (hit) {
+            select(hit.id)
+            return
+          }
+          const textHit = [...present.freeTexts].reverse().find((layer) => pointInTextBox(point, freeTextBox(layer)))
+          if (textHit) {
+            select(textHit.id)
+            beginGesture()
+            event.currentTarget.setPointerCapture(event.pointerId)
+            event.currentTarget.dataset.drag = 'text'
+            event.currentTarget.dataset.dragId = textHit.id
+            event.currentTarget.dataset.grabX = String(point.x)
+            event.currentTarget.dataset.grabY = String(point.y)
+            event.currentTarget.dataset.originX = String(textHit.x)
+            event.currentTarget.dataset.originY = String(textHit.y)
+            return
+          }
+        }}
+        onPointerMove={(event) => {
+          const mode = event.currentTarget.dataset.drag
+          if (!mode) return
+          if (mode === 'text' && event.currentTarget.dataset.dragId) {
+            const point = eventPoint(event)
+            const dx = point.x - Number(event.currentTarget.dataset.grabX)
+            const dy = point.y - Number(event.currentTarget.dataset.grabY)
+            moveFreeText(
+              event.currentTarget.dataset.dragId,
+              Number(event.currentTarget.dataset.originX) + dx,
+              Number(event.currentTarget.dataset.originY) + dy,
+            )
+            return
+          }
+          if (mode === 'text-size' && event.currentTarget.dataset.dragId && event.currentTarget.dataset.handleName) {
+            const point = eventPoint(event)
+            const size = scaledFontSize(
+              Number(event.currentTarget.dataset.startSize),
+              event.currentTarget.dataset.handleName as TextHandleName,
+              { x: Number(event.currentTarget.dataset.centerX), y: Number(event.currentTarget.dataset.centerY) },
+              { x: Number(event.currentTarget.dataset.handleX), y: Number(event.currentTarget.dataset.handleY) },
+              point,
+            )
+            resizeFreeText(event.currentTarget.dataset.dragId, size)
+            return
+          }
+          if (mode === 'box' && event.currentTarget.dataset.dragId && image) {
+            const point = eventPoint(event)
+            const corner = Number(event.currentTarget.dataset.corner)
+            const block = editor.getState().history.present.blocks.find((item) => item.id === event.currentTarget.dataset.dragId)
+            if (!block) return
+            const next = (block.manualPolygon ?? block.polygon).map((item, index) => index === corner ? clampPoint(point, image.naturalWidth, image.naturalHeight) : item)
+            updateManualPolygon(block.id, next)
+          }
+        }}
+        onPointerUp={(event) => {
+          if (event.currentTarget.dataset.drag) endGesture()
+          delete event.currentTarget.dataset.drag
+          delete event.currentTarget.dataset.dragId
+          delete event.currentTarget.dataset.corner
+          delete event.currentTarget.dataset.grabX
+          delete event.currentTarget.dataset.grabY
+          delete event.currentTarget.dataset.originX
+          delete event.currentTarget.dataset.originY
+          delete event.currentTarget.dataset.handleName
+          delete event.currentTarget.dataset.handleX
+          delete event.currentTarget.dataset.handleY
+          delete event.currentTarget.dataset.startSize
+          delete event.currentTarget.dataset.centerX
+          delete event.currentTarget.dataset.centerY
+        }}
+      >
+        {gifPreview && <img className="gif-preview" src={image.previewUrl} alt="" />}
+        <canvas ref={canvasRef} width={image.naturalWidth} height={image.naturalHeight} />
+        <svg className="overlay" viewBox={`0 0 ${image.naturalWidth} ${image.naturalHeight}`}>
+          {present.blocks.map((block) => {
+            const polygon = block.manualPolygon ?? block.polygon
+            const selected = present.selectedId === block.id
+            const points = polygon.map((point) => `${point.x},${point.y}`).join(' ')
+            return (
+              <g key={block.id}>
+                <polygon points={points} className={selected ? 'box selected' : 'box'} />
+                {selected && polygon.map((point, index) => (
+                  <circle
+                    key={index}
+                    cx={point.x}
+                    cy={point.y}
+                    r={Math.max(6, image.naturalWidth * 0.012)}
+                    className="handle"
+                    data-handle="true"
+                    onPointerDown={(event) => {
+                      event.stopPropagation()
+                      select(block.id)
+                      beginGesture()
+                      const sheet = event.currentTarget.ownerSVGElement?.parentElement as HTMLElement | null
+                      if (!sheet) return
+                      sheet.dataset.drag = 'box'
+                      sheet.dataset.dragId = block.id
+                      sheet.dataset.corner = String(index)
+                      sheet.setPointerCapture(event.pointerId)
+                    }}
+                  />
+                ))}
+              </g>
+            )
+          })}
+          {present.freeTexts.filter((layer) => layer.id === present.selectedId).map((layer) => {
+            const box = freeTextBox(layer)
+            const handleSize = Math.max(6, image.naturalWidth * 0.012)
+            return (
+              <g key={layer.id}>
+                <rect
+                  x={box.minX}
+                  y={box.minY}
+                  width={box.width}
+                  height={box.height}
+                  className="box selected text-box"
+                  onPointerDown={(event) => {
+                    event.stopPropagation()
+                    select(layer.id)
+                    beginGesture()
+                    const sheet = event.currentTarget.ownerSVGElement?.parentElement as HTMLElement | null
+                    if (!sheet) return
+                    const point = eventPoint(event)
+                    sheet.dataset.drag = 'text'
+                    sheet.dataset.dragId = layer.id
+                    sheet.dataset.grabX = String(point.x)
+                    sheet.dataset.grabY = String(point.y)
+                    sheet.dataset.originX = String(layer.x)
+                    sheet.dataset.originY = String(layer.y)
+                    sheet.setPointerCapture(event.pointerId)
+                  }}
+                />
+                {textBoxHandles(box).map((handle) => (
+                  <circle
+                    key={handle.name}
+                    cx={handle.x}
+                    cy={handle.y}
+                    r={handleSize}
+                    className={`handle ${handleCursor(handle.name)}`}
+                    data-handle="true"
+                    onPointerDown={(event) => {
+                      event.stopPropagation()
+                      select(layer.id)
+                      beginGesture()
+                      const sheet = event.currentTarget.ownerSVGElement?.parentElement as HTMLElement | null
+                      if (!sheet) return
+                      sheet.dataset.drag = 'text-size'
+                      sheet.dataset.dragId = layer.id
+                      sheet.dataset.handleName = handle.name
+                      sheet.dataset.handleX = String(handle.x)
+                      sheet.dataset.handleY = String(handle.y)
+                      sheet.dataset.startSize = String(layer.textStyle.fontSize)
+                      sheet.dataset.centerX = String(layer.x)
+                      sheet.dataset.centerY = String(layer.y)
+                      sheet.setPointerCapture(event.pointerId)
+                    }}
+                  />
+                ))}
+              </g>
+            )
+          })}
+        </svg>
+        {deleteAnchor && (
+          <button
+            type="button"
+            className={deleteAnchor.below ? 'selection-delete below' : 'selection-delete'}
+            data-layer="true"
+            style={{
+              left: `${(deleteAnchor.x / image.naturalWidth) * 100}%`,
+              top: `${(deleteAnchor.y / image.naturalHeight) * 100}%`,
+              ['--inv-scale' as string]: String(1 / state.view.scale),
+            }}
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={(event) => {
+              event.stopPropagation()
+              deleteFocusedCell()
+            }}
+          >
+            删除
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function cellIsCommitted(focus: { index: number; cells: string[] }, committed: string): boolean {
+  const cell = focus.cells[focus.index] ?? ''
+  if (!cell) return false
+  return focus.cells.filter((item) => item.length > 0).join('') === committed
+}
+
+function handleCursor(name: TextHandleName): string {
+  if (name === 'n' || name === 's') return 'ns'
+  if (name === 'e' || name === 'w') return 'ew'
+  if (name === 'ne' || name === 'sw') return 'nesw'
+  return 'nwse'
+}
+
+function clampPoint(point: Point, width: number, height: number): Point {
+  return {
+    x: Math.min(width, Math.max(0, point.x)),
+    y: Math.min(height, Math.max(0, point.y)),
+  }
+}

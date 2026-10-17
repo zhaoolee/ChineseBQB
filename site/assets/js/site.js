@@ -62,6 +62,7 @@
     $('#preview-download').href = item.dataset.src;
     $('#preview-download').download = item.dataset.name;
     $('#preview-original').href = item.dataset.src;
+    updateMakerLink(item);
     $('#preview-position').textContent = `${previewIndex + 1} / ${previewItems.length}`;
     $('#preview-prev').disabled = $('#preview-next').disabled = previewItems.length < 2;
   }
@@ -72,6 +73,40 @@
     previewItems = Array.from(document.querySelectorAll('[data-preview]')).filter(item => !item.closest('[hidden]'));
     showPreview(previewItems.indexOf(link));
     preview.showModal();
+  });
+  function catalogMediaPath(src) {
+    let url;
+    try { url = new URL(src, base); } catch { return null; }
+    if (url.origin !== location.origin) return null;
+    const prefix = base.pathname.endsWith('/') ? base.pathname : `${base.pathname}/`;
+    if (!url.pathname.startsWith(prefix)) return null;
+    let relative = '';
+    try { relative = decodeURIComponent(url.pathname.slice(prefix.length)); } catch { return null; }
+    if (relative.includes('..') || relative.includes('\\') || !/^media\/[a-f0-9]{64}\.[a-z0-9]+$/i.test(relative)) return null;
+    return relative;
+  }
+  function updateMakerLink(item) {
+    const maker = $('#preview-maker');
+    const note = $('#preview-maker-note');
+    if (!maker || !note) return;
+    const relative = catalogMediaPath(item.dataset.src || '');
+    const animated = item.dataset.animated === 'true';
+    if (!relative) {
+      maker.setAttribute('aria-disabled', 'true');
+      maker.removeAttribute('href');
+      note.hidden = false;
+      note.textContent = '这张图片不能在 Maker 里打开。';
+      return;
+    }
+    const href = new URL('maker/', base);
+    href.searchParams.set('src', relative);
+    maker.href = href.href;
+    maker.removeAttribute('aria-disabled');
+    note.hidden = !animated;
+    note.textContent = '这是动图。GIF 会把改字套到每一帧并导出整张；动画 WebP 仍然只有当前这一帧。';
+  }
+  $('#preview-maker')?.addEventListener('click', event => {
+    if ($('#preview-maker').getAttribute('aria-disabled') === 'true') event.preventDefault();
   });
   $('#preview-close').addEventListener('click', () => preview.close());
   $('#preview-prev').addEventListener('click', () => showPreview(previewIndex - 1));
@@ -151,6 +186,7 @@
     link.dataset.preview = '';
     link.dataset.name = item.name;
     link.dataset.src = link.href;
+    link.dataset.animated = item.animated ? 'true' : 'false';
     const image = document.createElement('img');
     image.src = asset(item.thumb);
     image.alt = item.label;

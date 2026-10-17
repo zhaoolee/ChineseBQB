@@ -62,6 +62,8 @@ python scripts/build_site.py serve
 
 打开 <http://localhost:1313/ChineseBQB/#/>。预览会监测 BQB 文件夹的新增、更名、删除及图片变化，重新生成页面。
 
+Maker 是独立的 Vite 应用，构建后放在 `/ChineseBQB/maker/`，不替换 Hugo 页面。本地要同时开 Hugo 和 Vite，步骤、OCR 限制和隐私说明见 [maker/README.md](maker/README.md)。
+
 构建及检查：
 
 ```bash
@@ -88,6 +90,7 @@ python scripts/verify_site.py
 /ChineseBQB/109_opossum_负鼠_bqb/       负鼠分类
 /ChineseBQB/110_ai_人工智能_bqb/        人工智能分类
 /ChineseBQB/search/?q=人工智能         搜索
+/ChineseBQB/maker/                     表情包制作器
 /ChineseBQB/v2fy/                      旧版 v2fy 搜索页镜像
 ```
 
@@ -103,6 +106,7 @@ hugo.toml                 Hugo 配置及 /ChineseBQB/ 路径
 requirements-site.txt     Python 图片处理依赖
 scripts/build_site.py      从 BQB 目录提取内容、生成缩略图、构建及预览
 scripts/verify_site.py     检查产物、子目录链接、搜索数据及图片
+scripts/check_maker.py     检查 Maker 是否并入 public-hugo，并复核整站 1 GB 上限
 scripts/update_readme.py   生成 README 分类目录，按标记更新手写文档
 scripts/publish_downloads.py 上传、校验及清理自动生成的 Release ZIP
 site/layouts/             Hugo 模板
@@ -110,6 +114,7 @@ site/assets/              样式和浏览器交互
 site/static/assets/       从参考站复用的背景、字体及本项目图标
 site/static/v2fy/         旧版 v2fy 搜索页镜像（页面与脚本；索引构建时生成）
 tests/                    目录生命周期、GIF 和 ZIP 的回归验证
+maker/                    表情包制作器，构建后进入 public-hugo/maker
 README/                   README 正文使用的图片资料
 memory/                   本项目的维护流程与经验
 .hugo-generated/          自动生成的内容、数据、图片、ZIP（不提交）

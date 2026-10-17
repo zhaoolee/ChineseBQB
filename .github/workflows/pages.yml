@@ -32,6 +32,14 @@ jobs:
           cache-dependency-path: requirements-site.txt
       - name: Install image tools
         run: python -m pip install -r requirements-site.txt
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: maker/package-lock.json
+      - name: Install Maker
+        run: npm ci --prefix maker
       - name: Install Hugo
         run: |
           curl --fail --location --retry 3 --output "$RUNNER_TEMP/hugo.tar.gz" "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-amd64.tar.gz"
@@ -46,10 +54,22 @@ jobs:
           restore-keys: bqb-thumbnails-v1-${{ runner.os }}-
       - name: Test folder lifecycle and downloads
         run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Typecheck and test Maker
+        run: |
+          npm run typecheck --prefix maker
+          npm run test --prefix maker
       - name: Generate and build site
         run: python scripts/build_site.py build
+      - name: Build Maker
+        run: npm run build --prefix maker
+      - name: Merge Maker into the Pages artifact
+        run: |
+          mkdir -p public-hugo/maker
+          cp -R maker/dist/. public-hugo/maker/
       - name: Verify every page and image reference
         run: python scripts/verify_site.py
+      - name: Verify Maker output and total Pages size
+        run: python scripts/check_maker.py
       - name: Upload README directory
         if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
