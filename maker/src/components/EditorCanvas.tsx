@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { cellAnchorPolygon, cellWasAdded } from '../lib/char-layout'
 import { freeTextBox, pointInTextBox, scaledFontSize, textBoxHandles, type TextHandleName } from '../lib/free-text-box'
 import { pointInPolygon, polygonBounds } from '../lib/geometry'
@@ -23,21 +23,30 @@ export function EditorCanvas() {
   const state = useEditor()
   const stageRef = useRef<HTMLElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [frame, setFrame] = useState({ width: 1, height: 1 })
+  const resizeObserver = useRef<ResizeObserver | null>(null)
+  const [frame, setFrame] = useState({ width: 0, height: 0 })
   const image = state.image
   const present = state.history.present
   const gifPreview = Boolean(image?.frames && image.frames.length > 1)
 
-  useEffect(() => {
-    const stage = stageRef.current
-    if (!stage) return
-    const observer = new ResizeObserver(() => {
-      setFrame({ width: stage.clientWidth, height: stage.clientHeight })
-    })
-    observer.observe(stage)
-    setFrame({ width: stage.clientWidth, height: stage.clientHeight })
-    return () => observer.disconnect()
+  const bindStage = useCallback((node: HTMLElement | null) => {
+    stageRef.current = node
+    resizeObserver.current?.disconnect()
+    resizeObserver.current = null
+    if (!node) return
+    const measure = () => {
+      const width = node.clientWidth
+      const height = node.clientHeight
+      if (width < 2 || height < 2) return
+      setFrame((current) => (current.width === width && current.height === height ? current : { width, height }))
+    }
+    const observer = new ResizeObserver(measure)
+    resizeObserver.current = observer
+    observer.observe(node)
+    measure()
   }, [])
+
+  useEffect(() => () => resizeObserver.current?.disconnect(), [])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -87,13 +96,14 @@ export function EditorCanvas() {
 
   const fitted = useMemo(() => {
     if (!image?.naturalWidth || !image.naturalHeight) return { width: 0, height: 0 }
-    const fit = Math.min(frame.width / image.naturalWidth, frame.height / image.naturalHeight) || 1
+    if (frame.width < 2 || frame.height < 2) return { width: 0, height: 0 }
+    const fit = Math.min(frame.width / image.naturalWidth, frame.height / image.naturalHeight)
     return { width: image.naturalWidth * fit, height: image.naturalHeight * fit }
   }, [frame, image])
 
   if (!image) {
     return (
-      <label className="stage empty-stage" ref={(node) => { stageRef.current = node }}>
+      <label className="stage empty-stage" ref={bindStage}>
         <input
           type="file"
           accept="image/png,image/jpeg,image/webp,image/gif"
@@ -110,7 +120,7 @@ export function EditorCanvas() {
   }
   if (image.source.animated && !image.imageData) {
     return (
-      <div className="stage" ref={(node) => { stageRef.current = node }}>
+      <div className="stage" ref={bindStage}>
         <img className="animated-preview" src={image.previewUrl} alt={image.source.name} />
         <p className="banner">这一帧读不出来，所以不能识别文字。</p>
       </div>
@@ -128,7 +138,7 @@ export function EditorCanvas() {
   }
 
   return (
-    <div className="stage" ref={(node) => { stageRef.current = node }}>
+    <div className="stage" ref={bindStage}>
       <div
         className="sheet"
         style={{ width: fitted.width, height: fitted.height, transform: `translate(${state.view.panX}px, ${state.view.panY}px) scale(${state.view.scale})` }}

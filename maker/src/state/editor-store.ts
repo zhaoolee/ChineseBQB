@@ -2,7 +2,7 @@ import { decideCatalogSrc, readCatalog, siteAsset, siteBaseFrom, makerBaseUrl } 
 import { createHistory, historyCommit, historyRedo, historyUndo, type HistoryState } from '../lib/history'
 import { decodeGifFrames, gifWithinBudget, type GifFrame } from '../lib/gif'
 import { assertEditableFile, sniffImage } from '../lib/image'
-import { recognize } from '../lib/ocr'
+import { recognize, scaleOcrBlocks } from '../lib/ocr'
 import { canvasToPng } from '../lib/paint'
 import { addedTextStyle, defaultTextStyle, liveRedraw } from '../lib/plan'
 import type { CatalogImage, FreeText, OcrBlock, Point, TextStyle } from '../types'
@@ -222,7 +222,8 @@ export async function runOcr() {
   const sourceId = image.source.id
   update({ ocrStatus: 'loading', ocrMessage: '正在加载识别模型，图片不会离开这台设备。' })
   try {
-    const blocks = await recognize(await frameBlob(image))
+    const prepared = await ocrInput(image)
+    const blocks = scaleOcrBlocks(await recognize(prepared.blob), prepared.scale)
     if (token !== ocrToken || state.image?.source.id !== sourceId) return
     const present = { ...emptyEditable(), blocks, selectedId: blocks[0]?.id ?? null }
     update({
@@ -481,6 +482,37 @@ function retarget(block: OcrBlock): OcrBlock {
 function revokePreview() {
   if (previewUrl.startsWith('blob:')) URL.revokeObjectURL(previewUrl)
   previewUrl = ''
+}
+
+const OCR_MIN_EDGE = 480
+
+async function ocrInput(image: LoadedImage): Promise<{ blob: Blob; scale: number }> {
+  const edge = Math.max(image.naturalWidth, image.naturalHeight)
+  if (!image.imageData || edge >= OCR_MIN_EDGE || edge < 1) return { blob: await frameBlob(image), scale: 1 }
+  const scale = OCR_MIN_EDGE / edge
+  const width = Math.max(1, Math.round(image.naturalWidth * scale))
+  const height = Math.max(1, Math.round(image.naturalHeight * scale))
+  const source = document.createElement('canvas')
+  source.width = image.imageData.width
+  source.height = image.imageData.height
+  const sourceContext = source.getContext('2d')
+  if (!sourceContext) throw new Error('浏览器不能读取这张图片的像素。')
+  sourceContext.putImageData(image.imageData, 0, 0)
+  const canvas = document.createElement('canvas')
+  canvas.width = width
+  canvas.height = height
+  const context = canvas.getContext('2d')
+  if (!context) throw new Error('浏览器不能读取这张图片的像素。')
+  context.imageSmoothingEnabled = true
+  context.drawImage(source, 0, 0, width, height)
+  try {
+    return { blob: await canvasToPng(canvas), scale }
+  } finally {
+    source.width = 0
+    source.height = 0
+    canvas.width = 0
+    canvas.height = 0
+  }
 }
 
 async function frameBlob(image: LoadedImage): Promise<Blob> {

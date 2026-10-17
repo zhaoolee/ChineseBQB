@@ -10,7 +10,7 @@ import { composeGifFrames, decodeGifFrames, encodeGif } from '../src/lib/gif'
 import { sniffImage } from '../src/lib/image'
 import { editedDownloadName, inheritedStillExport } from '../src/lib/paint'
 import { imageFileFromClipboard } from '../src/lib/clipboard'
-import { OCR_MODEL_FILES, normalizeOcrItems, ocrModelUrl } from '../src/lib/ocr'
+import { OCR_MODEL_FILES, normalizeOcrItems, ocrModelUrl, scaleOcrBlocks } from '../src/lib/ocr'
 import { spreadCellValue } from '../src/lib/grapheme'
 import { freeTextBox, scaledFontSize, textBoxHandles } from '../src/lib/free-text-box'
 import type { OcrBlock, Point } from '../src/types'
@@ -453,6 +453,12 @@ describe('history and image sniffing', () => {
     expect(blocks).toHaveLength(1)
     expect(blocks[0]?.targetText).toBe(blocks[0]?.originalText)
     expect(blocks[0]?.polygon).toHaveLength(4)
+    const caption = normalizeOcrItems([
+      { text: '说人', score: 1, poly: [[94, 558], [452, 558], [452, 754], [94, 754]] },
+      { text: '话', score: 1, poly: [[397, 566], [591, 566], [591, 747], [397, 747]] },
+      { text: '1', score: 0.5, poly: [[200, 300], [230, 300], [230, 340], [200, 340]] },
+    ])
+    expect(caption.map((block) => block.originalText)).toEqual(['说人话'])
     expect(sniffImage(new Uint8Array([0x47, 0x49, 0x46, 0x38, 0x39, 0x61]), 'image/gif').animated).toBe(true)
     expect(sniffImage(new Uint8Array([0x89, 0x50, 0x4e, 0x47]), 'image/png').animated).toBe(false)
   })
@@ -494,6 +500,12 @@ describe('history and image sniffing', () => {
     expect(ocrModelUrl(OCR_MODEL_FILES.det, '/ChineseBQB/maker/')).toBe('/ChineseBQB/maker/models/PP-OCRv5_mobile_det_onnx_infer.tar')
     expect(ocrModelUrl(OCR_MODEL_FILES.rec, '/ChineseBQB/maker')).toBe('/ChineseBQB/maker/models/PP-OCRv5_mobile_rec_onnx_infer.tar')
     expect(ocrModelUrl(OCR_MODEL_FILES.det, '/ChineseBQB/maker/')).not.toMatch(/^https?:/)
+  })
+
+  it('maps an upscaled OCR box back onto the original image', () => {
+    const [block] = normalizeOcrItems([{ text: '啊', score: 0.9, poly: [[0, 0], [40, 0], [40, 20], [0, 20]] }])
+    const [scaled] = scaleOcrBlocks([block], 4)
+    expect(scaled?.polygon.map((point) => [point.x, point.y])).toEqual([[0, 0], [10, 0], [10, 5], [0, 5]])
   })
 })
 
