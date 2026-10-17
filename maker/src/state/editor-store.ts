@@ -492,7 +492,12 @@ async function frameBlob(image: LoadedImage): Promise<Blob> {
   const context = canvas.getContext('2d')
   if (!context) throw new Error('浏览器不能读取这张图片的像素。')
   context.putImageData(image.imageData, 0, 0)
-  return canvasToPng(canvas)
+  try {
+    return await canvasToPng(canvas)
+  } finally {
+    canvas.width = 0
+    canvas.height = 0
+  }
 }
 
 type DecodedImage = {
@@ -535,20 +540,33 @@ async function decodeBlob(blob: Blob): Promise<DecodedImage> {
   const bitmap = await createImageBitmap(new Blob([bytes], { type: sniffed.mime || blob.type }))
   try {
     if (bitmap.width > 8192 || bitmap.height > 8192) throw new Error('图片边长超过 8192，请先缩小。')
+    const fitted = fitEditSize(bitmap.width, bitmap.height)
     const canvas = document.createElement('canvas')
-    canvas.width = bitmap.width
-    canvas.height = bitmap.height
+    canvas.width = fitted.width
+    canvas.height = fitted.height
     const context = canvas.getContext('2d', { willReadFrequently: true })
     if (!context) throw new Error('浏览器不能读取这张图片的像素。')
-    context.drawImage(bitmap, 0, 0)
+    context.drawImage(bitmap, 0, 0, fitted.width, fitted.height)
+    const imageData = context.getImageData(0, 0, fitted.width, fitted.height)
+    canvas.width = 0
+    canvas.height = 0
     return {
-      imageData: context.getImageData(0, 0, bitmap.width, bitmap.height),
-      width: bitmap.width,
-      height: bitmap.height,
+      imageData,
+      width: fitted.width,
+      height: fitted.height,
       singleFrameAnimation: sniffed.animated,
       limitedGif: false,
     }
   } finally {
     bitmap.close()
   }
+}
+
+const EDIT_MAX_EDGE = 1600
+
+function fitEditSize(width: number, height: number): { width: number; height: number } {
+  const edge = Math.max(width, height)
+  if (edge <= EDIT_MAX_EDGE) return { width, height }
+  const scale = EDIT_MAX_EDGE / edge
+  return { width: Math.max(1, Math.round(width * scale)), height: Math.max(1, Math.round(height * scale)) }
 }

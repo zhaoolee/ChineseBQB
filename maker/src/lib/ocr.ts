@@ -11,6 +11,7 @@ type PaddleLike = {
 }
 
 let enginePromise: Promise<Awaited<ReturnType<PaddleLike['create']>>> | null = null
+let engineUsers = 0
 
 export const OCR_MODEL_FILES = {
   det: 'PP-OCRv5_mobile_det_onnx_infer.tar',
@@ -36,9 +37,18 @@ export function resetOcrEngine() {
  * the SDK does not fall back to a CDN WASM build.
  */
 export async function recognize(blob: Blob): Promise<OcrBlock[]> {
-  const engine = await loadEngine()
-  const [result] = await engine.predict(blob)
-  return normalizeOcrItems(result?.items ?? [])
+  engineUsers += 1
+  try {
+    const engine = await loadEngine()
+    const [result] = await engine.predict(blob)
+    return normalizeOcrItems(result?.items ?? [])
+  } finally {
+    engineUsers -= 1
+    if (engineUsers <= 0) {
+      engineUsers = 0
+      resetOcrEngine()
+    }
+  }
 }
 
 async function loadEngine() {

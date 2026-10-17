@@ -1,4 +1,4 @@
-import { applyFills, blurPolygon, restoreOutside } from './compose'
+import { applyFills, blurPolygon } from './compose'
 import { centroid, polygonBounds } from './geometry'
 import type { FreeText, Point, TextStyle } from '../types'
 
@@ -42,12 +42,16 @@ function blurRadius(polygon: Point[]): number {
   return Math.max(2, Math.round(polygonBounds(polygon).height * 0.42))
 }
 
+let blurStamp: HTMLCanvasElement | null = null
+
 function stampBlur(context: CanvasRenderingContext2D, source: ImageData, polygon: Point[]) {
   const blurred = blurPolygon(source, polygon, blurRadius(polygon))
-  const stamp = document.createElement('canvas')
-  stamp.width = source.width
-  stamp.height = source.height
-  const stampContext = stamp.getContext('2d')
+  if (!blurStamp) blurStamp = document.createElement('canvas')
+  if (blurStamp.width !== source.width || blurStamp.height !== source.height) {
+    blurStamp.width = source.width
+    blurStamp.height = source.height
+  }
+  const stampContext = blurStamp.getContext('2d')
   if (!stampContext) return
   stampContext.putImageData(blurred, 0, 0)
   context.save()
@@ -55,7 +59,7 @@ function stampBlur(context: CanvasRenderingContext2D, source: ImageData, polygon
   polygon.forEach((point, index) => (index === 0 ? context.moveTo(point.x, point.y) : context.lineTo(point.x, point.y)))
   context.closePath()
   context.clip()
-  context.drawImage(stamp, 0, 0)
+  context.drawImage(blurStamp, 0, 0)
   context.restore()
 }
 
@@ -74,20 +78,19 @@ function fillClipped(context: CanvasRenderingContext2D, polygon: Point[], color:
 export function paintComposite(source: ImageData, patches: TextPatch[], freeTexts: FreeText[], canvas: HTMLCanvasElement) {
   const context = canvas.getContext('2d')
   if (!context) throw new Error('浏览器不能创建画布，无法导出。')
-  canvas.width = source.width
-  canvas.height = source.height
+  if (canvas.width !== source.width || canvas.height !== source.height) {
+    canvas.width = source.width
+    canvas.height = source.height
+  }
   let current = source
   for (const patch of patches) {
     if (!patch.blur) continue
     current = blurPolygon(current, patch.polygon, blurRadius(patch.polygon))
   }
-  const filled = applyFills(current, patches.filter((patch) => !patch.blur && !patch.textOnly).map((patch) => ({ polygon: patch.polygon, color: patch.color })))
+  const fills = patches.filter((patch) => !patch.blur && !patch.textOnly).map((patch) => ({ polygon: patch.polygon, color: patch.color }))
+  const filled = fills.length ? applyFills(current, fills) : current
   context.putImageData(filled, 0, 0)
   for (const patch of patches) drawClippedText(context, patch.polygon, patch.text, patch.style)
-  for (const layer of freeTexts) drawFreeText(context, layer)
-  const painted = context.getImageData(0, 0, canvas.width, canvas.height)
-  const restored = restoreOutside(source, painted, patches.map((patch) => patch.polygon))
-  context.putImageData(restored, 0, 0)
   for (const layer of freeTexts) drawFreeText(context, layer)
 }
 

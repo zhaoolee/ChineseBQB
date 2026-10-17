@@ -101,12 +101,28 @@ function fractionPolygon(polygon: [Point, Point, Point, Point], start: number, e
   ]
 }
 
+const glyphCache = new WeakMap<ImageData, Map<string, { start: number; end: number }[] | null>>()
+
 /**
  * Horizontal spans of the original glyphs. A wide letter such as W keeps its own
  * ink, instead of an equal slice that is only as wide as a narrower replacement.
  * Returns null when the ink cannot be split into one span per grapheme.
  */
 export function originalGlyphFractions(image: ImageData, polygon: Point[], count: number): { start: number; end: number }[] | null {
+  const key = `${count}|${polygon.map((point) => `${point.x},${point.y}`).join('|')}`
+  const store = glyphCache.get(image)
+  if (store?.has(key)) return store.get(key) ?? null
+  const result = scanGlyphFractions(image, polygon, count)
+  let next = store
+  if (!next) {
+    next = new Map()
+    glyphCache.set(image, next)
+  }
+  next.set(key, result)
+  return result
+}
+
+function scanGlyphFractions(image: ImageData, polygon: Point[], count: number): { start: number; end: number }[] | null {
   if (count < 1) return null
   const bounds = polygonBounds(polygon)
   const span = bounds.maxX - bounds.minX

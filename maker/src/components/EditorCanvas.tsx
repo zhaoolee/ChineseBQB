@@ -10,6 +10,7 @@ import {
   deleteFocusedCell,
   endGesture,
   moveFreeText,
+  openLocalFile,
   resizeFreeText,
   select,
   updateManualPolygon,
@@ -20,7 +21,7 @@ import type { Point } from '../types'
 
 export function EditorCanvas() {
   const state = useEditor()
-  const stageRef = useRef<HTMLDivElement>(null)
+  const stageRef = useRef<HTMLElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [frame, setFrame] = useState({ width: 1, height: 1 })
   const image = state.image
@@ -92,14 +93,24 @@ export function EditorCanvas() {
 
   if (!image) {
     return (
-      <div className="stage empty-stage" ref={stageRef}>
-        <p>点顶部右侧的「图库」选一张表情包，也可以上传或直接粘贴图片。选中后会自动识别文字。</p>
-      </div>
+      <label className="stage empty-stage" ref={(node) => { stageRef.current = node }}>
+        <input
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif"
+          aria-label="上传图片"
+          onChange={(event) => {
+            const file = event.target.files?.[0]
+            event.target.value = ''
+            if (file) void openLocalFile(file)
+          }}
+        />
+        <p>点这里上传图片。也可以点右上角「图库」选一张表情包，或直接粘贴。选中后会自动识别文字。</p>
+      </label>
     )
   }
   if (image.source.animated && !image.imageData) {
     return (
-      <div className="stage" ref={stageRef}>
+      <div className="stage" ref={(node) => { stageRef.current = node }}>
         <img className="animated-preview" src={image.previewUrl} alt={image.source.name} />
         <p className="banner">这一帧读不出来，所以不能识别文字。</p>
       </div>
@@ -117,7 +128,7 @@ export function EditorCanvas() {
   }
 
   return (
-    <div className="stage" ref={stageRef}>
+    <div className="stage" ref={(node) => { stageRef.current = node }}>
       <div
         className="sheet"
         style={{ width: fitted.width, height: fitted.height, transform: `translate(${state.view.panX}px, ${state.view.panY}px) scale(${state.view.scale})` }}

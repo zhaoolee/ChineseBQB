@@ -355,6 +355,52 @@ describe('local replacement', () => {
     expect(box.maxX).toBeLessThan(56)
   })
 
+  it('covers a replaced character with the paper under it', () => {
+    const paper = solidImage(80, 50, [250, 250, 250, 255])
+    const photo = applyFills(paper, [{
+      polygon: [{ x: 0, y: 0 }, { x: 80, y: 0 }, { x: 80, y: 20 }, { x: 0, y: 20 }],
+      color: [140, 140, 140, 255],
+    }])
+    const line: OcrBlock['polygon'] = [
+      { x: 8, y: 22 },
+      { x: 72, y: 22 },
+      { x: 72, y: 42 },
+      { x: 8, y: 42 },
+    ]
+    const painted = applyFills(photo, [{
+      polygon: [{ x: 24, y: 26 }, { x: 40, y: 26 }, { x: 40, y: 38 }, { x: 24, y: 38 }],
+      color: [12, 12, 12, 255],
+    }])
+    const plan = planBlockEdit(block('你', '*', { polygon: line }), painted)
+    const color = plan.regions[0]?.color ?? [0, 0, 0, 0]
+    expect(color[0]).toBeGreaterThan(230)
+    expect(color[1]).toBeGreaterThan(230)
+    expect(color[2]).toBeGreaterThan(230)
+  })
+
+  it('covers a character with the white margin when the stroke fringe is gray', () => {
+    const paper = solidImage(48, 40, [248, 248, 248, 255])
+    const line: OcrBlock['polygon'] = [
+      { x: 4, y: 4 },
+      { x: 44, y: 4 },
+      { x: 44, y: 36 },
+      { x: 4, y: 36 },
+    ]
+    const fringed = applyFills(paper, [{
+      polygon: [{ x: 4, y: 14 }, { x: 44, y: 14 }, { x: 44, y: 28 }, { x: 4, y: 28 }],
+      color: [134, 134, 134, 255],
+    }])
+    const painted = applyFills(fringed, [{
+      polygon: [{ x: 16, y: 16 }, { x: 30, y: 16 }, { x: 30, y: 26 }, { x: 16, y: 26 }],
+      color: [12, 12, 12, 255],
+    }])
+    const plan = planBlockEdit(block('妈', '*', { polygon: line }), painted)
+    const color = plan.regions[0]?.color ?? [0, 0, 0, 0]
+    expect(color[0]).toBeGreaterThan(220)
+    expect(color[1]).toBeGreaterThan(220)
+    expect(color[2]).toBeGreaterThan(220)
+  })
+
   it('reads light glyphs on a dark panel instead of the panel', () => {
     const source = solidImage(100, 50, [30, 70, 150, 255])
     const panel: OcrBlock['polygon'] = [

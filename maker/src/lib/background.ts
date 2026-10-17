@@ -8,7 +8,31 @@ export type BackgroundSample = {
   samples: number
 }
 
+const backgroundCache = new WeakMap<ImageData, Map<string, BackgroundSample>>()
+const inkCache = new WeakMap<ImageData, Map<string, [number, number, number, number] | null>>()
+
+function polygonKey(polygon: Point[], extra = ''): string {
+  return `${extra}|${polygon.map((point) => `${point.x},${point.y}`).join('|')}`
+}
+
+function remember<T>(cache: WeakMap<ImageData, Map<string, T>>, image: ImageData, key: string, value: T): T {
+  let store = cache.get(image)
+  if (!store) {
+    store = new Map()
+    cache.set(image, store)
+  }
+  store.set(key, value)
+  return value
+}
+
 export function sampleBackground(image: ImageData, polygon: Point[], radius = 4): BackgroundSample {
+  const key = polygonKey(polygon, String(radius))
+  const hit = backgroundCache.get(image)?.get(key)
+  if (hit) return hit
+  return remember(backgroundCache, image, key, readBackground(image, polygon, radius))
+}
+
+function readBackground(image: ImageData, polygon: Point[], radius: number): BackgroundSample {
   const bounds = polygonBounds(polygon)
   const pixels: number[][] = []
   const x0 = Math.max(0, Math.floor(bounds.minX))
@@ -67,6 +91,13 @@ export function colorToHex(color: [number, number, number, number]): string {
 
 /** The color of the original glyphs, not the panel they sit on. */
 export function sampleInk(image: ImageData, polygon: Point[]): [number, number, number, number] | null {
+  const key = polygonKey(polygon)
+  const store = inkCache.get(image)
+  if (store?.has(key)) return store.get(key) ?? null
+  return remember(inkCache, image, key, readInk(image, polygon))
+}
+
+function readInk(image: ImageData, polygon: Point[]): [number, number, number, number] | null {
   const background = sampleBackground(image, polygon).color
   const bounds = polygonBounds(polygon)
   const x0 = Math.max(0, Math.floor(bounds.minX))
@@ -106,6 +137,67 @@ export function sampleInk(image: ImageData, polygon: Point[]): [number, number, 
     ? ranked.slice(1).find((group) => group.count >= glyphFloor && colorDistance(group.color, main.color) >= 48)
     : undefined
   return (onPanel ?? main).color
+}
+
+type ColorBucket = { colors: [number, number, number, number][]; count: number }
+
+/** Paper inside the glyph box. The strip above the line can be the photo, so it is not used as the cover. */
+export function sampleCover(
+  image: ImageData,
+  polygon: Point[],
+  ink: [number, number, number, number] | null,
+): [number, number, number, number] {
+  const bounds = polygonBounds(polygon)
+  const seeds: ColorBucket[] = []
+  const marginSeeds: ColorBucket[] = []
+  const byKey = new Map<string, ColorBucket>()
+  const marginByKey = new Map<string, ColorBucket>()
+  let kept = 0
+  const x0 = Math.max(0, Math.floor(bounds.minX))
+  const x1 = Math.min(image.width - 1, Math.ceil(bounds.maxX))
+  const y0 = Math.max(0, Math.floor(bounds.minY))
+  const y1 = Math.min(image.height - 1, Math.ceil(bounds.maxY))
+  const height = Math.max(1, bounds.maxY - bounds.minY)
+  for (let y = y0; y <= y1; y += 1) {
+    const onMargin = y <= bounds.minY + height * 0.22 || y >= bounds.maxY - height * 0.22
+    for (let x = x0; x <= x1; x += 1) {
+      if (!pointInPolygon({ x: x + 0.5, y: y + 0.5 }, polygon)) continue
+      const index = (y * image.width + x) * 4
+      if (image.data[index + 3] < 20) continue
+      const color: [number, number, number, number] = [
+        image.data[index],
+        image.data[index + 1],
+        image.data[index + 2],
+        image.data[index + 3],
+      ]
+      if (ink && colorDistance(color, ink) < 48) continue
+      kept += 1
+      const key = [0, 1, 2].map((channel) => Math.round(color[channel] / 16) * 16).join(',')
+      pushColor(byKey, seeds, key, color)
+      if (onMargin) pushColor(marginByKey, marginSeeds, key, color)
+    }
+  }
+  if (kept < 6) return sampleBackground(image, polygon).color
+  const margin = largestColor(marginSeeds)
+  if (margin && margin.count >= 6) return margin.color
+  return largestColor(seeds)?.color ?? sampleBackground(image, polygon).color
+}
+
+function pushColor(index: Map<string, ColorBucket>, list: ColorBucket[], key: string, color: [number, number, number, number]) {
+  const bucket = index.get(key)
+  if (bucket) {
+    bucket.colors.push(color)
+    bucket.count += 1
+    return
+  }
+  const created = { colors: [color], count: 1 }
+  index.set(key, created)
+  list.push(created)
+}
+
+function largestColor(seeds: ColorBucket[]): { color: [number, number, number, number]; count: number } | null {
+  const groups = mergeColorBuckets(seeds).sort((left, right) => right.count - left.count)
+  return groups[0] ?? null
 }
 
 function mergeColorBuckets(seeds: { colors: [number, number, number, number][]; count: number }[]): { color: [number, number, number, number]; count: number }[] {

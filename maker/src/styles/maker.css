@@ -34,7 +34,8 @@ h2 { margin: 0; font-size: 16px; }
 .preview-tools .tool-menu { position: absolute; top: 54px; left: 10px; z-index: 7; display: flex; flex-direction: column; gap: 8px; width: max-content; }
 .preview-tools .tool-menu button { width: 100%; white-space: nowrap; box-shadow: 0 1px 4px rgba(63, 47, 34, 0.16); }
 .stage { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
-.empty-stage { color: #6f4219; padding: 24px; text-align: center; }
+.empty-stage { color: #6f4219; padding: 24px; text-align: center; cursor: pointer; }
+.empty-stage input { display: none; }
 .sheet { position: relative; transform-origin: center center; }
 .sheet canvas, .sheet svg, .sheet .gif-preview { position: absolute; inset: 0; width: 100%; height: 100%; }
 .sheet .gif-preview { pointer-events: none; }

@@ -1,4 +1,4 @@
-import { colorToHex, luminance, sampleBackground, sampleInk } from './background'
+import { colorToHex, luminance, sampleBackground, sampleCover, sampleInk } from './background'
 import { appendCharPolygon, blockLayout, estimateFontSize, paddedCharPolygon } from './char-layout'
 import { diffText } from './diff'
 import { segmentGraphemes } from './grapheme'
@@ -117,17 +117,18 @@ export function planBlockEdit(block: OcrBlock, image: ImageData | null): EditPla
 
   const width = image?.width ?? Number.POSITIVE_INFINITY
   const height = image?.height ?? Number.POSITIVE_INFINITY
+  const ink = image ? sampleInk(image, block.polygon) : null
   const regions = changes.map((change) => {
     const estimated = !block.manualPolygon
     const polygon = block.manualPolygon && changes.length === 1
       ? block.manualPolygon
       : paddedCharPolygon(block, change.oldStart, change.oldEnd, Math.max(2, polygonBounds(block.polygon).height * 0.08), width, height, image)
     const sample = image ? sampleBackground(image, polygon) : { color: [255, 255, 255, 255] as [number, number, number, number], solid: false, variance: 255, samples: 0 }
-    return { change, polygon, estimated, solid: sample.solid, color: sample.color }
+    const color = image ? sampleCover(image, polygon, ink) : sample.color
+    return { change, polygon, estimated, solid: sample.solid, color }
   })
   const solid = regions.every((region) => region.solid)
   const safety: EditSafety = !image ? 'review' : solid ? 'safe' : 'review'
-  const ink = image ? sampleInk(image, block.polygon) : null
   const fallbackFill = regions[0] && luminance(regions[0].color) < 140 ? '#f7f7f7' : '#161616'
   const fill = ink ? colorToHex(ink) : fallbackFill
   const stroke = ink
