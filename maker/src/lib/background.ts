@@ -128,7 +128,9 @@ function readInk(image: ImageData, polygon: Point[]): [number, number, number, n
   const groups = mergeColorBuckets([...buckets.values()].map((colors) => ({ colors, count: colors.length })))
   const distinct = groups
     .filter((group) => group.count >= 6 && colorDistance(group.color, background) >= 24)
-    .sort((left, right) => right.count - left.count)
+    // Large photo regions can outnumber the strokes. Favor a repeated color
+    // that also contrasts with the area around the recognized text.
+    .sort((left, right) => right.count * colorDistance(right.color, background) - left.count * colorDistance(left.color, background))
   const ranked = distinct.length ? distinct : groups.sort((left, right) => right.count - left.count)
   const main = ranked[0]
   if (!main || main.count < 6) return null

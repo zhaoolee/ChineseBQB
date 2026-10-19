@@ -1,6 +1,6 @@
 import { describeChange, diffText } from '../src/lib/diff'
 import { containTransform, deviceToImage, imageToScreen, polygonBounds, screenToImage } from '../src/lib/geometry'
-import { appendCharPolygon, cellAnchorPolygon, cellWasAdded, charRangeToPolygon, paddedCharPolygon } from '../src/lib/char-layout'
+import { appendCharPolygon, cellAnchorPolygon, cellWasAdded, charRangeToPolygon, originalGlyphFractions, paddedCharPolygon } from '../src/lib/char-layout'
 import { luminance, sampleBackground, sampleInk } from '../src/lib/background'
 import { applyFills, blurPolygon, countDifferences, restoreOutside } from '../src/lib/compose'
 import { activePatches, addedTextStyle, liveRedraw, planBlockEdit } from '../src/lib/plan'
@@ -170,6 +170,36 @@ describe('geometry', () => {
     expect(Math.max(...edge.map((point: Point) => point.x))).toBeLessThanOrEqual(410)
     expect(Math.max(...edge.map((point: Point) => point.y))).toBeLessThanOrEqual(120)
     expect(Math.min(...edge.map((point: Point) => point.x))).toBeGreaterThanOrEqual(0)
+  })
+
+  it('ignores photo edges split into three uneven runs and keeps the OCR middle third', () => {
+    const frame = solidImage(420, 140, [90, 90, 90, 255])
+    const line: OcrBlock['polygon'] = [
+      { x: 20, y: 30 },
+      { x: 320, y: 30 },
+      { x: 320, y: 110 },
+      { x: 20, y: 110 },
+    ]
+    const strip = (x0: number, x1: number, color: [number, number, number, number]) => ({
+      polygon: [
+        { x: x0, y: 30 },
+        { x: x1, y: 30 },
+        { x: x1, y: 110 },
+        { x: x0, y: 110 },
+      ] as OcrBlock['polygon'],
+      color,
+    })
+    // Every strip is at least 80 away from the gray frame, so the scan treats
+    // them as ink. They are 200, 3 and 94 pixels wide with 1-2 pixel gaps.
+    const painted = applyFills(frame, [
+      strip(20, 220, [200, 200, 200, 255]),
+      strip(221, 224, [160, 160, 160, 255]),
+      strip(226, 320, [140, 140, 140, 255]),
+    ])
+    const photo = block('照片字', '照片字', { polygon: line })
+    expect(originalGlyphFractions(painted, line, 3)).toBeNull()
+    const middle = polygonBounds(paddedCharPolygon(photo, 1, 2, 4, painted.width, painted.height, painted))
+    expect(middle.width).toBeCloseTo((320 - 20) / 3)
   })
 })
 
@@ -416,6 +446,60 @@ describe('local replacement', () => {
     expect(luminance(sampleInk(painted, panel)!)).toBeGreaterThan(180)
     const turned = liveRedraw(block('What?', 'When?', { polygon: panel }), painted)
     expect(turned.textStyle.fill).toBe('#ececec')
+  })
+
+  it('prefers light ink over a larger dark photo region by contrast instead of count', () => {
+    const frame = solidImage(100, 60, [30, 30, 30, 255])
+    const panel: OcrBlock['polygon'] = [
+      { x: 10, y: 10 },
+      { x: 90, y: 10 },
+      { x: 90, y: 50 },
+      { x: 10, y: 50 },
+    ]
+    const rect = (x0: number, y0: number, x1: number, y1: number, color: [number, number, number, number]) => ({
+      polygon: [
+        { x: x0, y: y0 },
+        { x: x1, y: y0 },
+        { x: x1, y: y1 },
+        { x: x0, y: y1 },
+      ] as Point[],
+      color,
+    })
+    // 312 dark pixels in two shades outnumber the 144 white glyph pixels, so a
+    // raw count sort picks the photo; the white ink has far more contrast.
+    const painted = applyFills(frame, [
+      rect(14, 14, 40, 26, [76, 76, 76, 255]),
+      rect(26, 14, 32, 26, [90, 90, 90, 255]),
+      rect(52, 22, 64, 34, [245, 245, 245, 255]),
+    ])
+    let photoPixels = 0
+    let glyphPixels = 0
+    for (let index = 0; index < painted.data.length; index += 4) {
+      if (painted.data[index] === 245) glyphPixels += 1
+      else if (painted.data[index] === 76 || painted.data[index] === 90) photoPixels += 1
+    }
+    expect(photoPixels).toBe(312)
+    expect(glyphPixels).toBe(144)
+    expect(photoPixels).toBeGreaterThan(glyphPixels)
+    const ink = sampleInk(painted, panel)!
+    expect(ink[0]).toBeGreaterThan(230)
+    expect(luminance(ink)).toBeGreaterThan(200)
+  })
+
+  it('keeps replacement text when softening a varied photo background', () => {
+    const source = solidImage(420, 140, [0, 0, 0, 255])
+    for (let y = 0; y < source.height; y += 1) {
+      for (let x = 0; x < source.width; x += 1) {
+        const value = Math.round(x / source.width * 255)
+        source.data.set([value, value, value, 255], (y * source.width + x) * 4)
+      }
+    }
+    const edited = block('说人话', '说猫话')
+    const patches = activePatches(edited, planBlockEdit(edited, source), source)
+    expect(patches).toHaveLength(1)
+    expect(patches[0]).toMatchObject({ text: '猫', blur: true, textOnly: false })
+    const blurred = blurPolygon(source, patches[0].polygon, 20)
+    expect(countDifferences(source, blurred, [patches[0].polygon])).toBe(0)
   })
 
   it('marks a noisy background as review and samples a flat gray field', () => {

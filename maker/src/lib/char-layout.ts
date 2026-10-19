@@ -161,6 +161,10 @@ function scanGlyphFractions(image: ImageData, polygon: Point[], count: number): 
   const bodies = runs.filter((run) => run.end - run.start >= 2)
   const fitted = fitGlyphRuns(counts, bodies, count, Math.max(6, Math.round(counts.length / count)))
   if (!fitted) return null
+  // Photo edges can be split into the requested number of runs, but a narrow
+  // sliver is not a reliable character box. Fall back to the OCR line layout.
+  const minimumWidth = span / count * 0.2
+  if (fitted.some((run) => run.end - run.start < minimumWidth)) return null
   return fitted.map((run) => ({
     start: (x0 + run.start - bounds.minX) / span,
     end: (x0 + run.end - bounds.minX) / span,

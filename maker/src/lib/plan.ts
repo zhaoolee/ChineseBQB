@@ -13,6 +13,8 @@ export type EditRegion = {
   color: [number, number, number, number]
   /** Cleared character: smear the original pixels in this box instead of painting a flat color. */
   blur?: boolean
+  /** Keep the photo's local tones under replacement text instead of using a solid rectangle. */
+  blurBackground?: boolean
 }
 
 export type EditPlan = {
@@ -125,7 +127,7 @@ export function planBlockEdit(block: OcrBlock, image: ImageData | null): EditPla
       : paddedCharPolygon(block, change.oldStart, change.oldEnd, Math.max(2, polygonBounds(block.polygon).height * 0.08), width, height, image)
     const sample = image ? sampleBackground(image, polygon) : { color: [255, 255, 255, 255] as [number, number, number, number], solid: false, variance: 255, samples: 0 }
     const color = image ? sampleCover(image, polygon, ink) : sample.color
-    return { change, polygon, estimated, solid: sample.solid, color }
+    return { change, polygon, estimated, solid: sample.solid, color, blurBackground: Boolean(image && sample.variance > 48) }
   })
   const solid = regions.every((region) => region.solid)
   const safety: EditSafety = !image ? 'review' : solid ? 'safe' : 'review'
@@ -220,7 +222,7 @@ export function activePatches(block: OcrBlock, plan: EditPlan, image?: ImageData
       color: region.color,
       text: cleared ? '' : region.change.newText,
       style,
-      blur: cleared,
+      blur: cleared || Boolean(region.blurBackground),
       textOnly: region.change.kind === 'insert',
     }
   })
