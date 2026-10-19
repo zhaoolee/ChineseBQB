@@ -28,11 +28,11 @@ h2 { margin: 0; font-size: 16px; }
 .workspace { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .canvas-pane { position: relative; z-index: 1; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: row; align-items: stretch; background: #e7d8c6; }
 .preview-frame { position: relative; flex: 1 1 auto; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
-.preview-tools { position: relative; z-index: 7; flex: 0 0 56px; width: 56px; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 10px; }
-.preview-tools .tool-toggle { width: 36px; height: 36px; padding: 0; display: grid; place-items: center; }
+.preview-tools { position: absolute; top: 0; left: 0; z-index: 7; display: flex; align-items: flex-start; padding: 10px; pointer-events: none; }
+.preview-tools .tool-toggle { width: 36px; height: 36px; padding: 0; display: grid; place-items: center; pointer-events: auto; }
 .preview-tools .tool-toggle[aria-expanded="true"] { background: #6f4219; color: #fff8ed; border-color: #6f4219; }
-.preview-tools .tool-menu { position: absolute; top: 54px; left: 10px; z-index: 7; display: flex; flex-direction: column; gap: 8px; width: max-content; }
-.preview-tools .tool-menu button { width: 100%; white-space: nowrap; box-shadow: 0 1px 4px rgba(63, 47, 34, 0.16); }
+.preview-tools .tool-menu { position: absolute; top: 10px; left: 54px; z-index: 7; display: flex; gap: 8px; width: max-content; pointer-events: none; }
+.preview-tools .tool-menu button { width: auto; white-space: nowrap; pointer-events: auto; box-shadow: 0 1px 4px rgba(63, 47, 34, 0.16); }
 .stage { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
 .empty-stage { color: #6f4219; padding: 24px; text-align: center; cursor: pointer; }
 .empty-stage input { display: none; }
@@ -76,7 +76,7 @@ h2 { margin: 0; font-size: 16px; }
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 10px 12px 12px;
+  padding: 56px 12px 12px;
   background: #fbf7ed;
   box-sizing: border-box;
   overflow: hidden;
@@ -265,4 +265,26 @@ input, select { border: 1px solid #e4dad1; border-radius: 6px; padding: 8px; bac
   .ocr-scan,
   .ocr-scan-beam { animation: none; }
   .ocr-scan-beam { top: 6px; height: 6px; opacity: 0.55; }
+}
+
+@media (max-width: 640px) {
+  .maker-app {
+    height: 100vh;
+    height: 100svh;
+    padding-bottom: 50vh;
+    padding-bottom: 50svh;
+    background: #fbf7ed;
+  }
+  .canvas-pane {
+    flex: 0 1 20vh;
+    flex: 0 1 20svh;
+  }
+  .dock {
+    flex: 1 1 auto;
+    height: auto;
+    max-height: none;
+  }
+  /* Expanded gallery owns the upper half; the dock returns when it closes. */
+  .canvas-pane:has(.asset-sheet) { flex: 1 1 auto; }
+  .canvas-pane:has(.asset-sheet) ~ .dock { display: none; }
 }
