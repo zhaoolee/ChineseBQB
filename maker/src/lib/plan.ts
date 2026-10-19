@@ -90,11 +90,7 @@ export function planBlockEdit(block: OcrBlock, image: ImageData | null): EditPla
       message: '整行重绘会盖住这一行里没有改动的字。只有打开「整行重绘」并应用后才会执行。',
     }
   }
-  const equalReplace = changes.every((change) => (
-    change.kind === 'replace'
-    && segmentGraphemes(change.oldText).length === segmentGraphemes(change.newText).length
-    && segmentGraphemes(change.oldText).length > 0
-  ))
+  const equalReplace = changes.every(isEqualReplacement)
   if (!equalReplace) {
     const regions = unevenRegions(block, image, changes)
     const drawn = regions.some((region) => !region.blur && region.change.newText)
@@ -117,18 +113,8 @@ export function planBlockEdit(block: OcrBlock, image: ImageData | null): EditPla
     }
   }
 
-  const width = image?.width ?? Number.POSITIVE_INFINITY
-  const height = image?.height ?? Number.POSITIVE_INFINITY
   const ink = image ? sampleInk(image, block.polygon) : null
-  const regions = changes.map((change) => {
-    const estimated = !block.manualPolygon
-    const polygon = block.manualPolygon && changes.length === 1
-      ? block.manualPolygon
-      : paddedCharPolygon(block, change.oldStart, change.oldEnd, Math.max(2, polygonBounds(block.polygon).height * 0.08), width, height, image)
-    const sample = image ? sampleBackground(image, polygon) : { color: [255, 255, 255, 255] as [number, number, number, number], solid: false, variance: 255, samples: 0 }
-    const color = image ? sampleCover(image, polygon, ink) : sample.color
-    return { change, polygon, estimated, solid: sample.solid, color, blurBackground: Boolean(image && sample.variance > 48) }
-  })
+  const regions = changes.map((change) => replacementRegion(block, image, change, changes.length === 1))
   const solid = regions.every((region) => region.solid)
   const safety: EditSafety = !image ? 'review' : solid ? 'safe' : 'review'
   const fallbackFill = regions[0] && luminance(regions[0].color) < 140 ? '#f7f7f7' : '#161616'
@@ -147,13 +133,42 @@ export function planBlockEdit(block: OcrBlock, image: ImageData | null): EditPla
   }
 }
 
+function isEqualReplacement(change: TextChange): boolean {
+  return change.kind === 'replace'
+    && change.oldEnd > change.oldStart
+    && change.oldEnd - change.oldStart === change.newEnd - change.newStart
+}
+
+function replacementRegion(block: OcrBlock, image: ImageData | null, change: TextChange, useManual: boolean): EditRegion {
+  const manual = useManual ? block.manualPolygon : undefined
+  const polygon = manual ?? paddedCharPolygon(
+    block, change.oldStart, change.oldEnd,
+    Math.max(2, polygonBounds(block.polygon).height * 0.08),
+    image?.width ?? Number.POSITIVE_INFINITY,
+    image?.height ?? Number.POSITIVE_INFINITY,
+    image,
+  )
+  const sample = image ? sampleBackground(image, polygon) : { color: [255, 255, 255, 255] as [number, number, number, number], solid: false, variance: 255 }
+  const ink = image ? sampleInk(image, block.polygon) : null
+  return {
+    change, polygon, estimated: !manual, solid: sample.solid,
+    color: image ? sampleCover(image, polygon, ink) : sample.color,
+    blurBackground: Boolean(image && sample.variance > 48),
+  }
+}
+
 function unevenRegions(block: OcrBlock, image: ImageData | null, changes: TextChange[]): EditRegion[] {
   const width = image?.width ?? Number.POSITIVE_INFINITY
   const height = image?.height ?? Number.POSITIVE_INFINITY
   const pad = Math.max(2, polygonBounds(block.polygon).height * 0.06)
   let slot = 0
   const regions: EditRegion[] = []
+  const singleOriginalChange = changes.filter((change) => change.oldEnd > change.oldStart).length === 1
   for (const change of changes) {
+    if (isEqualReplacement(change)) {
+      regions.push(replacementRegion(block, image, change, singleOriginalChange))
+      continue
+    }
     for (let index = change.oldStart; index < change.oldEnd; index += 1) {
       const polygon = paddedCharPolygon(block, index, index + 1, pad, width, height, image)
       regions.push({

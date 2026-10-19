@@ -516,6 +516,162 @@ describe('local replacement', () => {
   })
 })
 
+describe('mixed replacement and append', () => {
+  const tails = [
+    { label: 'full-width tilde', tail: '～' },
+    { label: 'ASCII tilde', tail: '~' },
+    { label: 'emoji cat', tail: '🐱' },
+  ]
+
+  for (const { label, tail } of tails) {
+    it(`keeps the replaced cat in place and appends only the ${label}`, () => {
+      const source = solidImage(420, 140, [255, 255, 255, 255])
+      const original = block('说人话')
+      paintInk(source, original)
+
+      const replacementOnly = block('说人话', '说猫话')
+      const replacementPatches = activePatches(replacementOnly, planBlockEdit(replacementOnly, source), source)
+      expect(replacementPatches.map((patch) => patch.text)).toEqual(['猫'])
+
+      const mixed = block('说人话', `说猫话${tail}`)
+      const plan = planBlockEdit(mixed, source)
+      const patches = activePatches(mixed, plan, source)
+      const cat = patches.find((patch) => patch.text === '猫')
+      const appended = patches.find((patch) => patch.text === tail)
+
+      expect(cat).toBeTruthy()
+      expect(appended).toBeTruthy()
+      expect(patches.filter((patch) => patch.text === '')).toEqual([])
+      expect(cat).toMatchObject({ text: '猫', textOnly: false })
+      expect(appended).toMatchObject({ text: tail, textOnly: true })
+      expect(cat!.polygon).toEqual(replacementPatches[0]!.polygon)
+
+      const lineBounds = polygonBounds(original.polygon)
+      const catBounds = polygonBounds(cat!.polygon)
+      const tailBounds = polygonBounds(appended!.polygon)
+      expect(catBounds.maxX).toBeLessThanOrEqual(lineBounds.maxX)
+      expect(tailBounds.minX).toBeGreaterThan(lineBounds.maxX)
+      expect(catBounds.maxX).toBeLessThanOrEqual(tailBounds.minX)
+
+      const cells = ['说', '猫', '话', tail]
+      const catAnchor = polygonBounds(cellAnchorPolygon(mixed, cells, 1, source.width, source.height))
+      const tailAnchor = polygonBounds(cellAnchorPolygon(mixed, cells, 3, source.width, source.height))
+      expect(cellWasAdded(mixed, cells, 1, source.width, source.height)).toBe(false)
+      expect(cellWasAdded(mixed, cells, 3, source.width, source.height)).toBe(true)
+      // The glyph scan can inset the cover by a fraction of a pixel; the cell anchor stays on it.
+      expect(catAnchor.minX).toBeGreaterThanOrEqual(catBounds.minX - 1)
+      expect(catAnchor.maxX).toBeLessThanOrEqual(catBounds.maxX + 1)
+      expect(catAnchor.minY).toBeGreaterThanOrEqual(catBounds.minY - 1)
+      expect(catAnchor.maxY).toBeLessThanOrEqual(catBounds.maxY + 1)
+      expect(tailAnchor.minX).toBe(tailBounds.minX)
+      expect(tailAnchor.maxX).toBe(tailBounds.maxX)
+    })
+  }
+
+  it('splits an adjacent replace and append into an in-place edit plus a tail insert', () => {
+    const tail = '～'
+    expect(diffText('说人话', `说人猫${tail}`)).toEqual([
+      expect.objectContaining({ kind: 'replace', oldText: '话', newText: '猫', oldStart: 2, oldEnd: 3 }),
+      expect.objectContaining({ kind: 'insert', oldText: '', newText: tail, oldStart: 3, oldEnd: 3 }),
+    ])
+
+    const source = solidImage(420, 140, [255, 255, 255, 255])
+    const original = block('说人话')
+    paintInk(source, original)
+
+    const replacementOnly = block('说人话', '说人猫')
+    const replacementPatches = activePatches(replacementOnly, planBlockEdit(replacementOnly, source), source)
+    expect(replacementPatches.map((patch) => patch.text)).toEqual(['猫'])
+
+    const mixed = block('说人话', `说人猫${tail}`)
+    const plan = planBlockEdit(mixed, source)
+    expect(plan.changes.map((change) => `${change.kind}:${change.oldText}>${change.newText}`)).toEqual([
+      'replace:话>猫',
+      `insert:>${tail}`,
+    ])
+    const patches = activePatches(mixed, plan, source)
+    const cat = patches.find((patch) => patch.text === '猫')
+    const appended = patches.find((patch) => patch.text === tail)
+    expect(patches.filter((patch) => patch.text === '')).toEqual([])
+    expect(cat).toMatchObject({ text: '猫', textOnly: false })
+    expect(appended).toMatchObject({ text: tail, textOnly: true })
+    expect(cat!.polygon).toEqual(replacementPatches[0]!.polygon)
+
+    const lineBounds = polygonBounds(original.polygon)
+    const catBounds = polygonBounds(cat!.polygon)
+    const tailBounds = polygonBounds(appended!.polygon)
+    const catCenterX = (catBounds.minX + catBounds.maxX) / 2
+    const tailCenterX = (tailBounds.minX + tailBounds.maxX) / 2
+    expect(catCenterX).toBeLessThan(lineBounds.maxX)
+    expect(tailBounds.minX).toBeGreaterThanOrEqual(lineBounds.maxX)
+    expect(catCenterX).toBeLessThan(tailCenterX)
+
+    const cells = ['说', '人', '猫', tail]
+    const catAnchor = polygonBounds(cellAnchorPolygon(mixed, cells, 2, source.width, source.height))
+    const tailAnchor = polygonBounds(cellAnchorPolygon(mixed, cells, 3, source.width, source.height))
+    expect(cellWasAdded(mixed, cells, 2, source.width, source.height)).toBe(false)
+    expect(cellWasAdded(mixed, cells, 3, source.width, source.height)).toBe(true)
+    expect(Math.abs((catAnchor.minX + catAnchor.maxX) / 2 - catCenterX)).toBeLessThanOrEqual(1)
+    expect(catAnchor.minY).toBeGreaterThanOrEqual(catBounds.minY - 1)
+    expect(catAnchor.maxY).toBeLessThanOrEqual(catBounds.maxY + 1)
+    expect(tailAnchor.minX).toBe(tailBounds.minX)
+    expect(tailAnchor.maxX).toBe(tailBounds.maxX)
+  })
+
+  it('keeps a replacement in place while a separate deletion is cleared', () => {
+    expect(diffText('说人话啊', '说猫话')).toEqual([
+      expect.objectContaining({ kind: 'replace', oldText: '人', newText: '猫', oldStart: 1, oldEnd: 2 }),
+      expect.objectContaining({ kind: 'delete', oldText: '啊', oldStart: 3, oldEnd: 4 }),
+    ])
+
+    const source = solidImage(420, 140, [255, 255, 255, 255])
+    const original = block('说人话啊')
+    paintInk(source, original)
+
+    const replacementOnly = block('说人话啊', '说猫话啊')
+    const replacementPatches = activePatches(replacementOnly, planBlockEdit(replacementOnly, source), source)
+    expect(replacementPatches.map((patch) => patch.text)).toEqual(['猫'])
+
+    const mixed = block('说人话啊', '说猫话')
+    const plan = planBlockEdit(mixed, source)
+    const patches = activePatches(mixed, plan, source)
+    const cats = patches.filter((patch) => patch.text === '猫')
+    expect(cats).toHaveLength(1)
+    expect(cats[0]).toMatchObject({ text: '猫', textOnly: false })
+    expect(cats[0]!.polygon).toEqual(replacementPatches[0]!.polygon)
+
+    const lineBounds = polygonBounds(original.polygon)
+    expect(polygonBounds(cats[0]!.polygon).maxX).toBeLessThanOrEqual(lineBounds.maxX)
+    const cleared = patches.filter((patch) => patch.blur && patch.text === '')
+    expect(cleared).toHaveLength(1)
+    const deletedBox = charRangeToPolygon(original, 3, 4)
+    const deletedCenter = {
+      x: (deletedBox[0].x + deletedBox[1].x) / 2,
+      y: (deletedBox[0].y + deletedBox[3].y) / 2,
+    }
+    const clearedBounds = polygonBounds(cleared[0]!.polygon)
+    expect(deletedCenter.x).toBeGreaterThanOrEqual(clearedBounds.minX)
+    expect(deletedCenter.x).toBeLessThanOrEqual(clearedBounds.maxX)
+    expect(deletedCenter.y).toBeGreaterThanOrEqual(clearedBounds.minY)
+    expect(deletedCenter.y).toBeLessThanOrEqual(clearedBounds.maxY)
+    expect(polygonBounds(cats[0]!.polygon).maxX).toBeLessThan(deletedCenter.x)
+  })
+
+  it('keeps the replacement when an adjacent deleted suffix shares the same diff span', () => {
+    const source = solidImage(420, 140, [255, 255, 255, 255])
+    const mixed = block('说人话啊', '说人猫')
+    expect(diffText(mixed.originalText, mixed.targetText)).toEqual([
+      expect.objectContaining({ kind: 'replace', oldText: '话', newText: '猫', oldStart: 2, oldEnd: 3, newStart: 2, newEnd: 3 }),
+      expect.objectContaining({ kind: 'delete', oldText: '啊', newText: '', oldStart: 3, oldEnd: 4, newStart: 3, newEnd: 3 }),
+    ])
+    const patches = activePatches(mixed, planBlockEdit(mixed, source), source)
+    expect(patches.map((patch) => patch.text)).toEqual(['猫', ''])
+    expect(patches[0].textOnly).toBe(false)
+    expect(patches[1].blur).toBe(true)
+    expect(polygonBounds(patches[0].polygon).maxX).toBeLessThanOrEqual(polygonBounds(patches[1].polygon).minX)
+  })
+})
+
 describe('history and image sniffing', () => {
   it('undo and redo restore text snapshots without a place to store image bytes', () => {
     let history = createHistory({ blocks: ['小明'], freeTexts: [] as string[] })

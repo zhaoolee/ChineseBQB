@@ -27,7 +27,32 @@ export function diffText(oldText: string, newText: string): TextChange[] {
   }
 
   if (start === oldEnd && start === newEnd) return []
-  return coalesce(diffMiddle(oldParts, newParts, start, oldEnd, start, newEnd))
+  return coalesce(diffMiddle(oldParts, newParts, start, oldEnd, start, newEnd)).flatMap(splitUnequalReplacement)
+}
+
+/** Keep the shared replacement in its old slots; only surplus characters are inserted or deleted. */
+function splitUnequalReplacement(item: TextChange): TextChange[] {
+  if (item.kind !== 'replace') return [item]
+  const oldParts = segmentGraphemes(item.oldText)
+  const newParts = segmentGraphemes(item.newText)
+  const paired = Math.min(oldParts.length, newParts.length)
+  if (oldParts.length === newParts.length) return [item]
+  const replacement: TextChange = {
+    ...item,
+    oldEnd: item.oldStart + paired,
+    newEnd: item.newStart + paired,
+    oldText: oldParts.slice(0, paired).join(''),
+    newText: newParts.slice(0, paired).join(''),
+  }
+  return [replacement, {
+    kind: oldParts.length > paired ? 'delete' : 'insert',
+    oldStart: replacement.oldEnd,
+    oldEnd: item.oldEnd,
+    newStart: replacement.newEnd,
+    newEnd: item.newEnd,
+    oldText: oldParts.slice(paired).join(''),
+    newText: newParts.slice(paired).join(''),
+  }]
 }
 
 function diffMiddle(
