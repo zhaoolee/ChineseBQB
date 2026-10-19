@@ -55,6 +55,8 @@ python scripts/check_maker.py
 
 - 两份权重在 `maker/public/models/`，开发和 Pages 都从 `/ChineseBQB/maker/models/` 加载。识别不会请求 `paddle-model-ecology.bj.bcebos.com`。
 - 这些文件是模型，不是用户的图片。本应用没有把图片发给 OCR 服务的接口。
+- 开始识别时并行下载两份模型和仅 WASM 的运行库，避免模型下载完才开始下载运行库。公共识别资源保存在浏览器 Cache Storage 中；存储不可用时仍可直接下载识别，不缓存用户图片。
+- 资源下载最多等待 90 秒。失败时显示原因并提供「重新识别」，重试不会被上一轮失败的任务堵住。
 - Vite 会把 `onnxruntime-web` 的 WASM 放进 `/ChineseBQB/maker/assets/`。没有启用 Worker，因此不会改用 jsDelivr 上的 WASM。
 - OCR 始终从编辑像素生成输入，最长边限制在 480–640 像素，并把识别框按两个轴映射回画布；不会重新读取原始大图。
 - 识别任务串行运行，切图后跳过过期任务，每轮结束后释放模型会话；识别期间暂不允许导出，避免两种高内存操作叠加。

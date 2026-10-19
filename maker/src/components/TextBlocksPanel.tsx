@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { addFreeText, focusCell, resetDocument, select, setFreeText, type CellFocus } from '../state/editor-store'
+import { addFreeText, focusCell, resetDocument, runOcr, select, setFreeText, type CellFocus } from '../state/editor-store'
 import type { FreeText } from '../types'
 import { BangCells } from './BangCells'
 import { EditControls } from './EditControls'
@@ -19,8 +19,19 @@ export function TextBlocksPanel() {
           <button type="button" disabled={!editable} onClick={resetDocument}>还原原图</button>
         </div>
       </div>
-      {(state.ocrStatus === 'loading' || state.ocrStatus === 'error') && (
-        <p className="status" role="status">{state.ocrMessage}</p>
+      {state.ocrStatus === 'loading' && (
+        <p className="status ocr-pending" role="status" aria-live="polite">
+          <span className="ocr-scan" aria-hidden="true">
+            <span className="ocr-scan-beam" />
+          </span>
+          <span>正在识别文本</span>
+        </p>
+      )}
+      {state.ocrStatus === 'error' && (
+        <div>
+          <p className="status" role="status">{state.ocrMessage}</p>
+          <button type="button" disabled={!editable} onClick={() => { void runOcr() }}>重新识别</button>
+        </div>
       )}
       <div className="block-list">
         {present.blocks.map((block) => <TextBlockItem key={block.id} block={block} />)}

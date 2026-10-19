@@ -1,6 +1,7 @@
 import { expect, it, vi } from 'vitest'
 const sdk = vi.hoisted(() => ({ create:vi.fn(), predict:vi.fn(), dispose:vi.fn() }))
 vi.mock('@paddleocr/paddleocr-js', () => ({PaddleOCR:{create:sdk.create}}))
+vi.mock('../src/lib/ocr-assets', () => ({ prepareOcrAssets: vi.fn(async () => ({ fetch: vi.fn() })) }))
 import { recognize } from '../src/lib/ocr'
 
 it('serializes inference, skips stale requests, and awaits disposal before a new engine', async () => {
@@ -42,4 +43,11 @@ it('disposes failed predictions and lets the following request recover',async()=
   await expect(recognize(new Blob())).rejects.toThrow('inference failed')
   await expect(recognize(new Blob())).resolves.toEqual([])
   expect(sdk.dispose).toHaveBeenCalledTimes(2)
+})
+
+it('reports download timeouts and leaves the queue available for retry', async () => {
+  sdk.create.mockRejectedValueOnce(new DOMException('Timed out', 'TimeoutError'))
+  await expect(recognize(new Blob())).rejects.toThrow('识别资源加载超时')
+  sdk.create.mockResolvedValueOnce({ predict: async () => [{ items: [] }], dispose: async () => undefined })
+  await expect(recognize(new Blob())).resolves.toEqual([])
 })

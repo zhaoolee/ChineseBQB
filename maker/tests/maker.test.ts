@@ -459,6 +459,11 @@ describe('history and image sniffing', () => {
       { text: '1', score: 0.5, poly: [[200, 300], [230, 300], [230, 340], [200, 340]] },
     ])
     expect(caption.map((block) => block.originalText)).toEqual(['说人话'])
+    const watermarked = normalizeOcrItems([
+      { text: '不想说话', score: 1, poly: [[20, 300], [400, 300], [400, 390], [20, 390]] },
+      { text: '@NAN凯星', score: 1, poly: [[350, 370], [440, 370], [440, 390], [350, 390]] },
+    ])
+    expect(watermarked.map((block) => block.originalText)).toEqual(['不想说话', '@NAN凯星'])
     expect(sniffImage(new Uint8Array([0x47, 0x49, 0x46, 0x38, 0x39, 0x61]), 'image/gif').animated).toBe(true)
     expect(sniffImage(new Uint8Array([0x89, 0x50, 0x4e, 0x47]), 'image/png').animated).toBe(false)
   })

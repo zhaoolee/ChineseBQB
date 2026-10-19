@@ -1,6 +1,7 @@
 import { blockLayout } from './char-layout'
 import { orderQuad, polygonBounds } from './geometry'
 import { defaultTextStyle } from './plan'
+import { prepareOcrAssets } from './ocr-assets'
 import type { OcrBlock, Point } from '../types'
 
 type PaddleLike = {
@@ -44,6 +45,11 @@ export function recognize(blob: Blob, isCurrent = () => true): Promise<OcrBlock[
       if (!isCurrent()) return []
       const [result] = await engine.predict(blob)
       return normalizeOcrItems(result?.items ?? [])
+    } catch (error) {
+      if (error instanceof Error && (error.name === 'TimeoutError' || error.name === 'AbortError')) {
+        throw new Error('识别资源加载超时，请检查网络后重新识别')
+      }
+      throw error
     } finally {
       // Finish releasing sessions before the next image can create new ones.
       await resetOcrEngine()
@@ -64,7 +70,10 @@ export function scaleOcrBlocks(blocks: OcrBlock[], scale: number, scaleY = scale
 
 async function loadEngine() {
   if (!enginePromise) {
-    enginePromise = import('@paddleocr/paddleocr-js').then((mod) => {
+    enginePromise = Promise.all([
+      import('@paddleocr/paddleocr-js'),
+      prepareOcrAssets(ocrModelUrl(OCR_MODEL_FILES.det), ocrModelUrl(OCR_MODEL_FILES.rec)),
+    ]).then(([mod, assets]) => {
       const factory = mod as unknown as { PaddleOCR: PaddleLike }
       return factory.PaddleOCR.create({
         lang: 'ch',
@@ -78,6 +87,7 @@ async function loadEngine() {
         textDetMaxSideLimit: 640,
         textRecognitionBatchSize: 1,
         worker: false,
+        fetch: assets.fetch,
         ortOptions: { backend: 'wasm', numThreads: 1 },
       })
     }).catch((error: unknown) => {
@@ -121,7 +131,11 @@ function mergeSameLine(blocks: OcrBlock[]): OcrBlock[] {
   const lines: OcrBlock[][] = []
   for (const block of pending) {
     const bounds = polygonBounds(block.polygon)
-    const line = lines.find((group) => verticalOverlap(bounds, polygonBounds(group[0].polygon)) >= 0.55)
+    const line = lines.find((group) => {
+      const other = polygonBounds(group[0].polygon)
+      const sizeRatio = Math.min(bounds.height, other.height) / Math.max(bounds.height, other.height)
+      return sizeRatio >= 0.55 && verticalOverlap(bounds, other) >= 0.55
+    })
     if (line) line.push(block)
     else lines.push([block])
   }

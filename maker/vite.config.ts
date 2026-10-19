@@ -4,12 +4,16 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   base: '/ChineseBQB/maker/',
+  resolve: {
+    // This editor uses WASM only. The default entry also ships the much larger GPU runtime.
+    alias: [{ find: /^onnxruntime-web$/, replacement: 'onnxruntime-web/wasm' }],
+  },
   build: {
     outDir: 'dist',
     emptyOutDir: true,
   },
   optimizeDeps: {
-    exclude: ['onnxruntime-web'],
+    exclude: ['onnxruntime-web', 'onnxruntime-web/wasm'],
   },
   server: {
     proxy: {

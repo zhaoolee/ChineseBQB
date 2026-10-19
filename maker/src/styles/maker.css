@@ -221,3 +221,48 @@ input, select { border: 1px solid #e4dad1; border-radius: 6px; padding: 8px; bac
 .style-row label { flex: 1 1 72px; }
 .style-row input[type="color"] { height: 36px; padding: 4px; }
 .loading { margin: 8px 12px; }
+
+/* OCR in progress: a small paper-toned scan frame with a soft light band. The label stays static. */
+.ocr-pending { display: flex; align-items: center; gap: 8px; }
+.ocr-scan {
+  position: relative;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border: 1px solid rgba(111, 66, 25, 0.38);
+  border-radius: 5px;
+  background: linear-gradient(180deg, #fffdf8, #f6efe4);
+  overflow: hidden;
+  animation: ocr-breathe 2.8s ease-in-out infinite;
+}
+.ocr-scan::after {
+  content: '';
+  position: absolute;
+  inset: 5px 4px;
+  background: repeating-linear-gradient(to bottom, rgba(111, 66, 25, 0.32) 0 1px, transparent 1px 4px);
+}
+.ocr-scan-beam {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  top: 0;
+  height: 45%;
+  background: linear-gradient(180deg, rgba(196, 85, 42, 0), rgba(196, 85, 42, 0.3) 70%, rgba(224, 163, 92, 0.42));
+  animation: ocr-scan 1.9s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+@keyframes ocr-scan {
+  0% { transform: translateY(-110%); opacity: 0.2; }
+  15% { opacity: 0.55; }
+  55% { opacity: 0.85; }
+  85% { opacity: 0.55; }
+  100% { transform: translateY(240%); opacity: 0.2; }
+}
+@keyframes ocr-breathe {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(196, 85, 42, 0.16); }
+  50% { box-shadow: 0 0 0 3px rgba(196, 85, 42, 0.07); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ocr-scan,
+  .ocr-scan-beam { animation: none; }
+  .ocr-scan-beam { top: 6px; height: 6px; opacity: 0.55; }
+}
