@@ -55,6 +55,7 @@ python scripts/check_maker.py
 
 - 两份权重在 `maker/public/models/`，开发和 Pages 都从 `/ChineseBQB/maker/models/` 加载。识别不会请求 `paddle-model-ecology.bj.bcebos.com`。
 - 这些文件是模型，不是用户的图片。本应用没有把图片发给 OCR 服务的接口。
+- OCR 程序独立打包，脚本下载失败时最多尝试三次，重试地址绕过浏览器缓存的失败结果；后续点「重新识别」仍可发起新请求，无需刷新页面。构建时检查 OCR 不会成为主页面的静态依赖。
 - 开始识别时并行下载两份模型和仅 WASM 的运行库，避免模型下载完才开始下载运行库。公共识别资源保存在浏览器 Cache Storage 中；存储不可用时仍可直接下载识别，不缓存用户图片。
 - 资源下载最多等待 90 秒。失败时显示原因并提供「重新识别」，重试不会被上一轮失败的任务堵住。
 - Vite 会把 `onnxruntime-web` 的 WASM 放进 `/ChineseBQB/maker/assets/`。没有启用 Worker，因此不会改用 jsDelivr 上的 WASM。
@@ -86,6 +87,10 @@ python scripts/check_maker.py
 4. 去掉 `maker/models` 里的权重后再识别，确认失败提示还在，加字和导出仍能用。
 
 没有在 CI 里跑 Playwright。上面的步骤就是浏览器回归清单。
+
+## 模块下载恢复回归
+
+2026-10-19：使用生产构建，在桌面 Safari 和 Chromium 中对 OCR 脚本注入连续三次 HTTP 503，再恢复请求；点击「重新识别」后，两者均在不刷新页面的情况下识别出样例图片的「丟人」。另验证了首次脚本请求失败后自动换地址重试成功。此项未代替 iPhone 真机验证。
 
 ## 真机回归记录
 
