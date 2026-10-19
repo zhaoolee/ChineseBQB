@@ -1,9 +1,9 @@
 import { decideCatalogSrc, readCatalog, siteAsset, siteBaseFrom, makerBaseUrl } from '../lib/catalog'
 import { createHistory, historyCommit, historyRedo, historyUndo, type HistoryState } from '../lib/history'
-import { decodeGifFrames, gifWithinBudget, type GifFrame } from '../lib/gif'
+import { decodeGifFrames, type GifFrame } from '../lib/gif'
 import { assertEditableFile, sniffImage } from '../lib/image'
 import { recognize, scaleOcrBlocks } from '../lib/ocr'
-import { canvasToPng } from '../lib/paint'
+import { prepareOcrInput } from '../lib/ocr-input'
 import { addedTextStyle, defaultTextStyle, liveRedraw } from '../lib/plan'
 import type { CatalogImage, FreeText, OcrBlock, Point, TextStyle } from '../types'
 
@@ -150,6 +150,8 @@ export async function openCatalogImage(image: CatalogImage) {
     const response = await fetch(assetUrl(image.src))
     if (!response.ok) throw new Error(`原图加载失败（${response.status}）`)
     const blob = await response.blob()
+    if (token !== imageToken) return
+    if (blob.size > 15_000_000) throw new Error('图片超过 15 MB，请先缩小。')
     const decoded = await decodeBlob(blob)
     if (token !== imageToken) return
     previewUrl = URL.createObjectURL(blob)
@@ -178,10 +180,12 @@ export async function openLocalFile(file: File) {
   ocrToken += 1
   try {
     assertEditableFile(file)
+    revokePreview()
+    update({ image: null, imageLoading: true, imageError: null, ocrStatus: 'idle', cellFocus: null, history: createHistory(emptyEditable()) })
     const bytes = new Uint8Array(await file.arrayBuffer())
+    if (token !== imageToken) return
     const sniffed = sniffImage(bytes, file.type)
     const blob = new Blob([bytes], { type: sniffed.mime || file.type })
-    revokePreview()
     const url = new URL(location.href)
     url.searchParams.delete('src')
     history.replaceState(null, '', url)
@@ -208,7 +212,8 @@ export async function openLocalFile(file: File) {
     })
     void runOcr()
   } catch (error) {
-    update({ imageError: error instanceof Error ? error.message : '这张图片打不开' })
+    if (token !== imageToken) return
+    update({ imageLoading: false, imageError: error instanceof Error ? error.message : '这张图片打不开' })
   }
 }
 
@@ -222,8 +227,8 @@ export async function runOcr() {
   const sourceId = image.source.id
   update({ ocrStatus: 'loading', ocrMessage: '正在加载识别模型，图片不会离开这台设备。' })
   try {
-    const prepared = await ocrInput(image)
-    const blocks = scaleOcrBlocks(await recognize(prepared.blob), prepared.scale)
+    const prepared = await prepareOcrInput(image.imageData)
+    const blocks = scaleOcrBlocks(await recognize(prepared.blob, () => token === ocrToken), prepared.scaleX, prepared.scaleY)
     if (token !== ocrToken || state.image?.source.id !== sourceId) return
     const present = { ...emptyEditable(), blocks, selectedId: blocks[0]?.id ?? null }
     update({
@@ -484,54 +489,6 @@ function revokePreview() {
   previewUrl = ''
 }
 
-const OCR_MIN_EDGE = 480
-
-async function ocrInput(image: LoadedImage): Promise<{ blob: Blob; scale: number }> {
-  const edge = Math.max(image.naturalWidth, image.naturalHeight)
-  if (!image.imageData || edge >= OCR_MIN_EDGE || edge < 1) return { blob: await frameBlob(image), scale: 1 }
-  const scale = OCR_MIN_EDGE / edge
-  const width = Math.max(1, Math.round(image.naturalWidth * scale))
-  const height = Math.max(1, Math.round(image.naturalHeight * scale))
-  const source = document.createElement('canvas')
-  source.width = image.imageData.width
-  source.height = image.imageData.height
-  const sourceContext = source.getContext('2d')
-  if (!sourceContext) throw new Error('浏览器不能读取这张图片的像素。')
-  sourceContext.putImageData(image.imageData, 0, 0)
-  const canvas = document.createElement('canvas')
-  canvas.width = width
-  canvas.height = height
-  const context = canvas.getContext('2d')
-  if (!context) throw new Error('浏览器不能读取这张图片的像素。')
-  context.imageSmoothingEnabled = true
-  context.drawImage(source, 0, 0, width, height)
-  try {
-    return { blob: await canvasToPng(canvas), scale }
-  } finally {
-    source.width = 0
-    source.height = 0
-    canvas.width = 0
-    canvas.height = 0
-  }
-}
-
-async function frameBlob(image: LoadedImage): Promise<Blob> {
-  if (!image.source.animated && image.blob) return image.blob
-  if (!image.imageData) throw new Error('当前没有可识别的图片。')
-  const canvas = document.createElement('canvas')
-  canvas.width = image.imageData.width
-  canvas.height = image.imageData.height
-  const context = canvas.getContext('2d')
-  if (!context) throw new Error('浏览器不能读取这张图片的像素。')
-  context.putImageData(image.imageData, 0, 0)
-  try {
-    return await canvasToPng(canvas)
-  } finally {
-    canvas.width = 0
-    canvas.height = 0
-  }
-}
-
 type DecodedImage = {
   imageData: ImageData
   width: number
@@ -552,36 +509,28 @@ async function decodeBlob(blob: Blob): Promise<DecodedImage> {
   const bytes = new Uint8Array(await blob.arrayBuffer())
   const sniffed = sniffImage(bytes, blob.type || '')
   if (sniffed.mime === 'image/gif') {
-    try {
-      const gif = decodeGifFrames(bytes)
-      if (gif.width > 8192 || gif.height > 8192) throw new Error('图片边长超过 8192，请先缩小。')
-      const limitedGif = gif.frames.length > 1 && !gifWithinBudget(gif.width, gif.height, gif.frames.length)
-      const frames = gif.frames.length > 1 && !limitedGif ? gif.frames : undefined
-      return {
-        imageData: gif.frames[0].imageData,
-        width: gif.width,
-        height: gif.height,
-        frames,
-        singleFrameAnimation: !frames && !limitedGif,
-        limitedGif,
-      }
-    } catch (error) {
-      if (error instanceof Error && error.message.includes('8192')) throw error
+    const gif = decodeGifFrames(bytes)
+    const frames = gif.frames.length > 1 ? gif.frames : undefined
+    return {
+      imageData: gif.frames[0].imageData,
+      width: gif.width,
+      height: gif.height,
+      frames,
+      singleFrameAnimation: false,
+      limitedGif: gif.limited,
     }
   }
   const bitmap = await createImageBitmap(new Blob([bytes], { type: sniffed.mime || blob.type }))
+  const canvas = document.createElement('canvas')
   try {
     if (bitmap.width > 8192 || bitmap.height > 8192) throw new Error('图片边长超过 8192，请先缩小。')
     const fitted = fitEditSize(bitmap.width, bitmap.height)
-    const canvas = document.createElement('canvas')
     canvas.width = fitted.width
     canvas.height = fitted.height
     const context = canvas.getContext('2d', { willReadFrequently: true })
     if (!context) throw new Error('浏览器不能读取这张图片的像素。')
     context.drawImage(bitmap, 0, 0, fitted.width, fitted.height)
     const imageData = context.getImageData(0, 0, fitted.width, fitted.height)
-    canvas.width = 0
-    canvas.height = 0
     return {
       imageData,
       width: fitted.width,
@@ -590,6 +539,7 @@ async function decodeBlob(blob: Blob): Promise<DecodedImage> {
       limitedGif: false,
     }
   } finally {
+    canvas.width = canvas.height = 0
     bitmap.close()
   }
 }

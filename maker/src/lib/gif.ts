@@ -1,4 +1,4 @@
-import { decompressFrames, parseGIF } from 'gifuct-js'
+import { decompressFrame, parseGIF } from 'gifuct-js'
 import { applyPalette, GIFEncoder, quantize } from 'gifenc'
 
 export type GifFrame = {
@@ -13,18 +13,34 @@ type GifPatch = {
   patch: Uint8ClampedArray
 }
 
-const PIXEL_BUDGET = 24_000_000
+const PIXEL_BUDGET = 8_000_000
+const MAX_GIF_EDGE = 1600
+const MAX_GIF_FRAMES = 200
 
-export function decodeGifFrames(bytes: Uint8Array): { width: number; height: number; frames: GifFrame[] } {
+export function decodeGifFrames(bytes: Uint8Array): { width: number; height: number; frames: GifFrame[]; limited: boolean } {
+  if (bytes.byteLength > 15_000_000) throw new Error('图片超过 15 MB，请先缩小。')
   const buffer = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer
   const parsed = parseGIF(buffer)
-  const raw = decompressFrames(parsed, true)
+  const { width, height } = parsed.lsd
+  const raw = parsed.frames.filter((frame) => 'image' in frame)
   if (!raw.length) throw new Error('这个 GIF 没有画面。')
-  const frames = composeGifFrames(parsed.lsd.width, parsed.lsd.height, raw)
-  return { width: parsed.lsd.width, height: parsed.lsd.height, frames }
+  // Inspect metadata before LZW decompression or allocating any pixel buffers.
+  for (const size of [{ width, height }, ...raw.map((frame) => frame.image.descriptor)]) {
+    if (size.width < 1 || size.height < 1 || size.width > MAX_GIF_EDGE || size.height > MAX_GIF_EDGE) {
+      throw new Error('GIF 尺寸无效或边长超过 1600，请先缩小。')
+    }
+  }
+  const limited = !gifWithinBudget(width, height, raw.length)
+  function* patches() {
+    for (const frame of limited ? raw.slice(0, 1) : raw) {
+      yield decompressFrame(frame, parsed.gct, true)
+    }
+  }
+  const frames = composeGifFrames(width, height, patches())
+  return { width, height, frames, limited }
 }
 
-export function composeGifFrames(width: number, height: number, frames: GifPatch[]): GifFrame[] {
+export function composeGifFrames(width: number, height: number, frames: Iterable<GifPatch>): GifFrame[] {
   let screen = new Uint8ClampedArray(width * height * 4)
   const output: GifFrame[] = []
   for (const frame of frames) {
@@ -32,7 +48,8 @@ export function composeGifFrames(width: number, height: number, frames: GifPatch
     blit(screen, width, height, frame)
     output.push({
       imageData: new ImageData(new Uint8ClampedArray(screen), width, height),
-      delayMs: Math.max(20, (frame.delay || 10) * 10),
+      // gifuct-js already converts GIF centiseconds to milliseconds.
+      delayMs: Math.max(20, frame.delay || 100),
     })
     if (frame.disposalType === 2) clearPatch(screen, width, height, frame)
     else if (frame.disposalType === 3 && saved) screen = saved
@@ -41,26 +58,45 @@ export function composeGifFrames(width: number, height: number, frames: GifPatch
 }
 
 export function gifWithinBudget(width: number, height: number, frameCount: number): boolean {
-  return width * height * frameCount <= PIXEL_BUDGET
+  return frameCount <= MAX_GIF_FRAMES && width * height * frameCount <= PIXEL_BUDGET
 }
 
-export function encodeGif(frames: GifFrame[]): Uint8Array {
-  if (!frames.length) throw new Error('没有可以导出的 GIF 帧。')
+export function encodeGif(frames: Iterable<GifFrame>): Uint8Array {
   const gif = GIFEncoder()
+  let count = 0
   for (const frame of frames) {
-    const rgba = frame.imageData.data
-    const palette = quantize(rgba, 256, { format: 'rgba4444', oneBitAlpha: true })
-    const index = applyPalette(rgba, palette, 'rgba4444')
-    const transparentIndex = palette.findIndex((color) => (color[3] ?? 255) === 0)
-    gif.writeFrame(index, frame.imageData.width, frame.imageData.height, {
-      palette,
-      delay: frame.delayMs,
-      transparent: transparentIndex >= 0,
-      transparentIndex: transparentIndex >= 0 ? transparentIndex : 0,
-    })
+    count += 1
+    writeFrame(gif, frame)
   }
+  if (!count) throw new Error('没有可以导出的 GIF 帧。')
   gif.finish()
   return gif.bytes()
+}
+
+/** Async producers can render and release one frame at a time, yielding to the UI. */
+export async function encodeGifAsync(frames: AsyncIterable<GifFrame>): Promise<Uint8Array> {
+  const gif = GIFEncoder()
+  let count = 0
+  for await (const frame of frames) {
+    writeFrame(gif, frame)
+    count += 1
+  }
+  if (!count) throw new Error('没有可以导出的 GIF 帧。')
+  gif.finish()
+  return gif.bytes()
+}
+
+function writeFrame(gif: ReturnType<typeof GIFEncoder>, frame: GifFrame) {
+  const rgba = frame.imageData.data
+  const palette = quantize(rgba, 256, { format: 'rgba4444', oneBitAlpha: true })
+  const index = applyPalette(rgba, palette, 'rgba4444')
+  const transparentIndex = palette.findIndex((color) => (color[3] ?? 255) === 0)
+  gif.writeFrame(index, frame.imageData.width, frame.imageData.height, {
+    palette,
+    delay: frame.delayMs,
+    transparent: transparentIndex >= 0,
+    transparentIndex: transparentIndex >= 0 ? transparentIndex : 0,
+  })
 }
 
 function blit(screen: Uint8ClampedArray, width: number, height: number, frame: GifPatch) {

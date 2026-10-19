@@ -11,6 +11,7 @@ type PaddleLike = {
 }
 
 let enginePromise: Promise<Awaited<ReturnType<PaddleLike['create']>>> | null = null
+let recognitionQueue: Promise<unknown> = Promise.resolve()
 
 export const OCR_MODEL_FILES = {
   det: 'PP-OCRv5_mobile_det_onnx_infer.tar',
@@ -22,10 +23,10 @@ export function ocrModelUrl(file: string, base = import.meta.env.BASE_URL): stri
   return `${prefix}models/${file}`
 }
 
-export function resetOcrEngine() {
+async function resetOcrEngine() {
   const current = enginePromise
   enginePromise = null
-  void current?.then((engine) => engine.dispose?.()).catch(() => undefined)
+  await current?.then((engine) => engine.dispose?.()).catch(() => undefined)
 }
 
 /**
@@ -35,17 +36,28 @@ export function resetOcrEngine() {
  * is loaded from the installed package on this origin. Worker mode stays off so
  * the SDK does not fall back to a CDN WASM build.
  */
-export async function recognize(blob: Blob): Promise<OcrBlock[]> {
-  const engine = await loadEngine()
-  const [result] = await engine.predict(blob)
-  return normalizeOcrItems(result?.items ?? [])
+export function recognize(blob: Blob, isCurrent = () => true): Promise<OcrBlock[]> {
+  const task = recognitionQueue.then(async () => {
+    if (!isCurrent()) return []
+    try {
+      const engine = await loadEngine()
+      if (!isCurrent()) return []
+      const [result] = await engine.predict(blob)
+      return normalizeOcrItems(result?.items ?? [])
+    } finally {
+      // Finish releasing sessions before the next image can create new ones.
+      await resetOcrEngine()
+    }
+  })
+  recognitionQueue = task.catch(() => undefined)
+  return task
 }
 
 /** Map boxes from an upscaled OCR image back onto the original pixels. */
-export function scaleOcrBlocks(blocks: OcrBlock[], scale: number): OcrBlock[] {
-  if (scale === 1) return blocks
+export function scaleOcrBlocks(blocks: OcrBlock[], scale: number, scaleY = scale): OcrBlock[] {
+  if (scale === 1 && scaleY === 1) return blocks
   return blocks.map((block) => {
-    const polygon = block.polygon.map((point) => ({ x: point.x / scale, y: point.y / scale })) as OcrBlock['polygon']
+    const polygon = block.polygon.map((point) => ({ x: point.x / scale, y: point.y / scaleY })) as OcrBlock['polygon']
     return { ...block, polygon, layout: blockLayout(polygon), textStyle: defaultTextStyle(polygon) }
   })
 }
@@ -61,6 +73,10 @@ async function loadEngine() {
         textDetectionModelAsset: { url: ocrModelUrl(OCR_MODEL_FILES.det) },
         textRecognitionModelName: 'PP-OCRv5_mobile_rec',
         textRecognitionModelAsset: { url: ocrModelUrl(OCR_MODEL_FILES.rec) },
+        textDetLimitType: 'max',
+        textDetLimitSideLen: 640,
+        textDetMaxSideLimit: 640,
+        textRecognitionBatchSize: 1,
         worker: false,
         ortOptions: { backend: 'wasm', numThreads: 1 },
       })
