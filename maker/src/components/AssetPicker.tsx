@@ -249,53 +249,56 @@ export function AssetPicker() {
               {categories.map((name) => <option key={name} value={name}>{name}</option>)}
             </select>
           </div>
-          {state.catalogLoading && <p className="muted">正在读取素材索引…</p>}
-          {state.catalogError && (
-            <p className="error">
-              {state.catalogError}
-              <button type="button" onClick={() => void loadCatalog()}>重试</button>
-            </p>
-          )}
-          {!state.catalogLoading && state.catalog.length > 0 && (
-            matched.length > 0
-              ? <h2 className="gallery-prompt">点击选图片</h2>
-              : <p className="muted">
-                  {searching
-                    ? `文件名和分类里没有「${query.trim()}」。图上的字如果没写进文件名，这里搜不到。索引共 ${state.catalog.length} 张。`
-                    : `${category ? '本分类' : '索引'} 0 张，已加载 0 张。搜索只看文件名和分类，不看图上的字。`}
-                </p>
-          )}
-          <div
-            className="thumbs-scroll"
-            ref={scrollRef}
-            onScroll={(event) => {
-              scrollMemory.current = { key: selectionKey, top: event.currentTarget.scrollTop }
-            }}
-          >
-            <div className="thumbs thumbs-grid" ref={gridRef} style={{ height: layout.height }}>
-              {visible.map((image, index) => (
-                <ThumbTile
-                  // Remount on search/filter changes so no tile keeps a stale loading or error state.
-                  key={`${selectionKey}:${image.src}`}
-                  image={image}
-                  style={layout.cards[index] ? { position: 'absolute', ...layout.cards[index] } : { visibility: 'hidden' }}
-                  selected={selectedId === image.src}
-                  eager={index < EAGER_THUMBS}
-                  buttonRef={selectedRef}
-                  onPick={() => {
-                    collapsePicker()
-                    void openCatalogImage(image)
-                  }}
-                />
-              ))}
-            </div>
-            {!state.catalogLoading && matched.length > 0 && (
-              <div className="gallery-more" ref={moreRef}>
-                {hasMore
-                  ? <button type="button" onClick={loadMore}>加载更多（已加载 {visible.length} / {matched.length}）</button>
-                  : <span role="status">已显示全部 {matched.length} 张</span>}
-              </div>
+          {/* Prompt and grid share one warm surface so the headline reads as a label for the thumbnails. */}
+          <div className="gallery-surface">
+            {state.catalogLoading && <p className="muted">正在读取素材索引…</p>}
+            {state.catalogError && (
+              <p className="error">
+                {state.catalogError}
+                <button type="button" onClick={() => void loadCatalog()}>重试</button>
+              </p>
             )}
+            {!state.catalogLoading && state.catalog.length > 0 && (
+              matched.length > 0
+                ? <h2 className="gallery-prompt" aria-label="点击图片开始编辑"><span>点击</span><span>图片</span><span>开始</span><span>编辑</span></h2>
+                : <p className="muted">
+                    {searching
+                      ? `文件名和分类里没有「${query.trim()}」。图上的字如果没写进文件名，这里搜不到。索引共 ${state.catalog.length} 张。`
+                      : `${category ? '本分类' : '索引'} 0 张，已加载 0 张。搜索只看文件名和分类，不看图上的字。`}
+                  </p>
+            )}
+            <div
+              className="thumbs-scroll"
+              ref={scrollRef}
+              onScroll={(event) => {
+                scrollMemory.current = { key: selectionKey, top: event.currentTarget.scrollTop }
+              }}
+            >
+              <div className="thumbs thumbs-grid" ref={gridRef} style={{ height: layout.height }}>
+                {visible.map((image, index) => (
+                  <ThumbTile
+                    // Remount on search/filter changes so no tile keeps a stale loading or error state.
+                    key={`${selectionKey}:${image.src}`}
+                    image={image}
+                    style={layout.cards[index] ? { position: 'absolute', ...layout.cards[index] } : { visibility: 'hidden' }}
+                    selected={selectedId === image.src}
+                    eager={index < EAGER_THUMBS}
+                    buttonRef={selectedRef}
+                    onPick={() => {
+                      collapsePicker()
+                      void openCatalogImage(image)
+                    }}
+                  />
+                ))}
+              </div>
+              {!state.catalogLoading && matched.length > 0 && (
+                <div className="gallery-more" ref={moreRef}>
+                  {hasMore
+                    ? <button type="button" onClick={loadMore}>加载更多（已加载 {visible.length} / {matched.length}）</button>
+                    : <span role="status">已显示全部 {matched.length} 张</span>}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

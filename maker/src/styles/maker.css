@@ -97,10 +97,26 @@ h2 { margin: 0; font-size: 16px; }
 .asset-bar .upload, .asset-bar > button { flex: none; }
 .asset-bar input { flex: 1; min-width: 0; }
 .asset-bar select { width: 34%; max-width: 180px; }
+/* Prompt + thumbnails sit on one warm surface: the background is what ties the headline to the grid below. */
+.asset-sheet .gallery-surface {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid #e4d5c1;
+  border-radius: 10px;
+  background: #f1e6d6;
+}
+.asset-sheet .gallery-surface > p { flex: none; overflow-wrap: anywhere; }
 .thumbs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; }
 .thumbs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); overflow: visible; }
 .asset-sheet .thumbs-scroll {
   flex: 1 1 auto;
+  min-width: 0;
   min-height: 0;
   overflow: auto;
   scrollbar-gutter: stable;
@@ -179,15 +195,21 @@ h2 { margin: 0; font-size: 16px; }
   line-height: 18px;
   margin-top: 4px;
 }
-/* Prompt sitting where the catalog summary used to be: a headline, not a control. */
+/* Prompt sitting where the catalog summary used to be: a headline, not a control.
+   Four unbreakable word groups spread edge to edge, so the ends align without splitting characters. */
 .asset-sheet .gallery-prompt {
   margin: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: clamp(22px, 2.4vw, 28px);
   line-height: 1.3;
   font-weight: 700;
   color: #6f4219;
   flex: none;
 }
+.asset-sheet .gallery-prompt > span { white-space: nowrap; }
 /* Batch "load more" row: outside the absolute-positioned grid, inside the scroller. */
 .asset-sheet .gallery-more {
   display: flex;
@@ -341,6 +363,8 @@ input, select { border: 1px solid #e4dad1; border-radius: 6px; padding: 8px; bac
   }
   /* Expanded gallery owns the upper half; the dock returns when it closes. */
   .canvas-pane:has(.asset-sheet) { flex: 1 1 auto; }
+  /* Keep 320px phones free of sideways scroll while the surface still reads as a distinct block. */
+  .asset-sheet .gallery-surface { padding: 8px; gap: 8px; }
 }
 
 .preview-tools { flex-direction: column; gap: 6px; }
