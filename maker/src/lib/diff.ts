@@ -27,16 +27,28 @@ export function diffText(oldText: string, newText: string): TextChange[] {
   }
 
   if (start === oldEnd && start === newEnd) return []
-  return coalesce(diffMiddle(oldParts, newParts, start, oldEnd, start, newEnd)).flatMap(splitUnequalReplacement)
+  return coalesce(diffMiddle(oldParts, newParts, start, oldEnd, start, newEnd))
+    .flatMap(item => splitUnequalReplacement(item, oldParts.length))
 }
 
 /** Keep the shared replacement in its old slots; only surplus characters are inserted or deleted. */
-function splitUnequalReplacement(item: TextChange): TextChange[] {
+function splitUnequalReplacement(item: TextChange, originalLength: number): TextChange[] {
   if (item.kind !== 'replace') return [item]
   const oldParts = segmentGraphemes(item.oldText)
   const newParts = segmentGraphemes(item.newText)
   const paired = Math.min(oldParts.length, newParts.length)
   if (oldParts.length === newParts.length) return [item]
+  // A longer opening phrase grows to the left of the unchanged suffix:
+  // 我从不失恋 → 老娘从不失恋 inserts 老 before replacing 我 with 娘.
+  if (item.oldStart === 0 && item.newStart === 0 && item.oldEnd < originalLength && newParts.length > paired) {
+    const surplus = newParts.length - paired
+    return [{
+      kind: 'insert', oldStart: 0, oldEnd: 0, newStart: 0, newEnd: surplus,
+      oldText: '', newText: newParts.slice(0, surplus).join(''),
+    }, {
+      ...item, newStart: surplus, newText: newParts.slice(surplus).join(''),
+    }]
+  }
   const replacement: TextChange = {
     ...item,
     oldEnd: item.oldStart + paired,

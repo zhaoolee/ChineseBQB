@@ -1,5 +1,5 @@
 import { colorToHex, luminance, sampleBackground, sampleCover, sampleInk, sampleInkStyle } from './background'
-import { appendCharPolygon, blockLayout, estimateFontSize, paddedCharPolygon } from './char-layout'
+import { blockLayout, estimateFontSize, paddedCharPolygon, targetGraphemePolygons } from './char-layout'
 import { diffText } from './diff'
 import { segmentGraphemes } from './grapheme'
 import { polygonBounds } from './geometry'
@@ -170,7 +170,7 @@ function unevenRegions(block: OcrBlock, image: ImageData | null, changes: TextCh
   const width = image?.width ?? Number.POSITIVE_INFINITY
   const height = image?.height ?? Number.POSITIVE_INFINITY
   const pad = Math.max(2, polygonBounds(block.polygon).height * 0.06)
-  let slot = 0
+  const targets = targetGraphemePolygons(block, width, height)
   const regions: EditRegion[] = []
   const singleOriginalChange = changes.filter((change) => change.oldEnd > change.oldStart).length === 1
   for (const change of changes) {
@@ -189,14 +189,14 @@ function unevenRegions(block: OcrBlock, image: ImageData | null, changes: TextCh
         blur: true,
       })
     }
-    for (const grapheme of segmentGraphemes(change.newText)) {
-      const polygon = appendCharPolygon(block, slot, width, height)
-      slot += 1
+    for (const [offset, grapheme] of segmentGraphemes(change.newText).entries()) {
+      const polygon = targets[change.newStart + offset]
       const sample = image
         ? sampleBackground(image, polygon)
         : { color: [255, 255, 255, 255] as [number, number, number, number], solid: false }
       regions.push({
-        change: { ...change, kind: 'insert', oldText: '', newText: grapheme, oldEnd: change.oldStart },
+        change: { ...change, kind: 'insert', oldText: '', newText: grapheme, oldEnd: change.oldStart,
+          newStart: change.newStart + offset, newEnd: change.newStart + offset + 1 },
         polygon,
         estimated: true,
         solid: sample.solid,

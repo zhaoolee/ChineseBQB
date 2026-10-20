@@ -261,6 +261,25 @@ export function appendCharPolygon(
   return box(room > 1 ? bounds.maxX + 1 : bounds.maxX, bounds.minY, room > 1 ? Math.min(charW, room - 1) : width, charH)
 }
 
+/** Place the entire prefix in reading order to the left; a tight margin narrows it as a group. */
+function prependCharPolygon(
+  block: Pick<OcrBlock, 'polygon' | 'originalText'>,
+  index: number,
+  count: number,
+  imageWidth: number,
+  imageHeight: number,
+): Point[] {
+  const bounds = polygonBounds(block.polygon)
+  const total = segmentGraphemes(block.originalText).reduce((sum, part) => sum + graphemeWeight(part), 0) || 1
+  const width = Math.max(8, bounds.width / total)
+  const height = Math.max(8, bounds.height)
+  const gap = Math.max(2, Math.min(width, height) * 0.12)
+  const room = Math.max(0, Math.min(bounds.minX, imageWidth))
+  const scale = Math.min(1, room / (count * (width + gap)))
+  const step = (width + gap) * scale
+  return clampPolygon(box(bounds.minX - count * step + index * step, bounds.minY, width * scale, height), imageWidth, imageHeight)
+}
+
 function layoutTargetGraphemes(
   block: Pick<OcrBlock, 'polygon' | 'originalText' | 'targetText'>,
   imageWidth: number,
@@ -290,10 +309,12 @@ function layoutTargetGraphemes(
         added.push(false)
       }
     } else {
+      const prefix = change.kind === 'insert' && change.oldStart === 0 && change.newStart === 0 && oldParts.length > 0
       for (let offset = 0; offset < newCount; offset += 1) {
-        polygons.push(appendCharPolygon(block, appendSlot, imageWidth, imageHeight))
+        polygons.push(prefix
+          ? prependCharPolygon(block, offset, newCount, imageWidth, imageHeight)
+          : appendCharPolygon(block, appendSlot++, imageWidth, imageHeight))
         added.push(true)
-        appendSlot += 1
       }
     }
     oldIndex = change.oldEnd
