@@ -11,14 +11,21 @@ class FakeWorker {
   reply(data: unknown) { this.onmessage?.({ data } as MessageEvent) }
 }
 let page: EventTarget
+let documentState: EventTarget & { visibilityState: string }
 beforeEach(() => {
   vi.resetModules()
   FakeWorker.instances = []
   page = new EventTarget()
+  Object.assign(page, { setTimeout: (callback: () => void, ms: number) => setTimeout(callback, ms), clearTimeout: (id: ReturnType<typeof setTimeout>) => clearTimeout(id) })
+  documentState = Object.assign(new EventTarget(), { visibilityState: 'visible' })
   vi.stubGlobal('Worker', FakeWorker)
   vi.stubGlobal('window', page)
+  vi.stubGlobal('document', documentState)
 })
-afterEach(() => {
+afterEach(async () => {
+  const { cancelOcrRecognition, cancelOcrWarmup } = await import('../src/lib/ocr-worker-client')
+  cancelOcrRecognition()
+  cancelOcrWarmup()
   vi.useRealTimers()
   vi.unstubAllGlobals()
 })
@@ -136,4 +143,141 @@ it('suppresses progress from stale recognition and after cancellation', async ()
   worker.reply({ kind: 'progress', progress: { stage: 'finish' } })
   await rejected
   expect(progress).not.toHaveBeenCalled()
+})
+
+it('prewarms only one worker, preserves it when opening a picture, and consumes it once', async () => {
+  const { warmOcrWorker, cancelOcrRecognition, runOcrWorker } = await import('../src/lib/ocr-worker-client')
+  warmOcrWorker()
+  warmOcrWorker()
+  const worker = FakeWorker.instances[0]
+  expect(FakeWorker.instances).toHaveLength(1)
+  expect(worker.postMessage).toHaveBeenCalledWith({kind: 'warmup'})
+  worker.reply({kind: 'progress', progress: {stage: 'initialize'}})
+  worker.reply({kind: 'ready'})
+  cancelOcrRecognition()
+  expect(worker.terminate).not.toHaveBeenCalled()
+  const progress = vi.fn()
+  const pending = runOcrWorker(new Blob(), progress)
+  expect(progress).toHaveBeenCalledWith({stage: 'initialize'})
+  expect(worker.postMessage).toHaveBeenLastCalledWith({kind: 'recognize', blob: expect.any(Blob)})
+  expect(FakeWorker.instances).toHaveLength(1)
+  worker.reply({ok: true, items: ['first']})
+  await expect(pending).resolves.toEqual(['first'])
+  expect(worker.terminate).toHaveBeenCalledOnce()
+  const next = runOcrWorker(new Blob())
+  expect(FakeWorker.instances).toHaveLength(2)
+  FakeWorker.instances[1].reply({ok: true, items: []})
+  await next
+})
+
+it('claims initialization already in flight without resolving recognition on the ready message', async () => {
+  const { warmOcrWorker, runOcrWorker } = await import('../src/lib/ocr-worker-client')
+  warmOcrWorker()
+  const progress = vi.fn()
+  const completed = vi.fn()
+  const pending = runOcrWorker(new Blob(), progress).then(completed)
+  const worker = FakeWorker.instances[0]
+  worker.reply({kind: 'ready'})
+  await Promise.resolve()
+  expect(completed).not.toHaveBeenCalled()
+  worker.reply({kind: 'progress', progress: {stage: 'recognize'}})
+  expect(progress).toHaveBeenLastCalledWith({stage: 'recognize'})
+  worker.reply({ok: true, items: []})
+  await pending
+  expect(completed).toHaveBeenCalledOnce()
+  expect(FakeWorker.instances).toHaveLength(1)
+})
+
+it('discards failed prewarming silently and starts recognition with a fresh worker', async () => {
+  const { warmOcrWorker, runOcrWorker } = await import('../src/lib/ocr-worker-client')
+  warmOcrWorker()
+  const failed = FakeWorker.instances[0]
+  failed.reply({ok: false, error: {name: 'RangeError', message: 'Out of memory'}})
+  expect(failed.terminate).toHaveBeenCalledOnce()
+  const pending = runOcrWorker(new Blob())
+  const fresh = FakeWorker.instances[1]
+  failed.reply({kind: 'ready'})
+  fresh.reply({ok: true, items: []})
+  await expect(pending).resolves.toEqual([])
+})
+
+it('expires an unused warmed heap and can still recognize afterward', async () => {
+  vi.useFakeTimers()
+  const { warmOcrWorker, runOcrWorker, OCR_WARM_IDLE_MS } = await import('../src/lib/ocr-worker-client')
+  warmOcrWorker()
+  const warm = FakeWorker.instances[0]
+  warm.reply({kind: 'ready'})
+  await vi.advanceTimersByTimeAsync(OCR_WARM_IDLE_MS)
+  expect(warm.terminate).toHaveBeenCalledOnce()
+  const pending = runOcrWorker(new Blob())
+  FakeWorker.instances[1].reply({ok: true, items: []})
+  await pending
+})
+
+it('times out stalled prewarming and resets its timer when a picture claims the worker', async () => {
+  vi.useFakeTimers()
+  const { warmOcrWorker, runOcrWorker, OCR_WORKER_TIMEOUT_MS } = await import('../src/lib/ocr-worker-client')
+  warmOcrWorker()
+  await vi.advanceTimersByTimeAsync(OCR_WORKER_TIMEOUT_MS)
+  expect(FakeWorker.instances[0].terminate).toHaveBeenCalledOnce()
+  warmOcrWorker()
+  await vi.advanceTimersByTimeAsync(OCR_WORKER_TIMEOUT_MS - 1)
+  const pending = runOcrWorker(new Blob())
+  const rejected = expect(pending).rejects.toMatchObject({name: 'TimeoutError'})
+  await vi.advanceTimersByTimeAsync(1)
+  expect(FakeWorker.instances[1].terminate).not.toHaveBeenCalled()
+  await vi.advanceTimersByTimeAsync(OCR_WORKER_TIMEOUT_MS - 1)
+  await rejected
+  expect(FakeWorker.instances[1].terminate).toHaveBeenCalledOnce()
+})
+
+it.each(['pagehide', 'hidden'])('releases unused prewarming on %s', async kind => {
+  const { warmOcrWorker } = await import('../src/lib/ocr-worker-client')
+  warmOcrWorker()
+  if (kind === 'pagehide') page.dispatchEvent(new Event('pagehide'))
+  else {
+    documentState.visibilityState = 'hidden'
+    documentState.dispatchEvent(new Event('visibilitychange'))
+  }
+  expect(FakeWorker.instances[0].terminate).toHaveBeenCalledOnce()
+})
+
+it('schedules after rendering, survives effect replay and cancels unused prewarming on unmount', async () => {
+  vi.useFakeTimers()
+  const { scheduleOcrWarmup } = await import('../src/lib/ocr-worker-client')
+  const firstCleanup = scheduleOcrWarmup()
+  firstCleanup()
+  const cleanup = scheduleOcrWarmup()
+  expect(FakeWorker.instances).toHaveLength(0)
+  await vi.advanceTimersByTimeAsync(0)
+  expect(FakeWorker.instances).toHaveLength(1)
+  cleanup()
+  expect(FakeWorker.instances[0].terminate).toHaveBeenCalledOnce()
+})
+
+it('waits until a background page is visible before preparing the engine', async () => {
+  vi.useFakeTimers()
+  const { scheduleOcrWarmup } = await import('../src/lib/ocr-worker-client')
+  documentState.visibilityState = 'hidden'
+  const cleanup = scheduleOcrWarmup()
+  await vi.advanceTimersByTimeAsync(0)
+  expect(FakeWorker.instances).toHaveLength(0)
+  documentState.visibilityState = 'visible'
+  documentState.dispatchEvent(new Event('visibilitychange'))
+  await vi.advanceTimersByTimeAsync(0)
+  expect(FakeWorker.instances).toHaveLength(1)
+  cleanup()
+})
+
+it('does not create a competing warm worker when recognition starts before the idle callback', async () => {
+  vi.useFakeTimers()
+  const { scheduleOcrWarmup, runOcrWorker } = await import('../src/lib/ocr-worker-client')
+  const cleanup = scheduleOcrWarmup()
+  const pending = runOcrWorker(new Blob())
+  await vi.advanceTimersByTimeAsync(0)
+  expect(FakeWorker.instances).toHaveLength(1)
+  cleanup()
+  expect(FakeWorker.instances[0].terminate).not.toHaveBeenCalled()
+  FakeWorker.instances[0].reply({ok: true, items: []})
+  await pending
 })

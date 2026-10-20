@@ -6,6 +6,7 @@ import { ImageToolbar } from './components/ImageToolbar'
 import { GifTimeline } from './components/GifTimeline'
 import { TextBlocksPanel } from './components/TextBlocksPanel'
 import { imageFileFromClipboard } from './lib/clipboard'
+import { scheduleOcrWarmup } from './lib/ocr-worker-client'
 import { useEditor } from './components/use-editor'
 import { boot, dismissNotice, editor, openLocalFile, redo, siteHome, undo } from './state/editor-store'
 
@@ -13,6 +14,7 @@ export function App() {
   const state = useEditor()
   const [pendingPaste, setPendingPaste] = useState<File | null>(null)
   useEffect(() => { void boot() }, [])
+  useEffect(() => scheduleOcrWarmup(), [])
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && pendingPaste) {

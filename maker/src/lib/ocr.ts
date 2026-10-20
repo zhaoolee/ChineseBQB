@@ -10,7 +10,7 @@ export { cancelOcrRecognition } from './ocr-worker-client'
 
 let recognitionQueue: Promise<unknown> = Promise.resolve()
 
-/** Every request gets a fresh WASM context, released on every completion path. */
+/** The first request may claim a prewarmed context; every completion releases it. */
 export function recognize(blob: Blob, isCurrent = () => true, onProgress?: OcrProgressListener): Promise<OcrBlock[]> {
   const task = recognitionQueue.then(async () => {
     if (!isCurrent()) return []

@@ -73,7 +73,7 @@ export function OcrProgressIndicator({ progress, animated, frameIndex, frameCoun
       </div>
       <p className="ocr-progress-meta">
         <span>{frameText}</span>
-        {MODEL_HINT_STAGES.includes(progress.stage) && <span>首次识别需要加载模型，请稍候</span>}
+        {MODEL_HINT_STAGES.includes(progress.stage) && <span>识别模型正在准备中，请稍候</span>}
       </p>
     </div>
   )

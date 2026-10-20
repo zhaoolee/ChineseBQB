@@ -33,14 +33,18 @@ async function sourceToMat(cv: Cv, source: Blob) {
   }
 }
 
-async function recognize(blob: Blob) {
-  report('resources')
-  const [sdk, assets] = await Promise.all([
-    import('@paddleocr/paddleocr-js'),
-    prepareOcrAssets(ocrModelUrl(OCR_MODEL_FILES.det), ocrModelUrl(OCR_MODEL_FILES.rec)),
-  ])
-  let engine: Engine | null = null
-  try {
+let engine: Engine | null = null
+let initialization: Promise<Engine> | null = null
+let disposal: Promise<void> | null = null
+
+function prepareEngine(): Promise<Engine> {
+  if (initialization) return initialization
+  initialization = (async () => {
+    report('resources')
+    const [sdk, assets] = await Promise.all([
+      import('@paddleocr/paddleocr-js'),
+      prepareOcrAssets(ocrModelUrl(OCR_MODEL_FILES.det), ocrModelUrl(OCR_MODEL_FILES.rec)),
+    ])
     report('initialize')
     engine = await sdk.PaddleOCR.create({
       initialize: false,
@@ -57,24 +61,51 @@ async function recognize(blob: Blob) {
     if (typeof engine.sourceToMat !== 'function') throw new Error('识别引擎版本不兼容')
     engine.sourceToMat = sourceToMat
     await engine.initialize()
+    return engine
+  })()
+  return initialization
+}
+
+function disposeEngine(): Promise<void> {
+  if (!disposal) disposal = engine?.dispose().catch(() => undefined) ?? Promise.resolve()
+  return disposal
+}
+
+function reportError(error: unknown) {
+  self.postMessage({ ok: false, error: {
+    name: error instanceof Error ? error.name : 'Error',
+    message: error instanceof Error ? error.message : String(error),
+  } })
+}
+
+async function recognize(blob: Blob) {
+  try {
+    const ready = await prepareEngine()
     report('recognize')
-    const [result] = await engine.predict(blob)
+    const [result] = await ready.predict(blob)
     report('finish')
     return result?.items ?? []
   } finally {
-    await engine?.dispose().catch(() => undefined)
+    await disposeEngine()
   }
 }
 
 let started = false
+let warming = false
 self.onmessage = (event: MessageEvent) => {
+  if (event.data?.kind === 'warmup') {
+    if (started || warming) return
+    warming = true
+    void prepareEngine().then(
+      () => self.postMessage({ kind: 'ready' }),
+      async error => { await disposeEngine(); reportError(error) },
+    )
+    return
+  }
   if (started || event.data?.kind !== 'recognize' || !(event.data.blob instanceof Blob)) return
   started = true
   void recognize(event.data.blob).then(
     items => self.postMessage({ ok: true, items }),
-    error => self.postMessage({ ok: false, error: {
-      name: error instanceof Error ? error.name : 'Error',
-      message: error instanceof Error ? error.message : String(error),
-    } }),
+    reportError,
   )
 }
