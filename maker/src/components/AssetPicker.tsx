@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from 'react'
 import { createPortal } from 'react-dom'
 import { matchesQuery } from '../lib/catalog'
 import { assetUrl, loadCatalog, openCatalogImage, openLocalFile } from '../state/editor-store'
 import type { CatalogImage } from '../types'
 import { useEditor } from './use-editor'
+import { GALLERY_BATCH_SIZE, galleryLayout } from '../lib/gallery-layout'
 
 /** First visible thumbnails decode eagerly; the rest stay lazy so the sheet is not one big decode burst. */
 const EAGER_THUMBS = 4
@@ -30,12 +31,14 @@ function ThumbTile({
   eager,
   buttonRef,
   onPick,
+  style,
 }: {
   image: CatalogImage
   selected: boolean
   eager: boolean
   buttonRef: RefObject<HTMLButtonElement | null>
   onPick: () => void
+  style: CSSProperties
 }) {
   const [status, setStatus] = useState<ThumbStatus>('thumb-loading')
   const imgRef = useRef<HTMLImageElement>(null)
@@ -53,6 +56,7 @@ function ThumbTile({
       className={selected ? 'thumb selected' : 'thumb'}
       aria-pressed={selected}
       title={image.label}
+      style={style}
       onClick={onPick}
     >
       <span className={`thumb-media ${status}`} style={{ aspectRatio: thumbRatio(image) }}>
@@ -83,18 +87,64 @@ export function AssetPicker() {
     () => [...new Set(state.catalog.map((image) => image.categoryTitle).filter((title): title is string => Boolean(title)))],
     [state.catalog],
   )
-  const visible = useMemo(() => state.catalog.filter((image) => (
+  const matched = useMemo(() => state.catalog.filter((image) => (
     (!category || image.categoryTitle === category) && matchesQuery(image, query)
-  )).slice(0, 80), [state.catalog, category, query])
+  )), [state.catalog, category, query])
   const selectionKey = `${category}\u0000${query}`
+  const [page, setPage] = useState({ key: selectionKey, limit: GALLERY_BATCH_SIZE })
+  const limit = page.key === selectionKey ? page.limit : GALLERY_BATCH_SIZE
+  const visible = useMemo(() => matched.slice(0, limit), [matched, limit])
+  const warmImages = useMemo(() => matched.slice(0, PRELOAD_THUMBS), [matched])
+  const hasMore = visible.length < matched.length
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const gridRef = useRef<HTMLDivElement>(null)
+  const moreRef = useRef<HTMLDivElement>(null)
+  const [gridWidth, setGridWidth] = useState(0)
+  const layout = useMemo(() => galleryLayout(visible, gridWidth), [visible, gridWidth])
   const selectedId = state.image?.source.id
   const searching = query.trim().length > 0
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(
+    () => !(new URLSearchParams(location.search).get("src") ?? "").trim(),
+  )
   const [previewPane, setPreviewPane] = useState<HTMLElement | null>(null)
   const [headerActions, setHeaderActions] = useState<HTMLElement | null>(null)
   const seenSource = useRef('')
   const collapsePicker = () => setExpanded(false)
   const expandPicker = () => setExpanded(true)
+
+  const loadMore = () => setPage(current => ({ key: selectionKey,
+    limit: Math.min(matched.length, (current.key === selectionKey ? current.limit : GALLERY_BATCH_SIZE) + GALLERY_BATCH_SIZE),
+  }))
+
+  useLayoutEffect(() => {
+    const grid = gridRef.current
+    if (!expanded || !grid) return
+    const measure = () => setGridWidth(grid.clientWidth)
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(grid)
+    return () => observer.disconnect()
+  }, [expanded, previewPane])
+
+  useLayoutEffect(() => {
+    setPage({ key: selectionKey, limit: GALLERY_BATCH_SIZE })
+    if (scrollRef.current) scrollRef.current.scrollTop = 0
+  }, [selectionKey])
+
+  useEffect(() => {
+    const root = scrollRef.current
+    const sentinel = moreRef.current
+    if (!expanded || !hasMore || gridWidth <= 0 || !root || !sentinel || typeof IntersectionObserver === 'undefined') return
+    let requested = false
+    const observer = new IntersectionObserver(entries => {
+      if (!requested && entries.some(entry => entry.isIntersecting)) {
+        requested = true
+        loadMore()
+      }
+    }, { root, rootMargin: '600px 0px' })
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [expanded, hasMore, gridWidth, visible.length, selectionKey, matched.length])
 
   useEffect(() => {
     if (state.catalog.length === 0 && !state.catalogLoading && !state.catalogError) void loadCatalog()
@@ -113,12 +163,12 @@ export function AssetPicker() {
 
   useEffect(() => {
     if (expanded) selectedRef.current?.scrollIntoView({ inline: 'nearest', block: 'nearest' })
-  }, [selectedId, expanded])
+  }, [selectedId, expanded, gridWidth])
 
   // Warm up only the first screen of thumbnails once the index is in, and hold off while OCR owns the CPU.
   useEffect(() => {
-    if (!visible.length || state.ocrStatus === 'loading' || prefersSaveData()) return
-    const queue = visible.slice(0, PRELOAD_THUMBS)
+    if (!warmImages.length || state.ocrStatus === 'loading' || prefersSaveData()) return
+    const queue = warmImages
     if (!queue.length) return
     const preloaded: HTMLImageElement[] = []
     let cancelled = false
@@ -142,7 +192,7 @@ export function AssetPicker() {
       else window.clearTimeout(handle)
       for (const img of preloaded) img.src = ''
     }
-  }, [visible, state.ocrStatus])
+  }, [warmImages, state.ocrStatus])
 
   const pickLocalFile = (file: File | undefined) => {
     if (!file) return
@@ -173,19 +223,20 @@ export function AssetPicker() {
           {!state.catalogLoading && state.catalog.length > 0 && (
             <p className="muted">
               {searching
-                ? (visible.length
-                  ? `找到 ${visible.length} 张，文件名或分类里有这段字。`
+                ? (matched.length
+                  ? `找到 ${matched.length} 张，已加载 ${visible.length} 张。搜索只看文件名和分类。`
                   : `文件名和分类里没有「${query.trim()}」。图上的字如果没写进文件名，这里搜不到。索引共 ${state.catalog.length} 张。`)
-                : `索引 ${state.catalog.length} 张。搜索只看文件名和分类，不看图上的字。`}
+                : `${category ? '本分类' : '索引'} ${matched.length} 张，已加载 ${visible.length} 张。搜索只看文件名和分类，不看图上的字。`}
             </p>
           )}
-          <div className="thumbs-scroll">
-            <div className="thumbs thumbs-grid">
+          <div className="thumbs-scroll" ref={scrollRef}>
+            <div className="thumbs thumbs-grid" ref={gridRef} style={{ height: layout.height }}>
               {visible.map((image, index) => (
                 <ThumbTile
                   // Remount on search/filter changes so no tile keeps a stale loading or error state.
                   key={`${selectionKey}:${image.src}`}
                   image={image}
+                  style={layout.cards[index] ? { position: 'absolute', ...layout.cards[index] } : { visibility: 'hidden' }}
                   selected={selectedId === image.src}
                   eager={index < EAGER_THUMBS}
                   buttonRef={selectedRef}
@@ -196,6 +247,13 @@ export function AssetPicker() {
                 />
               ))}
             </div>
+            {!state.catalogLoading && matched.length > 0 && (
+              <div className="gallery-more" ref={moreRef}>
+                {hasMore
+                  ? <button type="button" onClick={loadMore}>加载更多（已加载 {visible.length} / {matched.length}）</button>
+                  : <span role="status">已显示全部 {matched.length} 张</span>}
+              </div>
+            )}
           </div>
         </div>
       )}

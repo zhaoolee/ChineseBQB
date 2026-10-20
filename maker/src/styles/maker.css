@@ -59,6 +59,9 @@ h2 { margin: 0; font-size: 16px; }
 .maker-app:has(.asset-sheet) .preview-tools,
 .maker-app:has(.asset-sheet) .preview-export,
 .maker-app:has(.asset-sheet) .text-pane .pane-head .row { display: none; }
+/* 图库打开时整个下方 dock（文字编辑/GIF 时间线/导出）也隐藏，所有宽度生效；收起或选图后 CSS 自动恢复。
+   图库内容与头部上传按钮经 portal 渲染在 dock 之外，不受影响。 */
+.canvas-pane:has(.asset-sheet) ~ .dock { display: none; }
 .dock {
   position: relative;
   z-index: 2;
@@ -100,13 +103,15 @@ h2 { margin: 0; font-size: 16px; }
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
+  scrollbar-gutter: stable;
 }
+/* Absolute-positioned masonry: the grid is just the positioning context, thumbs are placed inline. */
 .asset-sheet .thumbs-grid {
+  position: relative;
   display: block;
-  height: max-content;
+  flex: none;
+  padding: 0;
   overflow: visible;
-  column-width: 148px;
-  column-gap: 10px;
 }
 .thumb { flex: 0 0 88px; width: 88px; display: flex; flex-direction: column; gap: 4px; padding: 6px; text-align: left; }
 .asset-sheet .thumb {
@@ -115,8 +120,7 @@ h2 { margin: 0; font-size: 16px; }
   width: 100%;
   height: auto;
   min-width: 0;
-  margin: 0 0 10px;
-  break-inside: avoid;
+  margin: 0;
   overflow: hidden;
 }
 .thumb img { width: 100%; height: 72px; min-width: 0; object-fit: contain; background: #f3eee5; }
@@ -174,6 +178,20 @@ h2 { margin: 0; font-size: 16px; }
   height: 18px;
   line-height: 18px;
   margin-top: 4px;
+}
+/* Batch "load more" row: outside the absolute-positioned grid, inside the scroller. */
+.asset-sheet .gallery-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 8px;
+  color: #8d7761;
+  font-size: 12px;
+}
+.asset-sheet .gallery-more button {
+  min-height: 30px;
+  font-size: 12px;
 }
 .thumb.selected { outline: 2px solid #6f4219; }
 .thumb span, .muted, .status { color: #8d7761; font-size: 13px; }
@@ -314,7 +332,6 @@ input, select { border: 1px solid #e4dad1; border-radius: 6px; padding: 8px; bac
   }
   /* Expanded gallery owns the upper half; the dock returns when it closes. */
   .canvas-pane:has(.asset-sheet) { flex: 1 1 auto; }
-  .canvas-pane:has(.asset-sheet) ~ .dock { display: none; }
 }
 
 .preview-tools { flex-direction: column; gap: 6px; }
