@@ -260,7 +260,7 @@ export function AssetPicker() {
             )}
             {!state.catalogLoading && state.catalog.length > 0 && (
               matched.length > 0
-                ? <h2 className="gallery-prompt" aria-label="点击图片开始编辑"><span>点击</span><span>图片</span><span>开始</span><span>编辑</span></h2>
+                ? <h2 className="gallery-prompt" aria-label="点击图片开始编辑"><span>点击图片开始编辑</span></h2>
                 : <p className="muted">
                     {searching
                       ? `文件名和分类里没有「${query.trim()}」。图上的字如果没写进文件名，这里搜不到。索引共 ${state.catalog.length} 张。`

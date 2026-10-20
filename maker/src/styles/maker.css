@@ -196,20 +196,32 @@ h2 { margin: 0; font-size: 16px; }
   margin-top: 4px;
 }
 /* Prompt sitting where the catalog summary used to be: a headline, not a control.
-   Four unbreakable word groups spread edge to edge, so the ends align without splitting characters. */
+   One continuous sentence, centered, with a thin rule on each side. */
 .asset-sheet .gallery-prompt {
   margin: 0;
   width: 100%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: center;
+  gap: 12px;
   font-size: clamp(22px, 2.4vw, 28px);
   line-height: 1.3;
   font-weight: 700;
   color: #6f4219;
   flex: none;
 }
-.asset-sheet .gallery-prompt > span { white-space: nowrap; }
+.asset-sheet .gallery-prompt::before,
+.asset-sheet .gallery-prompt::after {
+  content: '';
+  flex: 1 1 0;
+  min-width: 8px;
+  height: 1px;
+  background: #cdb697;
+}
+.asset-sheet .gallery-prompt > span {
+  flex: none;
+  white-space: nowrap;
+}
 /* Batch "load more" row: outside the absolute-positioned grid, inside the scroller. */
 .asset-sheet .gallery-more {
   display: flex;
