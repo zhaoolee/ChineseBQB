@@ -1,0 +1,5 @@
+{{- $label := .label | default "这张图" -}}
+{{- $cover := .cover | default false -}}
+{{- $action := cond $cover "编辑封面图" "编辑这张图" -}}
+{{- $href := printf "%s?src=%s" ("maker/" | relURL) (urlquery .src) -}}
+<a class="image-edit{{ if $cover }} image-edit-cover{{ end }}" href="{{ $href }}" title="{{ $action }}：{{ $label }}" aria-label="{{ $action }}：{{ $label }}"><span class="image-edit-icon" aria-hidden="true"></span></a>

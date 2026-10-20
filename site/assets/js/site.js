@@ -85,6 +85,24 @@
     if (relative.includes('..') || relative.includes('\\') || !/^media\/[a-f0-9]{64}\.[a-z0-9]+$/i.test(relative)) return null;
     return relative;
   }
+  function makerHref(relative) {
+    const href = new URL('maker/', base);
+    href.searchParams.set('src', relative);
+    return href.href;
+  }
+  function editLink(relative, label) {
+    const link = document.createElement('a');
+    link.className = 'image-edit';
+    link.href = makerHref(relative);
+    const message = `编辑这张图：${label}`;
+    link.title = message;
+    link.setAttribute('aria-label', message);
+    const icon = document.createElement('span');
+    icon.className = 'image-edit-icon';
+    icon.setAttribute('aria-hidden', 'true');
+    link.append(icon);
+    return link;
+  }
   function updateMakerLink(item) {
     const maker = $('#preview-maker');
     const note = $('#preview-maker-note');
@@ -98,9 +116,7 @@
       note.textContent = '这张图片不能在 Maker 里打开。';
       return;
     }
-    const href = new URL('maker/', base);
-    href.searchParams.set('src', relative);
-    maker.href = href.href;
+    maker.href = makerHref(relative);
     maker.removeAttribute('aria-disabled');
     note.hidden = !animated;
     note.textContent = '这是动图。GIF 会把改字套到每一帧并导出整张；动画 WebP 仍然只有当前这一帧。';
@@ -208,6 +224,8 @@
     category.href = asset(item.categoryUrl);
     category.textContent = item.categoryTitle;
     card.append(link, caption, category);
+    const relative = catalogMediaPath(item.src);
+    if (relative) card.append(editLink(relative, item.label || item.name));
     return card;
   }
   function showMore() {
