@@ -1,4 +1,4 @@
-import { colorToHex, luminance, sampleBackground, sampleCover, sampleInk } from './background'
+import { colorToHex, luminance, sampleBackground, sampleCover, sampleInk, sampleInkStyle } from './background'
 import { appendCharPolygon, blockLayout, estimateFontSize, paddedCharPolygon } from './char-layout'
 import { diffText } from './diff'
 import { segmentGraphemes } from './grapheme'
@@ -40,20 +40,29 @@ export function defaultTextStyle(polygon: Point[], fill = '#111111'): TextStyle 
 
 /** New free text copies the largest original line's ink. With no text, it is white and softly outlined. */
 export function addedTextStyle(image: ImageData | null, blocks: OcrBlock[], polygon: Point[]): TextStyle {
-  const ink = image ? dominantInk(image, blocks) : null
-  if (!ink) {
+  const style = image ? dominantInkStyle(image, blocks) : null
+  if (!style) {
     return { ...defaultTextStyle(polygon, '#ffffff'), strokeWidth: 0, softOutline: true }
   }
-  return { ...defaultTextStyle(polygon, colorToHex(ink)), strokeWidth: 0, softOutline: false }
+  return { ...defaultTextStyle(polygon, style.fill), ...style, softOutline: false }
 }
 
-function dominantInk(image: ImageData, blocks: OcrBlock[]): [number, number, number, number] | null {
+function dominantInkStyle(image: ImageData, blocks: OcrBlock[]) {
   const ranked = [...blocks].sort((left, right) => polygonArea(right.polygon) - polygonArea(left.polygon))
   for (const block of ranked) {
-    const ink = sampleInk(image, block.polygon)
-    if (ink) return ink
+    const style = originalInkStyle(image, block.polygon)
+    if (style) return style
   }
   return null
+}
+
+function originalInkStyle(image: ImageData, polygon: Point[]): Pick<TextStyle, 'fill' | 'stroke' | 'strokeWidth'> | null {
+  const ink = sampleInkStyle(image, polygon)
+  return ink ? {
+    fill: colorToHex(ink.color),
+    stroke: ink.stroke ? colorToHex(ink.stroke) : luminance(ink.color) > 160 ? '#111111' : '#ffffff',
+    strokeWidth: ink.strokeWidth ?? 0,
+  } : null
 }
 
 function polygonArea(polygon: Point[]): number {
@@ -94,39 +103,39 @@ export function planBlockEdit(block: OcrBlock, image: ImageData | null): EditPla
   if (!equalReplace) {
     const regions = unevenRegions(block, image, changes)
     const drawn = regions.some((region) => !region.blur && region.change.newText)
-    const ink = drawn && image ? sampleInk(image, block.polygon) : null
+    const ink = drawn && image ? originalInkStyle(image, block.polygon) : null
     const fallback = regions.find((region) => !region.blur && region.change.newText)
     const fill = ink
-      ? colorToHex(ink)
+      ? ink.fill
       : fallback
         ? (luminance(fallback.color) < 140 ? '#f7f7f7' : '#161616')
         : undefined
     const stroke = ink
-      ? (luminance(ink) > 160 ? '#111111' : '#ffffff')
+      ? ink.stroke
       : fill === '#161616' ? '#ffffff' : '#111111'
     return {
       changes,
       safety: 'review',
       regions,
-      suggestedStyle: fill ? { fill, stroke } : undefined,
+      suggestedStyle: fill ? { fill, stroke, strokeWidth: ink?.strokeWidth ?? 0 } : undefined,
       message: '删掉的字只模糊它所在的位置。后加的字画在原句外面，没有改动的字保持原样。',
     }
   }
 
-  const ink = image ? sampleInk(image, block.polygon) : null
+  const ink = image ? originalInkStyle(image, block.polygon) : null
   const regions = changes.map((change) => replacementRegion(block, image, change, changes.length === 1))
   const solid = regions.every((region) => region.solid)
   const safety: EditSafety = !image ? 'review' : solid ? 'safe' : 'review'
   const fallbackFill = regions[0] && luminance(regions[0].color) < 140 ? '#f7f7f7' : '#161616'
-  const fill = ink ? colorToHex(ink) : fallbackFill
+  const fill = ink ? ink.fill : fallbackFill
   const stroke = ink
-    ? (luminance(ink) > 160 ? '#111111' : '#ffffff')
+    ? ink.stroke
     : fill === '#161616' ? '#ffffff' : '#111111'
   return {
     changes,
     safety,
     regions,
-    suggestedStyle: { fill, stroke },
+    suggestedStyle: { fill, stroke, strokeWidth: ink?.strokeWidth ?? 0 },
     message: safety === 'safe'
       ? '背景接近纯色，只会覆盖有变化的字。框是按整行估算的，不是模型给出的单字框。'
       : '背景不够干净，或还没有原图像素可采样。请先看预览，确认后再应用局部覆盖。',
@@ -203,10 +212,8 @@ export function liveRedraw(block: OcrBlock, image: ImageData | null): Pick<OcrBl
   const probed = planBlockEdit({ ...block, lineRedraw: false }, image)
   const changed = probed.changes.length > 0
   const lineRedraw = changed && probed.safety === 'manual'
-  const ink = image ? sampleInk(image, block.polygon) : null
-  const alreadyOriginal = Boolean(ink && block.textStyle.fill.toLowerCase() === colorToHex(ink))
-  const textStyle = !block.styleCustomized && probed.suggestedStyle?.fill && !alreadyOriginal
-    ? { ...block.textStyle, fill: probed.suggestedStyle.fill, stroke: probed.suggestedStyle.stroke ?? block.textStyle.stroke }
+  const textStyle = !block.styleCustomized && probed.suggestedStyle?.fill
+    ? { ...block.textStyle, ...probed.suggestedStyle }
     : block.textStyle
   return { lineRedraw, applyLocal: changed, textStyle }
 }
@@ -245,9 +252,6 @@ export function activePatches(block: OcrBlock, plan: EditPlan, image?: ImageData
 
 function inkStyle(block: OcrBlock, image: ImageData) {
   if (block.styleCustomized) return block.textStyle
-  const ink = sampleInk(image, block.polygon)
-  if (!ink) return block.textStyle
-  const fill = colorToHex(ink)
-  if (block.textStyle.fill.toLowerCase() === fill) return block.textStyle
-  return { ...block.textStyle, fill, stroke: luminance(ink) > 160 ? '#111111' : '#ffffff' }
+  const style = originalInkStyle(image, block.polygon)
+  return style ? { ...block.textStyle, ...style } : block.textStyle
 }

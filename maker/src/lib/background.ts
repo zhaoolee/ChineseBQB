@@ -9,7 +9,9 @@ export type BackgroundSample = {
 }
 
 const backgroundCache = new WeakMap<ImageData, Map<string, BackgroundSample>>()
-const inkCache = new WeakMap<ImageData, Map<string, [number, number, number, number] | null>>()
+type Color = [number, number, number, number]
+export type InkSample = { color: Color; stroke?: Color; strokeWidth?: number }
+const inkCache = new WeakMap<ImageData, Map<string, InkSample | null>>()
 
 function polygonKey(polygon: Point[], extra = ''): string {
   return `${extra}|${polygon.map((point) => `${point.x},${point.y}`).join('|')}`
@@ -91,20 +93,25 @@ export function colorToHex(color: [number, number, number, number]): string {
 
 /** The color of the original glyphs, not the panel they sit on. */
 export function sampleInk(image: ImageData, polygon: Point[]): [number, number, number, number] | null {
+  return sampleInkStyle(image, polygon)?.color ?? null
+}
+
+export function sampleInkStyle(image: ImageData, polygon: Point[]): InkSample | null {
   const key = polygonKey(polygon)
   const store = inkCache.get(image)
   if (store?.has(key)) return store.get(key) ?? null
   return remember(inkCache, image, key, readInk(image, polygon))
 }
 
-function readInk(image: ImageData, polygon: Point[]): [number, number, number, number] | null {
+function readInk(image: ImageData, polygon: Point[]): InkSample | null {
   const background = sampleBackground(image, polygon).color
   const bounds = polygonBounds(polygon)
   const x0 = Math.max(0, Math.floor(bounds.minX))
   const x1 = Math.min(image.width - 1, Math.ceil(bounds.maxX))
   const y0 = Math.max(0, Math.floor(bounds.minY))
   const y1 = Math.min(image.height - 1, Math.ceil(bounds.maxY))
-  const buckets = new Map<string, [number, number, number, number][]>()
+  const buckets = new Map<string, ColorBucket>()
+  const radius = Math.max(2, Math.min(6, Math.round(bounds.height * 0.1)))
   let count = 0
   for (let y = y0; y <= y1; y += 1) {
     for (let x = x0; x <= x1; x += 1) {
@@ -119,13 +126,39 @@ function readInk(image: ImageData, polygon: Point[]): [number, number, number, n
       if (color[3] < 20) continue
       count += 1
       const key = [0, 1, 2].map((channel) => Math.round(color[channel] / 16) * 16).join(',')
-      const bucket = buckets.get(key)
-      if (bucket) bucket.push(color)
-      else buckets.set(key, [color])
+      let bucket = buckets.get(key)
+      if (!bucket) {
+        bucket = { colors: [], count: 0, strength: 0, supported: 0, neighbors: [] }
+        buckets.set(key, bucket)
+      }
+      bucket.colors.push(color)
+      bucket.count++
+      const evidence = strokeEvidence(image, x, y, color, radius)
+      if (evidence) {
+        bucket.strength! += evidence.strength
+        bucket.supported!++
+        bucket.neighbors!.push(...evidence.neighbors)
+      }
     }
   }
   if (count < 6) return null
-  const groups = mergeColorBuckets([...buckets.values()].map((colors) => ({ colors, count: colors.length })))
+  const groups = mergeColorBuckets([...buckets.values()])
+  // A glyph stroke has similar, contrasting colors on both sides at a short
+  // distance. Large areas of the photo rarely have that repeated structure.
+  const strokes = groups.filter(group => group.supported >= 6 && group.supported / group.count >= 0.4)
+    .sort((a, b) => b.strength * Math.sqrt(b.supported / b.count) - a.strength * Math.sqrt(a.supported / a.count))
+  if (strokes[0]) {
+    const glyph = strokes[0]
+    const neighbors = new Map<string, ColorBucket>()
+    const seeds: ColorBucket[] = []
+    for (const color of glyph.neighbors) {
+      if (colorDistance(color, glyph.color) < 96 || colorDistance(color, background) < 48) continue
+      pushColor(neighbors, seeds, color.map(channel => Math.round(channel / 16)).join(','), color)
+    }
+    const outline = largestColor(seeds)
+    const width = outline && outline.count >= 6 ? readOutlineWidth(image, polygon, glyph.color, outline.color) : 0
+    return width ? { color: glyph.color, stroke: outline!.color, strokeWidth: width } : { color: glyph.color }
+  }
   const distinct = groups
     .filter((group) => group.count >= 6 && colorDistance(group.color, background) >= 24)
     // Large photo regions can outnumber the strokes. Favor a repeated color
@@ -138,10 +171,63 @@ function readInk(image: ImageData, polygon: Point[]): [number, number, number, n
   const onPanel = main.count >= count * 0.45
     ? ranked.slice(1).find((group) => group.count >= glyphFloor && colorDistance(group.color, main.color) >= 48)
     : undefined
-  return (onPanel ?? main).color
+  return { color: (onPanel ?? main).color }
 }
 
-type ColorBucket = { colors: [number, number, number, number][]; count: number }
+type ColorBucket = { colors: Color[]; count: number; strength?: number; supported?: number; neighbors?: Color[] }
+
+function pixel(image: ImageData, x: number, y: number): Color | null {
+  if (x < 0 || y < 0 || x >= image.width || y >= image.height) return null
+  const i = (y * image.width + x) * 4
+  return image.data[i + 3] < 20 ? null : [image.data[i], image.data[i + 1], image.data[i + 2], image.data[i + 3]]
+}
+
+function strokeEvidence(image: ImageData, x: number, y: number, color: Color, radius: number) {
+  let best: { strength: number; neighbors: Color[] } | null = null
+  for (const [dx, dy] of [[1, 0], [0, 1], [1, 1], [1, -1]]) {
+    for (let a = 1; a <= radius; a++) {
+      const left = pixel(image, x - a * dx, y - a * dy)
+      if (!left || colorDistance(left, color) < 70) continue
+      for (let b = 1; b <= radius; b++) {
+        const right = pixel(image, x + b * dx, y + b * dy)
+        if (!right || colorDistance(right, color) < 70 || colorDistance(left, right) > 64) continue
+        const strength = Math.min(colorDistance(left, color), colorDistance(right, color))
+        if (!best || strength > best.strength) best = { strength, neighbors: [left, right] }
+      }
+    }
+  }
+  return best
+}
+
+/** Only inherit a thin band, not the whole background or a caption panel. */
+function readOutlineWidth(image: ImageData, polygon: Point[], ink: Color, outline: Color): number {
+  const bounds = polygonBounds(polygon)
+  const widths: number[] = []
+  const radius = Math.max(3, Math.min(8, Math.round(bounds.height * 0.16)))
+  const maxBand = Math.max(1, Math.min(4, Math.round(bounds.height * 0.08)))
+  let rays = 0
+  for (let y = Math.max(0, Math.floor(bounds.minY)); y <= Math.min(image.height - 1, Math.ceil(bounds.maxY)); y++) {
+    for (let x = Math.max(0, Math.floor(bounds.minX)); x <= Math.min(image.width - 1, Math.ceil(bounds.maxX)); x++) {
+      const center = pixel(image, x, y)
+      if (!center || colorDistance(center, ink) > 32 || !pointInPolygon({ x: x + 0.5, y: y + 0.5 }, polygon)) continue
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        rays++
+        let start = 0
+        for (let d = 1; d <= radius; d++) {
+          const next = pixel(image, x + d * dx, y + d * dy)
+          if (!next) break
+          if (colorDistance(next, outline) <= 56) {
+            if (!start) start = d
+          } else if (start) {
+            if (d - start <= maxBand && colorDistance(next, ink) > 64) widths.push(d - start)
+            break
+          }
+        }
+      }
+    }
+  }
+  return widths.length >= Math.max(6, rays * 0.1) ? median(widths) * 2 : 0
+}
 
 /** Paper inside the glyph box. The strip above the line can be the photo, so it is not used as the cover. */
 export function sampleCover(
@@ -202,11 +288,11 @@ function largestColor(seeds: ColorBucket[]): { color: [number, number, number, n
   return groups[0] ?? null
 }
 
-function mergeColorBuckets(seeds: { colors: [number, number, number, number][]; count: number }[]): { color: [number, number, number, number]; count: number }[] {
+function mergeColorBuckets(seeds: ColorBucket[]) {
   const pending = seeds
-    .map((seed) => ({ color: medianColor(seed.colors), colors: seed.colors, count: seed.count }))
+    .map((seed) => ({ ...seed, color: medianColor(seed.colors) }))
     .sort((left, right) => right.count - left.count)
-  const groups: { color: [number, number, number, number]; count: number }[] = []
+  const groups: { color: Color; count: number; strength: number; supported: number; neighbors: Color[] }[] = []
   const used = new Set<number>()
   for (let index = 0; index < pending.length; index += 1) {
     if (used.has(index)) continue
@@ -219,7 +305,12 @@ function mergeColorBuckets(seeds: { colors: [number, number, number, number][]; 
       used.add(other)
     }
     const colors = members.flatMap((member) => member.colors)
-    groups.push({ color: medianColor(colors), count: colors.length })
+    groups.push({
+      color: medianColor(colors), count: colors.length,
+      strength: members.reduce((sum, member) => sum + (member.strength ?? 0), 0),
+      supported: members.reduce((sum, member) => sum + (member.supported ?? 0), 0),
+      neighbors: members.flatMap(member => member.neighbors ?? []),
+    })
   }
   return groups
 }

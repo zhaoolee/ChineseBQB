@@ -431,6 +431,31 @@ describe('local replacement', () => {
     expect(color[2]).toBeGreaterThan(220)
   })
 
+  it.each([
+    { ink: [250, 250, 250, 255], outline: [8, 8, 8, 255], fill: '#fafafa' },
+    { ink: [238, 48, 36, 255], outline: [8, 8, 8, 255], fill: '#ee3024' },
+    { ink: [8, 8, 8, 255], outline: [250, 250, 250, 255], fill: '#080808' },
+  ])('inherits $fill glyphs and their outline over a larger photo region', ({ ink, outline, fill }) => {
+    const line: OcrBlock['polygon'] = [
+      { x: 10, y: 10 }, { x: 90, y: 10 }, { x: 90, y: 50 }, { x: 10, y: 50 },
+    ]
+    const rect = (x: number, y: number, width: number, height: number, color: number[]) => ({
+      polygon: [{ x, y }, { x: x + width, y }, { x: x + width, y: y + height }, { x, y: y + height }],
+      color: color as [number, number, number, number],
+    })
+    const photo = applyFills(solidImage(120, 60, [142, 105, 96, 255]), [
+      rect(12, 18, 76, 20, [85, 66, 63, 255]),
+      rect(26, 18, 7, 26, outline), rect(28, 20, 3, 22, ink),
+      rect(56, 18, 7, 26, outline), rect(58, 20, 3, 22, ink),
+    ])
+    const item = block('丢人', '丢人啊', { polygon: line })
+    const patch = activePatches(item, planBlockEdit(item, photo), photo)[0]
+    expect(patch.style.fill).toBe(fill)
+    expect(patch.style.strokeWidth).toBeGreaterThan(0)
+    expect(patch.style.stroke).toBe(outline[0] === 8 ? '#080808' : '#fafafa')
+    expect(addedTextStyle(photo, [item], line).fill).toBe(fill)
+  })
+
   it('reads light glyphs on a dark panel instead of the panel', () => {
     const source = solidImage(100, 50, [30, 70, 150, 255])
     const panel: OcrBlock['polygon'] = [
