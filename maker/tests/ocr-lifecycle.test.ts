@@ -106,3 +106,34 @@ it('terminates a stalled worker on timeout rather than leaving a background allo
   await rejected
   expect(FakeWorker.instances[0].terminate).toHaveBeenCalledOnce()
 })
+
+it('forwards progress without settling or terminating, and ignores messages after completion', async () => {
+  const { recognize } = await import('../src/lib/ocr')
+  const progress = vi.fn()
+  const pending = recognize(new Blob(), () => true, progress)
+  const worker = await nextWorker(1)
+  worker.reply({ kind: 'progress', progress: { stage: 'initialize' } })
+  worker.reply({ kind: 'progress', progress: { stage: 'recognize' } })
+  expect(progress.mock.calls.map(([value]) => value.stage)).toEqual(['initialize', 'recognize'])
+  expect(worker.terminate).not.toHaveBeenCalled()
+  worker.reply({ ok: true, items: [] })
+  await expect(pending).resolves.toEqual([])
+  worker.reply({ kind: 'progress', progress: { stage: 'finish' } })
+  expect(progress).toHaveBeenCalledTimes(2)
+  expect(worker.terminate).toHaveBeenCalledOnce()
+})
+
+it('suppresses progress from stale recognition and after cancellation', async () => {
+  const { recognize, cancelOcrRecognition } = await import('../src/lib/ocr')
+  let current = true
+  const progress = vi.fn()
+  const pending = recognize(new Blob(), () => current, progress)
+  const rejected = expect(pending).rejects.toMatchObject({ name: 'AbortError' })
+  const worker = await nextWorker(1)
+  current = false
+  worker.reply({ kind: 'progress', progress: { stage: 'recognize' } })
+  cancelOcrRecognition()
+  worker.reply({ kind: 'progress', progress: { stage: 'finish' } })
+  await rejected
+  expect(progress).not.toHaveBeenCalled()
+})

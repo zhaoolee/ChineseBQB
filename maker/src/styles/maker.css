@@ -263,49 +263,32 @@ input, select { border: 1px solid #e4dad1; border-radius: 6px; padding: 8px; bac
 .style-row input[type="color"] { height: 36px; padding: 4px; }
 .loading { margin: 8px 12px; }
 
-/* OCR in progress: a small paper-toned scan frame with a soft light band. The label stays static. */
-.ocr-pending { display: flex; align-items: center; gap: 8px; }
-.ocr-scan {
-  position: relative;
-  flex: none;
-  width: 20px;
-  height: 20px;
-  border: 1px solid rgba(111, 66, 25, 0.38);
-  border-radius: 5px;
-  background: linear-gradient(180deg, #fffdf8, #f6efe4);
-  overflow: hidden;
-  animation: ocr-breathe 2.8s ease-in-out infinite;
+/* OCR progress: five real stages, no time-based percentage. Stays under ~60px tall. */
+.ocr-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  max-width: min(360px, 100%);
+  color: #6f4219;
 }
-.ocr-scan::after {
-  content: '';
-  position: absolute;
-  inset: 5px 4px;
-  background: repeating-linear-gradient(to bottom, rgba(111, 66, 25, 0.32) 0 1px, transparent 1px 4px);
-}
-.ocr-scan-beam {
-  position: absolute;
-  left: -10%;
-  right: -10%;
-  top: 0;
-  height: 45%;
-  background: linear-gradient(180deg, rgba(196, 85, 42, 0), rgba(196, 85, 42, 0.3) 70%, rgba(224, 163, 92, 0.42));
-  animation: ocr-scan 1.9s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-}
-@keyframes ocr-scan {
-  0% { transform: translateY(-110%); opacity: 0.2; }
-  15% { opacity: 0.55; }
-  55% { opacity: 0.85; }
-  85% { opacity: 0.55; }
-  100% { transform: translateY(240%); opacity: 0.2; }
-}
-@keyframes ocr-breathe {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(196, 85, 42, 0.16); }
-  50% { box-shadow: 0 0 0 3px rgba(196, 85, 42, 0.07); }
+.ocr-progress-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; min-height: 18px; }
+.ocr-progress-stage { min-width: 0; font-size: 13px; line-height: 18px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ocr-progress-stage b { margin-right: 6px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.ocr-progress-elapsed { flex: none; color: #8d7761; font-size: 12px; line-height: 18px; font-variant-numeric: tabular-nums; }
+.ocr-progress-track { display: flex; width: 100%; height: 4px; border-radius: 999px; background: #eadfce; overflow: hidden; }
+.ocr-progress-done { flex: none; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #b07437, #8f5c2c); transition: width 0.28s ease; }
+.ocr-progress-current { flex: none; height: 100%; border-radius: inherit; background: #d9a05f; }
+.ocr-progress-current { animation: ocr-progress-step 1.5s ease-in-out infinite; }
+.ocr-progress-meta { display: flex; flex-wrap: wrap; gap: 2px 10px; margin: 0; color: #8d7761; font-size: 11px; line-height: 15px; }
+.ocr-progress-meta span { min-width: 0; }
+@keyframes ocr-progress-step {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ocr-scan,
-  .ocr-scan-beam { animation: none; }
-  .ocr-scan-beam { top: 6px; height: 6px; opacity: 0.55; }
+  .ocr-progress-current { animation: none; }
+  .ocr-progress-done { transition: none; }
 }
 
 @media (max-width: 640px) {

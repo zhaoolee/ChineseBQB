@@ -1,5 +1,10 @@
 import { prepareOcrAssets } from '../lib/ocr-assets'
 import { OCR_MODEL_FILES, ocrModelUrl } from '../lib/ocr-models'
+import type { OcrStage } from '../lib/ocr-progress'
+
+function report(stage: OcrStage) {
+  self.postMessage({ kind: 'progress', progress: { stage } })
+}
 
 type Mat = { delete(): void }
 type Cv = { CV_8UC4: number; matFromArray(rows: number, cols: number, type: number, pixels: Uint8ClampedArray): Mat }
@@ -29,12 +34,14 @@ async function sourceToMat(cv: Cv, source: Blob) {
 }
 
 async function recognize(blob: Blob) {
+  report('resources')
   const [sdk, assets] = await Promise.all([
     import('@paddleocr/paddleocr-js'),
     prepareOcrAssets(ocrModelUrl(OCR_MODEL_FILES.det), ocrModelUrl(OCR_MODEL_FILES.rec)),
   ])
   let engine: Engine | null = null
   try {
+    report('initialize')
     engine = await sdk.PaddleOCR.create({
       initialize: false,
       lang: 'ch', ocrVersion: 'PP-OCRv5',
@@ -50,7 +57,9 @@ async function recognize(blob: Blob) {
     if (typeof engine.sourceToMat !== 'function') throw new Error('识别引擎版本不兼容')
     engine.sourceToMat = sourceToMat
     await engine.initialize()
+    report('recognize')
     const [result] = await engine.predict(blob)
+    report('finish')
     return result?.items ?? []
   } finally {
     await engine?.dispose().catch(() => undefined)

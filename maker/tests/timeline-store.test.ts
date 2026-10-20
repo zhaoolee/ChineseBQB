@@ -66,3 +66,34 @@ it('invalidates pending OCR when seeking so a late result cannot replace another
   expect(s.editor.getState().gifFrameIndex).toBe(2)
   expect(s.editor.getState().ocrStatus).toBe('ready')
 })
+
+it('clears progress after failure or seeking and rejects late progress from the old frame', async () => {
+  const s = await loaded()
+  let report!: (value: { stage: 'recognize' }) => void
+  let fail!: (error: Error) => void
+  mocks.recognize.mockImplementationOnce((_blob, _current, onProgress) => new Promise((_resolve, reject) => {
+    report = onProgress
+    fail = reject
+  }))
+  const failed = s.runOcr()
+  expect(s.editor.getState().ocrProgress).toEqual({stage: 'prepare'})
+  await vi.waitFor(() => expect(report).toBeTypeOf('function'))
+  report({stage: 'recognize'})
+  expect(s.editor.getState().ocrProgress).toEqual({stage: 'recognize'})
+  fail(new Error('Failed'))
+  await failed
+  expect(s.editor.getState().ocrStatus).toBe('error')
+  expect(s.editor.getState().ocrProgress).toBeNull()
+  mocks.recognize.mockImplementationOnce((_blob, _current, onProgress) => new Promise((_resolve, reject) => {
+    report = onProgress
+    fail = reject
+  }))
+  const pending = s.runOcr()
+  await vi.waitFor(() => expect(mocks.recognize).toHaveBeenCalledTimes(3))
+  s.setGifFrame(2)
+  report({stage: 'recognize'})
+  fail(new Error('Cancelled'))
+  await pending
+  expect(s.editor.getState().ocrProgress).toBeNull()
+  expect(s.editor.getState().ocrStatus).toBe('ready')
+})

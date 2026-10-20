@@ -5,6 +5,7 @@ import { BangCells } from './BangCells'
 import { EditControls } from './EditControls'
 import { TextBlockItem } from './TextBlockItem'
 import { useEditor } from './use-editor'
+import { OcrProgressIndicator } from './OcrProgress'
 
 export function TextBlocksPanel() {
   const state = useEditor()
@@ -21,12 +22,12 @@ export function TextBlocksPanel() {
         </div>
       </div>
       {state.ocrStatus === 'loading' && (
-        <p className="status ocr-pending" role="status" aria-live="polite">
-          <span className="ocr-scan" aria-hidden="true">
-            <span className="ocr-scan-beam" />
-          </span>
-          <span>正在识别文本</span>
-        </p>
+        <OcrProgressIndicator
+          progress={state.ocrProgress}
+          animated={Boolean(state.image?.source.animated)}
+          frameIndex={state.gifFrameIndex}
+          frameCount={state.image?.frames?.length ?? 1}
+        />
       )}
       {state.ocrStatus === 'error' && (
         <div>

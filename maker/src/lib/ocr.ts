@@ -2,6 +2,7 @@ import { blockLayout } from './char-layout'
 import { orderQuad, polygonBounds } from './geometry'
 import { defaultTextStyle } from './plan'
 import { runOcrWorker } from './ocr-worker-client'
+import type { OcrProgressListener } from './ocr-progress'
 import type { OcrBlock, Point } from '../types'
 
 export { OCR_MODEL_FILES, ocrModelUrl } from './ocr-models'
@@ -10,11 +11,11 @@ export { cancelOcrRecognition } from './ocr-worker-client'
 let recognitionQueue: Promise<unknown> = Promise.resolve()
 
 /** Every request gets a fresh WASM context, released on every completion path. */
-export function recognize(blob: Blob, isCurrent = () => true): Promise<OcrBlock[]> {
+export function recognize(blob: Blob, isCurrent = () => true, onProgress?: OcrProgressListener): Promise<OcrBlock[]> {
   const task = recognitionQueue.then(async () => {
     if (!isCurrent()) return []
     try {
-      const items = await runOcrWorker(blob)
+      const items = await runOcrWorker(blob, progress => { if (isCurrent()) onProgress?.(progress) })
       return isCurrent() ? normalizeOcrItems(items) : []
     } catch (error) {
       if (error instanceof Error && /out of memory|memory access out of bounds|failed to allocate/i.test(error.message)) {

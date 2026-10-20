@@ -6,6 +6,7 @@ import { editsAtFrame, segmentAtFrame, splitSegment, type GifSegment } from '../
 import { assertEditableFile, sniffImage } from '../lib/image'
 import { cancelOcrRecognition, recognize, scaleOcrBlocks } from '../lib/ocr'
 import { prepareOcrInput } from '../lib/ocr-input'
+import type { OcrProgress } from '../lib/ocr-progress'
 import { addedTextStyle, defaultTextStyle, liveRedraw } from '../lib/plan'
 import type { CatalogImage, FreeText, OcrBlock, Point, TextStyle } from '../types'
 
@@ -44,6 +45,7 @@ export type EditorSnapshot = {
   imageError: string | null
   ocrStatus: 'idle' | 'loading' | 'ready' | 'error'
   ocrMessage: string
+  ocrProgress: OcrProgress | null
   notice: string | null
   view: { scale: number; panX: number; panY: number }
   history: HistoryState<Editable>
@@ -67,6 +69,7 @@ let state: EditorSnapshot = {
   imageError: null,
   ocrStatus: 'idle',
   ocrMessage: '选一张图后会自动识别文字。',
+  ocrProgress: null,
   notice: null,
   view: { scale: 1, panX: 0, panY: 0 },
   history: createHistory(emptyEditable()),
@@ -84,6 +87,7 @@ function emit() {
 }
 
 function update(patch: Partial<EditorSnapshot>) {
+  if (patch.ocrStatus && patch.ocrStatus !== 'loading') patch = { ...patch, ocrProgress: null }
   state = { ...state, ...patch }
   emit()
 }
@@ -243,10 +247,12 @@ export async function runOcr() {
   const token = ++ocrToken
   const sourceId = image.source.id
   const segmentId = segmentAtFrame(state.history.present.segments, state.gifFrameIndex)?.id
-  update({ gifPlaying: false, ocrStatus: 'loading', ocrMessage: '正在加载识别模型，图片不会离开这台设备。' })
+  update({ gifPlaying: false, ocrStatus: 'loading', ocrMessage: '正在识别文本，图片不会离开这台设备。', ocrProgress: { stage: 'prepare' } })
   try {
     const prepared = await prepareOcrInput(image.imageData)
-    const blocks = scaleOcrBlocks(await recognize(prepared.blob, () => token === ocrToken), prepared.scaleX, prepared.scaleY)
+    const blocks = scaleOcrBlocks(await recognize(prepared.blob, () => token === ocrToken, progress => {
+      if (token === ocrToken && state.image?.source.id === sourceId) update({ ocrProgress: progress })
+    }), prepared.scaleX, prepared.scaleY)
     if (token !== ocrToken || state.image?.source.id !== sourceId) return
     const current = state.history.present
     const scoped = blocks.map(block => ({ ...block, segmentId, id: `${segmentId ?? 'still'}:${token}:${block.id}` }))

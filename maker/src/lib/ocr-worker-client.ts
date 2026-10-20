@@ -1,3 +1,5 @@
+import { isOcrProgress, type OcrProgressListener } from './ocr-progress'
+
 export const OCR_WORKER_TIMEOUT_MS = 180_000
 let cancelActive: (() => void) | null = null
 
@@ -6,7 +8,7 @@ export function cancelOcrRecognition() {
 }
 
 /** One disposable worker owns both WASM heaps; no OCR runtime is imported by the page. */
-export function runOcrWorker(blob: Blob): Promise<unknown[]> {
+export function runOcrWorker(blob: Blob, onProgress?: OcrProgressListener): Promise<unknown[]> {
   return new Promise((resolve, reject) => {
     let worker: Worker | null = null
     let timer: ReturnType<typeof setTimeout> | undefined
@@ -30,7 +32,12 @@ export function runOcrWorker(blob: Blob): Promise<unknown[]> {
       if (typeof window !== 'undefined') window.addEventListener('pagehide', cancel, { once: true })
       timer = setTimeout(() => finish(new DOMException('识别超时，请重新识别', 'TimeoutError')), OCR_WORKER_TIMEOUT_MS)
       worker.onmessage = (event: MessageEvent) => {
+        if (settled) return
         const data = event.data
+        if (data?.kind === 'progress' && isOcrProgress(data.progress)) {
+          onProgress?.(data.progress)
+          return
+        }
         if (data?.ok === true && Array.isArray(data.items)) finish(null, data.items)
         else {
           const error = new Error(typeof data?.error?.message === 'string' ? data.error.message : '识别进程返回了无效结果')
