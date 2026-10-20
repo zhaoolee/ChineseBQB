@@ -204,7 +204,7 @@ export function AssetPicker() {
   )
   const headerChrome = headerActions && createPortal(
     <>
-      {(state.image || expanded) && <UploadButton onPick={pickLocalFile} />}
+      <UploadButton onPick={pickLocalFile} />
       <button type="button" onClick={togglePicker}>{expanded ? '收起' : '图库'}</button>
     </>,
     headerActions,
