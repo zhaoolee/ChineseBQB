@@ -109,8 +109,24 @@ export function AssetPicker() {
   const [previewPane, setPreviewPane] = useState<HTMLElement | null>(null)
   const [headerActions, setHeaderActions] = useState<HTMLElement | null>(null)
   const seenSource = useRef('')
-  const collapsePicker = () => setExpanded(false)
-  const expandPicker = () => setExpanded(true)
+  // Collapsing unmounts the scroll DOM, so the offset has to live in a ref. `key === null` means this
+  // filter never had a recorded position, which lets the first open still focus the selected thumb.
+  const scrollMemory = useRef<{ key: string | null; top: number }>({ key: null, top: 0 })
+  const restorePending = useRef(false)
+  const rememberedKey = useRef<string | null>(null)
+  const rememberScroll = () => {
+    const scroller = scrollRef.current
+    if (scroller) scrollMemory.current = { key: selectionKey, top: scroller.scrollTop }
+  }
+  const collapsePicker = () => {
+    rememberScroll()
+    setExpanded(false)
+  }
+  const expandPicker = () => {
+    // One-shot: the restore pass below consumes this so later batches and re-renders leave scrollTop alone.
+    restorePending.current = true
+    setExpanded(true)
+  }
 
   const loadMore = () => setPage(current => ({ key: selectionKey,
     limit: Math.min(matched.length, (current.key === selectionKey ? current.limit : GALLERY_BATCH_SIZE) + GALLERY_BATCH_SIZE),
@@ -129,7 +145,30 @@ export function AssetPicker() {
   useLayoutEffect(() => {
     setPage({ key: selectionKey, limit: GALLERY_BATCH_SIZE })
     if (scrollRef.current) scrollRef.current.scrollTop = 0
+    // A filter change starts at the top, and that top becomes this filter's saved position so a reopen
+    // never restores the previous filter's offset. The mount pass records nothing for the same reason
+    // the first open may still focus the selected thumb.
+    if (rememberedKey.current !== null && rememberedKey.current !== selectionKey) {
+      scrollMemory.current = { key: selectionKey, top: 0 }
+    }
+    rememberedKey.current = selectionKey
   }, [selectionKey])
+
+  // Restore only once per expand, and only after width and height are settled: restoring against a stale
+  // height would let the browser clamp scrollTop before the taller grid exists.
+  useLayoutEffect(() => {
+    if (!expanded || !restorePending.current) return
+    const scroller = scrollRef.current
+    const grid = gridRef.current
+    if (!scroller || !grid) return
+    const width = grid.clientWidth
+    if (width <= 0 || width !== gridWidth) return
+    if (visible.length > 0 && layout.height <= 0) return
+    const saved = scrollMemory.current
+    restorePending.current = false
+    if (saved.key === selectionKey) scroller.scrollTop = saved.top
+    else selectedRef.current?.scrollIntoView({ inline: 'nearest', block: 'nearest' })
+  }, [expanded, previewPane, gridWidth, layout.height, selectionKey])
 
   useEffect(() => {
     const root = scrollRef.current
@@ -152,7 +191,8 @@ export function AssetPicker() {
 
   useEffect(() => {
     const sourceId = selectedId ?? ''
-    if (sourceId && sourceId !== seenSource.current) setExpanded(false)
+    // Same collapse path as the toggle so picking an image still records the offset it was picked from.
+    if (sourceId && sourceId !== seenSource.current) collapsePicker()
     seenSource.current = sourceId
   }, [selectedId])
 
@@ -160,10 +200,6 @@ export function AssetPicker() {
     setPreviewPane(document.getElementById('preview-pane'))
     setHeaderActions(document.getElementById('header-actions'))
   }, [])
-
-  useEffect(() => {
-    if (expanded) selectedRef.current?.scrollIntoView({ inline: 'nearest', block: 'nearest' })
-  }, [selectedId, expanded, gridWidth])
 
   // Warm up only the first screen of thumbnails once the index is in, and hold off while OCR owns the CPU.
   useEffect(() => {
@@ -229,7 +265,13 @@ export function AssetPicker() {
                 : `${category ? '本分类' : '索引'} ${matched.length} 张，已加载 ${visible.length} 张。搜索只看文件名和分类，不看图上的字。`}
             </p>
           )}
-          <div className="thumbs-scroll" ref={scrollRef}>
+          <div
+            className="thumbs-scroll"
+            ref={scrollRef}
+            onScroll={(event) => {
+              scrollMemory.current = { key: selectionKey, top: event.currentTarget.scrollTop }
+            }}
+          >
             <div className="thumbs thumbs-grid" ref={gridRef} style={{ height: layout.height }}>
               {visible.map((image, index) => (
                 <ThumbTile
