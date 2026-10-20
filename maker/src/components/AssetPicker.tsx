@@ -257,13 +257,13 @@ export function AssetPicker() {
             </p>
           )}
           {!state.catalogLoading && state.catalog.length > 0 && (
-            <p className="muted">
-              {searching
-                ? (matched.length
-                  ? `找到 ${matched.length} 张，已加载 ${visible.length} 张。搜索只看文件名和分类。`
-                  : `文件名和分类里没有「${query.trim()}」。图上的字如果没写进文件名，这里搜不到。索引共 ${state.catalog.length} 张。`)
-                : `${category ? '本分类' : '索引'} ${matched.length} 张，已加载 ${visible.length} 张。搜索只看文件名和分类，不看图上的字。`}
-            </p>
+            matched.length > 0
+              ? <h2 className="gallery-prompt">点击选图片</h2>
+              : <p className="muted">
+                  {searching
+                    ? `文件名和分类里没有「${query.trim()}」。图上的字如果没写进文件名，这里搜不到。索引共 ${state.catalog.length} 张。`
+                    : `${category ? '本分类' : '索引'} 0 张，已加载 0 张。搜索只看文件名和分类，不看图上的字。`}
+                </p>
           )}
           <div
             className="thumbs-scroll"
