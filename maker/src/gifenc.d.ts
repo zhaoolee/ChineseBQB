@@ -5,6 +5,7 @@ declare module 'gifenc' {
     writeFrame(index: Uint8Array, width: number, height: number, opts?: {
       palette?: GifPalette
       delay?: number
+      dispose?: number
       transparent?: boolean
       transparentIndex?: number
       repeat?: number

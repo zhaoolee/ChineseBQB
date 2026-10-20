@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { addFreeText, focusCell, resetDocument, runOcr, select, setFreeText, type CellFocus } from '../state/editor-store'
+import { addFreeText, focusCell, resetDocument, runOcr, select, setFreeText, visibleEdits, type CellFocus } from '../state/editor-store'
 import type { FreeText } from '../types'
 import { BangCells } from './BangCells'
 import { EditControls } from './EditControls'
@@ -8,7 +8,7 @@ import { useEditor } from './use-editor'
 
 export function TextBlocksPanel() {
   const state = useEditor()
-  const present = state.history.present
+  const present = visibleEdits(state)
   const editable = Boolean(state.image?.imageData)
   return (
     <aside className="pane text-pane">
@@ -17,6 +17,7 @@ export function TextBlocksPanel() {
         <div className="row">
           <button type="button" disabled={!editable} onClick={addFreeText}>添加文字</button>
           <button type="button" disabled={!editable} onClick={resetDocument}>还原原图</button>
+          {state.image?.frames && <button type="button" disabled={state.ocrStatus === 'loading'} onClick={() => void runOcr()}>识别当前片段</button>}
         </div>
       </div>
       {state.ocrStatus === 'loading' && (

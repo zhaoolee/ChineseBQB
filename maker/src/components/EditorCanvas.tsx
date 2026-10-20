@@ -4,7 +4,8 @@ import { freeTextBox, pointInTextBox, scaledFontSize, textBoxHandles, type TextH
 import { pointInPolygon, polygonBounds } from '../lib/geometry'
 import { segmentGraphemes } from '../lib/grapheme'
 import { collectPatches } from '../lib/plan'
-import { paintComposite, paintOverlay } from '../lib/paint'
+import { paintComposite } from '../lib/paint'
+import { BeforeAfter } from './BeforeAfter'
 import {
   beginGesture,
   deleteFocusedCell,
@@ -15,6 +16,7 @@ import {
   select,
   updateManualPolygon,
   editor,
+  visibleEdits,
 } from '../state/editor-store'
 import { useEditor } from './use-editor'
 import type { Point } from '../types'
@@ -26,8 +28,7 @@ export function EditorCanvas() {
   const resizeObserver = useRef<ResizeObserver | null>(null)
   const [frame, setFrame] = useState({ width: 0, height: 0 })
   const image = state.image
-  const present = state.history.present
-  const gifPreview = Boolean(image?.frames && image.frames.length > 1)
+  const present = useMemo(() => visibleEdits(state), [state.history.present, state.gifFrameIndex])
 
   const bindStage = useCallback((node: HTMLElement | null) => {
     stageRef.current = node
@@ -54,21 +55,6 @@ export function EditorCanvas() {
     if (!canvas || !current?.imageData) return
     const patches = collectPatches(present.blocks, current.imageData)
     const texts = present.freeTexts
-    if (current.frames && current.frames.length > 1) {
-      const live = patches.length > 0 || texts.some((layer) => layer.text.length > 0)
-      if (!live) {
-        const context = canvas.getContext('2d')
-        if (canvas.width !== current.naturalWidth || canvas.height !== current.naturalHeight) {
-          canvas.width = current.naturalWidth
-          canvas.height = current.naturalHeight
-        } else {
-          context?.clearRect(0, 0, canvas.width, canvas.height)
-        }
-        return
-      }
-      paintOverlay(current.naturalWidth, current.naturalHeight, patches, texts, canvas, current.imageData)
-      return
-    }
     paintComposite(current.imageData, patches, texts, canvas)
   }, [image, present])
 
@@ -217,9 +203,8 @@ export function EditorCanvas() {
           delete event.currentTarget.dataset.centerY
         }}
       >
-        {gifPreview && <img className="gif-preview" src={image.previewUrl} alt="" />}
         <canvas ref={canvasRef} width={image.naturalWidth} height={image.naturalHeight} />
-        <svg className="overlay" viewBox={`0 0 ${image.naturalWidth} ${image.naturalHeight}`}>
+        <svg className="overlay" style={{ display: state.comparing || state.gifPlaying ? 'none' : undefined }} viewBox={`0 0 ${image.naturalWidth} ${image.naturalHeight}`}>
           {present.blocks.map((block) => {
             const polygon = block.manualPolygon ?? block.polygon
             const selected = present.selectedId === block.id
@@ -308,7 +293,7 @@ export function EditorCanvas() {
             )
           })}
         </svg>
-        {deleteAnchor && (
+        {!state.comparing && !state.gifPlaying && deleteAnchor && (
           <button
             type="button"
             className={deleteAnchor.below ? 'selection-delete below' : 'selection-delete'}
@@ -327,6 +312,7 @@ export function EditorCanvas() {
             删除
           </button>
         )}
+        {state.comparing && image.imageData && <BeforeAfter imageData={image.imageData} />}
       </div>
     </div>
   )

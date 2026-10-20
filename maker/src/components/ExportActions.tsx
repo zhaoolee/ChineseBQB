@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { exportGif } from '../lib/gif-export'
+import { exportSegmentedGif } from '../lib/gif-export'
 import { collectPatches } from '../lib/plan'
 import { canvasToImage, downloadBlob, editedDownloadName, inheritedStillExport, paintComposite } from '../lib/paint'
-import { editor } from '../state/editor-store'
+import { editor, setGifPlaying } from '../state/editor-store'
 import { useEditor } from './use-editor'
 
 export function ExportActions() {
@@ -13,6 +13,7 @@ export function ExportActions() {
   const exportLock = useRef(false)
   const [previewPane, setPreviewPane] = useState<HTMLElement | null>(null)
   const editable = Boolean(state.image?.imageData)
+  useEffect(() => { setMessage('') }, [state.image?.source.id])
   useEffect(() => {
     setPreviewPane(document.getElementById('preview-pane'))
   }, [])
@@ -41,8 +42,7 @@ export function ExportActions() {
     const image = latest.image
     const frames = image?.frames
     if (!image?.imageData || !frames || frames.length < 2) throw new Error('当前没有可导出的 GIF。')
-    const patches = collectPatches(latest.history.present.blocks, image.imageData)
-    return exportGif(frames, patches, latest.history.present.freeTexts)
+    return exportSegmentedGif(frames, latest.history.present)
   }
 
   const exportButton = (
@@ -53,6 +53,7 @@ export function ExportActions() {
       onClick={() => {
         if (exportLock.current) return
         exportLock.current = true
+        setGifPlaying(false)
         setExporting(true)
         const imageAtStart = editor.getState().image
         const task = gifExport
@@ -68,7 +69,7 @@ export function ExportActions() {
           })
         void task.then(({ blob, filename }) => {
           downloadBlob(blob, filename)
-          setMessage(gifExport ? '已开始下载，每一帧都带上了改字。' : '已开始下载。')
+          setMessage(gifExport ? '已开始下载，改字已按各片段应用，动画时长保留。' : '已开始下载。')
         }).catch((error: unknown) => setMessage(error instanceof Error ? error.message : '导出失败')).finally(() => {
           exportLock.current = false
           setExporting(false)

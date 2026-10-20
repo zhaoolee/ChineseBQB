@@ -20,7 +20,7 @@ function gifFile(width: number, height: number, count: number) {
 afterEach(() => vi.unstubAllGlobals())
 
 describe('bounded GIF processing', () => {
-  it('allocates only the first frame of an over-budget animation', () => {
+  it('downscales an over-budget animation while preserving frames and duration', () => {
     const sizes: number[] = []
     vi.stubGlobal('ImageData', class extends Pixels {
       constructor(data: Uint8ClampedArray, width: number, height: number) {
@@ -29,8 +29,10 @@ describe('bounded GIF processing', () => {
     })
     const decoded = decodeGifFrames(gifFile(1024,1024,25))
     expect(decoded.limited).toBe(true)
-    expect(decoded.frames).toHaveLength(1)
-    expect(sizes).toEqual([1024*1024*4])
+    expect(decoded.frames).toHaveLength(25)
+    expect(decoded.frames.reduce((sum, f) => sum + f.delayMs, 0)).toBe(2500)
+    expect(sizes.reduce((sum, size) => sum + size, 0)).toBeLessThanOrEqual(8_000_000 * 4)
+    expect(decoded.width).toBeLessThan(1024)
   })
   it('rejects huge logical dimensions before allocating ImageData', () => {
     const allocation = vi.fn()
@@ -41,7 +43,9 @@ describe('bounded GIF processing', () => {
   it('limits tiny animations with excessive frame counts', () => {
     vi.stubGlobal('ImageData', Pixels)
     expect(decodeGifFrames(gifFile(1,1,201))).toMatchObject({ limited:true, frames:expect.any(Array) })
-    expect(decodeGifFrames(gifFile(1,1,201)).frames).toHaveLength(1)
+    const result = decodeGifFrames(gifFile(1,1,201))
+    expect(result.frames.length).toBeLessThanOrEqual(200)
+    expect(result.frames.reduce((sum, frame) => sum + frame.delayMs, 0)).toBe(20_100)
   })
   it('preserves exact frame delays in synchronous and streaming exports', async () => {
     vi.stubGlobal('ImageData', Pixels)
@@ -51,6 +55,15 @@ describe('bounded GIF processing', () => {
     const asyncResult = decodeGifFrames(await encodeGifAsync(stream()))
     expect(sync.frames.map((frame)=>frame.delayMs)).toEqual([80,100,250])
     expect(asyncResult.frames.map((frame)=>frame.delayMs)).toEqual([80,100,250])
+  })
+  it('clears old pixels when a later full frame has transparency', () => {
+    vi.stubGlobal('ImageData', Pixels)
+    const result = decodeGifFrames(encodeGif([
+      {imageData:new ImageData(new Uint8ClampedArray([255,0,0,255,0,0,0,0]),2,1),delayMs:100},
+      {imageData:new ImageData(new Uint8ClampedArray([0,0,0,0,0,0,255,255]),2,1),delayMs:100},
+    ]))
+    expect(result.frames[1].imageData.data[3]).toBe(0)
+    expect(result.frames[1].imageData.data[7]).toBe(255)
   })
 })
 

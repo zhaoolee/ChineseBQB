@@ -86,8 +86,8 @@ export async function runPhoneSmoke() {
     over[6]=0;over[7]=4;over[8]=0;over[9]=4
     await openLocalFile(new File([new Uint8Array(over)],'synthetic-over-budget.gif',{type:'image/gif'}))
     await waitOcr()
-    assert(!editor.getState().image?.frames,'over-budget GIF must retain only its first frame')
-    assert(editor.getState().notice?.includes('太大'),'over-budget notice')
+    assert(editor.getState().image?.frames?.length===25,'over-budget GIF must preserve animation at a lower resolution')
+    assert(editor.getState().notice?.includes('调整'),'over-budget notice')
     log({stage:'gif-budget-fallback',status:'pass',compressedBytes:over.length})
     await openLocalFile(tiny);await waitOcr()
     log({stage:'complete',status:'pass',maxMainThreadGapMs:Math.round(maxGap)})

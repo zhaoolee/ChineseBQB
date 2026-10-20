@@ -116,11 +116,31 @@ h2 { margin: 0; font-size: 16px; }
   overflow: hidden;
 }
 .thumb img { width: 100%; height: 72px; min-width: 0; object-fit: contain; background: #f3eee5; }
-.asset-sheet .thumb img { display: block; width: 100%; height: auto; border-radius: 4px; }
-.asset-sheet .thumb em {
+/* Fixed-ratio media box: the card keeps its height before, during, and after the thumbnail arrives. */
+.asset-sheet .thumb-media {
+  position: relative;
+  display: block;
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #f1ebe1;
+  box-shadow: inset 0 0 0 1px #e9e1d5;
+}
+.asset-sheet .thumb-media img {
   position: absolute;
-  left: 10px;
-  bottom: 30px;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: transparent;
+  opacity: 0;
+}
+.asset-sheet .thumb-media.thumb-loaded img { opacity: 1; }
+.asset-sheet .thumb-media em {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
   margin: 0;
   padding: 0 4px;
   border-radius: 4px;
@@ -129,6 +149,27 @@ h2 { margin: 0; font-size: 16px; }
   font-size: 11px;
   font-style: normal;
   line-height: 16px;
+}
+.asset-sheet .thumb .thumb-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  color: #a08b74;
+  font-size: 12px;
+  line-height: 1.35;
+  text-align: center;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+.asset-sheet .thumb .thumb-label {
+  display: block;
+  height: 18px;
+  line-height: 18px;
+  margin-top: 4px;
 }
 .thumb.selected { outline: 2px solid #6f4219; }
 .thumb span, .muted, .status { color: #8d7761; font-size: 13px; }
@@ -288,3 +329,35 @@ input, select { border: 1px solid #e4dad1; border-radius: 6px; padding: 8px; bac
   .canvas-pane:has(.asset-sheet) { flex: 1 1 auto; }
   .canvas-pane:has(.asset-sheet) ~ .dock { display: none; }
 }
+
+.preview-tools { flex-direction: column; gap: 6px; }
+.preview-tools .compare-toggle[aria-pressed="true"] { background: #6f4219; color: #fff8ed; border-color: #6f4219; }
+.compare-overlay { z-index: 5; cursor: col-resize; user-select: none; overflow: hidden; }
+.compare-label { position: absolute; top: 8px; padding: 3px 7px; border-radius: 4px; background: rgba(63,47,34,.72); color: #fff8ed; font-size: 12px; line-height: 18px; pointer-events: none; }
+.compare-label.before { left: 8px; }
+.compare-label.after { right: 8px; }
+.compare-divider { position: absolute; top: 0; bottom: 0; width: 2px; transform: translateX(-50%); background: #fff8ed; box-shadow: 0 0 0 1px rgba(63,47,34,.28); }
+.compare-handle { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 32px; height: 40px; display: grid; place-items: center; border: 1px solid #d9cbb9; border-radius: 10px; background: #fffaf2; color: #6f4219; font-size: 20px; cursor: col-resize; }
+.compare-handle:focus-visible { outline: 3px solid #e39b12; outline-offset: 2px; }
+.gif-timeline { flex: none; padding: 8px 12px; display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid #e4dad1; background: #f8f1e6; }
+.timeline-controls { display: flex; align-items: center; gap: 6px; }
+.timeline-controls button { min-height: 28px; padding: 3px 7px; font-size: 12px; white-space: nowrap; }
+.timeline-controls output { flex: 1; min-width: 0; color: #8d7761; font-size: 12px; font-variant-numeric: tabular-nums; }
+.timeline-scrubber { display: block; width: 100%; height: 18px; margin: 0; accent-color: #8f5c2c; cursor: ew-resize; }
+.timeline-segments { display: flex; gap: 4px; overflow-x: auto; padding: 1px; }
+.timeline-segments button { flex-basis: 0; min-width: 90px; min-height: 28px; padding: 3px 6px; text-align: left; font-size: 12px; }
+.timeline-segments button[aria-pressed="true"] { background: #6f4219; border-color: #6f4219; color: #fff8ed; }
+.timeline-segments small { margin-left: 6px; font-size: 10px; white-space: nowrap; }
+@media (max-width:640px) {
+  .gif-timeline { padding: 5px 8px; gap: 3px; }
+  .timeline-controls { gap: 4px; }
+  .timeline-controls output { font-size: 10px; }
+  .timeline-segments small { display: none; }
+  .text-pane .pane-head .row { flex-wrap: wrap; justify-content: flex-end; gap: 4px; }
+}
+.compare-original { background: #e7d8c6; }
+@media (max-width:640px) {
+  .maker-app:has(.gif-timeline) .canvas-pane { flex-basis: 14vh; flex-basis: 14svh; }
+  .maker-app:has(.gif-timeline) .canvas-pane:has(.asset-sheet) { flex-basis: auto; }
+}
+.banner > button { flex: none; white-space: nowrap; }

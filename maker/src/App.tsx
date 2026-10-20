@@ -3,6 +3,7 @@ import { AssetPicker } from './components/AssetPicker'
 import { EditorCanvas } from './components/EditorCanvas'
 import { ExportActions } from './components/ExportActions'
 import { ImageToolbar } from './components/ImageToolbar'
+import { GifTimeline } from './components/GifTimeline'
 import { TextBlocksPanel } from './components/TextBlocksPanel'
 import { imageFileFromClipboard } from './lib/clipboard'
 import { useEditor } from './components/use-editor'
@@ -85,6 +86,7 @@ export function App() {
         </section>
         <section className="dock" aria-label="选图和改字">
           <AssetPicker />
+          <GifTimeline />
           <div className="editor">
             <TextBlocksPanel />
           </div>

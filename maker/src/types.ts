@@ -12,6 +12,7 @@ export type TextStyle = {
 }
 
 export type OcrBlock = {
+  segmentId?: string
   id: string
   originalText: string
   targetText: string
@@ -31,6 +32,7 @@ export type OcrBlock = {
 }
 
 export type FreeText = {
+  segmentId?: string
   id: string
   text: string
   x: number

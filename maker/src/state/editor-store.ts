@@ -1,6 +1,8 @@
 import { decideCatalogSrc, readCatalog, siteAsset, siteBaseFrom, makerBaseUrl } from '../lib/catalog'
 import { createHistory, historyCommit, historyRedo, historyUndo, type HistoryState } from '../lib/history'
-import { decodeGifFrames, type GifFrame } from '../lib/gif'
+import type { GifFrame } from '../lib/gif'
+import { cancelGifDecode, decodeGifInWorker } from '../lib/gif-decode'
+import { editsAtFrame, segmentAtFrame, splitSegment, type GifSegment } from '../lib/timeline'
 import { assertEditableFile, sniffImage } from '../lib/image'
 import { cancelOcrRecognition, recognize, scaleOcrBlocks } from '../lib/ocr'
 import { prepareOcrInput } from '../lib/ocr-input'
@@ -8,6 +10,7 @@ import { addedTextStyle, defaultTextStyle, liveRedraw } from '../lib/plan'
 import type { CatalogImage, FreeText, OcrBlock, Point, TextStyle } from '../types'
 
 export type Editable = {
+  segments?: GifSegment[]
   blocks: OcrBlock[]
   freeTexts: FreeText[]
   selectedId: string | null
@@ -30,6 +33,9 @@ export type CellFocus = {
 }
 
 export type EditorSnapshot = {
+  gifFrameIndex: number
+  gifPlaying: boolean
+  comparing: boolean
   catalog: CatalogImage[]
   catalogLoading: boolean
   catalogError: string | null
@@ -45,9 +51,14 @@ export type EditorSnapshot = {
   cellFocus: CellFocus | null
 }
 
-const emptyEditable = (): Editable => ({ blocks: [], freeTexts: [], selectedId: null })
+const emptyEditable = (frameCount = 0): Editable => ({ blocks: [], freeTexts: [], selectedId: null,
+  segments: frameCount > 1 ? [{ id: 'gif-first', start: 0, end: frameCount }] : undefined,
+})
 
 let state: EditorSnapshot = {
+  gifFrameIndex: 0,
+  gifPlaying: false,
+  comparing: false,
   catalog: [],
   catalogLoading: false,
   catalogError: null,
@@ -131,10 +142,12 @@ export function loadCatalog(): Promise<void> {
 
 export async function openCatalogImage(image: CatalogImage) {
   cancelOcrRecognition()
+  cancelGifDecode()
   const token = ++imageToken
   ocrToken += 1
   revokePreview()
   update({
+    gifFrameIndex: 0, gifPlaying: false, comparing: false, cellFocus: null,
     imageLoading: true,
     imageError: null,
     notice: null,
@@ -155,15 +168,16 @@ export async function openCatalogImage(image: CatalogImage) {
     if (blob.size > 15_000_000) throw new Error('图片超过 15 MB，请先缩小。')
     const decoded = await decodeBlob(blob)
     if (token !== imageToken) return
-    previewUrl = URL.createObjectURL(blob)
+    previewUrl = decoded.frames ? '' : URL.createObjectURL(blob)
     update({
       imageLoading: false,
+      history: createHistory(emptyEditable(decoded.frames?.length)),
       notice: animationNotice(decoded),
       image: {
         source: { kind: 'catalog', id: image.src, name: image.name, animated: image.animated || decoded.singleFrameAnimation || Boolean(decoded.frames) },
         naturalWidth: decoded.width,
         naturalHeight: decoded.height,
-        blob,
+        blob: decoded.frames ? null : blob,
         imageData: decoded.imageData,
         frames: decoded.frames,
         previewUrl,
@@ -178,12 +192,13 @@ export async function openCatalogImage(image: CatalogImage) {
 
 export async function openLocalFile(file: File) {
   cancelOcrRecognition()
+  cancelGifDecode()
   const token = ++imageToken
   ocrToken += 1
   try {
     assertEditableFile(file)
     revokePreview()
-    update({ image: null, imageLoading: true, imageError: null, ocrStatus: 'idle', cellFocus: null, history: createHistory(emptyEditable()) })
+    update({ image: null, imageLoading: true, imageError: null, notice: null, ocrStatus: 'idle', cellFocus: null, gifFrameIndex: 0, gifPlaying: false, comparing: false, history: createHistory(emptyEditable()) })
     const bytes = new Uint8Array(await file.arrayBuffer())
     if (token !== imageToken) return
     const sniffed = sniffImage(bytes, file.type)
@@ -193,7 +208,7 @@ export async function openLocalFile(file: File) {
     history.replaceState(null, '', url)
     const decoded = await decodeBlob(blob)
     if (token !== imageToken) return
-    previewUrl = URL.createObjectURL(blob)
+    previewUrl = decoded.frames ? '' : URL.createObjectURL(blob)
     update({
       imageLoading: false,
       imageError: null,
@@ -201,12 +216,12 @@ export async function openLocalFile(file: File) {
       ocrStatus: 'idle',
       ocrMessage: '正在打开图片，接着会自动识别文字。',
       view: { scale: 1, panX: 0, panY: 0 },
-      history: createHistory(emptyEditable()),
+      history: createHistory(emptyEditable(decoded.frames?.length)),
       image: {
         source: { kind: 'local', id: file.name, name: file.name, animated: sniffed.animated || Boolean(decoded.frames) },
         naturalWidth: decoded.width,
         naturalHeight: decoded.height,
-        blob,
+        blob: decoded.frames ? null : blob,
         imageData: decoded.imageData,
         frames: decoded.frames,
         previewUrl,
@@ -227,12 +242,18 @@ export async function runOcr() {
   }
   const token = ++ocrToken
   const sourceId = image.source.id
-  update({ ocrStatus: 'loading', ocrMessage: '正在加载识别模型，图片不会离开这台设备。' })
+  const segmentId = segmentAtFrame(state.history.present.segments, state.gifFrameIndex)?.id
+  update({ gifPlaying: false, ocrStatus: 'loading', ocrMessage: '正在加载识别模型，图片不会离开这台设备。' })
   try {
     const prepared = await prepareOcrInput(image.imageData)
     const blocks = scaleOcrBlocks(await recognize(prepared.blob, () => token === ocrToken), prepared.scaleX, prepared.scaleY)
     if (token !== ocrToken || state.image?.source.id !== sourceId) return
-    const present = { ...emptyEditable(), blocks, selectedId: blocks[0]?.id ?? null }
+    const current = state.history.present
+    const scoped = blocks.map(block => ({ ...block, segmentId, id: `${segmentId ?? 'still'}:${token}:${block.id}` }))
+    const present: Editable = { ...current,
+      blocks: [...(segmentId ? current.blocks.filter(block => block.segmentId !== segmentId) : []), ...scoped],
+      freeTexts: segmentId ? current.freeTexts : [], selectedId: scoped[0]?.id ?? null,
+    }
     update({
       ocrStatus: blocks.length ? 'ready' : 'error',
       ocrMessage: blocks.length
@@ -252,7 +273,7 @@ export async function runOcr() {
 export function select(id: string | null) {
   const present = state.history.present
   const cellFocus = state.cellFocus?.id === id ? state.cellFocus : null
-  update({ cellFocus, history: { ...state.history, present: { ...present, selectedId: id } } })
+  update({ gifPlaying: false, cellFocus, history: { ...state.history, present: { ...present, selectedId: id } } })
 }
 
 export function focusCell(id: string, index: number, cells: string[]) {
@@ -261,7 +282,7 @@ export function focusCell(id: string, index: number, cells: string[]) {
   if (current?.id === id && current.index === index && sameCells && state.history.present.selectedId === id) return
   const present = state.history.present
   const history = present.selectedId === id ? state.history : { ...state.history, present: { ...present, selectedId: id } }
-  update({ cellFocus: { id, index, cells }, history })
+  update({ gifPlaying: false, cellFocus: { id, index, cells }, history })
 }
 
 export function setOriginalText(id: string, text: string) {
@@ -306,6 +327,7 @@ export function setLineRedraw(id: string, lineRedraw: boolean) {
 }
 
 export function beginGesture() {
+  update({ gifPlaying: false })
   gestureBase = state.history.present
 }
 
@@ -365,6 +387,7 @@ export function addManualBlock() {
     { x: width * 0.18, y: height * 0.62 },
   ]
   const block: OcrBlock = {
+    segmentId: segmentAtFrame(state.history.present.segments, state.gifFrameIndex)?.id,
     id: `manual-${Date.now()}`,
     originalText: '原文',
     targetText: '原文',
@@ -383,11 +406,12 @@ export function addFreeText() {
   const image = state.image
   if (!image?.imageData) return
   const layer: FreeText = {
+    segmentId: segmentAtFrame(state.history.present.segments, state.gifFrameIndex)?.id,
     id: `text-${Date.now()}`,
     text: '新文字',
     x: image.naturalWidth / 2,
     y: image.naturalHeight / 2,
-    textStyle: addedTextStyle(image.imageData, state.history.present.blocks, [
+    textStyle: addedTextStyle(image.imageData, visibleEdits().blocks, [
       { x: 0, y: 0 },
       { x: 10, y: 0 },
       { x: 10, y: image.naturalHeight * 0.12 },
@@ -448,11 +472,13 @@ export function deleteFocusedCell() {
 }
 
 export function undo() {
-  update({ history: historyUndo(state.history) })
+  invalidateOcr()
+  update({ history: historyUndo(state.history), gifPlaying: false, cellFocus: null })
 }
 
 export function redo() {
-  update({ history: historyRedo(state.history) })
+  invalidateOcr()
+  update({ history: historyRedo(state.history), gifPlaying: false, cellFocus: null })
 }
 
 export function resetDocument() {
@@ -460,7 +486,9 @@ export function resetDocument() {
   if (!state.image?.imageData) return
   if (dirty && !window.confirm('还原原图会丢掉当前文字修改。')) return
   update({
-    history: createHistory(emptyEditable()),
+    history: createHistory(emptyEditable(state.image.frames?.length)),
+    gifFrameIndex: 0, gifPlaying: false,
+    image: { ...state.image, imageData: state.image.frames?.[0].imageData ?? state.image.imageData },
     cellFocus: null,
     ocrStatus: 'idle',
     ocrMessage: '已回到原图，正在重新识别。',
@@ -479,8 +507,48 @@ export function dismissNotice() {
 
 function commitEdit(recipe: (current: Editable) => Editable) {
   const present = recipe(state.history.present)
-  update({ history: historyCommit(state.history, present) })
+  update({ gifPlaying: false, history: historyCommit(state.history, present) })
 }
+
+export function visibleEdits(snapshot = state): Editable {
+  return editsAtFrame(snapshot.history.present, snapshot.gifFrameIndex)
+}
+
+function invalidateOcr() {
+  ocrToken += 1
+  cancelOcrRecognition()
+  if (state.ocrStatus === 'loading') update({ ocrStatus: 'idle', ocrMessage: '' })
+}
+
+export function setGifFrame(index: number, playing = false) {
+  const image = state.image
+  if (!image?.frames?.length) return
+  const next = Math.max(0, Math.min(image.frames.length - 1, Math.floor(index)))
+  if (state.ocrStatus === 'loading') invalidateOcr()
+  const edits = editsAtFrame(state.history.present, next)
+  const selectedId = [...edits.blocks, ...edits.freeTexts].some(item => item.id === edits.selectedId)
+    ? edits.selectedId : edits.blocks[0]?.id ?? edits.freeTexts[0]?.id ?? null
+  update({ gifFrameIndex: next, gifPlaying: playing, cellFocus: null,
+    image: { ...image, imageData: image.frames[next].imageData },
+    history: { ...state.history, present: { ...state.history.present, selectedId } },
+    ocrStatus: edits.blocks.length ? 'ready' : 'idle', ocrMessage: '',
+  })
+}
+
+export function setGifPlaying(playing: boolean) {
+  if (!state.image?.frames || state.image.frames.length < 2) return
+  if (playing && state.ocrStatus === 'loading') invalidateOcr()
+  update({ gifPlaying: playing, cellFocus: null })
+}
+
+export function splitGifAtPlayhead() {
+  invalidateOcr()
+  const present = splitSegment(state.history.present, state.gifFrameIndex, `segment-${Date.now()}`)
+  if (present === state.history.present) return
+  update({ gifPlaying: false, cellFocus: null, history: historyCommit(state.history, present) })
+}
+
+export function toggleComparison() { update({ comparing: !state.comparing }) }
 
 function retarget(block: OcrBlock): OcrBlock {
   return { ...block, ...liveRedraw(block, state.image?.imageData ?? null) }
@@ -501,8 +569,9 @@ type DecodedImage = {
 }
 
 function animationNotice(decoded: DecodedImage): string | null {
-  if (decoded.frames && decoded.frames.length > 1) return '这是 GIF。改字会套到每一帧，导出也是整张动图。'
-  if (decoded.limitedGif) return '这个 GIF 太大，只能改当前这一帧。'
+  if (decoded.frames && decoded.frames.length > 1) return decoded.limitedGif
+    ? `GIF 已调整为 ${decoded.width}×${decoded.height}、${decoded.frames.length} 帧，时长保留。`
+    : null
   if (decoded.singleFrameAnimation) return '这是动图。识别、改字和导出生效的都是当前这一帧，动画不会保留。'
   return null
 }
@@ -511,7 +580,7 @@ async function decodeBlob(blob: Blob): Promise<DecodedImage> {
   const bytes = new Uint8Array(await blob.arrayBuffer())
   const sniffed = sniffImage(bytes, blob.type || '')
   if (sniffed.mime === 'image/gif') {
-    const gif = decodeGifFrames(bytes)
+    const gif = await decodeGifInWorker(bytes)
     const frames = gif.frames.length > 1 ? gif.frames : undefined
     return {
       imageData: gif.frames[0].imageData,

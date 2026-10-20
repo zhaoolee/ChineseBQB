@@ -45,6 +45,7 @@ export function retryOcrImports(): Plugin {
     },
     generateBundle(_options, bundle) {
       const chunks = Object.values(bundle).filter(item => item.type === 'chunk')
+      if (!chunks.some(chunk => Object.keys(chunk.modules).some(id => id.endsWith('/workers/ocr.worker.ts')))) return
       const runtime = chunks.find(chunk => Object.keys(chunk.modules).some(id => id.includes('/@paddleocr/paddleocr-js/')))
       if (!runtime || !Object.keys(runtime.modules).some(id => id.includes('/onnxruntime-web/'))) {
         this.error('Paddle and ONNX Runtime must share one retriable OCR chunk')
