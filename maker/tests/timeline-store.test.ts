@@ -22,6 +22,74 @@ async function loaded() {
   return store
 }
 
+const catalogImage = (id: string) => ({ name: `${id}.gif`, src: `media/${id}.gif`, thumb: `thumbs/${id}.webp`, label: id, animated: true })
+
+it('publishes a thumbnail immediately, keeps it through decoding, and only then starts OCR', async () => {
+  const s = await import('../src/state/editor-store')
+  let download!: (response: Response) => void
+  let decode!: (value: unknown) => void
+  vi.stubGlobal('fetch', vi.fn(() => new Promise(resolve => { download = resolve })))
+  const decoded = await mocks.decode()
+  mocks.decode.mockImplementationOnce(() => new Promise(resolve => { decode = resolve }))
+  const pending = s.openCatalogImage(catalogImage('first'))
+  expect(s.editor.getState()).toMatchObject({ image: null, imageLoading: true, loadingPreview: { src: expect.stringContaining('/thumbs/first.webp'), phase: 'download' } })
+  expect(mocks.recognize).not.toHaveBeenCalled()
+  download(new Response(new Blob(['GIF89a'], {type: 'image/gif'})))
+  await vi.waitFor(() => expect(decode).toBeTypeOf('function'))
+  expect(s.editor.getState().loadingPreview?.phase).toBe('decode')
+  expect(mocks.recognize).not.toHaveBeenCalled()
+  decode(decoded)
+  await pending
+  expect(s.editor.getState()).toMatchObject({ imageLoading: false, loadingPreview: null, image: { source: {id: 'media/first.gif'} } })
+  await vi.waitFor(() => expect(mocks.recognize).toHaveBeenCalledOnce())
+})
+
+it('aborts the previous original download and ignores even a late successful response', async () => {
+  const s = await import('../src/state/editor-store')
+  const requests: { signal: AbortSignal; finish: (response: Response) => void }[] = []
+  vi.stubGlobal('fetch', vi.fn((_url, options) => new Promise(resolve => { requests.push({signal: options.signal, finish: resolve}) })))
+  const first = s.openCatalogImage(catalogImage('first'))
+  const second = s.openCatalogImage(catalogImage('second'))
+  expect(requests[0].signal.aborted).toBe(true)
+  expect(s.editor.getState().loadingPreview?.src).toContain('/thumbs/second.webp')
+  const oldResponse = new Response('GIF89a')
+  const oldBody = vi.spyOn(oldResponse, 'blob')
+  requests[0].finish(oldResponse)
+  await first
+  expect(oldBody).not.toHaveBeenCalled()
+  expect(s.editor.getState().loadingPreview?.src).toContain('/thumbs/second.webp')
+  requests[1].finish(new Response('GIF89a'))
+  await second
+  expect(s.editor.getState().image?.source.id).toBe('media/second.gif')
+  expect(mocks.decode).toHaveBeenCalledOnce()
+})
+
+it('does not start a stale GIF decoder after a slow blob read, or replace the newer image', async () => {
+  const s = await import('../src/state/editor-store')
+  let readOld!: (bytes: ArrayBuffer) => void
+  const oldBlob = new Blob(['GIF89a'])
+  vi.spyOn(oldBlob, 'arrayBuffer').mockImplementationOnce(() => new Promise(resolve => { readOld = resolve }))
+  vi.stubGlobal('fetch', vi.fn()
+    .mockResolvedValueOnce({ok: true, blob: async () => oldBlob})
+    .mockResolvedValueOnce(new Response('GIF89a')))
+  const first = s.openCatalogImage(catalogImage('first'))
+  await vi.waitFor(() => expect(readOld).toBeTypeOf('function'))
+  await s.openCatalogImage(catalogImage('second'))
+  readOld(new TextEncoder().encode('GIF89a').buffer as ArrayBuffer)
+  await first
+  expect(mocks.decode).toHaveBeenCalledOnce()
+  expect(s.editor.getState()).toMatchObject({ imageLoading: false, loadingPreview: null, image: {source: {id: 'media/second.gif'}} })
+})
+
+it.each(['download', 'decode'])('clears the thumbnail when %s fails', async phase => {
+  const s = await import('../src/state/editor-store')
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('GIF89a', {status: phase === 'download' ? 503 : 200})))
+  if (phase === 'decode') mocks.decode.mockRejectedValueOnce(new Error('Invalid GIF'))
+  await s.openCatalogImage(catalogImage('broken'))
+  expect(s.editor.getState()).toMatchObject({imageLoading: false, loadingPreview: null, image: null, imageError: expect.any(String)})
+  expect(mocks.recognize).not.toHaveBeenCalled()
+})
+
 it('keeps segment text independent across seeking, undo and redo', async () => {
   const s = await loaded()
   s.addFreeText()

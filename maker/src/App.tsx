@@ -80,7 +80,6 @@ export function App() {
         <section className="canvas-pane">
           <ImageToolbar />
           <div className="preview-frame" id="preview-pane">
-            {state.imageLoading && <p className="loading">正在打开原图…</p>}
             <EditorCanvas />
           </div>
         </section>

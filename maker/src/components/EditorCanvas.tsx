@@ -6,6 +6,7 @@ import { segmentGraphemes } from '../lib/grapheme'
 import { collectPatches } from '../lib/plan'
 import { paintComposite } from '../lib/paint'
 import { BeforeAfter } from './BeforeAfter'
+import { LoadingPreview } from './LoadingPreview'
 import {
   beginGesture,
   deleteFocusedCell,
@@ -87,6 +88,10 @@ export function EditorCanvas() {
     return { width: image.naturalWidth * fit, height: image.naturalHeight * fit }
   }, [frame, image])
 
+  if (state.imageLoading) {
+    const pending = state.loadingPreview
+    return <LoadingPreview key={pending?.src ?? 'local'} src={pending?.src} name={pending?.name} phase={pending?.phase ?? 'decode'} />
+  }
   if (!image) {
     return (
       <label className="stage empty-stage" ref={bindStage}>

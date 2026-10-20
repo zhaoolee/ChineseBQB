@@ -47,7 +47,7 @@ h2 { margin: 0; font-size: 16px; }
 .handle.ew { cursor: ew-resize; }
 .handle.nesw { cursor: nesw-resize; }
 .text-box { cursor: move; }
-.asset-sheet.with-export { padding-top: 56px; }
+.asset-sheet.with-export { padding-top: 12px; }
 .preview-export {
   position: absolute;
   z-index: 6;
@@ -55,6 +55,10 @@ h2 { margin: 0; font-size: 16px; }
   right: 10px;
 }
 .preview-export > button { box-shadow: 0 1px 4px rgba(63, 47, 34, 0.16); display: inline-flex; align-items: center; gap: 6px; }
+/* 图库展开时隐藏上方工具/导出与文字操作按钮，收起后自动恢复；不保留空占位或透明焦点。 */
+.maker-app:has(.asset-sheet) .preview-tools,
+.maker-app:has(.asset-sheet) .preview-export,
+.maker-app:has(.asset-sheet) .text-pane .pane-head .row { display: none; }
 .dock {
   position: relative;
   z-index: 2;
@@ -76,7 +80,7 @@ h2 { margin: 0; font-size: 16px; }
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 56px 12px 12px;
+  padding: 12px;
   background: #fbf7ed;
   box-sizing: border-box;
   overflow: hidden;
@@ -344,3 +348,54 @@ input, select { border: 1px solid #e4dad1; border-radius: 6px; padding: 8px; bac
   .maker-app:has(.gif-timeline) .canvas-pane:has(.asset-sheet) { flex-basis: auto; }
 }
 .banner > button { flex: none; white-space: nowrap; }
+
+/* 打开图片时的预览：缓存图铺满 stage，状态浮层绝对定位，不占预览高度、不挡左上工具与右上导出。 */
+.loading-preview { overflow: hidden; }
+.loading-preview-image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.loading-preview-status {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: calc(100% - 24px);
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(63, 47, 34, 0.72);
+  color: #fff8ed;
+  font-size: 12px;
+  line-height: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+.loading-preview-status.is-centered { top: 50%; bottom: auto; transform: translate(-50%, -50%); }
+.loading-preview-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.loading-preview-dots { display: inline-flex; flex: none; gap: 3px; }
+.loading-preview-dots i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.4;
+  animation: loading-preview-dot 1s ease-in-out infinite;
+}
+.loading-preview-dots i:nth-child(2) { animation-delay: 0.16s; }
+.loading-preview-dots i:nth-child(3) { animation-delay: 0.32s; }
+@keyframes loading-preview-dot {
+  0%, 100% { opacity: 0.4; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-2px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .loading-preview-dots i { animation: none; opacity: 0.7; }
+}

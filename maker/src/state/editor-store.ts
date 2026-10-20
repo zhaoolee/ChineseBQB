@@ -33,6 +33,12 @@ export type CellFocus = {
   cells: string[]
 }
 
+export type LoadingImagePreview = {
+  src: string
+  name: string
+  phase: 'download' | 'decode'
+}
+
 export type EditorSnapshot = {
   gifFrameIndex: number
   gifPlaying: boolean
@@ -42,6 +48,7 @@ export type EditorSnapshot = {
   catalogError: string | null
   image: LoadedImage | null
   imageLoading: boolean
+  loadingPreview: LoadingImagePreview | null
   imageError: string | null
   ocrStatus: 'idle' | 'loading' | 'ready' | 'error'
   ocrMessage: string
@@ -66,6 +73,7 @@ let state: EditorSnapshot = {
   catalogError: null,
   image: null,
   imageLoading: false,
+  loadingPreview: null,
   imageError: null,
   ocrStatus: 'idle',
   ocrMessage: '选一张图后会自动识别文字。',
@@ -78,6 +86,7 @@ let state: EditorSnapshot = {
 
 const listeners = new Set<() => void>()
 let imageToken = 0
+let imageRequest: AbortController | null = null
 let ocrToken = 0
 let gestureBase: Editable | null = null
 let previewUrl = ''
@@ -88,6 +97,7 @@ function emit() {
 
 function update(patch: Partial<EditorSnapshot>) {
   if (patch.ocrStatus && patch.ocrStatus !== 'loading') patch = { ...patch, ocrProgress: null }
+  if (patch.imageLoading === false) patch = { ...patch, loadingPreview: null }
   state = { ...state, ...patch }
   emit()
 }
@@ -145,6 +155,9 @@ export function loadCatalog(): Promise<void> {
 }
 
 export async function openCatalogImage(image: CatalogImage) {
+  imageRequest?.abort()
+  const request = new AbortController()
+  imageRequest = request
   cancelOcrRecognition()
   cancelGifDecode()
   const token = ++imageToken
@@ -153,6 +166,7 @@ export async function openCatalogImage(image: CatalogImage) {
   update({
     gifFrameIndex: 0, gifPlaying: false, comparing: false, cellFocus: null,
     imageLoading: true,
+    loadingPreview: { src: assetUrl(image.thumb), name: image.name, phase: 'download' },
     imageError: null,
     notice: null,
     ocrStatus: 'idle',
@@ -165,12 +179,14 @@ export async function openCatalogImage(image: CatalogImage) {
   url.searchParams.set('src', image.src)
   history.replaceState(null, '', url)
   try {
-    const response = await fetch(assetUrl(image.src))
+    const response = await fetch(assetUrl(image.src), { signal: request.signal })
+    if (token !== imageToken) return
     if (!response.ok) throw new Error(`原图加载失败（${response.status}）`)
     const blob = await response.blob()
     if (token !== imageToken) return
     if (blob.size > 15_000_000) throw new Error('图片超过 15 MB，请先缩小。')
-    const decoded = await decodeBlob(blob)
+    update({ loadingPreview: { src: assetUrl(image.thumb), name: image.name, phase: 'decode' } })
+    const decoded = await decodeBlob(blob, () => token === imageToken)
     if (token !== imageToken) return
     previewUrl = decoded.frames ? '' : URL.createObjectURL(blob)
     update({
@@ -191,10 +207,14 @@ export async function openCatalogImage(image: CatalogImage) {
   } catch (error) {
     if (token !== imageToken) return
     update({ imageLoading: false, imageError: error instanceof Error ? error.message : '原图加载失败' })
+  } finally {
+    if (imageRequest === request) imageRequest = null
   }
 }
 
 export async function openLocalFile(file: File) {
+  imageRequest?.abort()
+  imageRequest = null
   cancelOcrRecognition()
   cancelGifDecode()
   const token = ++imageToken
@@ -202,7 +222,7 @@ export async function openLocalFile(file: File) {
   try {
     assertEditableFile(file)
     revokePreview()
-    update({ image: null, imageLoading: true, imageError: null, notice: null, ocrStatus: 'idle', cellFocus: null, gifFrameIndex: 0, gifPlaying: false, comparing: false, history: createHistory(emptyEditable()) })
+    update({ image: null, imageLoading: true, loadingPreview: null, imageError: null, notice: null, ocrStatus: 'idle', cellFocus: null, gifFrameIndex: 0, gifPlaying: false, comparing: false, history: createHistory(emptyEditable()) })
     const bytes = new Uint8Array(await file.arrayBuffer())
     if (token !== imageToken) return
     const sniffed = sniffImage(bytes, file.type)
@@ -210,7 +230,7 @@ export async function openLocalFile(file: File) {
     const url = new URL(location.href)
     url.searchParams.delete('src')
     history.replaceState(null, '', url)
-    const decoded = await decodeBlob(blob)
+    const decoded = await decodeBlob(blob, () => token === imageToken)
     if (token !== imageToken) return
     previewUrl = decoded.frames ? '' : URL.createObjectURL(blob)
     update({
@@ -582,8 +602,9 @@ function animationNotice(decoded: DecodedImage): string | null {
   return null
 }
 
-async function decodeBlob(blob: Blob): Promise<DecodedImage> {
+async function decodeBlob(blob: Blob, isCurrent = () => true): Promise<DecodedImage> {
   const bytes = new Uint8Array(await blob.arrayBuffer())
+  if (!isCurrent()) throw new DOMException('图片加载已取消', 'AbortError')
   const sniffed = sniffImage(bytes, blob.type || '')
   if (sniffed.mime === 'image/gif') {
     const gif = await decodeGifInWorker(bytes)
@@ -600,6 +621,7 @@ async function decodeBlob(blob: Blob): Promise<DecodedImage> {
   const bitmap = await createImageBitmap(new Blob([bytes], { type: sniffed.mime || blob.type }))
   const canvas = document.createElement('canvas')
   try {
+    if (!isCurrent()) throw new DOMException('图片加载已取消', 'AbortError')
     if (bitmap.width > 8192 || bitmap.height > 8192) throw new Error('图片边长超过 8192，请先缩小。')
     const fitted = fitEditSize(bitmap.width, bitmap.height)
     canvas.width = fitted.width
