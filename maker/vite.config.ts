@@ -1,9 +1,10 @@
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import { retryOcrImports } from './build/ocr-import-retry'
+import { boundedOpenCvMemory } from './build/ocr-memory'
 
 export default defineConfig({
-  plugins: [react(), retryOcrImports()],
+  plugins: [react(), boundedOpenCvMemory()],
   base: '/ChineseBQB/maker/',
   resolve: {
     // This editor uses WASM only. The default entry also ships the much larger GPU runtime.
@@ -12,14 +13,12 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+  },
+  worker: {
+    format: 'es',
+    plugins: () => [boundedOpenCvMemory(), retryOcrImports()],
     rollupOptions: {
-      output: {
-        // One module instance shares ORT configuration with Paddle, including after a retried import.
-        manualChunks: {
-          preload: ['\0vite/preload-helper.js'],
-          ocr: ['@paddleocr/paddleocr-js', 'onnxruntime-web/wasm'],
-        },
-      },
+      output: { manualChunks: { ocr: ['@paddleocr/paddleocr-js', 'onnxruntime-web/wasm'] } },
     },
   },
   optimizeDeps: {

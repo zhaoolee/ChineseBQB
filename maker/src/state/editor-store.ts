@@ -2,7 +2,7 @@ import { decideCatalogSrc, readCatalog, siteAsset, siteBaseFrom, makerBaseUrl } 
 import { createHistory, historyCommit, historyRedo, historyUndo, type HistoryState } from '../lib/history'
 import { decodeGifFrames, type GifFrame } from '../lib/gif'
 import { assertEditableFile, sniffImage } from '../lib/image'
-import { recognize, scaleOcrBlocks } from '../lib/ocr'
+import { cancelOcrRecognition, recognize, scaleOcrBlocks } from '../lib/ocr'
 import { prepareOcrInput } from '../lib/ocr-input'
 import { addedTextStyle, defaultTextStyle, liveRedraw } from '../lib/plan'
 import type { CatalogImage, FreeText, OcrBlock, Point, TextStyle } from '../types'
@@ -130,6 +130,7 @@ export function loadCatalog(): Promise<void> {
 }
 
 export async function openCatalogImage(image: CatalogImage) {
+  cancelOcrRecognition()
   const token = ++imageToken
   ocrToken += 1
   revokePreview()
@@ -176,6 +177,7 @@ export async function openCatalogImage(image: CatalogImage) {
 }
 
 export async function openLocalFile(file: File) {
+  cancelOcrRecognition()
   const token = ++imageToken
   ocrToken += 1
   try {

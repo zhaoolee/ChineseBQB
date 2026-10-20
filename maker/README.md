@@ -51,16 +51,17 @@ python scripts/check_maker.py
 
 ## OCR、模型和隐私
 
-锁定版本是 `@paddleocr/paddleocr-js@0.4.2`（Apache-2.0）。识别使用 PP-OCRv5 mobile 的检测和识别模型，WASM 在主线程运行。
+锁定版本是 `@paddleocr/paddleocr-js@0.4.2`（Apache-2.0）。识别使用 PP-OCRv5 mobile 的检测和识别模型，每轮在独立的模块 Worker 中运行。
 
 - 两份权重在 `maker/public/models/`，开发和 Pages 都从 `/ChineseBQB/maker/models/` 加载。识别不会请求 `paddle-model-ecology.bj.bcebos.com`。
 - 这些文件是模型，不是用户的图片。本应用没有把图片发给 OCR 服务的接口。
 - OCR 程序独立打包，脚本下载失败时最多尝试三次，重试地址绕过浏览器缓存的失败结果；后续点「重新识别」仍可发起新请求，无需刷新页面。构建时检查 OCR 不会成为主页面的静态依赖。
-- 开始识别时并行下载两份模型和仅 WASM 的运行库，避免模型下载完才开始下载运行库。公共识别资源保存在浏览器 Cache Storage 中；存储不可用时仍可直接下载识别，不缓存用户图片。
+- 模型按引擎请求下载，公共模型保存在浏览器 Cache Storage 中；存储不可用时仍可直接下载识别，不缓存用户图片。WASM 通过同源 URL 交给浏览器加载，不在运行库配置中额外保留完整字节副本。
 - 资源下载最多等待 90 秒。失败时显示原因并提供「重新识别」，重试不会被上一轮失败的任务堵住。
-- Vite 会把 `onnxruntime-web` 的 WASM 放进 `/ChineseBQB/maker/assets/`。没有启用 Worker，因此不会改用 jsDelivr 上的 WASM。
+- Vite 会把 `onnxruntime-web` 的 WASM 放进 `/ChineseBQB/maker/assets/`。应用自行管理 Worker，使用 OffscreenCanvas 读取识别像素，不启用 SDK 内置的 CDN Worker。
+- 构建插件把锁定版本 OpenCV 的初始内存从 128 MiB 降到 32 MiB，同时修改 JavaScript 分配值和内嵌 WASM 的内存导入下限，保留原来的增长上限。构建时检查内存契约、数据段范围和 WASM 有效性；升级依赖后格式改变会阻止构建，须重新评估。
 - OCR 始终从编辑像素生成输入，最长边限制在 480–640 像素，并把识别框按两个轴映射回画布；不会重新读取原始大图。
-- 识别任务串行运行，切图后跳过过期任务，每轮结束后释放模型会话；识别期间暂不允许导出，避免两种高内存操作叠加。
+- 识别任务串行运行，切图后跳过过期任务。成功、失败、超时、切图和离开页面都会终止当前 Worker，释放其运行库上下文；内存分配失败后点击「重新识别」会创建新的 Worker。整轮最多等待 180 秒。识别期间暂不允许导出，避免两种高内存操作叠加。
 - 模型文件缺失或初始化失败时显示错误，仍可手工加字并导出。浏览器进程被系统终止不属于可捕获的 JavaScript 错误。
 
 ## 已知限制
@@ -77,7 +78,7 @@ python scripts/check_maker.py
 
 `maker/tests/maker.test.ts` 覆盖字符 diff、恶意 `src`、坐标往返、单字框不越过图片边界、纯色背景上 `明 → 红` 的框外像素不变、长度变化不自动擦图，以及撤销快照不保存图片字节。像素测试在内存里生成图，不读取仓库里的表情包原图。
 
-`memory.test.ts` 和 `ocr-lifecycle.test.ts` 覆盖 GIF 分配预算、帧间隔、OCR 缩放、画布释放，以及识别串行化、过期任务和失败恢复。
+`memory.test.ts`、`ocr-memory.test.ts` 和 `ocr-lifecycle.test.ts` 覆盖 GIF 分配预算、帧间隔、OCR 缩放、画布释放、WASM 内存导入契约，以及识别串行化、过期任务、Worker 释放和失败恢复。
 
 真实 OCR 需要浏览器加载随项目发布的模型，不放进单元测试。手工冒烟：
 
@@ -93,6 +94,8 @@ python scripts/check_maker.py
 2026-10-19：使用生产构建，在桌面 Safari 和 Chromium 中对 OCR 脚本注入连续三次 HTTP 503，再恢复请求；点击「重新识别」后，两者均在不刷新页面的情况下识别出样例图片的「丟人」。另验证了首次脚本请求失败后自动换地址重试成功。此项未代替 iPhone 真机验证。
 
 ## 真机回归记录
+
+2026-10-20 内存修复本地回归：87 项单元测试、生产构建和 Pages 产物检查通过。Chromium 与桌面 Safari 分别连续刷新三次，均识别出同一张样例图片的「丟人」。Chromium 连续识别三轮，每轮结束后活动 Worker 数量均为 0；对真实运行库注入 `RangeError: Out of memory` 后，终止失败 Worker，再建 Worker 可成功识别。该样例中 OpenCV WASM 堆保持 32 MiB，ONNX Runtime 推理后约 87.75 MiB；此数值不包含页面、模型副本等其他内存。当前 iPhone 未连接，这轮尚未完成手机真机回归，不代表长期内存压力保证。
 
 2026-10-19：在已连接的 iPhone 17 Pro Max（iOS 26.2 / Safari 26.2）上运行本地修复版，使用真实模型和合成图片完成以下检查，未观察到页面崩溃或自动刷新：
 

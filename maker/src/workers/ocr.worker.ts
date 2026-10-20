@@ -1,0 +1,71 @@
+import { prepareOcrAssets } from '../lib/ocr-assets'
+import { OCR_MODEL_FILES, ocrModelUrl } from '../lib/ocr-models'
+
+type Mat = { delete(): void }
+type Cv = { CV_8UC4: number; matFromArray(rows: number, cols: number, type: number, pixels: Uint8ClampedArray): Mat }
+type Engine = {
+  sourceToMat: (cv: Cv, source: Blob) => Promise<{ width: number; height: number; mat: Mat; dispose(): void }>
+  initialize(): Promise<unknown>
+  predict(blob: Blob): Promise<Array<{ items?: unknown[] }>>
+  dispose(): Promise<void>
+}
+
+// PaddleOCR 0.4.2's main adapter uses document/canvas. Its exposed runner adapter
+// is replaced with the same matFromArray path used by the SDK's worker adapter.
+async function sourceToMat(cv: Cv, source: Blob) {
+  const bitmap = await createImageBitmap(source)
+  const canvas = new OffscreenCanvas(bitmap.width, bitmap.height)
+  try {
+    const context = canvas.getContext('2d', { willReadFrequently: true })
+    if (!context) throw new Error('浏览器不能创建识别画布')
+    context.drawImage(bitmap, 0, 0)
+    const pixels = context.getImageData(0, 0, canvas.width, canvas.height)
+    const mat = cv.matFromArray(pixels.height, pixels.width, cv.CV_8UC4, pixels.data)
+    return { width: pixels.width, height: pixels.height, mat, dispose: () => mat.delete() }
+  } finally {
+    bitmap.close()
+    canvas.width = canvas.height = 0
+  }
+}
+
+async function recognize(blob: Blob) {
+  const [sdk, assets] = await Promise.all([
+    import('@paddleocr/paddleocr-js'),
+    prepareOcrAssets(ocrModelUrl(OCR_MODEL_FILES.det), ocrModelUrl(OCR_MODEL_FILES.rec)),
+  ])
+  let engine: Engine | null = null
+  try {
+    engine = await sdk.PaddleOCR.create({
+      initialize: false,
+      lang: 'ch', ocrVersion: 'PP-OCRv5',
+      textDetectionModelName: 'PP-OCRv5_mobile_det',
+      textDetectionModelAsset: { url: ocrModelUrl(OCR_MODEL_FILES.det) },
+      textRecognitionModelName: 'PP-OCRv5_mobile_rec',
+      textRecognitionModelAsset: { url: ocrModelUrl(OCR_MODEL_FILES.rec) },
+      textDetLimitType: 'max', textDetLimitSideLen: 640, textDetMaxSideLimit: 640,
+      textRecognitionBatchSize: 1,
+      worker: false, fetch: assets.fetch,
+      ortOptions: { backend: 'wasm', numThreads: 1 },
+    }) as unknown as Engine
+    if (typeof engine.sourceToMat !== 'function') throw new Error('识别引擎版本不兼容')
+    engine.sourceToMat = sourceToMat
+    await engine.initialize()
+    const [result] = await engine.predict(blob)
+    return result?.items ?? []
+  } finally {
+    await engine?.dispose().catch(() => undefined)
+  }
+}
+
+let started = false
+self.onmessage = (event: MessageEvent) => {
+  if (started || event.data?.kind !== 'recognize' || !(event.data.blob instanceof Blob)) return
+  started = true
+  void recognize(event.data.blob).then(
+    items => self.postMessage({ ok: true, items }),
+    error => self.postMessage({ ok: false, error: {
+      name: error instanceof Error ? error.name : 'Error',
+      message: error instanceof Error ? error.message : String(error),
+    } }),
+  )
+}

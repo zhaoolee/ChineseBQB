@@ -1,58 +1,29 @@
 import { blockLayout } from './char-layout'
 import { orderQuad, polygonBounds } from './geometry'
 import { defaultTextStyle } from './plan'
-import { prepareOcrAssets } from './ocr-assets'
+import { runOcrWorker } from './ocr-worker-client'
 import type { OcrBlock, Point } from '../types'
 
-type PaddleLike = {
-  create: (options: Record<string, unknown>) => Promise<{
-    predict: (input: Blob) => Promise<Array<{ items?: unknown[] }>>
-    dispose?: () => Promise<void> | void
-  }>
-}
+export { OCR_MODEL_FILES, ocrModelUrl } from './ocr-models'
+export { cancelOcrRecognition } from './ocr-worker-client'
 
-let enginePromise: Promise<Awaited<ReturnType<PaddleLike['create']>>> | null = null
 let recognitionQueue: Promise<unknown> = Promise.resolve()
 
-export const OCR_MODEL_FILES = {
-  det: 'PP-OCRv5_mobile_det_onnx_infer.tar',
-  rec: 'PP-OCRv5_mobile_rec_onnx_infer.tar',
-} as const
-
-export function ocrModelUrl(file: string, base = import.meta.env.BASE_URL): string {
-  const prefix = base.endsWith('/') ? base : `${base}/`
-  return `${prefix}models/${file}`
-}
-
-async function resetOcrEngine() {
-  const current = enginePromise
-  enginePromise = null
-  await current?.then((engine) => engine.dispose?.()).catch(() => undefined)
-}
-
-/**
- * PP-OCRv5 mobile, WASM on the main thread (`@paddleocr/paddleocr-js` 0.4.2).
- * Detection and recognition weights live in `public/models` and are published
- * with the app. ONNX Runtime stays out of Vite's dependency prebundle so its WASM
- * is loaded from the installed package on this origin. Worker mode stays off so
- * the SDK does not fall back to a CDN WASM build.
- */
+/** Every request gets a fresh WASM context, released on every completion path. */
 export function recognize(blob: Blob, isCurrent = () => true): Promise<OcrBlock[]> {
   const task = recognitionQueue.then(async () => {
     if (!isCurrent()) return []
     try {
-      const engine = await loadEngine()
-      if (!isCurrent()) return []
-      const [result] = await engine.predict(blob)
-      return normalizeOcrItems(result?.items ?? [])
+      const items = await runOcrWorker(blob)
+      return isCurrent() ? normalizeOcrItems(items) : []
     } catch (error) {
-      if (error instanceof Error && (error.name === 'TimeoutError' || error.name === 'AbortError')) {
-        throw new Error('识别资源加载超时，请检查网络后重新识别')
+      if (error instanceof Error && /out of memory|memory access out of bounds|failed to allocate/i.test(error.message)) {
+        throw new Error('识别时内存不足，识别进程已释放；可点「重新识别」，无需刷新页面')
+      }
+      if (error instanceof Error && error.name === 'TimeoutError') {
+        throw new Error('识别资源加载或处理超时，请检查网络后重新识别')
       }
       throw error
-    } finally {
-      // Finish releasing sessions before the next image can create new ones.
-      await resetOcrEngine()
     }
   })
   recognitionQueue = task.catch(() => undefined)
@@ -66,36 +37,6 @@ export function scaleOcrBlocks(blocks: OcrBlock[], scale: number, scaleY = scale
     const polygon = block.polygon.map((point) => ({ x: point.x / scale, y: point.y / scaleY })) as OcrBlock['polygon']
     return { ...block, polygon, layout: blockLayout(polygon), textStyle: defaultTextStyle(polygon) }
   })
-}
-
-async function loadEngine() {
-  if (!enginePromise) {
-    enginePromise = Promise.all([
-      import('@paddleocr/paddleocr-js'),
-      prepareOcrAssets(ocrModelUrl(OCR_MODEL_FILES.det), ocrModelUrl(OCR_MODEL_FILES.rec)),
-    ]).then(([mod, assets]) => {
-      const factory = mod as unknown as { PaddleOCR: PaddleLike }
-      return factory.PaddleOCR.create({
-        lang: 'ch',
-        ocrVersion: 'PP-OCRv5',
-        textDetectionModelName: 'PP-OCRv5_mobile_det',
-        textDetectionModelAsset: { url: ocrModelUrl(OCR_MODEL_FILES.det) },
-        textRecognitionModelName: 'PP-OCRv5_mobile_rec',
-        textRecognitionModelAsset: { url: ocrModelUrl(OCR_MODEL_FILES.rec) },
-        textDetLimitType: 'max',
-        textDetLimitSideLen: 640,
-        textDetMaxSideLimit: 640,
-        textRecognitionBatchSize: 1,
-        worker: false,
-        fetch: assets.fetch,
-        ortOptions: { backend: 'wasm', numThreads: 1 },
-      })
-    }).catch((error: unknown) => {
-      enginePromise = null
-      throw error
-    })
-  }
-  return enginePromise
 }
 
 export function normalizeOcrItems(items: unknown[]): OcrBlock[] {

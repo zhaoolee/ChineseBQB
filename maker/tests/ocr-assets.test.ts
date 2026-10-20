@@ -28,26 +28,22 @@ function storage() {
   return { cache, entries }
 }
 
-it('starts model and WASM downloads together and reuses cached bytes on the next recognition', async () => {
+it('does not retain WASM bytes or prefetch model bodies, and reuses cached model downloads', async () => {
   const { entries } = storage()
-  const releases = new Map<string, (value: Response) => void>()
-  const network = vi.fn((url: string) => new Promise<Response>((resolve) => releases.set(url, resolve)))
+  const network = vi.fn(async (url: string) => new Response(url))
   vi.stubGlobal('fetch', network)
   const { prepareOcrAssets } = await import('../src/lib/ocr-assets')
-  const pending = prepareOcrAssets(detUrl, recUrl)
-  // All three downloads must have started before any is allowed to finish.
-  await vi.waitFor(() => expect(network).toHaveBeenCalledTimes(3))
-  expect([...releases.keys()].some((url) => url.includes('ort-wasm-simd-threaded.wasm'))).toBe(true)
-  for (const [url, resolve] of releases) resolve(new Response(url))
-  const assets = await pending
-  expect(await (await assets.fetch(detUrl)).text()).toBe(new URL(detUrl, location.href).href)
-  expect(await (await assets.fetch(recUrl)).text()).toBe(new URL(recUrl, location.href).href)
-  expect(runtime.env.wasm.wasmBinary).toBeInstanceOf(ArrayBuffer)
+  const assets = await prepareOcrAssets(detUrl, recUrl)
+  expect(network).not.toHaveBeenCalled()
+  expect(runtime.env.wasm.wasmBinary).toBeUndefined()
+  expect(runtime.env.wasm.wasmPaths).toMatchObject({ wasm: expect.stringContaining('ort-wasm-simd-threaded.wasm') })
   expect(runtime.env.wasm.numThreads).toBe(1)
-  await vi.waitFor(() => expect(entries.size).toBe(3))
+  expect(await (await assets.fetch(detUrl)).text()).toContain('det.tar')
+  expect(await (await assets.fetch(recUrl)).text()).toContain('rec.tar')
+  await vi.waitFor(() => expect(entries.size).toBe(2))
   const next = await prepareOcrAssets(detUrl, recUrl)
   expect(await (await next.fetch(detUrl)).text()).toContain('det.tar')
-  expect(network).toHaveBeenCalledTimes(3)
+  expect(network).toHaveBeenCalledTimes(2)
 })
 
 it('still recognizes when browser storage is disabled or full', async () => {

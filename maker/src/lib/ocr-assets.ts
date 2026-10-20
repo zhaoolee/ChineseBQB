@@ -25,12 +25,10 @@ export async function fetchOcrAsset(path: string): Promise<Response> {
 
 function prepareRuntime(): Promise<void> {
   if (!runtimeReady) {
-    runtimeReady = Promise.all([
-      import('onnxruntime-web/wasm'),
-      fetchOcrAsset(wasmUrl),
-    ]).then(async ([ort, response]) => {
-      // Supply the bytes directly so ORT does not start a second, late WASM download.
-      ort.env.wasm.wasmBinary = await response.arrayBuffer()
+    runtimeReady = import('onnxruntime-web/wasm').then((ort) => {
+      // Let the browser stream/compile WASM instead of keeping another 14 MiB
+      // ArrayBuffer in env.wasm.wasmBinary for the lifetime of the runtime.
+      ort.env.wasm.wasmPaths = { wasm: wasmUrl }
       ort.env.wasm.numThreads = 1
       ort.env.wasm.initTimeout = 60_000
     }).catch((error: unknown) => {
@@ -41,25 +39,13 @@ function prepareRuntime(): Promise<void> {
   return runtimeReady
 }
 
-/** Start both models and the small WASM runtime together, before SDK initialization. */
+/** The SDK consumes model responses as it asks for them, without retained prefetch clones. */
 export async function prepareOcrAssets(detUrl: string, recUrl: string): Promise<{ fetch: typeof fetch }> {
-  const [det, rec] = await Promise.all([
-    fetchOcrAsset(detUrl),
-    fetchOcrAsset(recUrl),
-    prepareRuntime(),
-  ])
-  const responses = new Map([
-    [new URL(detUrl, location.href).href, det],
-    [new URL(recUrl, location.href).href, rec],
-  ])
-  return {
-    fetch: async (input) => {
-      const url = new URL(input instanceof Request ? input.url : String(input), location.href).href
-      const response = responses.get(url)
-      if (!response) throw new Error('识别模型资源不可用，请重新识别')
-      // Do not retain an unread clone of the entire tar in the engine's options.
-      responses.delete(url)
-      return response
-    },
-  }
+  await prepareRuntime()
+  const allowed = new Set([detUrl, recUrl].map(path => new URL(path, location.href).href))
+  return { fetch: async (input) => {
+    const url = new URL(input instanceof Request ? input.url : String(input), location.href).href
+    if (!allowed.has(url)) throw new Error('识别模型资源不可用，请重新识别')
+    return fetchOcrAsset(url)
+  } }
 }
