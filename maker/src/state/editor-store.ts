@@ -114,6 +114,10 @@ export function siteHome(): string {
   return siteBaseFrom(makerBaseUrl(import.meta.env.BASE_URL, location.origin)).href
 }
 
+export function makerHome(): string {
+  return makerBaseUrl(import.meta.env.BASE_URL, location.origin).href
+}
+
 export function assetUrl(path: string): string {
   return siteAsset(path, siteBaseFrom(makerBaseUrl(import.meta.env.BASE_URL, location.origin)))
 }
@@ -353,6 +357,7 @@ export function setLineRedraw(id: string, lineRedraw: boolean) {
 }
 
 export function beginGesture() {
+  if (state.ocrStatus === 'loading') skipOcr()
   update({ gifPlaying: false })
   gestureBase = state.history.present
 }
@@ -532,6 +537,7 @@ export function dismissNotice() {
 }
 
 function commitEdit(recipe: (current: Editable) => Editable) {
+  if (state.ocrStatus === 'loading') skipOcr()
   const present = recipe(state.history.present)
   update({ gifPlaying: false, history: historyCommit(state.history, present) })
 }
@@ -544,6 +550,12 @@ function invalidateOcr() {
   ocrToken += 1
   cancelOcrRecognition()
   if (state.ocrStatus === 'loading') update({ ocrStatus: 'idle', ocrMessage: '' })
+}
+
+export function skipOcr() {
+  if (state.ocrStatus !== 'loading') return
+  invalidateOcr()
+  update({ ocrMessage: '已跳过识别，可以继续加字和导出。' })
 }
 
 export function setGifFrame(index: number, playing = false) {

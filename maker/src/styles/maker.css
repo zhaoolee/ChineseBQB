@@ -21,7 +21,7 @@ h2 { margin: 0; font-size: 16px; }
 .header-actions { margin-left: auto; display: flex; gap: 8px; align-items: center; flex: none; }
 .brand { display: flex; gap: 8px; align-items: baseline; font-weight: 700; flex: none; }
 .brand a { color: #6f4219; text-decoration: none; }
-.brand span { color: #8d7761; font-weight: 500; }
+.brand .brand-maker { color: #8d7761; font-weight: 500; }
 .toolbar, .export-actions, .row { display: flex; gap: 8px; align-items: center; }
 .toolbar { flex: 1; min-width: 0; flex-wrap: nowrap; overflow-x: auto; }
 .toolbar button { flex: none; }
@@ -37,6 +37,7 @@ h2 { margin: 0; font-size: 16px; }
 .empty-stage { color: #6f4219; padding: 24px; text-align: center; cursor: pointer; }
 .empty-stage input { display: none; }
 .sheet { position: relative; transform-origin: center center; }
+.sheet, .sheet * { -webkit-user-select: none; user-select: none; -webkit-user-drag: none; }
 .sheet canvas, .sheet svg, .sheet .gif-preview { position: absolute; inset: 0; width: 100%; height: 100%; }
 .sheet .gif-preview { pointer-events: none; }
 .overlay { pointer-events: none; }
@@ -381,7 +382,7 @@ input, select { border: 1px solid #e4dad1; border-radius: 6px; padding: 8px; bac
 
 .preview-tools { flex-direction: column; gap: 6px; }
 .preview-tools .compare-toggle[aria-pressed="true"] { background: #6f4219; color: #fff8ed; border-color: #6f4219; }
-.compare-overlay { z-index: 5; cursor: col-resize; user-select: none; overflow: hidden; }
+.compare-overlay { z-index: 5; cursor: col-resize; -webkit-user-select: none; user-select: none; overflow: hidden; }
 .compare-label { position: absolute; top: 8px; padding: 3px 7px; border-radius: 4px; background: rgba(63,47,34,.72); color: #fff8ed; font-size: 12px; line-height: 18px; pointer-events: none; }
 .compare-label.before { left: 8px; }
 .compare-label.after { right: 8px; }

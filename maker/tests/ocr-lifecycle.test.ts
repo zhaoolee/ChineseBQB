@@ -34,7 +34,7 @@ async function nextWorker(count: number) {
   return FakeWorker.instances[count - 1]
 }
 
-it('serializes inference, skips stale queued requests, and terminates before the next worker', async () => {
+it('serializes inference, skips stale queued requests, and reuses the same warm worker', async () => {
   const { recognize } = await import('../src/lib/ocr')
   const first = recognize(new Blob(['first']))
   let current = true
@@ -44,11 +44,12 @@ it('serializes inference, skips stale queued requests, and terminates before the
   expect(worker.postMessage.mock.calls[0][0]).toMatchObject({ kind: 'recognize', blob: expect.any(Blob) })
   current = false
   worker.reply({ ok: true, items: [] })
-  const second = await nextWorker(2)
-  expect(worker.terminate).toHaveBeenCalledOnce()
-  second.reply({ ok: true, items: [] })
+  await vi.waitFor(() => expect(worker.postMessage).toHaveBeenCalledTimes(2))
+  expect(FakeWorker.instances).toHaveLength(1)
+  expect(worker.terminate).not.toHaveBeenCalled()
+  worker.reply({ ok: true, items: [] })
   await Promise.all([first, stale, last])
-  expect(second.terminate).toHaveBeenCalledOnce()
+  expect(worker.terminate).not.toHaveBeenCalled()
 })
 
 it('releases a poisoned WASM backend and retries in a fresh worker', async () => {
@@ -64,7 +65,7 @@ it('releases a poisoned WASM backend and retries in a fresh worker', async () =>
   expect(fresh).not.toBe(worker)
   fresh.reply({ ok: true, items: [{ text: '丢人', score: 1, poly: [[0,0],[80,0],[80,40],[0,40]] }] })
   expect((await retry)[0].originalText).toBe('丢人')
-  expect(fresh.terminate).toHaveBeenCalledOnce()
+  expect(fresh.terminate).not.toHaveBeenCalled()
 })
 
 it('terminates on pagehide and allows recognition after a page is restored', async () => {
@@ -81,15 +82,22 @@ it('terminates on pagehide and allows recognition after a page is restored', asy
   await expect(retry).resolves.toEqual([])
 })
 
-it('terminates immediately when changing pictures, without accepting a late result', async () => {
+it('cancels immediately, drains the discarded result, and reuses the engine for the next picture', async () => {
   const { recognize, cancelOcrRecognition } = await import('../src/lib/ocr')
   const pending = recognize(new Blob())
   const rejected = expect(pending).rejects.toMatchObject({ name: 'AbortError' })
   const worker = await nextWorker(1)
   cancelOcrRecognition()
-  worker.reply({ ok: true, items: [] })
   await rejected
-  expect(worker.terminate).toHaveBeenCalledOnce()
+  expect(worker.terminate).not.toHaveBeenCalled()
+  const next = recognize(new Blob(['next']))
+  await Promise.resolve()
+  expect(worker.postMessage).toHaveBeenCalledTimes(1)
+  worker.reply({ ok: true, items: [{text: 'stale'}] })
+  await vi.waitFor(() => expect(worker.postMessage).toHaveBeenCalledTimes(2))
+  worker.reply({ ok: true, items: [] })
+  await expect(next).resolves.toEqual([])
+  expect(FakeWorker.instances).toHaveLength(1)
 })
 
 it.each(['error', 'messageerror', 'invalid'] as const)('cleans up after worker %s', async (kind) => {
@@ -127,7 +135,7 @@ it('forwards progress without settling or terminating, and ignores messages afte
   await expect(pending).resolves.toEqual([])
   worker.reply({ kind: 'progress', progress: { stage: 'finish' } })
   expect(progress).toHaveBeenCalledTimes(2)
-  expect(worker.terminate).toHaveBeenCalledOnce()
+  expect(worker.terminate).not.toHaveBeenCalled()
 })
 
 it('suppresses progress from stale recognition and after cancellation', async () => {
@@ -145,7 +153,7 @@ it('suppresses progress from stale recognition and after cancellation', async ()
   expect(progress).not.toHaveBeenCalled()
 })
 
-it('prewarms only one worker, preserves it when opening a picture, and consumes it once', async () => {
+it('prewarms only one worker and reuses it across pictures', async () => {
   const { warmOcrWorker, cancelOcrRecognition, runOcrWorker } = await import('../src/lib/ocr-worker-client')
   warmOcrWorker()
   warmOcrWorker()
@@ -158,15 +166,15 @@ it('prewarms only one worker, preserves it when opening a picture, and consumes 
   expect(worker.terminate).not.toHaveBeenCalled()
   const progress = vi.fn()
   const pending = runOcrWorker(new Blob(), progress)
-  expect(progress).toHaveBeenCalledWith({stage: 'initialize'})
+  expect(progress).toHaveBeenCalledWith({stage: 'recognize'})
   expect(worker.postMessage).toHaveBeenLastCalledWith({kind: 'recognize', blob: expect.any(Blob)})
   expect(FakeWorker.instances).toHaveLength(1)
   worker.reply({ok: true, items: ['first']})
   await expect(pending).resolves.toEqual(['first'])
-  expect(worker.terminate).toHaveBeenCalledOnce()
+  expect(worker.terminate).not.toHaveBeenCalled()
   const next = runOcrWorker(new Blob())
-  expect(FakeWorker.instances).toHaveLength(2)
-  FakeWorker.instances[1].reply({ok: true, items: []})
+  expect(FakeWorker.instances).toHaveLength(1)
+  worker.reply({ok: true, items: []})
   await next
 })
 
@@ -280,4 +288,37 @@ it('does not create a competing warm worker when recognition starts before the i
   expect(FakeWorker.instances[0].terminate).not.toHaveBeenCalled()
   FakeWorker.instances[0].reply({ok: true, items: []})
   await pending
+})
+
+
+it('releases a successfully used engine after the idle limit', async () => {
+  vi.useFakeTimers()
+  const { runOcrWorker, OCR_WARM_IDLE_MS } = await import('../src/lib/ocr-worker-client')
+  const first = runOcrWorker(new Blob())
+  const worker = FakeWorker.instances[0]
+  worker.reply({ok: true, items: []})
+  await first
+  await vi.advanceTimersByTimeAsync(OCR_WARM_IDLE_MS - 1)
+  const second = runOcrWorker(new Blob())
+  await vi.advanceTimersByTimeAsync(1)
+  expect(worker.terminate).not.toHaveBeenCalled()
+  worker.reply({ok: true, items: []})
+  await second
+  await vi.advanceTimersByTimeAsync(OCR_WARM_IDLE_MS)
+  expect(worker.terminate).toHaveBeenCalledOnce()
+})
+
+it('still releases a stalled inference after skipping, allowing a fresh retry', async () => {
+  vi.useFakeTimers()
+  const { runOcrWorker, cancelOcrRecognition, OCR_WORKER_TIMEOUT_MS } = await import('../src/lib/ocr-worker-client')
+  const first = runOcrWorker(new Blob())
+  const rejected = expect(first).rejects.toMatchObject({name: 'AbortError'})
+  cancelOcrRecognition()
+  await rejected
+  const next = runOcrWorker(new Blob())
+  await vi.advanceTimersByTimeAsync(OCR_WORKER_TIMEOUT_MS)
+  expect(FakeWorker.instances[0].terminate).toHaveBeenCalledOnce()
+  expect(FakeWorker.instances).toHaveLength(2)
+  FakeWorker.instances[1].reply({ok: true, items: []})
+  await expect(next).resolves.toEqual([])
 })

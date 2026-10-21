@@ -14,7 +14,7 @@ beforeEach(() => {
 })
 afterEach(() => { vi.unstubAllGlobals(); vi.clearAllMocks() })
 
-it('reports actual initialization and inference boundaries and disposes before success', async () => {
+it('reports actual initialization and inference boundaries while retaining the engine', async () => {
   let initialized!: () => void
   let predicted!: (items: unknown[]) => void
   const engine = {
@@ -35,7 +35,7 @@ it('reports actual initialization and inference boundaries and disposes before s
   predicted([{items: []}])
   await vi.waitFor(() => expect(scope.postMessage).toHaveBeenLastCalledWith({ok: true, items: []}))
   expect(scope.postMessage.mock.calls.map(([m]) => m.progress?.stage).filter(Boolean)).toEqual(['resources', 'initialize', 'recognize', 'finish'])
-  expect(engine.dispose).toHaveBeenCalledOnce()
+  expect(engine.dispose).not.toHaveBeenCalled()
 })
 
 it('does not report inference or completion when initialization fails', async () => {
@@ -49,7 +49,7 @@ it('does not report inference or completion when initialization fails', async ()
   expect(engine.dispose).toHaveBeenCalledOnce()
 })
 
-it('initializes before a picture is supplied, then reuses that engine and releases it after inference', async () => {
+it('initializes before a picture is supplied and reuses that engine across two inferences', async () => {
   const engine = {sourceToMat: vi.fn(), initialize: vi.fn(async () => undefined), predict: vi.fn(async () => [{items: ['text']}]), dispose: vi.fn(async () => undefined)}
   mocks.create.mockResolvedValue(engine)
   await import('../src/workers/ocr.worker')
@@ -64,8 +64,14 @@ it('initializes before a picture is supplied, then reuses that engine and releas
   expect(mocks.create).toHaveBeenCalledOnce()
   expect(engine.initialize).toHaveBeenCalledOnce()
   expect(engine.predict).toHaveBeenCalledOnce()
-  expect(engine.dispose).toHaveBeenCalledOnce()
+  expect(engine.dispose).not.toHaveBeenCalled()
   expect(scope.postMessage.mock.calls.slice(warmMessages).map(([m]) => m.progress?.stage).filter(Boolean)).toEqual(['recognize', 'finish'])
+  scope.onmessage!({data: {kind: 'recognize', blob: new Blob(['second'])}} as MessageEvent)
+  await vi.waitFor(() => expect(engine.predict).toHaveBeenCalledTimes(2))
+  await vi.waitFor(() => expect(scope.postMessage.mock.calls.filter(([m]) => m.ok)).toHaveLength(2))
+  expect(mocks.create).toHaveBeenCalledOnce()
+  expect(engine.initialize).toHaveBeenCalledOnce()
+  expect(engine.dispose).not.toHaveBeenCalled()
 })
 
 it('joins an unfinished warm-up instead of initializing another engine', async () => {
@@ -82,7 +88,7 @@ it('joins an unfinished warm-up instead of initializing another engine', async (
   await vi.waitFor(() => expect(scope.postMessage).toHaveBeenLastCalledWith({ok: true, items: []}))
   expect(mocks.create).toHaveBeenCalledOnce()
   expect(engine.initialize).toHaveBeenCalledOnce()
-  expect(engine.dispose).toHaveBeenCalledOnce()
+  expect(engine.dispose).not.toHaveBeenCalled()
 })
 
 it('disposes a failed warm initialization without trying inference', async () => {

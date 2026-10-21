@@ -12,15 +12,19 @@ type Session = {
   worker: Worker
   progress: OcrProgress
   request: Recognition | null
+  busy: boolean
+  available: Promise<void>
+  release: () => void
   timer: ReturnType<typeof setTimeout> | undefined
   finish: (error: Error | null, items?: unknown[]) => void
 }
 let session: Session | null = null
+let cancellation = 0
 
 function interrupted() { return new DOMException('识别已中断，可重新识别', 'AbortError') }
 function timedOut() { return new DOMException('识别超时，请重新识别', 'TimeoutError') }
 
-/** There is at most one OCR realm: a warm idle engine is claimed by the first recognition. */
+/** Keep one initialized engine, with bounded idle lifetime and serialized inference. */
 function createSession(): Session {
   const worker = new Worker(new URL('../workers/ocr.worker.ts', import.meta.url), { type: 'module' })
   let settled = false
@@ -29,7 +33,8 @@ function createSession(): Session {
     if (document.visibilityState === 'hidden' && !current.request) current.finish(interrupted())
   }
   const current: Session = {
-    worker, progress: { stage: 'resources' }, request: null, timer: undefined,
+    worker, progress: { stage: 'resources' }, request: null, busy: false,
+    available: Promise.resolve(), release: () => undefined, timer: undefined,
     finish(error, items = []) {
       if (settled) return
       settled = true
@@ -40,6 +45,7 @@ function createSession(): Session {
       if (session === current) session = null
       const request = current.request
       current.request = null
+      current.release()
       if (request) {
         if (error) request.reject(error)
         else request.resolve(items)
@@ -50,6 +56,12 @@ function createSession(): Session {
   if (typeof window !== 'undefined') window.addEventListener('pagehide', pagehide, { once: true })
   if (typeof document !== 'undefined') document.addEventListener('visibilitychange', hidden)
   current.timer = setTimeout(() => current.finish(timedOut()), OCR_WORKER_TIMEOUT_MS)
+  const idle = () => {
+    clearTimeout(current.timer)
+    current.progress = { stage: 'recognize' }
+    if (typeof document !== 'undefined' && document.visibilityState === 'hidden') current.finish(null)
+    else current.timer = setTimeout(() => current.finish(null), OCR_WARM_IDLE_MS)
+  }
   worker.onmessage = (event: MessageEvent) => {
     if (settled) return
     const data = event.data
@@ -59,13 +71,17 @@ function createSession(): Session {
       return
     }
     if (data?.kind === 'ready') {
-      if (!current.request) {
-        clearTimeout(current.timer)
-        current.timer = setTimeout(() => current.finish(null), OCR_WARM_IDLE_MS)
-      }
+      if (!current.busy) idle()
       return
     }
-    if (data?.ok === true && Array.isArray(data.items)) current.finish(null, data.items)
+    if (data?.ok === true && Array.isArray(data.items) && current.busy) {
+      const request = current.request
+      current.request = null
+      current.busy = false
+      idle()
+      current.release()
+      request?.resolve(data.items)
+    }
     else {
       const error = new Error(typeof data?.error?.message === 'string' ? data.error.message : '识别进程返回了无效结果')
       error.name = typeof data?.error?.name === 'string' ? data.error.name : 'Error'
@@ -90,12 +106,16 @@ export function warmOcrWorker() {
 }
 
 export function cancelOcrRecognition() {
-  // Opening the first image must not destroy the engine that is already preparing for it.
-  if (session?.request) session.finish(interrupted())
+  cancellation += 1
+  // Let in-flight inference drain in the worker, retaining its initialized engine.
+  // Detach the consumer now so a late result cannot reach the editor.
+  const request = session?.request
+  if (session) session.request = null
+  request?.reject(interrupted())
 }
 
 export function cancelOcrWarmup() {
-  if (session && !session.request) session.finish(null)
+  if (session && !session.busy) session.finish(null)
 }
 
 /** Start after the UI can paint; defer background tabs until the page becomes visible. */
@@ -129,16 +149,22 @@ export function scheduleOcrWarmup(): () => void {
   }
 }
 
-/** Claim the warm engine, or create one on demand; every recognition still releases its WASM heaps. */
-export function runOcrWorker(blob: Blob, onProgress?: OcrProgressListener): Promise<unknown[]> {
+/** A skipped job drains before the next picture uses the same engine. */
+export async function runOcrWorker(blob: Blob, onProgress?: OcrProgressListener): Promise<unknown[]> {
+  const generation = cancellation
+  while (session?.busy) {
+    await session.available
+    if (generation !== cancellation) throw interrupted()
+  }
   return new Promise((resolve, reject) => {
-    if (session?.request) { reject(new Error('上一轮识别尚未结束')); return }
     let current: Session | undefined
     try {
       const wasWarm = session !== null
       current = session ?? createSession()
       clearTimeout(current.timer)
       current.request = { resolve, reject, onProgress }
+      current.busy = true
+      current.available = new Promise<void>(resolve => { current!.release = resolve })
       const active = current
       current.timer = setTimeout(() => active.finish(timedOut()), OCR_WORKER_TIMEOUT_MS)
       if (wasWarm) onProgress?.(current.progress)

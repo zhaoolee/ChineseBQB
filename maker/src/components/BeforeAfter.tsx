@@ -42,6 +42,8 @@ export function BeforeAfter({ imageData }: { imageData: ImageData }) {
     // 阻止冒泡，避免父级 .sheet 把这次按下当成编辑选框的拖动。
     event.stopPropagation()
     if (event.pointerType === 'mouse' && event.button !== 0) return
+    event.preventDefault()
+    event.currentTarget.querySelector<HTMLElement>('[role="slider"]')?.focus({ preventScroll: true })
     dragging.current = true
     event.currentTarget.setPointerCapture(event.pointerId)
     moveTo(event.clientX)
@@ -96,6 +98,7 @@ export function BeforeAfter({ imageData }: { imageData: ImageData }) {
       onPointerUp={handlePointerEnd}
       onPointerCancel={handlePointerEnd}
       onLostPointerCapture={() => { dragging.current = false }}
+      onDragStart={(event) => event.preventDefault()}
     >
       <canvas
         ref={canvasRef}

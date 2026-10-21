@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { addFreeText, focusCell, resetDocument, runOcr, select, setFreeText, visibleEdits, type CellFocus } from '../state/editor-store'
+import { addFreeText, focusCell, resetDocument, runOcr, select, setFreeText, skipOcr, visibleEdits, type CellFocus } from '../state/editor-store'
 import type { FreeText } from '../types'
 import { BangCells } from './BangCells'
 import { EditControls } from './EditControls'
@@ -16,6 +16,7 @@ export function TextBlocksPanel() {
       <div className="pane-head">
         <h2>文字</h2>
         <div className="row">
+          {state.ocrStatus === 'loading' && <button type="button" onClick={skipOcr}>跳过识别</button>}
           <button type="button" disabled={!editable} onClick={addFreeText}>添加文字</button>
           <button type="button" disabled={!editable} onClick={resetDocument}>还原原图</button>
           {state.image?.frames && <button type="button" disabled={state.ocrStatus === 'loading'} onClick={() => void runOcr()}>识别当前片段</button>}
@@ -33,6 +34,12 @@ export function TextBlocksPanel() {
         <div>
           <p className="status" role="status">{state.ocrMessage}</p>
           <button type="button" disabled={!editable} onClick={() => { void runOcr() }}>重新识别</button>
+        </div>
+      )}
+      {state.ocrStatus === 'idle' && editable && (
+        <div className="row">
+          <p className="status" role="status">{state.ocrMessage}</p>
+          <button type="button" onClick={() => void runOcr()}>识别文字</button>
         </div>
       )}
       <div className="block-list">

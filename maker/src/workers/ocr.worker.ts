@@ -79,15 +79,11 @@ function reportError(error: unknown) {
 }
 
 async function recognize(blob: Blob) {
-  try {
-    const ready = await prepareEngine()
-    report('recognize')
-    const [result] = await ready.predict(blob)
-    report('finish')
-    return result?.items ?? []
-  } finally {
-    await disposeEngine()
-  }
+  const ready = await prepareEngine()
+  report('recognize')
+  const [result] = await ready.predict(blob)
+  report('finish')
+  return result?.items ?? []
 }
 
 let started = false
@@ -105,7 +101,7 @@ self.onmessage = (event: MessageEvent) => {
   if (started || event.data?.kind !== 'recognize' || !(event.data.blob instanceof Blob)) return
   started = true
   void recognize(event.data.blob).then(
-    items => self.postMessage({ ok: true, items }),
-    reportError,
+    items => { started = false; self.postMessage({ ok: true, items }) },
+    async error => { await disposeEngine(); reportError(error) },
   )
 }

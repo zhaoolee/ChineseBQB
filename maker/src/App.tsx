@@ -8,7 +8,7 @@ import { TextBlocksPanel } from './components/TextBlocksPanel'
 import { imageFileFromClipboard } from './lib/clipboard'
 import { scheduleOcrWarmup } from './lib/ocr-worker-client'
 import { useEditor } from './components/use-editor'
-import { boot, dismissNotice, editor, openLocalFile, redo, siteHome, undo } from './state/editor-store'
+import { boot, dismissNotice, editor, makerHome, openLocalFile, redo, siteHome, undo } from './state/editor-store'
 
 export function App() {
   const state = useEditor()
@@ -50,7 +50,7 @@ export function App() {
       <header className="topbar">
         <div className="brand">
           <a href={siteHome()}>ChineseBQB</a>
-          <span>Maker</span>
+          <a className="brand-maker" href={makerHome()}>Maker</a>
         </div>
         <div id="header-actions" className="header-actions" />
       </header>

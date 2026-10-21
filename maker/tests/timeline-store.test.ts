@@ -165,3 +165,32 @@ it('clears progress after failure or seeking and rejects late progress from the 
   expect(s.editor.getState().ocrProgress).toBeNull()
   expect(s.editor.getState().ocrStatus).toBe('ready')
 })
+
+
+it.each(['skip', 'edit', 'gesture'] as const)('protects manual edits from late OCR after %s', async action => {
+  const s = await loaded()
+  s.addFreeText()
+  const id = s.visibleEdits().freeTexts[0].id
+  s.setFreeText(id, '保留手工文字')
+  let finish!: (items: unknown[]) => void
+  let report!: (value: {stage: 'recognize'}) => void
+  mocks.recognize.mockImplementationOnce((_blob, _current, onProgress) => new Promise(resolve => {
+    finish = resolve
+    report = onProgress
+  }))
+  const pending = s.runOcr()
+  await vi.waitFor(() => expect(finish).toBeTypeOf('function'))
+  if (action === 'skip') s.skipOcr()
+  else if (action === 'edit') s.setFreeText(id, '识别中修改')
+  else { s.beginGesture(); s.moveFreeText(id, 10, 12); s.endGesture() }
+  expect(s.editor.getState()).toMatchObject({ocrStatus: 'idle', ocrProgress: null})
+  const edits = s.editor.getState().history.present
+  report({stage: 'recognize'})
+  finish([])
+  await pending
+  expect(s.editor.getState()).toMatchObject({ocrStatus: 'idle', ocrProgress: null})
+  expect(s.editor.getState().history.present).toBe(edits)
+  expect(s.visibleEdits().freeTexts[0].text).toBe(action === 'edit' ? '识别中修改' : '保留手工文字')
+  await s.runOcr()
+  expect(s.editor.getState().ocrStatus).toBe('ready')
+})

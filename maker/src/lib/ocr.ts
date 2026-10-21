@@ -10,7 +10,7 @@ export { cancelOcrRecognition } from './ocr-worker-client'
 
 let recognitionQueue: Promise<unknown> = Promise.resolve()
 
-/** The first request may claim a prewarmed context; every completion releases it. */
+/** Reuse the warm engine and serialize requests; stale consumers never receive results. */
 export function recognize(blob: Blob, isCurrent = () => true, onProgress?: OcrProgressListener): Promise<OcrBlock[]> {
   const task = recognitionQueue.then(async () => {
     if (!isCurrent()) return []

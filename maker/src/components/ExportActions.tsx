@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { exportSegmentedGif } from '../lib/gif-export'
 import { collectPatches } from '../lib/plan'
 import { canvasToImage, downloadBlob, editedDownloadName, inheritedStillExport, paintComposite } from '../lib/paint'
-import { editor, setGifPlaying } from '../state/editor-store'
+import { editor, setGifPlaying, skipOcr } from '../state/editor-store'
 import { useEditor } from './use-editor'
 
 export function ExportActions() {
@@ -49,10 +49,11 @@ export function ExportActions() {
     <button
       type="button"
       className="primary"
-      disabled={!editable || exporting || state.ocrStatus === 'loading'}
+      disabled={!editable || exporting}
       onClick={() => {
         if (exportLock.current) return
         exportLock.current = true
+        skipOcr()
         setGifPlaying(false)
         setExporting(true)
         const imageAtStart = editor.getState().image
