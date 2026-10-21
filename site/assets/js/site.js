@@ -190,6 +190,85 @@
     }
   });
 
+  const shareMimeTypes = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', gif: 'image/gif', webp: 'image/webp', bmp: 'image/bmp', avif: 'image/avif', svg: 'image/svg+xml' };
+  function shareMime(name, type) {
+    if (type && type.startsWith('image/')) return type;
+    const match = /\.([a-z0-9]+)$/i.exec(name);
+    return (match && shareMimeTypes[match[1].toLowerCase()]) || 'application/octet-stream';
+  }
+  const canShareFiles = () => window.isSecureContext && typeof navigator.share === 'function' && typeof navigator.canShare === 'function';
+  let preparedShare = null, sharing = false;
+  async function fetchShareFile(src, name) {
+    const controller = new AbortController();
+    let timedOut = false;
+    const timer = setTimeout(() => { timedOut = true; controller.abort(); }, 20000);
+    try {
+      const response = await fetch(src, { signal: controller.signal });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+      return new File([blob], name, { type: shareMime(name, blob.type) });
+    } catch (error) {
+      if (timedOut) throw new DOMException('分享原图加载超时', 'TimeoutError');
+      throw error;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  async function shareImage(button, src, name) {
+    if (sharing) return;
+    sharing = true;
+    button.disabled = true;
+    button.setAttribute('aria-busy', 'true');
+    let file = preparedShare && preparedShare.src === src && preparedShare.file.name === name ? preparedShare.file : null;
+    try {
+      if (!file) {
+        file = await fetchShareFile(src, name);
+        preparedShare = { src, file };
+        // Fetching can outlive transient user activation; the cached File lets the next click share synchronously.
+        if (navigator.userActivation?.isActive === false) {
+          toast('图片已准备好，请再点一次分享。');
+          return;
+        }
+      }
+      if (!navigator.canShare({ files: [file] })) {
+        preparedShare = null;
+        toast('这个浏览器不能分享这种格式的图片，请用旁边的下载按钮保存原图。');
+        return;
+      }
+      await navigator.share({ files: [file] });
+      preparedShare = null;
+    } catch (error) {
+      if (error?.name === 'AbortError') { preparedShare = null; return; }
+      if (error?.name === 'TimeoutError') {
+        preparedShare = null;
+        toast('原图加载超时，请检查网络后再试一次。');
+        return;
+      }
+      if (error?.name === 'NotAllowedError') {
+        if (file) preparedShare = { src, file };
+        toast('请再点一次分享；若仍无法分享，请用下载按钮保存原图。');
+        return;
+      }
+      preparedShare = null;
+      toast('分享失败，请稍后再试，也可以用旁边的下载按钮保存原图。');
+    } finally {
+      sharing = false;
+      button.disabled = false;
+      button.removeAttribute('aria-busy');
+    }
+  }
+  document.addEventListener('click', event => {
+    const button = event.target.closest('.image-share');
+    if (!button || button.disabled) return;
+    const src = button.dataset.src, name = button.dataset.name;
+    if (!src || !name) return;
+    if (!canShareFiles()) {
+      toast('当前环境不支持图片分享，请用旁边的下载按钮保存原图。');
+      return;
+    }
+    shareImage(button, src, name);
+  });
+
   if (!$('#search-form')) return;
   let searchIndex, searchPromise, results = [], shown = 0, sequence = 0, debounce;
   const input = $('#search-query'), status = $('#search-status'), resultsNode = $('#search-results');
@@ -218,7 +297,14 @@
     download.className = 'image-download';
     download.href = asset(item.src); download.download = item.name; download.title = '下载原图';
     download.setAttribute('aria-label', `保存 ${item.name}`);
-    caption.append(title, download);
+    const share = document.createElement('button');
+    share.type = 'button';
+    share.className = 'image-share';
+    share.dataset.src = asset(item.src);
+    share.dataset.name = item.name;
+    share.title = '分享原图';
+    share.setAttribute('aria-label', `分享 ${item.name}`);
+    caption.append(title, download, share);
     const category = document.createElement('a');
     category.className = 'search-category';
     category.href = asset(item.categoryUrl);
