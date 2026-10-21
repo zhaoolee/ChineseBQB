@@ -5,9 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="在 ChineseBQB 的表情包上改字。识别、对比和导出都在浏览器本地完成。" />
     <title>ChineseBQB Maker</title>
+    <style>
+      /* 启动提示自带样式，脚本或样式表未就绪时也能独立居中，React 挂载后整块被替换。 */
+      html, body, #root { height: 100%; margin: 0; }
+      body { background: #efe3d2; font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif; }
+      .boot { box-sizing: border-box; min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 24px; text-align: center; color: #6f4219; }
+      .boot-spinner { width: 26px; height: 26px; border: 3px solid #e0cfb8; border-top-color: #6f4219; border-radius: 50%; animation: boot-spin .8s linear infinite; }
+      .boot-text { margin: 0; font-size: 15px; }
+      .boot-help { margin: 0; font-size: 13px; line-height: 1.9; color: #8d7761; }
+      .boot-help a { margin: 0 6px; color: #6f4219; text-decoration: underline; }
+      @keyframes boot-spin { to { transform: rotate(360deg); } }
+      @media (prefers-reduced-motion: reduce) { .boot-spinner { animation: none; border-top-color: #c8b49a; } }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="boot" role="status" aria-live="polite">
+        <span class="boot-spinner" aria-hidden="true"></span>
+        <p class="boot-text">正在打开编辑器…</p>
+        <p class="boot-help">一直停在这里？<a href="">重新加载</a><a href="../">返回图库</a></p>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

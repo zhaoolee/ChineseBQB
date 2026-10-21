@@ -30,6 +30,9 @@ export function EditorCanvas() {
   const [frame, setFrame] = useState({ width: 0, height: 0 })
   const image = state.image
   const present = useMemo(() => visibleEdits(state), [state.history.present, state.gifFrameIndex])
+  // boot() 会先等素材索引再打开 ?src=，这段时间画布是空的；索引失败或链接无效时立刻退出提示。
+  const waitingForCatalog = state.catalogLoading && Boolean(new URLSearchParams(location.search).get('src'))
+    && !state.image && !state.imageError
 
   const bindStage = useCallback((node: HTMLElement | null) => {
     stageRef.current = node
@@ -88,9 +91,15 @@ export function EditorCanvas() {
     return { width: image.naturalWidth * fit, height: image.naturalHeight * fit }
   }, [frame, image])
 
-  if (state.imageLoading) {
+  if (state.imageLoading || waitingForCatalog) {
     const pending = state.loadingPreview
-    return <LoadingPreview key={pending?.src ?? 'local'} src={pending?.src} name={pending?.name} phase={pending?.phase ?? 'decode'} />
+    return <LoadingPreview
+      key={pending?.src ?? 'local'}
+      src={pending?.src}
+      name={pending?.name}
+      phase={pending?.phase ?? 'decode'}
+      label={waitingForCatalog && !pending ? '正在读取素材索引…' : undefined}
+    />
   }
   if (!image) {
     return (

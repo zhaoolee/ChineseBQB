@@ -11,7 +11,7 @@
   {{ with resources.Get "css/site.css" | minify | fingerprint }}
     <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
   {{ end }}
-  {{ $scripts := slice (resources.Get "js/zip.js") (resources.Get "js/site.js") }}
+  {{ $scripts := slice (resources.Get "js/zip.js") (resources.Get "js/loading.js") (resources.Get "js/site.js") }}
   {{ with $scripts | resources.Concat "js/app.js" | minify | fingerprint }}
     <script defer src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}"></script>
   {{ end }}
@@ -38,5 +38,6 @@
     <p class="preview-note" id="preview-maker-note" hidden></p>
   </dialog>
   <p class="toast" id="toast" role="status" hidden></p>
+  <div class="nav-loading" id="nav-loading" role="status" aria-live="polite" aria-atomic="true" hidden><span class="nav-loading-spinner" aria-hidden="true"></span><span class="nav-loading-text">正在打开编辑器…</span></div>
 </body>
 </html>

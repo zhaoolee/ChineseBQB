@@ -6,6 +6,8 @@ type Props = {
   src?: string
   name?: string
   phase: LoadingPhase
+  /** Overrides the status line, e.g. while the asset index is still loading. */
+  label?: string
 }
 
 const PHASE_TEXT: Record<LoadingPhase, string> = {
@@ -17,11 +19,11 @@ const PHASE_TEXT: Record<LoadingPhase, string> = {
  * 打开图片期间的纯展示预览：先显示父组件已缓存的原图/缩略图，底部浮层只报告阶段。
  * 不请求任何额外资源，不接管点击；加载失败时隐藏破图但保留状态文字。
  */
-export function LoadingPreview({ src, name, phase }: Props) {
+export function LoadingPreview({ src, name, phase, label }: Props) {
   const [failed, setFailed] = useState<{ src: string; name?: string } | null>(null)
   // src/name 变化即视为新的加载，失败状态在本次渲染中直接失效，无需副作用。
   const broken = failed !== null && failed.src === src && failed.name === name
-  const status = src ? PHASE_TEXT[phase] : '正在打开图片…'
+  const status = label ?? (src ? PHASE_TEXT[phase] : '正在打开图片…')
   const alt = name ? `${name}预览` : '预览'
 
   return (
