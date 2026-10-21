@@ -16,14 +16,19 @@
 .nav-loading-spinner{flex:none;width:16px;height:16px;border:2px solid #e7d9c4;border-top-color:var(--accent-strong);border-radius:50%;animation:bqb-nav-spin .7s linear infinite}
 @keyframes bqb-nav-spin{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.nav-loading-spinner{animation:none;border-top-color:var(--accent);opacity:.85}}
-/* 首页分类卡片：标题自然换行，下载/分享独占一行并平分宽度，与编辑按钮视觉统一。 */
-.collection-card{display:flex;flex-direction:column}
-.collection-cover{flex:0 0 auto}
-.collection-info{display:flex;flex-direction:column;flex:1 1 auto;gap:10px;padding-right:6px;padding-bottom:6px}
-.collection-info h3{min-width:0}
-.collection-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));flex:0 0 auto;align-items:center;gap:6px;width:100%;margin-top:auto;margin-left:0}
-.collection-actions .image-download,.collection-actions .image-share{width:100%;min-width:0;height:36px;gap:4px;font-size:13px;line-height:1;white-space:nowrap;border:1px solid #eadfce;border-radius:10px;background:#fffaf2;color:var(--accent-strong);box-shadow:0 1px 3px #6e512826}
-.collection-actions .image-download:hover,.collection-actions .image-download:focus-visible,.collection-actions .image-share:hover,.collection-actions .image-share:focus-visible{background:#f7f0e6;border-color:#dccdb9;color:var(--accent);box-shadow:0 2px 5px #6e51282e}
-.collection-actions .image-download:focus-visible,.collection-actions .image-share:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
-.collection-actions .image-download:active,.collection-actions .image-share:active{transform:translateY(1px)}
-@media(max-width:520px){.collection-actions .image-download,.collection-actions .image-share{font-size:12px;gap:2px}}
+/* 首页分类、分类详情和搜索结果：下载/分享独占一行并平分宽度，与编辑按钮视觉统一。 */
+.collection-card,.image-card{display:flex;flex-direction:column}
+.collection-cover,.image-card .image-preview{flex:0 0 auto}
+.collection-info,.image-info{display:flex;flex-direction:column;flex:1 1 auto;gap:10px;min-width:0}
+.collection-info{padding-right:6px;padding-bottom:6px}
+.image-info{padding:10px}
+.collection-info h3,.image-info .image-caption{min-width:0}
+.image-info .image-caption{display:flex;align-items:center;gap:10px;padding:0;font-size:12px;color:var(--muted)}
+.image-info .image-caption>span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.image-info .search-category{padding:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.collection-actions,.image-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));flex:0 0 auto;align-items:center;gap:6px;width:100%;margin-top:auto;margin-left:0}
+.collection-actions .image-download,.collection-actions .image-share,.image-actions .image-download,.image-actions .image-share{width:100%;min-width:0;height:36px;gap:4px;font-size:13px;line-height:1;white-space:nowrap;border:1px solid #eadfce;border-radius:10px;background:#fffaf2;color:var(--accent-strong);box-shadow:0 1px 3px #6e512826}
+.collection-actions .image-download:hover,.collection-actions .image-download:focus-visible,.collection-actions .image-share:hover,.collection-actions .image-share:focus-visible,.image-actions .image-download:hover,.image-actions .image-download:focus-visible,.image-actions .image-share:hover,.image-actions .image-share:focus-visible{background:#f7f0e6;border-color:#dccdb9;color:var(--accent);box-shadow:0 2px 5px #6e51282e}
+.collection-actions .image-download:focus-visible,.collection-actions .image-share:focus-visible,.image-actions .image-download:focus-visible,.image-actions .image-share:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.collection-actions .image-download:active,.collection-actions .image-share:active,.image-actions .image-download:active,.image-actions .image-share:active{transform:translateY(1px)}
+@media(max-width:520px){.collection-actions .image-download,.collection-actions .image-share,.image-actions .image-download,.image-actions .image-share{font-size:12px;gap:2px}}
