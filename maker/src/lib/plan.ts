@@ -38,13 +38,15 @@ export function defaultTextStyle(polygon: Point[], fill = '#111111'): TextStyle 
   }
 }
 
-/** New free text copies the largest original line's ink. With no text, it is white and softly outlined. */
+/** New free text copies the largest original line's fill, then adds its own solid black outline. */
 export function addedTextStyle(image: ImageData | null, blocks: OcrBlock[], polygon: Point[]): TextStyle {
   const style = image ? dominantInkStyle(image, blocks) : null
-  if (!style) {
-    return { ...defaultTextStyle(polygon, '#ffffff'), strokeWidth: 0, softOutline: true }
+  return {
+    ...defaultTextStyle(polygon, style?.fill ?? '#ffffff'),
+    stroke: '#000000',
+    strokeWidth: 2,
+    softOutline: false,
   }
-  return { ...defaultTextStyle(polygon, style.fill), ...style, softOutline: false }
 }
 
 function dominantInkStyle(image: ImageData, blocks: OcrBlock[]) {

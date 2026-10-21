@@ -8,12 +8,12 @@ import { createHistory, historyCommit, historyRedo, historyUndo } from '../src/l
 import { decideCatalogSrc, matchesQuery, normalizeQueryPath, readCatalog, siteAsset, siteBaseFrom, makerBaseUrl } from '../src/lib/catalog'
 import { composeGifFrames, decodeGifFrames, encodeGif } from '../src/lib/gif'
 import { sniffImage } from '../src/lib/image'
-import { editedDownloadName, inheritedStillExport } from '../src/lib/paint'
+import { editedDownloadName, inheritedStillExport, paintComposite, paintOverlay } from '../src/lib/paint'
 import { imageFileFromClipboard } from '../src/lib/clipboard'
 import { OCR_MODEL_FILES, normalizeOcrItems, ocrModelUrl, scaleOcrBlocks } from '../src/lib/ocr'
 import { spreadCellValue } from '../src/lib/grapheme'
 import { freeTextBox, scaledFontSize, textBoxHandles } from '../src/lib/free-text-box'
-import type { OcrBlock, Point } from '../src/types'
+import type { FreeText, OcrBlock, Point } from '../src/types'
 
 if (typeof globalThis.ImageData === 'undefined') {
   class ImageDataPolyfill {
@@ -801,15 +801,96 @@ describe('added text color', () => {
     const painted = applyFills(source, [{ polygon, color: [250, 250, 250, 255] }])
     const style = addedTextStyle(painted, [block('今天上班')], fontBox)
     expect(style.fill).toBe('#fafafa')
+    expect(style.stroke).toBe('#000000')
+    expect(style.strokeWidth).toBe(2)
     expect(style.softOutline).toBe(false)
   })
 
-  it('uses white text with a soft outline when the picture has no text', () => {
+  it('keeps white text when the picture has no text and still gets the black outline', () => {
     const source = solidImage(80, 80, [180, 60, 50, 255])
     const style = addedTextStyle(source, [], fontBox)
     expect(style.fill).toBe('#ffffff')
-    expect(style.softOutline).toBe(true)
-    expect(style.strokeWidth).toBe(0)
+    expect(style.stroke).toBe('#000000')
+    expect(style.strokeWidth).toBe(2)
+    expect(style.softOutline).toBe(false)
+  })
+})
+
+describe('free text stroke rendering', () => {
+  function recordingCanvas() {
+    const ops: Array<{ kind: 'stroke' | 'fill'; color: string; width?: number; text: string }> = []
+    const context = {
+      strokeStyle: '',
+      fillStyle: '',
+      lineWidth: 0,
+      font: '',
+      textAlign: '',
+      textBaseline: '',
+      lineJoin: '',
+      miterLimit: 0,
+      shadowColor: '',
+      shadowBlur: 0,
+      shadowOffsetY: 0,
+      save() {},
+      restore() {},
+      clearRect() {},
+      putImageData() {},
+      strokeText(value: string) {
+        ops.push({ kind: 'stroke', color: context.strokeStyle, width: context.lineWidth, text: value })
+      },
+      fillText(value: string) {
+        ops.push({ kind: 'fill', color: context.fillStyle, text: value })
+      },
+    }
+    const canvas = { width: 0, height: 0, getContext: () => context } as unknown as HTMLCanvasElement
+    return { canvas, ops }
+  }
+
+  function layer(textStyle: Partial<FreeText['textStyle']>): FreeText {
+    return {
+      id: 'text-1',
+      text: '新文字',
+      x: 50,
+      y: 40,
+      textStyle: { fontFamily: 'sans-serif', fontSize: 40, fill: '#ffffff', weight: 700, ...textStyle },
+    }
+  }
+
+  const explicit: Partial<FreeText['textStyle']> = {
+    stroke: '#ff0000',
+    strokeWidth: 4,
+    softOutline: false,
+  }
+
+  it('previews the explicit stroke color and width before filling', () => {
+    const { canvas, ops } = recordingCanvas()
+    paintOverlay(100, 80, [], [layer(explicit)], canvas)
+    expect(ops).toEqual([
+      { kind: 'stroke', color: '#ff0000', width: 4, text: '新文字' },
+      { kind: 'fill', color: '#ffffff', text: '新文字' },
+    ])
+  })
+
+  it('exports the same stroke-then-fill order as the preview', () => {
+    const { canvas, ops } = recordingCanvas()
+    paintComposite(solidImage(100, 80, [0, 0, 0, 255]), [], [layer(explicit)], canvas)
+    expect(ops).toEqual([
+      { kind: 'stroke', color: '#ff0000', width: 4, text: '新文字' },
+      { kind: 'fill', color: '#ffffff', text: '新文字' },
+    ])
+  })
+
+  it('does not let a leftover soft outline override an explicit stroke', () => {
+    const { canvas, ops } = recordingCanvas()
+    paintComposite(solidImage(100, 80, [0, 0, 0, 255]), [], [layer({ ...explicit, softOutline: true })], canvas)
+    expect(ops[0]).toMatchObject({ kind: 'stroke', color: '#ff0000', width: 4 })
+    expect(ops).toHaveLength(2)
+  })
+
+  it('skips the stroke when the width is zero', () => {
+    const { canvas, ops } = recordingCanvas()
+    paintComposite(solidImage(100, 80, [0, 0, 0, 255]), [], [layer({ stroke: '#ff0000', strokeWidth: 0 })], canvas)
+    expect(ops).toEqual([{ kind: 'fill', color: '#ffffff', text: '新文字' }])
   })
 })
 

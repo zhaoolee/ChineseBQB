@@ -126,7 +126,11 @@ function drawFreeText(context: CanvasRenderingContext2D, layer: FreeText) {
   context.textBaseline = 'middle'
   context.lineJoin = 'round'
   context.miterLimit = 2
-  if (layer.textStyle.softOutline) {
+  if (layer.textStyle.stroke && layer.textStyle.strokeWidth) {
+    context.strokeStyle = layer.textStyle.stroke
+    context.lineWidth = layer.textStyle.strokeWidth
+    context.strokeText(layer.text, layer.x, layer.y)
+  } else if (layer.textStyle.softOutline) {
     const size = layer.textStyle.fontSize
     context.shadowColor = 'rgba(40, 32, 24, 0.32)'
     context.shadowBlur = Math.max(2, size * 0.14)
@@ -137,10 +141,6 @@ function drawFreeText(context: CanvasRenderingContext2D, layer: FreeText) {
     context.shadowColor = 'transparent'
     context.shadowBlur = 0
     context.shadowOffsetY = 0
-  } else if (layer.textStyle.stroke && layer.textStyle.strokeWidth) {
-    context.strokeStyle = layer.textStyle.stroke
-    context.lineWidth = layer.textStyle.strokeWidth
-    context.strokeText(layer.text, layer.x, layer.y)
   }
   context.fillStyle = layer.textStyle.fill
   context.fillText(layer.text, layer.x, layer.y)
