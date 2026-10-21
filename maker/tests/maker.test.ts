@@ -144,6 +144,17 @@ describe('catalog urls', () => {
     expect(siteAsset(`media/${hash}.png`, site)).toBe(`https://zhaoolee.com/ChineseBQB/media/${hash}.png`)
   })
 
+  it('deduplicates by src in first-seen order while keeping the richer label', () => {
+    const catalog = readCatalog([
+      { name: 'first.png', src: `media/${hash}.png`, thumb: `thumbs/${hash}.webp`, label: 'abc' },
+      { name: 'second.png', src: `media/${'b'.repeat(64)}.png`, thumb: `thumbs/${'b'.repeat(64)}.webp`, label: '第二张' },
+      { name: 'better.png', src: `media/${hash}.png`, thumb: `thumbs/${hash}.webp`, label: '熊猫' },
+      { name: 'worse.png', src: `media/${'b'.repeat(64)}.png`, thumb: `thumbs/${'b'.repeat(64)}.webp`, label: 'x' },
+    ])
+    expect(catalog.map((image) => image.name)).toEqual(['better.png', 'second.png'])
+    expect(catalog.map((image) => image.label)).toEqual(['熊猫', '第二张'])
+  })
+
   it('searches name and category the same way as the gallery', () => {
     expect(images.filter((image) => matchesQuery(image, '熊猫 人工智能'))).toHaveLength(1)
     expect(matchesQuery({ ...images[0], label: '假笑男孩00001-拽', name: '假笑男孩00001-拽.jpg' }, '拽')).toBe(true)

@@ -41,6 +41,7 @@ export function sameOriginMedia(src: string, siteBase: URL, origin: string): boo
 export function readCatalog(payload: unknown): CatalogImage[] {
   if (!Array.isArray(payload)) throw new Error('素材索引不是列表')
   const images: CatalogImage[] = []
+  const positions = new Map<string, number>()
   for (const entry of payload) {
     if (!entry || typeof entry !== 'object') continue
     const record = entry as Record<string, unknown>
@@ -61,13 +62,15 @@ export function readCatalog(payload: unknown): CatalogImage[] {
       folder: typeof record.folder === 'string' ? record.folder : undefined,
       path: typeof record.path === 'string' ? record.path : undefined,
     }
-    const previous = images.find((item) => item.src === src)
-    if (!previous) {
+    const position = positions.get(src)
+    if (position === undefined) {
+      positions.set(src, images.length)
       images.push(image)
       continue
     }
-    if (labelScore(image.label) > labelScore(previous.label)) {
-      images[images.indexOf(previous)] = image
+    // Duplicate entries keep the first position but let a richer label win.
+    if (labelScore(image.label) > labelScore(images[position].label)) {
+      images[position] = image
     }
   }
   return images

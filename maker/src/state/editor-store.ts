@@ -69,7 +69,9 @@ let state: EditorSnapshot = {
   gifPlaying: false,
   comparing: false,
   catalog: [],
-  catalogLoading: false,
+  // The static boot skeleton hands off to the same loading state before boot()
+  // requests the index after the first paint.
+  catalogLoading: true,
   catalogError: null,
   image: null,
   imageLoading: false,

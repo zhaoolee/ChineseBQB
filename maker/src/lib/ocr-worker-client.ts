@@ -118,8 +118,13 @@ export function cancelOcrWarmup() {
   if (session && !session.busy) session.finish(null)
 }
 
-/** Start after the UI can paint; defer background tabs until the page becomes visible. */
-export function scheduleOcrWarmup(): () => void {
+export type OcrWarmupOptions = {
+  /** Wait for a click/key press before spending CPU on an empty or failed gallery. */
+  afterInteraction?: boolean
+}
+
+/** Start in idle time after the UI can paint; defer background tabs until visible. */
+function scheduleIdleWarmup(): () => void {
   let stopped = false
   let started = false
   let scheduled = false
@@ -147,6 +152,34 @@ export function scheduleOcrWarmup(): () => void {
     document.removeEventListener('visibilitychange', queue)
     cancelOcrWarmup()
   }
+}
+
+/** An empty gallery should not download OCR weights until the user actually does something. */
+function scheduleInteractionWarmup(): () => void {
+  if (typeof document === 'undefined' || session) return () => undefined
+  let stopped = false
+  let idleCleanup: (() => void) | null = null
+  const start = () => {
+    if (stopped || idleCleanup) return
+    remove()
+    idleCleanup = scheduleIdleWarmup()
+  }
+  const remove = () => {
+    document.removeEventListener('pointerdown', start, true)
+    document.removeEventListener('keydown', start, true)
+  }
+  document.addEventListener('pointerdown', start, true)
+  document.addEventListener('keydown', start, true)
+  return () => {
+    stopped = true
+    remove()
+    idleCleanup?.()
+    idleCleanup = null
+  }
+}
+
+export function scheduleOcrWarmup(options: OcrWarmupOptions = {}): () => void {
+  return options.afterInteraction ? scheduleInteractionWarmup() : scheduleIdleWarmup()
 }
 
 /** A skipped job drains before the next picture uses the same engine. */

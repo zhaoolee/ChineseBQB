@@ -160,8 +160,23 @@ h2 { margin: 0; font-size: 16px; }
   object-fit: contain;
   background: transparent;
   opacity: 0;
+  transition: opacity .18s ease;
 }
 .asset-sheet .thumb-media.thumb-loaded img { opacity: 1; }
+/* A light sweep while the thumbnail request is in flight; the fixed-ratio box keeps layout stable. */
+.asset-sheet .thumb-media.thumb-loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 18%, rgba(255, 255, 255, .55) 46%, transparent 74%);
+  background-size: 220% 100%;
+  animation: thumb-shimmer 1.5s linear infinite;
+  pointer-events: none;
+}
+@keyframes thumb-shimmer {
+  from { background-position: 120% 0; }
+  to { background-position: -120% 0; }
+}
 .asset-sheet .thumb-media em {
   position: absolute;
   left: 6px;
@@ -236,6 +251,53 @@ h2 { margin: 0; font-size: 16px; }
 .asset-sheet .gallery-more button {
   min-height: 30px;
   font-size: 12px;
+}
+/* Catalog request skeleton: same warm surface as the real cards, no images or layout shift. */
+.gallery-skeleton {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: 10px;
+  align-content: start;
+  overflow: hidden;
+}
+.gallery-skeleton-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid #e4d5c1;
+  border-radius: 8px;
+  background: #f7efe3;
+}
+.gallery-skeleton-media {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 5px;
+  background: linear-gradient(100deg, #e8dcc9 20%, #f8f1e6 45%, #e8dcc9 70%);
+  background-size: 220% 100%;
+  animation: gallery-shimmer 1.4s linear infinite;
+}
+.gallery-skeleton-card:nth-child(3n + 1) .gallery-skeleton-media { aspect-ratio: 4 / 3; }
+.gallery-skeleton-card:nth-child(3n + 2) .gallery-skeleton-media { aspect-ratio: 3 / 4; }
+.gallery-skeleton-line {
+  display: block;
+  width: 72%;
+  height: 8px;
+  border-radius: 999px;
+  background: #e8dcc9;
+}
+.gallery-skeleton-card:nth-child(2n) .gallery-skeleton-line { width: 52%; }
+@keyframes gallery-shimmer {
+  from { background-position: 120% 0; }
+  to { background-position: -120% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .asset-sheet .thumb-media img { transition: none; }
+  .asset-sheet .thumb-media.thumb-loading::after,
+  .gallery-skeleton-media { animation: none; }
 }
 .thumb.selected { outline: 2px solid #6f4219; }
 .thumb span, .muted, .status { color: #8d7761; font-size: 13px; }

@@ -5,6 +5,7 @@ import { ExportActions } from './components/ExportActions'
 import { ImageToolbar } from './components/ImageToolbar'
 import { GifTimeline } from './components/GifTimeline'
 import { TextBlocksPanel } from './components/TextBlocksPanel'
+import { afterFirstPaint } from './lib/after-first-paint'
 import { imageFileFromClipboard } from './lib/clipboard'
 import { scheduleOcrWarmup } from './lib/ocr-worker-client'
 import { useEditor } from './components/use-editor'
@@ -13,8 +14,29 @@ import { boot, dismissNotice, editor, makerHome, openLocalFile, redo, siteHome, 
 export function App() {
   const state = useEditor()
   const [pendingPaste, setPendingPaste] = useState<File | null>(null)
-  useEffect(() => { void boot() }, [])
-  useEffect(() => scheduleOcrWarmup(), [])
+  useEffect(() => {
+    let stopped = false
+    let stopWarmup: (() => void) | null = null
+    const cancelBoot = afterFirstPaint(() => {
+      if (stopped) return
+      void (async () => {
+        try {
+          await boot()
+        } catch {
+          // Failures are already surfaced through the catalog/image state.
+        }
+        if (stopped) return
+        // Browsing alone should not download OCR weights alongside thumbnails.
+        // Opening an image starts OCR directly; other interactions can prewarm it.
+        stopWarmup = scheduleOcrWarmup({ afterInteraction: true })
+      })()
+    })
+    return () => {
+      stopped = true
+      cancelBoot()
+      stopWarmup?.()
+    }
+  }, [])
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && pendingPaste) {

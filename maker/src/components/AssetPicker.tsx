@@ -10,6 +10,8 @@ import { GALLERY_BATCH_SIZE, galleryLayout } from '../lib/gallery-layout'
 const EAGER_THUMBS = 4
 /** Bounded warm-up for the first thumbnails, skipped when the network is metered or OCR is busy. */
 const PRELOAD_THUMBS = 12
+/** Placeholder cards shown while the catalog request is in flight. */
+const GALLERY_SKELETON_CARDS = 12
 
 function prefersSaveData(): boolean {
   const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection
@@ -75,6 +77,19 @@ function ThumbTile({
       </span>
       <span className="thumb-label">{image.label}</span>
     </button>
+  )
+}
+
+function GallerySkeleton() {
+  return (
+    <div className="gallery-skeleton" aria-hidden="true">
+      {Array.from({ length: GALLERY_SKELETON_CARDS }, (_, index) => (
+        <div className="gallery-skeleton-card" key={index}>
+          <span className="gallery-skeleton-media" />
+          <span className="gallery-skeleton-line" />
+        </div>
+      ))}
+    </div>
   )
 }
 
@@ -186,10 +201,6 @@ export function AssetPicker() {
   }, [expanded, hasMore, gridWidth, visible.length, selectionKey, matched.length])
 
   useEffect(() => {
-    if (state.catalog.length === 0 && !state.catalogLoading && !state.catalogError) void loadCatalog()
-  }, [state.catalog.length, state.catalogLoading, state.catalogError])
-
-  useEffect(() => {
     const sourceId = selectedId ?? ''
     // Same collapse path as the toggle so picking an image still records the offset it was picked from.
     if (sourceId && sourceId !== seenSource.current) collapsePicker()
@@ -250,8 +261,13 @@ export function AssetPicker() {
             </select>
           </div>
           {/* Prompt and grid share one warm surface so the headline reads as a label for the thumbnails. */}
-          <div className="gallery-surface">
-            {state.catalogLoading && <p className="muted">正在读取素材索引…</p>}
+          <div className="gallery-surface" aria-busy={state.catalogLoading}>
+            {state.catalogLoading && (
+              <>
+                <p className="muted" role="status" aria-live="polite">正在读取素材索引…</p>
+                <GallerySkeleton />
+              </>
+            )}
             {state.catalogError && (
               <p className="error">
                 {state.catalogError}

@@ -2,9 +2,10 @@ import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import { retryOcrImports } from './build/ocr-import-retry'
 import { boundedOpenCvMemory } from './build/ocr-memory'
+import { asyncAppStyles } from './build/async-app-styles'
 
 export default defineConfig({
-  plugins: [react(), boundedOpenCvMemory()],
+  plugins: [react(), boundedOpenCvMemory(), asyncAppStyles()],
   base: '/ChineseBQB/maker/',
   resolve: {
     // This editor uses WASM only. The default entry also ships the much larger GPU runtime.

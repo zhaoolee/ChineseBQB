@@ -277,6 +277,25 @@ it('waits until a background page is visible before preparing the engine', async
   cleanup()
 })
 
+it('waits for a user interaction before warming an empty gallery and never creates twice', async () => {
+  vi.useFakeTimers()
+  const { scheduleOcrWarmup } = await import('../src/lib/ocr-worker-client')
+  const cleanup = scheduleOcrWarmup({ afterInteraction: true })
+  await vi.advanceTimersByTimeAsync(0)
+  expect(FakeWorker.instances).toHaveLength(0)
+
+  documentState.dispatchEvent(new Event('pointerdown'))
+  await vi.advanceTimersByTimeAsync(0)
+  expect(FakeWorker.instances).toHaveLength(1)
+
+  documentState.dispatchEvent(new Event('pointerdown'))
+  documentState.dispatchEvent(new Event('keydown'))
+  await vi.advanceTimersByTimeAsync(0)
+  expect(FakeWorker.instances).toHaveLength(1)
+  cleanup()
+  expect(FakeWorker.instances[0].terminate).toHaveBeenCalledOnce()
+})
+
 it('does not create a competing warm worker when recognition starts before the idle callback', async () => {
   vi.useFakeTimers()
   const { scheduleOcrWarmup, runOcrWorker } = await import('../src/lib/ocr-worker-client')

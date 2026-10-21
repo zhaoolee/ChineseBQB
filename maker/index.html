@@ -6,24 +6,111 @@
     <meta name="description" content="在 ChineseBQB 的表情包上改字。识别、对比和导出都在浏览器本地完成。" />
     <title>ChineseBQB Maker</title>
     <style>
-      /* 启动提示自带样式，脚本或样式表未就绪时也能独立居中，React 挂载后整块被替换。 */
+      /* 首屏骨架完全内联、零图片请求：脚本或应用样式表未就绪时也能先看到背景和版式。 */
       html, body, #root { height: 100%; margin: 0; }
-      body { background: #efe3d2; font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif; }
-      .boot { box-sizing: border-box; min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 24px; text-align: center; color: #6f4219; }
+      body {
+        background: #efe3d2;
+        color: #3f2f22;
+        font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+        font-size: 15px;
+      }
+      .boot { box-sizing: border-box; height: 100%; min-height: 100%; display: flex; flex-direction: column; overflow: hidden; background: #efe3d2; color: #6f4219; }
+      .boot *, .boot *::before, .boot *::after { box-sizing: border-box; }
+      .boot-topbar { flex: 0 0 48px; display: flex; align-items: center; gap: 8px; padding: 0 12px; background: #fbf7ed; border-bottom: 1px solid #e4dad1; }
+      .boot-brand { display: flex; gap: 8px; align-items: baseline; font-weight: 700; }
+      .boot-brand small { color: #8d7761; font-size: 15px; font-weight: 500; }
+      .boot-actions { margin-left: auto; display: flex; gap: 8px; }
+      .boot-actions span { width: 72px; height: 30px; border: 1px solid #e0d3c4; border-radius: 6px; background: #f8f1e6; animation: boot-pulse 1.6s ease-in-out infinite; }
+      .boot-actions span + span { width: 54px; animation-delay: .16s; }
+      .boot-main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+      .boot-canvas { position: relative; flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 20px; background: #e7d8c6; }
+      .boot-frame { position: relative; width: min(560px, 78%); height: min(100%, 340px); min-height: 120px; overflow: hidden; border: 1px solid rgba(111, 66, 25, .12); border-radius: 12px; background: linear-gradient(135deg, #f9f3e8, #efe2cf); box-shadow: 0 10px 30px rgba(63, 47, 34, .08); animation: boot-pulse 1.8s ease-in-out infinite; }
+      .boot-frame::before { content: ''; position: absolute; inset: 14%; border: 1px dashed rgba(111, 66, 25, .16); border-radius: 8px; }
+      .boot-frame-media { position: absolute; top: 26%; left: 50%; width: 42%; aspect-ratio: 1 / 1; transform: translateX(-50%); border-radius: 8px; background: linear-gradient(100deg, #e8dcc9 20%, #f8f1e6 45%, #e8dcc9 70%); background-size: 220% 100%; animation: boot-shimmer 1.4s linear infinite; }
+      .boot-frame-line { position: absolute; left: 29%; bottom: 20%; width: 42%; height: 8px; border-radius: 999px; background: #e8dcc9; }
+      .boot-frame-line.short { bottom: 14%; left: 35%; width: 30%; }
+      .boot-status { position: absolute; left: 50%; bottom: 16px; z-index: 1; width: max-content; max-width: calc(100% - 32px); display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 12px 16px; border: 1px solid rgba(111, 66, 25, .12); border-radius: 12px; background: rgba(251, 247, 237, .94); text-align: center; box-shadow: 0 6px 18px rgba(63, 47, 34, .08); transform: translateX(-50%); }
       .boot-spinner { width: 26px; height: 26px; border: 3px solid #e0cfb8; border-top-color: #6f4219; border-radius: 50%; animation: boot-spin .8s linear infinite; }
       .boot-text { margin: 0; font-size: 15px; }
       .boot-help { margin: 0; font-size: 13px; line-height: 1.9; color: #8d7761; }
       .boot-help a { margin: 0 6px; color: #6f4219; text-decoration: underline; }
+      .boot-dock { flex: 0 0 42%; min-height: 120px; max-height: 52%; display: flex; flex-direction: column; gap: 10px; padding: 12px; border-top: 1px solid #e4dad1; background: #fbf7ed; }
+      .boot-search { flex: none; height: 34px; border: 1px solid #e4d5c1; border-radius: 6px; background: #f1e6d6; animation: boot-pulse 1.6s ease-in-out infinite; }
+      .boot-grid { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; align-content: start; overflow: hidden; }
+      .boot-tile { min-width: 0; display: flex; flex-direction: column; gap: 6px; padding: 6px; border: 1px solid #e4d5c1; border-radius: 8px; background: #f7efe3; }
+      .boot-tile-media { display: block; width: 100%; aspect-ratio: 1 / 1; border-radius: 5px; background: linear-gradient(100deg, #e8dcc9 20%, #f8f1e6 45%, #e8dcc9 70%); background-size: 220% 100%; animation: boot-shimmer 1.4s linear infinite; }
+      .boot-tile:nth-child(3n + 1) .boot-tile-media { aspect-ratio: 4 / 3; }
+      .boot-tile:nth-child(3n + 2) .boot-tile-media { aspect-ratio: 3 / 4; }
+      .boot-tile-line { display: block; width: 72%; height: 7px; border-radius: 999px; background: #e8dcc9; }
+      .boot-tile:nth-child(2n) .boot-tile-line { width: 52%; }
       @keyframes boot-spin { to { transform: rotate(360deg); } }
-      @media (prefers-reduced-motion: reduce) { .boot-spinner { animation: none; border-top-color: #c8b49a; } }
+      @keyframes boot-pulse { 0%, 100% { opacity: .62; } 50% { opacity: 1; } }
+      @keyframes boot-shimmer { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+      @media (max-width: 640px) {
+        .boot-topbar { flex-basis: 44px; padding: 0 10px; }
+        .boot-brand { font-size: 15px; }
+        .boot-actions span { width: 56px; height: 28px; }
+        .boot-actions span + span { width: 44px; }
+        .boot-canvas { padding: 12px; }
+        .boot-frame { width: 100%; max-height: 220px; }
+        .boot-status { bottom: 10px; gap: 8px; padding: 10px 12px; }
+        .boot-text { font-size: 14px; }
+        .boot-help { font-size: 12px; }
+        .boot-dock { flex-basis: 44%; gap: 8px; padding: 8px; }
+        .boot-grid { grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); gap: 6px; }
+      }
+      @media (max-height: 520px) {
+        .boot-dock { flex-basis: 38%; }
+        .boot-frame { max-height: 160px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .boot-spinner { animation: none; border-top-color: #c8b49a; }
+        .boot-actions span,
+        .boot-frame,
+        .boot-frame-media,
+        .boot-search,
+        .boot-tile-media { animation: none; }
+      }
     </style>
   </head>
   <body>
     <div id="root">
-      <div class="boot" role="status" aria-live="polite">
-        <span class="boot-spinner" aria-hidden="true"></span>
-        <p class="boot-text">正在打开编辑器…</p>
-        <p class="boot-help">一直停在这里？<a href="">重新加载</a><a href="../">返回图库</a></p>
+      <div class="boot">
+        <header class="boot-topbar">
+          <div class="boot-brand"><span>ChineseBQB</span><small>Maker</small></div>
+          <div class="boot-actions" aria-hidden="true"><span></span><span></span></div>
+        </header>
+        <main class="boot-main">
+          <section class="boot-canvas">
+            <div class="boot-frame" aria-hidden="true">
+              <span class="boot-frame-media"></span>
+              <span class="boot-frame-line"></span>
+              <span class="boot-frame-line short"></span>
+            </div>
+            <div class="boot-status" role="status" aria-live="polite" aria-busy="true">
+              <span class="boot-spinner" aria-hidden="true"></span>
+              <p class="boot-text">正在打开编辑器…</p>
+              <p class="boot-help">一直停在这里？<a href="">重新加载</a><a href="../">返回图库</a></p>
+            </div>
+          </section>
+          <section class="boot-dock" aria-hidden="true">
+            <div class="boot-search"></div>
+            <div class="boot-grid">
+              <div class="boot-tile"><span class="boot-tile-media"></span><span class="boot-tile-line"></span></div>
+              <div class="boot-tile"><span class="boot-tile-media"></span><span class="boot-tile-line"></span></div>
+              <div class="boot-tile"><span class="boot-tile-media"></span><span class="boot-tile-line"></span></div>
+              <div class="boot-tile"><span class="boot-tile-media"></span><span class="boot-tile-line"></span></div>
+              <div class="boot-tile"><span class="boot-tile-media"></span><span class="boot-tile-line"></span></div>
+              <div class="boot-tile"><span class="boot-tile-media"></span><span class="boot-tile-line"></span></div>
+              <div class="boot-tile"><span class="boot-tile-media"></span><span class="boot-tile-line"></span></div>
+              <div class="boot-tile"><span class="boot-tile-media"></span><span class="boot-tile-line"></span></div>
+              <div class="boot-tile"><span class="boot-tile-media"></span><span class="boot-tile-line"></span></div>
+              <div class="boot-tile"><span class="boot-tile-media"></span><span class="boot-tile-line"></span></div>
+              <div class="boot-tile"><span class="boot-tile-media"></span><span class="boot-tile-line"></span></div>
+              <div class="boot-tile"><span class="boot-tile-media"></span><span class="boot-tile-line"></span></div>
+            </div>
+          </section>
+        </main>
       </div>
     </div>
     <script type="module" src="/src/main.tsx"></script>
