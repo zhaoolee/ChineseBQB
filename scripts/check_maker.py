@@ -73,9 +73,9 @@ def walk(path, public, base, seen, errors):
         if not url.path.startswith(site.path):
             errors.append(f"Maker asset escaped the site path: {value}")
             continue
-        relative = unquote(url.path[len(site.path):]).split("?", 1)[0]
-        if relative.endswith("/"):
+        if url.path.endswith("/"):
             continue
+        relative = unquote(url.path[len(site.path):]).split("?", 1)[0]
         target = public / relative
         if not target.is_file():
             errors.append(f"Missing maker asset: {relative}")

@@ -49,6 +49,44 @@ class MakerArtifactTests(unittest.TestCase):
                 checker.check(public)
             self.assertIn("/assets", str(caught.exception))
 
+    def test_skips_root_empty_and_directory_navigation_refs(self):
+        with tempfile.TemporaryDirectory() as temp:
+            public = Path(temp)
+            maker = public / "maker"
+            maker.mkdir()
+            (maker / "index.html").write_text(
+                '<a href="../">返回图库</a>'
+                '<a href="">当前页</a>'
+                '<a href="/ChineseBQB/">图库根目录</a>'
+                '<a href="docs/">文档目录</a>'
+                '<link rel="stylesheet" href="/ChineseBQB/maker/assets/app.css">',
+                encoding="utf-8",
+            )
+            assets = maker / "assets"
+            assets.mkdir()
+            (assets / "app.css").write_text("body{}", encoding="utf-8")
+            models = maker / "models"
+            models.mkdir()
+            for name in checker.MODEL_FILES:
+                (maker / name).write_bytes(b"tar")
+            checker.check(public)
+
+    def test_still_rejects_a_real_missing_asset(self):
+        with tempfile.TemporaryDirectory() as temp:
+            public = Path(temp)
+            maker = public / "maker"
+            maker.mkdir()
+            (maker / "index.html").write_text(
+                '<script src="/ChineseBQB/maker/assets/missing.js"></script>', encoding="utf-8"
+            )
+            models = maker / "models"
+            models.mkdir()
+            for name in checker.MODEL_FILES:
+                (maker / name).write_bytes(b"tar")
+            with self.assertRaises(ValueError) as caught:
+                checker.check(public)
+            self.assertIn("Missing maker asset: maker/assets/missing.js", str(caught.exception))
+
     def test_requires_vendored_ocr_models(self):
         with tempfile.TemporaryDirectory() as temp:
             public = Path(temp)
