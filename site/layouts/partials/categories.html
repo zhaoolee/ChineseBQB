@@ -4,8 +4,8 @@
   <article class="collection-card">
     <a class="collection-link" href="{{ .url | relURL }}">
       <div class="collection-cover">{{ with .cover }}{{ $src := .thumb }}{{ if .animated }}{{ $src = .src }}{{ end }}<img src="{{ $src | relURL }}" alt="{{ .label }}" loading="lazy" width="360" height="300">{{ else }}<span class="empty-cover">等你来填满</span>{{ end }}</div>
-      <div class="collection-info"><h3>{{ with .number }}{{ . }} {{ end }}{{ .title }}</h3></div>
     </a>
+    <div class="collection-info"><h3><a class="collection-link" href="{{ .url | relURL }}">{{ with .number }}{{ . }} {{ end }}{{ .title }}</a></h3>{{ with .cover }}<div class="collection-actions"><a class="image-download" href="{{ .src | relURL }}" download="{{ .name }}" title="下载封面原图" aria-label="下载封面原图：{{ .name }}"></a><button type="button" class="image-share" data-src="{{ .src | relURL }}" data-name="{{ .name }}" title="分享封面原图" aria-label="分享封面原图：{{ .name }}"></button></div>{{ end }}</div>
     {{ with .cover }}{{ partial "maker-link.html" (dict "src" .src "label" $title "cover" true) }}{{ end }}
   </article>
   {{ end }}

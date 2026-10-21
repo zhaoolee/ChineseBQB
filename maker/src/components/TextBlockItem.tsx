@@ -10,6 +10,7 @@ export function TextBlockItem({ block }: { block: OcrBlock }) {
     <article className={selected ? 'block bang-block selected' : 'block bang-block'} onClick={() => select(block.id)}>
       <BangCells
         text={block.targetText}
+        originalText={block.originalText}
         cellFocus={state.cellFocus?.id === block.id ? state.cellFocus : null}
         onCommit={(text) => setTargetText(block.id, text)}
         onActivate={() => select(block.id)}

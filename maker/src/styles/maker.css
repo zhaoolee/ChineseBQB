@@ -272,7 +272,7 @@ h2 { margin: 0; font-size: 16px; }
   height: 44px;
   padding: 0;
   border: 1px solid rgba(80, 60, 40, 0.08);
-  border-radius: 12px;
+  border-radius: 0;
   background: #fff;
   box-shadow: 0 1px 1px rgba(63, 47, 34, 0.04), 0 6px 14px rgba(63, 47, 34, 0.08);
   text-align: center;
@@ -281,6 +281,7 @@ h2 { margin: 0; font-size: 16px; }
   color: #2a2118;
   caret-color: #e39b12;
 }
+.bang .bang-cell.bang-cell-changed { border-radius: 12px; }
 .bang-cell:focus {
   outline: none;
   border-color: #f0a020;

@@ -1,15 +1,18 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
-import { createCellSession, splitCells, type CellSession } from '../lib/cell-input'
+import { cellChangeFlags, createCellSession, splitCells, type CellSession } from '../lib/cell-input'
 import type { CellFocus } from '../state/editor-store'
 
 export function BangCells({
   text,
+  originalText,
   onCommit,
   onActivate,
   onFocusCell,
   cellFocus,
 }: {
   text: string
+  /** Stable OCR line used to keep unchanged cells square; absent for free text (all new). */
+  originalText?: string
   onCommit: (text: string) => void
   onActivate?: () => void
   onFocusCell?: (index: number, cells: string[]) => void
@@ -30,6 +33,7 @@ export function BangCells({
     })
   }
   const session = sessionRef.current
+  const changed = cellChangeFlags(originalText, cells)
 
   useEffect(() => {
     session.syncText(text)
@@ -75,7 +79,7 @@ export function BangCells({
         <input
           key={index}
           ref={(node) => { inputs.current[index] = node }}
-          className="bang-cell"
+          className={changed[index] ? 'bang-cell bang-cell-changed' : 'bang-cell'}
           aria-label={cell ? `第 ${index + 1} 格「${cell}」` : `第 ${index + 1} 格，空的`}
           value={cell}
           inputMode="text"

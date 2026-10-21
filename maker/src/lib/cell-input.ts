@@ -1,3 +1,4 @@
+import { diffText } from './diff'
 import { segmentGraphemes, spreadCellValue } from './grapheme'
 
 /** Wait this long after the last cell change before writing it into the document. */
@@ -6,6 +7,33 @@ export const APPLY_DELAY_MS = 220
 export function splitCells(text: string): string[] {
   const cells = segmentGraphemes(text)
   return cells.length ? cells : ['']
+}
+
+/**
+ * Which cells hold new or replaced text compared with the stable OCR baseline.
+ * `undefined` means the row has no baseline (free text), so every cell is new.
+ * Deletions are ignored: removing a character must not mark its untouched neighbours.
+ * A cell with several graphemes (an in-flight IME buffer) is marked when any part changed,
+ * and an empty cell is new or was cleared, so it keeps the rounded shape too.
+ */
+export function cellChangeFlags(originalText: string | undefined, cells: string[]): boolean[] {
+  if (originalText === undefined) return cells.map(() => true)
+  const changed = new Set<number>()
+  for (const change of diffText(originalText, cells.join(''))) {
+    if (change.kind === 'delete') continue
+    for (let index = change.newStart; index < change.newEnd; index += 1) changed.add(index)
+  }
+  let graphemeIndex = 0
+  return cells.map((cell) => {
+    const count = segmentGraphemes(cell).length
+    const start = graphemeIndex
+    graphemeIndex += count
+    if (count === 0) return true
+    for (let index = start; index < graphemeIndex; index += 1) {
+      if (changed.has(index)) return true
+    }
+    return false
+  })
 }
 
 export type CellTimers = {
