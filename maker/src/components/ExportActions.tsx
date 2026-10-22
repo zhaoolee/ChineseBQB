@@ -1,19 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { exportGifInWorker } from '../lib/gif-export-worker'
+import type { GifExportProgress } from '../lib/gif-export'
 import { collectPatches } from '../lib/plan'
 import { canvasToImage, downloadBlob, editedDownloadName, inheritedStillExport, paintComposite } from '../lib/paint'
 import { editor, setGifPlaying, skipOcr, type EditorSnapshot } from '../state/editor-store'
 import { useEditor } from './use-editor'
 
 type ExportKind = 'still' | 'gif'
-type ExportProgress = { stage: 'prepare' | 'encode'; completed: number; total: number }
 
 export function ExportActions() {
   const state = useEditor()
   const [message, setMessage] = useState('')
   const [exporting, setExporting] = useState<ExportKind | null>(null)
-  const [progress, setProgress] = useState<ExportProgress | null>(null)
+  const [progress, setProgress] = useState<GifExportProgress | null>(null)
   const exportLock = useRef(false)
   // controller 既作为 GIF 的取消信号，也作为任务身份：旧任务的 finally 不会解开新任务的锁。
   const abortRef = useRef<AbortController | null>(null)
@@ -160,7 +160,7 @@ export function ExportActions() {
   }
 
   const progressLabel = progress
-    ? `${progress.stage === 'prepare' ? '处理画面' : '压缩中'} ${progress.completed}/${progress.total}`
+    ? `${progress.stage === 'prepare' ? '处理画面' : progress.stage === 'motion' ? '优化流畅度' : '压缩中'} ${progress.completed}/${progress.total}`
     : ''
   const exportLabel = !busy
     ? '导出'

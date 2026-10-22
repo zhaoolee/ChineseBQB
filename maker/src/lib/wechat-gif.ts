@@ -19,6 +19,7 @@ export function stickerBounds(width: number, height: number, edge = WECHAT_GIF_E
 }
 
 export type StickerFrame = { index: number; delayMs: number }
+export type FittedGif = { bytes: Uint8Array; plan: StickerFrame[]; edge: number; colors: number }
 
 /** Keep actual caption edits and segment transitions when thinning motion. OCR
  * observations alone do not change the rendered image and must not pin every frame.
@@ -58,6 +59,7 @@ export async function encodeWechatGif(
   frames: GifFrame[], edits: TimedEdits,
   render: (plan: StickerFrame[], edge: number) => AsyncIterable<GifFrame>,
   paletteFor?: (maxColors: number) => number[][] | undefined,
+  improveMotion?: (fit: FittedGif) => Uint8Array,
 ): Promise<Blob> {
   const profiles = [
     [240, 1, 256], [240, 1.25, 256], [240, 1.5, 256], [240, 1.5, 192],
@@ -105,6 +107,10 @@ export async function encodeWechatGif(
           if (!(error instanceof GifSizeLimitError)) throw error
           upper = colors
         }
+      }
+      if (improveMotion) {
+        const candidate = improveMotion({ bytes, plan, edge, colors: lower })
+        if (candidate.length < WECHAT_GIF_MAX_BYTES) bytes = candidate
       }
       return new Blob([new Uint8Array(bytes)], { type: 'image/gif' })
     } catch (error) {

@@ -195,7 +195,7 @@ export async function encodeGifAsync(frames: AsyncIterable<GifFrame>, options: G
   return gif.bytes()
 }
 
-function mapOpaquePalette(image: ImageData, palette: number[][], lookup: Map<number, number>): Uint8Array {
+export function mapOpaquePalette(image: ImageData, palette: number[][], lookup: Map<number, number>): Uint8Array {
   if (!palette.length || palette.length > 255) throw new Error('GIF 全局调色板无效。')
   const index = new Uint8Array(image.width * image.height)
   for (let p = 0; p < index.length; p++) {

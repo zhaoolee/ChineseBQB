@@ -3,11 +3,12 @@ import { paintComposite, paintTextLayers, type TextPatch } from './paint'
 import { collectPatches } from './plan'
 import { editsAtFrame, type TimedEdits } from './timeline'
 import type { FreeText } from '../types'
-import { encodeWechatGif, stickerBounds, type StickerFrame } from './wechat-gif'
+import { encodeWechatGif, stickerBounds, stickerFramePlan, WECHAT_GIF_MAX_BYTES, type StickerFrame } from './wechat-gif'
+import { improveGifMotion } from './gif-motion'
 import { resizeGif } from './resize-area'
 import { quantize } from 'gifenc'
 
-export type GifExportProgress = { stage: 'prepare' | 'encode'; completed: number; total: number; attempt?: number }
+export type GifExportProgress = { stage: 'prepare' | 'encode' | 'motion'; completed: number; total: number; attempt?: number }
 export type GifExportOptions = { onProgress?: (progress: GifExportProgress) => void }
 
 export async function exportGif(frames: GifFrame[], patches: TextPatch[], texts: FreeText[], select?: (frame: GifFrame, index: number) => { patches: TextPatch[]; texts: FreeText[] }): Promise<Blob> {
@@ -98,13 +99,22 @@ export async function exportWechatSegmentedGif(
       offset += pixels.data.length / 4
     }
     const palettes = new Map<number, number[][]>()
-    return await encodeWechatGif(frames, edits, painted, opaque ? maxColors => {
+    const paletteFor = (maxColors: number) => {
       let palette = palettes.get(maxColors)
       if (!palette) {
         palette = quantize(sample.subarray(0, cursor), maxColors - 1, { format: 'rgb565' })
         palettes.set(maxColors, palette)
       }
       return palette
+    }
+    return await encodeWechatGif(frames, edits, painted, opaque ? paletteFor : undefined, opaque ? fit => {
+      if (fit.edge !== 240) return fit.bytes
+      return improveGifMotion(prepared.map((imageData, i) => ({ imageData, delayMs: frames[i].delayMs })),
+        fit.plan, paletteFor(fit.colors), fit.bytes, {
+          maxBytes: WECHAT_GIF_MAX_BYTES,
+          pinned: stickerFramePlan(frames, edits, Infinity).map(item => item.index),
+          onProgress: (completed, total) => options.onProgress?.({stage:'motion',completed,total}),
+        })
     } : undefined)
   } finally {
     prepared.length = 0

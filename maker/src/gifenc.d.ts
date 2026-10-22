@@ -9,6 +9,7 @@ declare module 'gifenc' {
       transparent?: boolean
       transparentIndex?: number
       repeat?: number
+      colorDepth?: number
     }): void
     finish(): void
     bytes(): Uint8Array
