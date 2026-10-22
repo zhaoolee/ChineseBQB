@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { GIFEncoder } from 'gifenc'
-import { decodeGifFrames, encodeGif, encodeGifAsync } from '../src/lib/gif'
+import { createEditableGifFrames, decodeGifFrames, encodeGif, encodeGifAsync, validateGif } from '../src/lib/gif'
 import { prepareOcrInput } from '../src/lib/ocr-input'
 import { scaleOcrBlocks, normalizeOcrItems } from '../src/lib/ocr'
 import { exportGif } from '../src/lib/gif-export'
@@ -20,6 +20,53 @@ function gifFile(width: number, height: number, count: number) {
 afterEach(() => vi.unstubAllGlobals())
 
 describe('bounded GIF processing', () => {
+  it('keeps original editing resolution and only allocates requested frames', () => {
+    const allocation = vi.fn()
+    vi.stubGlobal('ImageData', class extends Pixels {
+      constructor(data: Uint8ClampedArray, width: number, height: number) {
+        super(data, width, height); allocation(width, height)
+      }
+    })
+    const bytes = gifFile(932, 720, 115)
+    validateGif(bytes)
+    const decoded = createEditableGifFrames(bytes)
+    expect(allocation).not.toHaveBeenCalled()
+    expect(decoded).toMatchObject({width:932, height:720, sourceFrameCount:115, limited:false})
+    expect(decoded.frames).toHaveLength(115)
+    const first = decoded.frames[0].imageData
+    expect(first.width).toBe(932)
+    expect(first.height).toBe(720)
+    expect(allocation).toHaveBeenCalledTimes(1)
+    expect(decoded.frames[0].imageData).toBe(first)
+    const second = decoded.frames[1].imageData
+    expect(decoded.frames[0].imageData).toBe(first)
+    expect(decoded.frames[1].imageData).toBe(second)
+    expect(allocation).toHaveBeenCalledTimes(2)
+    // A seek renders the requested frame, rather than materializing all 115 frames.
+    expect(decoded.frames[114].imageData.width).toBe(932)
+    expect(allocation).toHaveBeenCalledTimes(3)
+    expect(decoded.frames.reduce((sum, item) => sum + item.delayMs, 0)).toBe(11500)
+  })
+
+  it('matches eager compositing across transparency, disposal and checkpoint seeks', () => {
+    vi.stubGlobal('ImageData', Pixels)
+    const encoder = GIFEncoder()
+    const palette = [[0,0,0],[255,0,0],[0,255,0],[0,0,255]]
+    for (let i = 0; i < 54; i++) {
+      encoder.writeFrame(new Uint8Array([i % 3 + 1, 0]), 2, 1, {
+        palette, delay: 30 + i % 2 * 10, transparent:true, transparentIndex:0,
+        dispose: i % 4 === 0 ? 3 : i % 3 === 0 ? 2 : 1,
+      })
+    }
+    encoder.finish()
+    const bytes = encoder.bytes()
+    const eager = decodeGifFrames(bytes)
+    const lazy = createEditableGifFrames(bytes)
+    for (const index of [0,1,17,33,53,48,35,16,2,51,30,0]) {
+      expect(lazy.frames[index].imageData.data).toEqual(eager.frames[index].imageData.data)
+      expect(lazy.frames[index].delayMs).toBe(eager.frames[index].delayMs)
+    }
+  })
   it('downscales an over-budget animation while preserving frames and duration', () => {
     const sizes: number[] = []
     vi.stubGlobal('ImageData', class extends Pixels {
@@ -46,6 +93,10 @@ describe('bounded GIF processing', () => {
     const result = decodeGifFrames(gifFile(1,1,201))
     expect(result.frames.length).toBeLessThanOrEqual(200)
     expect(result.frames.reduce((sum, frame) => sum + frame.delayMs, 0)).toBe(20_100)
+    const editing = createEditableGifFrames(gifFile(1,1,201))
+    expect(editing.limited).toBe(true)
+    expect(editing.frames.length).toBeLessThanOrEqual(200)
+    expect(editing.frames.reduce((sum, frame) => sum + frame.delayMs, 0)).toBe(20_100)
   })
   it('preserves exact frame delays in synchronous and streaming exports', async () => {
     vi.stubGlobal('ImageData', Pixels)

@@ -19,7 +19,7 @@ const MAX_GIF_FRAMES = 200
 const MAX_DECODE_FRAMES = 2000
 const MAX_PATCH_PIXELS = 200_000_000
 
-export function decodeGifFrames(bytes: Uint8Array): { width: number; height: number; frames: GifFrame[]; limited: boolean; sourceFrameCount: number } {
+function readGifSource(bytes: Uint8Array) {
   if (bytes.byteLength > 15_000_000) throw new Error('图片超过 15 MB，请先缩小。')
   const buffer = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer
   const parsed = parseGIF(buffer)
@@ -35,6 +35,76 @@ export function decodeGifFrames(bytes: Uint8Array): { width: number; height: num
       throw new Error('GIF 尺寸无效或边长超过 1600，请先缩小。')
     }
   }
+  return { parsed, raw, width, height }
+}
+
+/** Validate the compressed source in a short-lived worker without allocating frames. */
+export function validateGif(bytes: Uint8Array): void { readGifSource(bytes) }
+
+/** Keep source pixels for editing, decoding only requested frames. Compositing runs
+ * forward from a bounded checkpoint cache; the two recent ImageData frames also let
+ * OCR compare neighbours without repeatedly decoding them. Nothing is resized here.
+ */
+export function createEditableGifFrames(bytes: Uint8Array): ReturnType<typeof decodeGifFrames> {
+  const { parsed, raw, width, height } = readGifSource(bytes)
+  const sampleEvery = Math.ceil(raw.length / MAX_GIF_FRAMES)
+  const screen = new Uint8ClampedArray(width * height * 4)
+  const recent = new Map<number, ImageData>()
+  const checkpoints = new Map<number, Uint8ClampedArray>()
+  const maxCheckpoints = Math.max(0, Math.min(4, Math.floor(PIXEL_BUDGET / (width * height)) - 5))
+  let nextRaw = 0
+
+  function read(index: number): ImageData {
+    const cached = recent.get(index)
+    if (cached) return cached
+    const target = index * sampleEvery
+    if (target < nextRaw) {
+      // Checkpoints contain the screen *after disposal*, ready for the next raw frame.
+      const nearest = [...checkpoints.keys()].filter(next => next <= target).sort((a, b) => b - a)[0]
+      if (nearest !== undefined) {
+        const pixels = checkpoints.get(nearest)!
+        screen.set(pixels)
+        checkpoints.delete(nearest)
+        checkpoints.set(nearest, pixels)
+        nextRaw = nearest
+      } else {
+        screen.fill(0)
+        nextRaw = 0
+      }
+    }
+    let result: ImageData | undefined
+    while (nextRaw <= target) {
+      const patch = decompressFrame(raw[nextRaw], parsed.gct, true)
+      const saved = patch.disposalType === 3 ? screen.slice() : null
+      blit(screen, width, height, patch, 1, 1)
+      if (nextRaw === target) result = new ImageData(screen.slice(), width, height)
+      if (patch.disposalType === 2) clearPatch(screen, width, height, patch, 1, 1)
+      else if (saved) screen.set(saved)
+      nextRaw += 1
+      if (maxCheckpoints && nextRaw % 16 === 0) {
+        checkpoints.delete(nextRaw)
+        checkpoints.set(nextRaw, screen.slice())
+        if (checkpoints.size > maxCheckpoints) checkpoints.delete(checkpoints.keys().next().value!)
+      }
+    }
+    recent.set(index, result!)
+    if (recent.size > 2) recent.delete(recent.keys().next().value!)
+    return result!
+  }
+
+  const frames: GifFrame[] = []
+  for (let index = 0; index < raw.length; index += sampleEvery) {
+    const outputIndex = frames.length
+    const delayMs = raw.slice(index, index + sampleEvery)
+      .reduce((total, frame) => total + Math.max(20, (frame.gce?.delay ?? 0) * 10 || 100), 0)
+    frames.push({ get imageData() { return read(outputIndex) }, delayMs })
+  }
+  return { width, height, frames, limited: sampleEvery > 1, sourceFrameCount: raw.length }
+}
+
+/** Eager bounded decoder for independent exports/tests. Editing uses the lazy source above. */
+export function decodeGifFrames(bytes: Uint8Array): { width: number; height: number; frames: GifFrame[]; limited: boolean; sourceFrameCount: number } {
+  const { parsed, raw, width, height } = readGifSource(bytes)
   const sampleEvery = Math.ceil(raw.length / MAX_GIF_FRAMES)
   const count = Math.ceil(raw.length / sampleEvery)
   const scale = Math.min(1, Math.sqrt(PIXEL_BUDGET / (width * height * count)))
