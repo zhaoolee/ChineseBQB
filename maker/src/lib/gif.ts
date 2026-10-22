@@ -85,27 +85,36 @@ export function encodeGif(frames: Iterable<GifFrame>): Uint8Array {
   return gif.bytes()
 }
 
+export class GifSizeLimitError extends Error {
+  constructor() { super('GIF 超出体积预算。'); this.name = 'GifSizeLimitError' }
+}
+
+export type GifEncodeOptions = { maxColors?: number; maxBytes?: number }
+
 /** Async producers can render and release one frame at a time, yielding to the UI. */
-export async function encodeGifAsync(frames: AsyncIterable<GifFrame>): Promise<Uint8Array> {
+export async function encodeGifAsync(frames: AsyncIterable<GifFrame>, options: GifEncodeOptions = {}): Promise<Uint8Array> {
   const gif = GIFEncoder()
   let count = 0
   for await (const frame of frames) {
-    writeFrame(gif, frame)
+    writeFrame(gif, frame, options.maxColors)
     count += 1
+    if (options.maxBytes !== undefined && gif.bytesView().byteLength >= options.maxBytes) throw new GifSizeLimitError()
   }
   if (!count) throw new Error('没有可以导出的 GIF 帧。')
   gif.finish()
+  if (options.maxBytes !== undefined && gif.bytesView().byteLength >= options.maxBytes) throw new GifSizeLimitError()
   return gif.bytes()
 }
 
-function writeFrame(gif: ReturnType<typeof GIFEncoder>, frame: GifFrame) {
+function writeFrame(gif: ReturnType<typeof GIFEncoder>, frame: GifFrame, maxColors = 256) {
   const rgba = frame.imageData.data
-  const palette = quantize(rgba, 256, { format: 'rgba4444', oneBitAlpha: true })
+  const palette = quantize(rgba, maxColors, { format: 'rgba4444', oneBitAlpha: true })
   const index = applyPalette(rgba, palette, 'rgba4444')
   const transparentIndex = palette.findIndex((color) => (color[3] ?? 255) === 0)
   gif.writeFrame(index, frame.imageData.width, frame.imageData.height, {
     palette,
     delay: frame.delayMs,
+    repeat: 0,
     // Every encoded frame is a complete composite; transparent pixels must not
     // reveal pixels left over from the previous frame.
     dispose: 2,

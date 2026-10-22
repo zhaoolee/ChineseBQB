@@ -1,0 +1,1301 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; img-src blob: data:; media-src blob:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>实况照片检测</title>
+<style>
+  :root {
+    --bg: #fbf7f0;
+    --card: #fffdf9;
+    --ink: #2c2925;
+    --muted: #6b6259;
+    --line: #e6dccd;
+    --accent: #b85c2e;
+    --ok: #2f6b4f;
+    --warn: #9a5b00;
+    --bad: #a13333;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    padding: 16px 14px 64px;
+    -webkit-text-size-adjust: 100%;
+  }
+  main { max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 1.42rem; line-height: 1.35; margin: 6px 0 8px; }
+  h2 { font-size: 1.1rem; margin: 26px 0 8px; }
+  h3 { font-size: 0.98rem; margin: 0 0 4px; }
+  p { margin: 8px 0; }
+  .lede { color: var(--muted); }
+  .tiny { font-size: 0.82rem; color: var(--muted); }
+  .notice {
+    background: #fdf1e4;
+    border: 1px solid #f0d9c0;
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 0.88rem;
+  }
+  .entry {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin: 10px 0;
+  }
+  .entry .attrs { margin: 6px 0 0; font-size: 0.85rem; color: var(--muted); }
+  .entry .attrs code { font-size: 0.8rem; }
+  .entry input[type=file] {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+  .entry-status { margin: 8px 0 0; font-size: 0.82rem; color: var(--muted); }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+  button {
+    font: inherit;
+    font-size: 0.88rem;
+    padding: 9px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+  }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button:active { transform: scale(0.98); }
+  .batch {
+    border: 1px solid var(--line);
+    background: #fdf9f2;
+    border-radius: 14px;
+    padding: 10px 12px;
+    margin: 14px 0;
+  }
+  .batch-head { font-size: 0.85rem; color: var(--muted); }
+  .batch-head strong { color: var(--ink); font-size: 0.95rem; }
+  .batch-head .entryline { display: block; margin-top: 2px; }
+  .batch-summary { font-size: 0.88rem; margin: 8px 0 0; }
+  .file {
+    border: 1px solid var(--line);
+    background: var(--card);
+    border-radius: 12px;
+    padding: 10px 12px;
+    margin: 10px 0;
+  }
+  .name { font-weight: 600; overflow-wrap: anywhere; word-break: break-word; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 2px; }
+  .chip {
+    font-size: 0.74rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    background: #fff;
+  }
+  .chip.ok { color: var(--ok); border-color: #bcd9c9; background: #eef7f1; }
+  .chip.info { color: #35557a; border-color: #c3d4e6; background: #eef3f9; }
+  .chip.warn { color: var(--warn); border-color: #ecd2a8; background: #fdf4e3; }
+  .chip.bad { color: var(--bad); border-color: #e4bfbf; background: #fbeeee; }
+  dl.kv {
+    display: grid;
+    grid-template-columns: 6.8em minmax(0, 1fr);
+    gap: 3px 8px;
+    margin: 8px 0;
+    font-size: 0.88rem;
+  }
+  dl.kv dt { color: var(--muted); }
+  dl.kv dd { margin: 0; overflow-wrap: anywhere; word-break: break-word; }
+  .empty { color: var(--bad); }
+  .hint { font-size: 0.8rem; color: var(--muted); margin: 4px 0 0; }
+  .section-note { font-size: 0.8rem; color: var(--muted); margin: 6px 0 0; }
+  code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  code {
+    background: #f3ece1;
+    padding: 1px 5px;
+    border-radius: 5px;
+    font-size: 0.86em;
+    overflow-wrap: anywhere;
+  }
+  pre {
+    background: #f7f1e6;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px;
+    overflow-x: auto;
+    max-width: 100%;
+    font-size: 0.76rem;
+    line-height: 1.5;
+    margin: 8px 0 0;
+  }
+  ul.plain { margin: 6px 0; padding-left: 1.2em; font-size: 0.86rem; }
+  ul.plain li { margin: 3px 0; overflow-wrap: anywhere; }
+  details { margin-top: 10px; }
+  details > summary { cursor: pointer; color: var(--accent); font-size: 0.88rem; }
+  .boxtree { list-style: none; margin: 6px 0 0; padding-left: 14px; font-size: 0.78rem; }
+  .boxtree li { margin: 2px 0; overflow-wrap: anywhere; }
+  .boxtree .boxtype { font-weight: 600; }
+  .boxtree .boxmeta { color: var(--muted); }
+  .preview { margin-top: 10px; }
+  .preview img, .preview video {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    background: #111;
+    margin-top: 8px;
+  }
+  .preview video { width: 100%; }
+  .status { font-size: 0.82rem; color: var(--muted); margin: 6px 0 0; }
+  .status.bad { color: var(--bad); }
+  textarea {
+    width: 100%;
+    min-height: 170px;
+    margin-top: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.74rem;
+    line-height: 1.5;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 8px;
+    background: #fff;
+    color: var(--ink);
+  }
+  .limits ul { padding-left: 1.2em; font-size: 0.86rem; }
+  .limits li { margin: 4px 0; }
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    background: #2c2925;
+    color: #fff;
+    font-size: 0.85rem;
+    padding: 9px 16px;
+    border-radius: 999px;
+    max-width: calc(100vw - 32px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 10;
+  }
+  .toast.show { opacity: 1; }
+  footer { margin-top: 32px; font-size: 0.78rem; color: var(--muted); }
+  .chooser {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px;
+    margin: 16px 0;
+  }
+  .chooser label { display: block; margin-bottom: 8px; font-size: 1.05rem; font-weight: 700; }
+  .chooser input[type=file] { display: block; width: 100%; font-size: 0.95rem; color: var(--ink); }
+  .result-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+  .result-head h2 { margin: 0; }
+  .result-head .toolbar { margin: 0; }
+  .verdict-title { margin: 4px 0 7px; font-size: 1.05rem; font-weight: 700; line-height: 1.45; }
+  .verdict-callout {
+    margin: 6px 0 8px;
+    padding: 8px 10px;
+    border-left: 4px solid var(--bad);
+    border-radius: 0 8px 8px 0;
+    background: #fbeeee;
+    color: var(--bad);
+    font-size: 0.9rem;
+  }
+  .verdict-kv { margin: 8px 0; }
+  .file.compact { padding: 9px 11px; }
+  .file.compact h3 { margin-bottom: 4px; }
+  .file.compact dl.kv { margin: 3px 0; }
+  .file-preview { margin: 3px 0 0; color: var(--muted); font-size: 0.88rem; }
+  details.tech { margin-top: 8px; padding-top: 6px; border-top: 1px dashed var(--line); }
+  details.tech > summary { font-weight: 600; }
+  details.advanced, details.limits { margin-top: 22px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: #fdf9f2; }
+  details.advanced > summary, details.limits > summary { font-size: 1rem; font-weight: 700; }
+  details.advanced .entry { background: var(--card); }
+  .batch.main { background: var(--card); }
+  .batch.main .batch-head { font-size: 0.8rem; }
+  @media (max-width: 520px) {
+    body { padding: 14px 12px 56px; }
+    .result-head { align-items: flex-start; }
+    .result-head .toolbar { width: 100%; }
+    .result-head .toolbar button { flex: 1 1 auto; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>实况照片检测</h1>
+  <p class="lede">选择一张实况照片，自动查看浏览器拿到了什么。所选文件仅在本地检查。</p>
+
+  <section class="chooser" aria-labelledby="main-input-label">
+    <label id="main-input-label" for="main-input">选择实况照片</label>
+    <input type="file" id="main-input" accept="image/*,video/*" aria-label="选择实况照片">
+    <p id="main-status" class="tiny">尚未选择文件。单选，不调用相机。</p>
+  </section>
+
+  <section aria-labelledby="result-title">
+    <div class="result-head">
+      <h2 id="result-title">检测结果</h2>
+      <div class="toolbar">
+        <button type="button" id="btn-copy" class="primary">复制报告</button>
+        <button type="button" id="btn-download">下载报告</button>
+        <button type="button" id="btn-clear">清空</button>
+      </div>
+    </div>
+    <p class="hint">设备与浏览器信息会自动记录；需要排查时，复制详细报告给开发者即可。</p>
+    <div id="main-result"></div>
+    <p id="empty-hint" class="tiny">还没有收到文件。选择一张实况照片后会自动检测。</p>
+  </section>
+
+  <details id="copy-fallback" hidden>
+    <summary>复制失败时可手动全选复制</summary>
+    <textarea id="copy-fallback-text" readonly aria-label="完整 JSON 文本"></textarea>
+  </details>
+
+  <details class="advanced" id="advanced-tests">
+    <summary>高级对照测试（可选）</summary>
+    <p class="tiny">下面保留原来的 5 个入口与 accept 参数，用于对照不同选择器行为。主输入不计入这 5 个入口。</p>
+    <div id="advanced-entries"></div>
+    <h3>对照结果</h3>
+    <div id="advanced-results"></div>
+    <p id="advanced-empty" class="tiny">还没有对照批次。</p>
+  </details>
+
+  <details class="limits">
+    <summary>判读说明与限制</summary>
+    <ul>
+      <li><strong>签名</strong>：JPEG / PNG / GIF / WebP / BMP 的前几个字节是确定的；HEIC/HEIF、MOV/MP4 属于 ISO BMFF，要看 ftyp 品牌与 box 结构。</li>
+      <li><strong>HEIF 的 hvc1 / grid 是图片 item</strong>，不是视频帧；只有 moov/trak/mdia 里 <code>hdlr = vide</code> 的轨道才算视频轨道。</li>
+      <li><strong>字节命中是启发式</strong>：Exif、<code>com.apple.quicktime.content.identifier</code>、<code>still-image-time</code>、LivePhoto / MotionPhoto 等标记只说明扫描范围内出现过这些字节。没有命中<strong>不代表</strong>不是实况照片。</li>
+      <li><strong>UUID 候选不等于配对已证实</strong>：它只说明字节层面出现了类似 UUID 的内容。</li>
+      <li>本页<strong>不解析完整 EXIF / MakerNote</strong>，也不解析 HEIF 的 iloc 数据位置。</li>
+      <li>预览失败（尤其是 HEIC 或 HEVC 视频）只说明浏览器没能解码，<strong>不能</strong>据此认定文件里没有图片或视频。</li>
+      <li>大文件只读取有限字节：结构解析最多 1 MiB，原始字节扫描最多 7 MiB（单文件合计 8 MiB）。该预算只约束结构与标记检查；浏览器为预览解码可能额外读取文件，不计入这 8 MiB。超出范围的标记不会被发现，页面会写明本次实际扫描范围。</li>
+      <li>结构问题会区分两类：<strong>畸形</strong>（box 声明长度不合法、头不完整等，会停止该层解析，不再用于推导轨道）和<strong>读取限制</strong>（预算、box 数量、层深上限，只说明没读完）。</li>
+      <li>预览信息（kind / status / 尺寸 / 时长 / error / timeout）会写入每文件 JSON，并随加载事件刷新；复制和下载会带上当前状态。</li>
+    </ul>
+  </details>
+
+  <footer>
+    <span id="version"></span> · 纯静态页面，无第三方依赖 · 报告 JSON 不含图片原始数据
+  </footer>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script type="module">
+import { inspectFile, formatBytes, INSPECTOR_VERSION, LIMITS } from './inspect.mjs';
+
+const PAGE_VERSION = '1.2.0';
+const PREVIEW_TIMEOUT_MS = 8000;
+
+const MAIN_ENTRY = {
+  id: 'main',
+  title: '选择实况照片',
+  accept: 'image/*,video/*',
+  multiple: false,
+  note: '主入口；单选，不设置 capture。',
+};
+
+const ADVANCED_ENTRIES = [
+  {
+    id: 'maker',
+    title: 'A. 与 Maker 一致：PNG / JPEG / WebP / GIF（单选）',
+    accept: 'image/png,image/jpeg,image/webp,image/gif',
+    multiple: false,
+    note: 'Maker 页面使用的类型过滤。iOS 可能因此把 HEIC 转码成 JPEG。',
+  },
+  {
+    id: 'image-any',
+    title: 'B. 任意图片（单选）',
+    accept: 'image/*',
+    multiple: false,
+    note: '交给系统自己决定交什么图片格式。',
+  },
+  {
+    id: 'image-video-multi',
+    title: 'C. 图片 + 视频（多选）',
+    accept: 'image/*,video/*',
+    multiple: true,
+    note: '可以一次选图片和视频，方便对照同一张实况照片的两部分。',
+  },
+  {
+    id: 'video-multi',
+    title: 'D. 仅视频（多选）',
+    accept: 'video/*',
+    multiple: true,
+    note: '只允许视频类型。',
+  },
+  {
+    id: 'no-accept-multi',
+    title: 'E. 不限制类型（多选，不写 accept）',
+    accept: '',
+    multiple: true,
+    note: '完全不写 accept 属性，看系统默认交出什么。',
+  },
+];
+
+const ALL_ENTRIES = [MAIN_ENTRY, ...ADVANCED_ENTRIES];
+const LIVE_MARKER_IDS = new Set([
+  'content-identifier', 'still-image-time', 'live-photo', 'live-photo-dash',
+  'motion-photo', 'motion-photo-dash',
+]);
+
+const mainInput = document.getElementById('main-input');
+const mainStatusEl = document.getElementById('main-status');
+const mainResultEl = document.getElementById('main-result');
+const advancedEntriesEl = document.getElementById('advanced-entries');
+const advancedResultsEl = document.getElementById('advanced-results');
+const advancedEmpty = document.getElementById('advanced-empty');
+const emptyHint = document.getElementById('empty-hint');
+const toastEl = document.getElementById('toast');
+const fallbackDetails = document.getElementById('copy-fallback');
+const fallbackText = document.getElementById('copy-fallback-text');
+
+const batches = [];
+const previewCleanups = new Set();
+const reportUrls = new Set();
+let batchSeq = 0;
+let toastTimer = 0;
+let generation = 0;
+let mainRun = 0;
+let lastCancelAt = 0;
+
+/* ---------------------------- DOM 小工具 ---------------------------- */
+
+function el(tag, opts = {}) {
+  const node = document.createElement(tag);
+  if (opts.class) node.className = opts.class;
+  if (opts.text !== undefined) node.textContent = String(opts.text);
+  if (opts.attrs) {
+    for (const [key, value] of Object.entries(opts.attrs)) {
+      if (value !== null && value !== undefined) node.setAttribute(key, String(value));
+    }
+  }
+  if (opts.children) {
+    for (const child of opts.children) {
+      if (child) node.append(child);
+    }
+  }
+  return node;
+}
+
+function kv(label, valueNode) {
+  const row = document.createDocumentFragment();
+  const dt = el('dt', { text: label });
+  const dd = el('dd');
+  if (typeof valueNode === 'string' || typeof valueNode === 'number') dd.textContent = String(valueNode);
+  else dd.append(valueNode);
+  row.append(dt, dd);
+  return row;
+}
+
+function kvList(rows) {
+  const dl = el('dl', { class: 'kv' });
+  for (const [label, value] of rows) dl.append(kv(label, value));
+  return dl;
+}
+
+function chip(text, kind = '') {
+  return el('span', { class: `chip ${kind}`.trim(), text });
+}
+
+function toast(message) {
+  toastEl.textContent = message;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 3600);
+}
+
+function localTime(iso) {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleString('zh-CN', { hour12: false });
+}
+
+function humanDuration(seconds) {
+  if (!Number.isFinite(seconds)) return '未知';
+  const s = Math.round(seconds * 1000) / 1000;
+  return `${s} 秒`;
+}
+
+/* ---------------------------- 入口渲染 ---------------------------- */
+
+const entryStatus = new Map();
+
+function wireInput(entry, input, scope) {
+  input.addEventListener('change', () => onSelect(entry, input, 'change', scope));
+  input.addEventListener('cancel', () => {
+    // 浏览器确实触发了 cancel 事件才记录；没收到就不编造取消。
+    lastCancelAt = Date.now();
+    onSelect(entry, input, 'cancel', scope);
+  });
+}
+
+function renderEntries() {
+  for (const entry of ADVANCED_ENTRIES) {
+    const input = el('input', {
+      attrs: {
+        type: 'file',
+        id: `input-${entry.id}`,
+        'aria-label': entry.title,
+        multiple: entry.multiple ? '' : null,
+        accept: entry.accept || null,
+      },
+    });
+    wireInput(entry, input, 'advanced');
+
+    const status = el('p', { class: 'entry-status', text: '尚未选择。' });
+    entryStatus.set(entry.id, status);
+
+    const acceptText = entry.accept ? `accept="${entry.accept}"` : 'accept（未设置）';
+    const multipleText = entry.multiple ? 'multiple（允许多选）' : 'multiple（未设置，单选）';
+
+    const card = el('div', { class: 'entry', children: [
+      el('h3', { text: entry.title }),
+      el('p', { class: 'tiny', text: entry.note }),
+      el('p', { class: 'attrs', children: [
+        el('code', { text: acceptText }),
+        document.createTextNode(' · '),
+        el('code', { text: multipleText }),
+      ] }),
+      input,
+      status,
+    ] });
+    advancedEntriesEl.append(card);
+  }
+}
+
+/* ---------------------------- 批次与文件 ---------------------------- */
+
+async function onSelect(entry, input, eventType, scope = 'advanced') {
+  const selected = eventType === 'change' ? Array.from(input.files || []) : [];
+  if (eventType === 'change') input.value = ''; // 允许同一入口再次选择同一个文件，便于重复对照
+
+  // 某些浏览器在 cancel 之后还会补一个 FileList 为空的 change，避免重复记两批。
+  if (eventType === 'change' && selected.length === 0 && Date.now() - lastCancelAt < 1500) return;
+
+  if (scope === 'main') {
+    // 主流程重新选择时只保留最新一次主结果，避免旧结论堆在页面上。
+    mainRun += 1;
+    for (let index = batches.length - 1; index >= 0; index -= 1) {
+      if (batches[index].scope === 'main') batches.splice(index, 1);
+    }
+    mainResultEl.replaceChildren();
+  }
+
+  const token = generation;
+  const run = mainRun;
+  const active = () => token === generation && (scope !== 'main' || run === mainRun);
+  batchSeq += 1;
+  const startedAt = new Date().toISOString();
+  const batch = {
+    id: batchSeq,
+    startedAt,
+    finishedAt: eventType === 'cancel' ? startedAt : null,
+    eventType,
+    scope,
+    entry: { id: entry.id, title: entry.title, accept: entry.accept, multiple: entry.multiple },
+    selectedFileCount: selected.length,
+    fileCount: selected.length, // 浏览器 FileList 的原始数量，不随后续处理进度变化
+    processingStatus: eventType === 'cancel' ? 'cancelled' : 'processing',
+    files: [],
+  };
+  batches.push(batch);
+
+  const host = scope === 'main' ? mainResultEl : advancedResultsEl;
+  const statusNode = scope === 'main' ? mainStatusEl : entryStatus.get(entry.id);
+  const filesEl = el('div', { class: 'files' });
+  const summaryEl = el('div', { class: 'batch-summary' });
+  const statusEl = el('span', { class: 'entryline', text: '状态：处理中…' });
+  const headChildren = scope === 'main'
+    ? [
+      el('strong', { text: '本次结果' }),
+      el('span', { text: ` · ${localTime(batch.startedAt)}` }),
+      statusEl,
+    ]
+    : [
+      el('strong', { text: `批次 #${batch.id}` }),
+      el('span', { text: ` · ${localTime(batch.startedAt)} · 事件 ${batch.eventType}` }),
+      el('span', { class: 'entryline', text: `入口：${entry.title}` }),
+      el('span', { class: 'entryline', text: `FileList 原始数量：${batch.fileCount}` }),
+      statusEl,
+    ];
+  const headEl = el('div', { class: 'batch-head', children: headChildren });
+  const sectionChildren = scope === 'main'
+    ? [headEl, summaryEl, filesEl]
+    : [headEl, filesEl, summaryEl];
+  const section = el('section', { class: `batch ${scope}`, children: sectionChildren });
+  host.append(section);
+
+  if (scope === 'main') {
+    emptyHint.hidden = true;
+    mainStatusEl.textContent = `正在检查 ${batch.fileCount} 个文件…`;
+  } else {
+    advancedEmpty.hidden = true;
+    if (statusNode) statusNode.textContent = `最近一次：批次 #${batch.id}，FileList 返回 ${batch.fileCount} 个文件。`;
+  }
+
+  if (eventType === 'cancel') {
+    statusEl.textContent = '状态：已取消（收到 cancel 事件）';
+    if (scope === 'main') {
+      mainStatusEl.textContent = '本次没有收到文件。';
+      renderMainNoFiles(summaryEl, 'cancel');
+    } else {
+      summaryEl.textContent = '浏览器触发了 cancel 事件：本次没有收到文件。这里只记录确实发生的事件，不推测相册内容。';
+    }
+    return;
+  }
+
+  if (!selected.length) {
+    batch.processingStatus = 'done';
+    batch.finishedAt = new Date().toISOString();
+    statusEl.textContent = '状态：完成（change 事件，FileList 为空）';
+    if (scope === 'main') {
+      mainStatusEl.textContent = '本次没有收到文件。';
+      renderMainNoFiles(summaryEl, 'change');
+    } else {
+      summaryEl.textContent = '浏览器触发了 change 事件，但 FileList 为空。不能据此认定用户取消，也不推测相册内容。';
+    }
+    return;
+  }
+
+  summaryEl.textContent = `正在逐个检查 ${selected.length} 个文件…`;
+
+  try {
+    for (const file of selected) {
+      if (!active()) return;
+      const card = await buildFileCard(file, token);
+      if (!card) return; // 已清空：不再追加检查结果
+      if (!active()) return;
+      batch.files.push(card.record);
+      filesEl.append(card.node);
+    }
+    if (!active()) return;
+    batch.processingStatus = 'done';
+    batch.finishedAt = new Date().toISOString();
+    statusEl.textContent = `状态：完成（已检查 ${batch.files.length}/${batch.fileCount}）`;
+    summaryEl.replaceChildren();
+    if (scope === 'main') {
+      renderMainSummary(batch, summaryEl);
+      mainStatusEl.textContent = `本次收到 ${batch.fileCount} 个文件。`;
+    } else {
+      renderBatchSummary(batch, summaryEl);
+    }
+  } catch (err) {
+    if (!active()) return;
+    batch.processingStatus = 'error';
+    batch.finishedAt = new Date().toISOString();
+    statusEl.textContent = '状态：处理出错';
+    summaryEl.textContent = `处理出错：${err && err.message ? err.message : String(err)}。`;
+    if (scope === 'main') mainStatusEl.textContent = '本次检查出错。';
+  }
+}
+
+function renderMainNoFiles(target, eventType) {
+  target.replaceChildren();
+  target.append(el('p', { class: 'verdict-title', text: '这次没有收到文件' }));
+  target.append(el('p', {
+    class: 'tiny',
+    text: eventType === 'cancel'
+      ? '浏览器触发了 cancel 事件。'
+      : '浏览器触发了 change 事件，但 FileList 为空。',
+  }));
+}
+
+function previewFactText(preview) {
+  if (!preview) return '尺寸：未读取';
+  const dims = preview.width && preview.height ? `${preview.width}×${preview.height}` : '未知';
+  if (preview.status === 'loaded') return `图片尺寸：${dims}`;
+  if (preview.status === 'metadata-loaded') {
+    return `视频尺寸：${dims} · 时长：${preview.durationSeconds === null ? '未知' : humanDuration(preview.durationSeconds)}`;
+  }
+  if (preview.status === 'loading') return preview.kind === 'video' ? '视频尺寸：读取中…' : '图片尺寸：解码中…';
+  if (preview.status === 'timeout') {
+    return preview.kind === 'video' ? '视频尺寸：读取超时（不代表没有视频轨道）' : '图片尺寸：解码超时（不代表不是图片）';
+  }
+  if (preview.status === 'error') {
+    return preview.kind === 'video' ? '视频尺寸：未能读取（不代表没有视频轨道）' : '图片尺寸：未能解码（不代表不是图片）';
+  }
+  if (preview.status === 'skipped') return '尺寸：文件类型未确认，未尝试解码';
+  return '尺寸：读取中…';
+}
+
+async function buildFileCard(file, token) {
+  let inspection = null;
+  let error = '';
+  try {
+    inspection = await inspectFile(file);
+  } catch (err) {
+    error = err && err.message ? err.message : String(err);
+  }
+  if (token !== generation) return null; // 清空后不再为新结果建节点或预览
+
+  const record = {
+    fileName: file.name,
+    fileType: file.type,
+    fileSize: file.size,
+    inspection,
+    error,
+  };
+
+  const card = el('article', { class: 'file compact' });
+  card.append(el('h3', { class: 'name', text: file.name || '（文件名为空）' }));
+
+  const typeText = file.type
+    || (inspection ? `（type 为空；签名 ${inspection.signature.label}）` : '（type 为空）');
+  card.append(kvList([
+    ['类型', typeText],
+    ['大小', `${formatBytes(file.size)}（${file.size.toLocaleString('en-US')} 字节）`],
+  ]));
+
+  const previewLine = el('p', {
+    class: 'file-preview',
+    text: inspection ? previewFactText(inspection.preview) : '尺寸：未读取',
+  });
+  card.append(previewLine);
+
+  const tech = el('details', { class: 'tech' });
+  tech.append(el('summary', { text: '技术详情' }));
+  card.append(tech);
+
+  if (error) {
+    tech.append(el('p', { class: 'status bad', text: `检查出错：${error}。这个错误只影响本文件。` }));
+  }
+
+  if (inspection) {
+    const chips = el('div', { class: 'chips' });
+    if (inspection.looksLikeImage) chips.append(chip('看起来是图片', 'ok'));
+    if (inspection.hasVideoTrack) chips.append(chip('含视频轨道', 'ok'));
+    if (inspection.hasAudioTrack) chips.append(chip('含音频轨道', 'info'));
+    if (inspection.heif.isHeif) chips.append(chip('HEIF/HEIC 结构', 'info'));
+    if (!inspection.looksLikeImage && !inspection.hasVideoTrack) chips.append(chip('未识别为图片/视频轨道', 'warn'));
+    if (inspection.markers.hits.some((h) => LIVE_MARKER_IDS.has(h.id))) {
+      chips.append(chip('命中实况相关字节标记', 'ok'));
+    }
+    tech.append(chips);
+
+    const rows = [
+      ['name', file.name || '（空）'],
+      ['type', file.type ? file.type : el('span', { class: 'empty', text: '（空字符串：File.type 没有值）' })],
+      ['size', `${file.size.toLocaleString('en-US')} 字节（${formatBytes(file.size)}）`],
+      ['lastModified', file.lastModified
+        ? `${new Date(file.lastModified).toISOString()}（${file.lastModified}）`
+        : '（无或 0）'],
+      ['webkitRelativePath', file.webkitRelativePath || '（无）'],
+      ['前 32 字节', el('code', { text: inspection.head.hex || '（空文件）' })],
+      ['签名', `${inspection.signature.label}${inspection.signature.detail ? ` — ${inspection.signature.detail}` : ''}`],
+    ];
+    tech.append(kvList(rows));
+
+    if (inspection.errors.length) {
+      tech.append(el('p', { class: 'status bad', text: `部分检查未完成：${inspection.errors.join('；')}` }));
+    }
+    tech.append(buildStructureSection(inspection));
+    tech.append(buildMarkerSection(inspection));
+
+    // 原始 JSON 与预览共用同一份 inspection；加载事件发生后卡片尺寸和 JSON 都会刷新。
+    const jsonPre = el('pre');
+    const refreshPreview = () => {
+      if (token !== generation) return;
+      previewLine.textContent = previewFactText(inspection.preview);
+      jsonPre.textContent = JSON.stringify(inspection, null, 2);
+    };
+
+    const previewHost = el('div');
+    tech.append(el('h3', { text: '本地预览' }), previewHost);
+    previewHost.append(buildPreview(file, inspection, refreshPreview, token));
+    refreshPreview();
+
+    const jsonDetails = el('details');
+    jsonDetails.append(el('summary', { text: '原始 JSON（本文件，含预览状态）' }));
+    jsonDetails.append(jsonPre);
+    jsonDetails.addEventListener('toggle', () => { if (jsonDetails.open) refreshPreview(); });
+    tech.append(jsonDetails);
+
+    if (inspection.boxes.tree.length) {
+      const boxDetails = el('details');
+      boxDetails.append(el('summary', { text: `box 树（${inspection.boxes.boxCount} 个 box）` }));
+      boxDetails.append(renderBoxTree(inspection.boxes.tree));
+      if (inspection.boxes.malformed) {
+        boxDetails.append(el('p', { class: 'section-note', text: '结构畸形：box 声明长度或头信息不合法，已在出问题处停止该层解析，后续内容不再用于推导轨道。这是结构问题，不是读取预算或层深限制。' }));
+      }
+      if (inspection.boxes.truncated) {
+        boxDetails.append(el('p', { class: 'section-note', text: '读取限制：达到读取预算、box 数量或层深上限，box 树不完整。' }));
+      }
+      for (const issue of inspection.boxes.issues) {
+        boxDetails.append(el('p', { class: 'section-note', text: issue }));
+      }
+      tech.append(boxDetails);
+    }
+  }
+
+  if (token !== generation) return null;
+  return { node: card, record };
+}
+
+function buildStructureSection(inspection) {
+  const wrap = el('div');
+  const items = inspection.heif.imageItems;
+  const otherItems = inspection.heif.otherItems;
+  const tracks = inspection.tracks;
+
+  if (Boolean(inspection.isoBmff)) {
+    wrap.append(el('h3', { text: 'ISO BMFF 结构' }));
+    const brands = inspection.isoBmff.brands.join(', ') || '（未读到）';
+    wrap.append(kvList([
+      ['ftyp major', inspection.isoBmff.ftyp.majorBrand || '（空白）'],
+      ['兼容品牌', brands],
+      ['结构类型', inspection.isoBmff.kind],
+    ]));
+  }
+
+  if (items.length || otherItems.length) {
+    wrap.append(el('h3', { text: 'HEIF meta/iinf 中的 item' }));
+    const list = el('ul', { class: 'plain' });
+    for (const item of items) {
+      list.append(el('li', { text: `item ${item.itemId} · ${item.itemType} · ${item.description}` }));
+    }
+    for (const item of otherItems) {
+      list.append(el('li', { text: `item ${item.itemId} · ${item.itemType} · ${item.description}` }));
+    }
+    wrap.append(list);
+    wrap.append(el('p', { class: 'section-note', text: '说明：HEIF 的 grid / hvc1 是图片 item（静态图或 tile），不是视频帧。' }));
+  }
+
+  if (tracks.length) {
+    wrap.append(el('h3', { text: '轨道（moov/trak/mdia）' }));
+    const list = el('ul', { class: 'plain' });
+    for (const track of tracks) {
+      const codecs = track.sampleEntryTypes.length ? track.sampleEntryTypes.join(', ') : '（未读到 sample entry）';
+      list.append(el('li', {
+        text: `角色 ${track.role} · hdlr ${track.handlerTypes.join('/') || '（无）'} · sample entry ${codecs} · 偏移 ${track.offset}`,
+      }));
+    }
+    wrap.append(list);
+    wrap.append(el('p', { class: 'section-note', text: '只有 hdlr=vide 的轨道才是视频轨道；metadata 轨道常用于存放 still-image-time 之类的时间标记。' }));
+  } else if (inspection.isoBmff) {
+    wrap.append(el('p', { class: 'section-note', text: '没有解析到 moov/trak 轨道（这条文件不像是带视频轨道的 QuickTime/MP4，或是 box 未在读取范围内）。' }));
+  }
+
+  return wrap;
+}
+
+function buildMarkerSection(inspection) {
+  const wrap = el('div');
+  const m = inspection.markers;
+  wrap.append(el('h3', { text: '原始字节扫描（启发式）' }));
+  const ranges = m.ranges.map((r) => `${r.start}–${r.end}`).join('、') || '（无）';
+  wrap.append(kvList([
+    ['扫描范围', `${ranges} 字节`],
+    ['已扫描', `${m.bytesScanned.toLocaleString('en-US')} 字节（${formatBytes(m.bytesScanned)} / 文件共 ${formatBytes(inspection.size)}）`],
+    ['是否覆盖全文', m.complete ? '是' : '否（只扫描了头/尾有限字节）'],
+  ]));
+
+  if (m.hits.length) {
+    const list = el('ul', { class: 'plain' });
+    for (const hit of m.hits) {
+      list.append(el('li', { text: `${hit.label} × ${hit.count}，首次出现在偏移 ${hit.firstOffset}` }));
+    }
+    wrap.append(list);
+  } else {
+    wrap.append(el('p', { class: 'section-note', text: '扫描范围内没有命中已知标记。这不代表文件不是实况照片：元数据可能在范围外，或使用了其他键名。' }));
+  }
+
+  if (m.uuidCandidates.length) {
+    wrap.append(el('p', { class: 'section-note', text: 'UUID 候选（只说明字节层面出现类似 UUID 的内容，不代表图片与视频配对已证实）：' }));
+    const list = el('ul', { class: 'plain' });
+    for (const cand of m.uuidCandidates) {
+      list.append(el('li', { text: `${cand.uuid} · ${cand.source} · 偏移 ${cand.offset}` }));
+    }
+    wrap.append(list);
+  }
+
+  for (const note of m.notes || []) {
+    wrap.append(el('p', { class: 'section-note', text: note }));
+  }
+  wrap.append(el('p', { class: 'section-note', text: '这里只是原始字节启发式，不是完整 EXIF / MakerNote / QuickTime metadata 解析。' }));
+  return wrap;
+}
+
+/* ---------------------------- 预览 ---------------------------- */
+
+function buildPreview(file, inspection, onUpdate, token) {
+  const wrap = el('div', { class: 'preview' });
+  const imageish = file.type.startsWith('image/') || inspection.looksLikeImage;
+  const videoish = file.type.startsWith('video/') || inspection.hasVideoTrack
+    || inspection.isoBmff?.kind === 'quicktime' || inspection.isoBmff?.kind === 'mp4';
+  const active = () => token === generation;
+
+  // 预览状态写回 inspection.preview，onUpdate 负责刷新该文件的原始 JSON。
+  const patch = (updates) => {
+    if (!active()) return;
+    inspection.preview = { ...inspection.preview, ...updates, updatedAt: new Date().toISOString() };
+    onUpdate();
+  };
+
+  if (!active()) return wrap;
+
+  if (imageish) {
+    const status = el('p', { class: 'status', text: '正在尝试图片预览…' });
+    let img = null;
+    let url = '';
+    let timer = 0;
+    let settled = false;
+    const finish = (updates) => {
+      if (!active() || settled) return;
+      settled = true;
+      clearTimeout(timer);
+      patch(updates);
+      status.textContent = updates.message;
+      if (updates.status === 'error' || updates.status === 'timeout') status.classList.add('bad');
+    };
+    timer = setTimeout(() => finish({
+      status: 'timeout',
+      timeout: true,
+      error: 'image-preview-timeout',
+      message: `预览超时（${PREVIEW_TIMEOUT_MS / 1000} 秒未完成）。这不代表文件不是图片，也不代表不是实况照片。`,
+    }), PREVIEW_TIMEOUT_MS);
+    const cleanup = () => {
+      clearTimeout(timer);
+      if (img) {
+        img.removeAttribute('src');
+        img.removeAttribute('srcset');
+      }
+      if (url) URL.revokeObjectURL(url);
+      url = '';
+    };
+    if (!active()) return wrap;
+    url = URL.createObjectURL(file);
+    img = el('img', { attrs: { alt: `本地预览：${file.name}` } });
+    img.addEventListener('load', () => finish({
+      status: 'loaded',
+      width: img.naturalWidth > 0 ? img.naturalWidth : null,
+      height: img.naturalHeight > 0 ? img.naturalHeight : null,
+      durationSeconds: null,
+      timeout: false,
+      error: null,
+      message: `图片已在本地解码：${img.naturalWidth}×${img.naturalHeight}。图片来自 blob URL，未上传。`,
+    }));
+    img.addEventListener('error', () => finish({
+      status: 'error',
+      width: null,
+      height: null,
+      timeout: false,
+      error: 'image-decode-error',
+      message: '图片预览失败：浏览器无法解码这个格式（HEIC 常见）。这不能说明文件里没有图片或视频。',
+    }));
+    img.src = url;
+    previewCleanups.add(cleanup);
+    wrap.append(img, status);
+    patch({
+      kind: 'image',
+      status: 'loading',
+      width: null,
+      height: null,
+      durationSeconds: null,
+      timeout: false,
+      error: null,
+      message: '正在尝试图片预览…',
+    });
+    return wrap;
+  }
+
+  if (videoish) {
+    const status = el('p', { class: 'status', text: '正在读取视频元数据（不自动播放，默认静音）…' });
+    let video = null;
+    let url = '';
+    let timer = 0;
+    let settled = false;
+    const finish = (updates) => {
+      if (!active() || settled) return;
+      settled = true;
+      clearTimeout(timer);
+      patch(updates);
+      status.textContent = updates.message;
+      if (updates.status === 'error' || updates.status === 'timeout') status.classList.add('bad');
+    };
+    timer = setTimeout(() => finish({
+      status: 'timeout',
+      timeout: true,
+      error: 'video-metadata-timeout',
+      width: null,
+      height: null,
+      durationSeconds: null,
+      message: `视频元数据加载超时（${PREVIEW_TIMEOUT_MS / 1000} 秒）。这不代表文件里没有视频轨道。`,
+    }), PREVIEW_TIMEOUT_MS);
+    const cleanup = () => {
+      clearTimeout(timer);
+      if (video) {
+        try { video.pause(); } catch (e) { /* 已销毁时忽略 */ }
+        video.removeAttribute('src');
+        try { video.load(); } catch (e) { /* 已销毁时忽略 */ }
+      }
+      if (url) URL.revokeObjectURL(url);
+      url = '';
+    };
+    if (!active()) return wrap;
+    url = URL.createObjectURL(file);
+    video = el('video', { attrs: { controls: '', playsinline: '', preload: 'metadata', muted: '' } });
+    video.controls = true;
+    video.playsInline = true;
+    video.preload = 'metadata';
+    video.muted = true;
+    video.defaultMuted = true;
+    video.addEventListener('loadedmetadata', () => {
+      if (!active() || settled) return;
+      const width = video.videoWidth > 0 ? video.videoWidth : null;
+      const height = video.videoHeight > 0 ? video.videoHeight : null;
+      const durationSeconds = Number.isFinite(video.duration) ? video.duration : null;
+      finish({
+        status: 'metadata-loaded',
+        width,
+        height,
+        durationSeconds,
+        timeout: false,
+        error: null,
+        message: `尺寸 ${width && height ? `${width}×${height}` : '未知'}；时长 ${durationSeconds === null ? '未知' : humanDuration(durationSeconds)}。只读取了元数据，没有自动播放；视频默认静音。`,
+      });
+    });
+    video.addEventListener('error', () => finish({
+      status: 'error',
+      width: null,
+      height: null,
+      durationSeconds: null,
+      timeout: false,
+      error: 'video-metadata-error',
+      message: '视频元数据加载失败：浏览器无法解码这个容器或编码。这不能说明文件里没有视频轨道，请以结构与签名结果为准。',
+    }));
+    video.src = url;
+    previewCleanups.add(cleanup);
+    wrap.append(video, status);
+    patch({
+      kind: 'video',
+      status: 'loading',
+      width: null,
+      height: null,
+      durationSeconds: null,
+      timeout: false,
+      error: null,
+      message: '正在读取视频元数据（不自动播放，默认静音）…',
+    });
+    return wrap;
+  }
+
+  const message = '未尝试预览：文件类型既不是图片，也不像带视频轨道的容器。';
+  wrap.append(el('p', { class: 'status', text: message }));
+  patch({
+    kind: 'none',
+    status: 'skipped',
+    width: null,
+    height: null,
+    durationSeconds: null,
+    timeout: false,
+    error: null,
+    message,
+  });
+  return wrap;
+}
+
+/* ---------------------------- box 树 ---------------------------- */
+
+function renderBoxTree(nodes) {
+  const ul = el('ul', { class: 'boxtree' });
+  for (const node of nodes) {
+    const li = el('li');
+    li.append(el('span', { class: 'boxtype', text: node.type }));
+    const flags = node.flags.length ? ` · ${node.flags.join(' / ')}` : '';
+    li.append(el('span', {
+      class: 'boxmeta',
+      text: ` ${node.size} B @ ${node.offset}${node.headerSize !== 8 ? ` · header ${node.headerSize} B` : ''}${flags}`,
+    }));
+    if (node.children && node.children.length) li.append(renderBoxTree(node.children));
+    ul.append(li);
+  }
+  return ul;
+}
+
+/* ---------------------------- 批次总结 ---------------------------- */
+
+function renderBatchSummary(batch, target) {
+  const total = batch.fileCount;
+  const images = [];
+  const videos = [];
+  const both = [];
+  const unknown = [];
+  const failed = [];
+
+  for (const record of batch.files) {
+    const insp = record.inspection;
+    if (!insp) { failed.push(record.fileName); continue; }
+    const isImage = insp.looksLikeImage;
+    const isVideo = insp.hasVideoTrack;
+    if (isImage) images.push(record.fileName);
+    if (isVideo) videos.push(record.fileName);
+    if (isImage && isVideo) both.push(record.fileName);
+    if (!isImage && !isVideo) unknown.push(record.fileName);
+  }
+
+  const parts = [];
+  parts.push(`本次 FileList 返回 ${total} 个文件（已检查 ${batch.files.length} 个）。`);
+  parts.push(images.length ? `看起来是图片：${images.join('、')}。` : '没有文件看起来是图片。');
+  parts.push(videos.length ? `含视频轨道：${videos.join('、')}。` : '没有文件包含可识别的视频轨道。');
+  if (both.length) parts.push(`同时像图片又含视频轨道：${both.join('、')}。`);
+  if (unknown.length) parts.push(`未能判断为图片或视频：${unknown.join('、')}。`);
+  if (failed.length) parts.push(`检查失败：${failed.join('、')}。`);
+  parts.push('这里只描述浏览器实际交出的文件，不推测相册里还有哪些资源。');
+
+  const uuids = sharedUuidCandidates(batch.files);
+  if (uuids.length) {
+    parts.push(`多个文件出现相同的 UUID 候选（${uuids.join('、')}）；这只能说明字节层面一致，不能证明图片与视频已配对。`);
+  }
+
+  target.textContent = parts.join('');
+}
+
+function relatedMarkerLabels(records) {
+  const labels = [];
+  for (const record of records) {
+    for (const hit of record.inspection?.markers.hits || []) {
+      if (LIVE_MARKER_IDS.has(hit.id)) labels.push(hit.label);
+    }
+  }
+  return Array.from(new Set(labels));
+}
+
+function mediaKind(record) {
+  const type = String(record.fileType || '');
+  const inspection = record.inspection;
+  const image = Boolean(inspection?.looksLikeImage || type.startsWith('image/'));
+  const video = Boolean(inspection?.hasVideoTrack || type.startsWith('video/'));
+  if (image && video) return '图片 + 视频轨道';
+  if (video) return '视频';
+  if (image) return '图片';
+  return '未判断';
+}
+
+function isImageRecord(record) {
+  return Boolean(record.inspection)
+    && (record.inspection.looksLikeImage || String(record.fileType || '').startsWith('image/'));
+}
+
+function renderMainSummary(batch, target) {
+  target.replaceChildren();
+  const total = batch.fileCount;
+  const records = batch.files;
+  const failed = records.filter((record) => !record.inspection);
+  const images = records.filter(isImageRecord);
+  const videoFiles = records.filter((record) => record.inspection && String(record.fileType || '').startsWith('video/'));
+  const videoTracks = records.filter((record) => record.inspection?.hasVideoTrack);
+  const videoTrackCount = records.reduce((sum, record) => sum
+    + (record.inspection?.tracks.filter((track) => track.role === 'video').length || 0), 0);
+  const markerLabels = relatedMarkerLabels(records);
+
+  let title = '收到文件，类型未能确认';
+  let callout = '';
+  const onlyImages = records.length === total && failed.length === 0
+    && images.length === total && videoFiles.length === 0 && videoTracks.length === 0;
+  if (videoTracks.length) title = images.length ? '收到图片，并解析到视频轨道' : '收到视频，并解析到视频轨道';
+  else if (onlyImages) {
+    title = '收到图片，未拿到可用视频轨道';
+    callout = '这次只收到图片，未拿到可用视频轨道。';
+  } else if (videoFiles.length) title = '收到视频文件，但未解析到视频轨道';
+  else if (failed.length === total) title = '收到文件，但检查没有完成';
+  else if (images.length) title = '收到图片，未解析到视频轨道';
+
+  const typeText = records.length
+    ? Array.from(new Set(records.map((record) => {
+      const kind = mediaKind(record);
+      return record.fileType ? `${kind}（${record.fileType}）` : kind;
+    }))).join('、')
+    : '—';
+
+  target.append(el('p', { class: 'verdict-title', text: title }));
+  if (callout) target.append(el('p', { class: 'verdict-callout', text: callout }));
+  target.append(kvList([
+    ['收到文件', `${total} 个`],
+    ['文件类型', typeText],
+    ['视频轨道', videoTrackCount ? `已解析到（${videoTrackCount} 条）` : '未解析到'],
+    ['相关标识', markerLabels.length ? `有：${markerLabels.join('、')}` : '未命中'],
+  ]));
+  if (failed.length) {
+    target.append(el('p', { class: 'tiny', text: `有 ${failed.length} 个文件检查未完成，其他结果不受影响。` }));
+  }
+  target.append(el('p', {
+    class: 'tiny',
+    text: '未命中相关标识或预览解码失败，都不代表一定不是实况照片；这里只描述本次浏览器实际交出的文件。',
+  }));
+}
+
+function sharedUuidCandidates(records) {
+  // 按“不同文件”去重：同一文件里同一 UUID 的多个来源只算一次。
+  const fileCounts = new Map();
+  for (const record of records) {
+    if (!record.inspection) continue;
+    const seenInFile = new Set();
+    for (const cand of record.inspection.markers.uuidCandidates) {
+      if (seenInFile.has(cand.uuid)) continue;
+      seenInFile.add(cand.uuid);
+      fileCounts.set(cand.uuid, (fileCounts.get(cand.uuid) || 0) + 1);
+    }
+  }
+  return Array.from(fileCounts.entries()).filter(([, files]) => files > 1).map(([uuid]) => uuid);
+}
+
+/* ---------------------------- 报告 ---------------------------- */
+
+function buildReport() {
+  const nav = typeof navigator !== 'undefined' ? navigator : {};
+  return {
+    report: {
+      pageVersion: PAGE_VERSION,
+      inspectorVersion: INSPECTOR_VERSION,
+      generatedAt: new Date().toISOString(),
+      description: '实况照片检测：浏览器实际交出的 FileList 与本地检查结果。',
+    },
+    environment: {
+      userAgent: nav.userAgent || '',
+      platform: (nav.userAgentData && nav.userAgentData.platform) || nav.platform || '',
+      secureContext: typeof window !== 'undefined' ? Boolean(window.isSecureContext) : false,
+      language: nav.language || '',
+      viewport: typeof window !== 'undefined'
+        ? { width: window.innerWidth, height: window.innerHeight, devicePixelRatio: window.devicePixelRatio }
+        : null,
+      origin: typeof location !== 'undefined' ? location.origin : '',
+      path: typeof location !== 'undefined' ? location.pathname : '',
+    },
+    limits: { ...LIMITS },
+    entries: ALL_ENTRIES.map((entry) => ({
+      id: entry.id,
+      title: entry.title,
+      accept: entry.accept,
+      multiple: entry.multiple,
+    })),
+    testerNote: '',
+    batches: batches.map((batch) => ({
+      id: batch.id,
+      startedAt: batch.startedAt,
+      finishedAt: batch.finishedAt,
+      eventType: batch.eventType,
+      selectedFileCount: batch.selectedFileCount,
+      fileCount: batch.fileCount,
+      processingStatus: batch.processingStatus,
+      entry: batch.entry,
+      files: batch.files.map((record) => record.inspection || {
+        ok: false,
+        name: record.fileName,
+        type: record.fileType,
+        size: record.fileSize,
+        error: record.error,
+      }),
+    })),
+    notes: [
+      '本报告不含图片原始数据，仅含文件名、类型、大小、时间、32 字节头部十六进制、结构与有限字节扫描结果。',
+      'fileCount 是浏览器 FileList 的原始返回数量；files 数组是实际完成检查的记录。',
+      '每文件 preview 记录本地预览状态（kind/status/尺寸/时长/error/timeout），随加载事件更新；超时或解码失败不代表文件里没有图片或视频。',
+      '字节命中、UUID 候选与签名都是启发式，不能替代系统或相册的判定，也不证明 Live Photo 已配对。',
+      '8 MiB 读取预算只约束结构与标记检查，浏览器为预览解码可能额外读取文件。',
+    ],
+  };
+}
+
+async function copyReport() {
+  if (!batches.length) { toast('还没有结果可复制'); return; }
+  const json = JSON.stringify(buildReport(), null, 2);
+  try {
+    if (!navigator.clipboard || typeof navigator.clipboard.writeText !== 'function') {
+      throw new Error('Clipboard API 不可用');
+    }
+    await navigator.clipboard.writeText(json);
+    toast('已复制报告');
+  } catch (err) {
+    fallbackText.value = json;
+    fallbackDetails.hidden = false;
+    fallbackDetails.open = true;
+    try {
+      fallbackText.focus();
+      fallbackText.select();
+      const ok = document.execCommand && document.execCommand('copy');
+      toast(ok ? '已用兼容方式复制' : '自动复制不可用，请在下方文本中手动全选复制');
+    } catch (e2) {
+      toast('自动复制不可用，请在下方文本中手动全选复制');
+    }
+  }
+}
+
+function downloadReport() {
+  if (!batches.length) { toast('还没有结果可下载'); return; }
+  const json = JSON.stringify(buildReport(), null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  reportUrls.add(url);
+  const stamp = new Date().toISOString().replace(/[:T]/g, '-').slice(0, 19);
+  const link = el('a', { attrs: { href: url, download: `livephoto-report-${stamp}.json` } });
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => {
+    if (!reportUrls.delete(url)) return;
+    URL.revokeObjectURL(url);
+  }, 3000);
+  toast('已生成报告');
+}
+
+/* ---------------------------- 清空与释放 ---------------------------- */
+
+function releaseReportUrls() {
+  for (const url of reportUrls) URL.revokeObjectURL(url);
+  reportUrls.clear();
+}
+
+function releasePreviewMedia() {
+  for (const cleanup of previewCleanups) {
+    try { cleanup(); } catch (e) { /* 忽略单个释放错误 */ }
+  }
+  previewCleanups.clear();
+}
+
+function clearAll() {
+  generation += 1; // 让所有在途检查失效，不能再建预览或追加结果
+  releasePreviewMedia();
+  releaseReportUrls();
+  batches.length = 0;
+  batchSeq = 0;
+  mainResultEl.replaceChildren();
+  advancedResultsEl.replaceChildren();
+  mainStatusEl.textContent = '尚未选择文件。单选，不调用相机。';
+  mainInput.value = '';
+  advancedEmpty.hidden = false;
+  fallbackText.value = '';
+  fallbackDetails.hidden = true;
+  fallbackDetails.open = false;
+  emptyHint.hidden = false;
+  for (const [id, node] of entryStatus) {
+    node.textContent = '尚未选择。';
+  }
+  toast('已清空本次结果');
+}
+
+function releaseAll() {
+  generation += 1; // 离开页面时同样让在途检查失效
+  releasePreviewMedia();
+  releaseReportUrls();
+}
+
+/* ---------------------------- 启动 ---------------------------- */
+
+renderEntries();
+wireInput(MAIN_ENTRY, mainInput, 'main');
+document.getElementById('version').textContent = `页面版本 ${PAGE_VERSION} · 检查模块 ${INSPECTOR_VERSION} · 单文件读取上限 ${formatBytes(LIMITS.totalReadBytes)}`;
+document.getElementById('btn-clear').addEventListener('click', clearAll);
+document.getElementById('btn-copy').addEventListener('click', () => { copyReport(); });
+document.getElementById('btn-download').addEventListener('click', downloadReport);
+window.addEventListener('pagehide', releaseAll);
+window.addEventListener('beforeunload', releaseAll);
+</script>
+</body>
+</html>

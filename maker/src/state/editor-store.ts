@@ -2,7 +2,8 @@ import { decideCatalogSrc, readCatalog, siteAsset, siteBaseFrom, makerBaseUrl } 
 import { createHistory, historyCommit, historyRedo, historyUndo, type HistoryState } from '../lib/history'
 import type { GifFrame } from '../lib/gif'
 import { cancelGifDecode, decodeGifInWorker } from '../lib/gif-decode'
-import { editsAtFrame, segmentAtFrame, splitSegment, type GifSegment } from '../lib/timeline'
+import { blockAtFrame, editsAtFrame, segmentAtFrame, splitSegment, type GifSegment } from '../lib/timeline'
+import { scanGifSubtitles, type GifOcrProgress } from '../lib/gif-subtitles'
 import { assertEditableFile, sniffImage } from '../lib/image'
 import { cancelOcrRecognition, recognize, scaleOcrBlocks } from '../lib/ocr'
 import { prepareOcrInput } from '../lib/ocr-input'
@@ -53,6 +54,7 @@ export type EditorSnapshot = {
   ocrStatus: 'idle' | 'loading' | 'ready' | 'error'
   ocrMessage: string
   ocrProgress: OcrProgress | null
+  gifOcrProgress: GifOcrProgress | null
   notice: string | null
   view: { scale: number; panX: number; panY: number }
   history: HistoryState<Editable>
@@ -80,6 +82,7 @@ let state: EditorSnapshot = {
   ocrStatus: 'idle',
   ocrMessage: '选一张图后会自动识别文字。',
   ocrProgress: null,
+  gifOcrProgress: null,
   notice: null,
   view: { scale: 1, panX: 0, panY: 0 },
   history: createHistory(emptyEditable()),
@@ -98,7 +101,7 @@ function emit() {
 }
 
 function update(patch: Partial<EditorSnapshot>) {
-  if (patch.ocrStatus && patch.ocrStatus !== 'loading') patch = { ...patch, ocrProgress: null }
+  if (patch.ocrStatus && patch.ocrStatus !== 'loading') patch = { ...patch, ocrProgress: null, gifOcrProgress: null }
   if (patch.imageLoading === false) patch = { ...patch, loadingPreview: null }
   const next = { ...state, ...patch }
   state = next.comparing && !canCompare(next) ? { ...next, comparing: false } : next
@@ -210,7 +213,7 @@ export async function openCatalogImage(image: CatalogImage) {
         previewUrl,
       },
     })
-    void runOcr()
+    void (decoded.frames ? runGifOcr() : runOcr())
   } catch (error) {
     if (token !== imageToken) return
     update({ imageLoading: false, imageError: error instanceof Error ? error.message : '原图加载失败' })
@@ -258,7 +261,7 @@ export async function openLocalFile(file: File) {
         previewUrl,
       },
     })
-    void runOcr()
+    void (decoded.frames ? runGifOcr() : runOcr())
   } catch (error) {
     if (token !== imageToken) return
     update({ imageLoading: false, imageError: error instanceof Error ? error.message : '这张图片打不开' })
@@ -273,8 +276,10 @@ export async function runOcr() {
   }
   const token = ++ocrToken
   const sourceId = image.source.id
-  const segmentId = segmentAtFrame(state.history.present.segments, state.gifFrameIndex)?.id
-  update({ gifPlaying: false, ocrStatus: 'loading', ocrMessage: '正在识别文本，图片不会离开这台设备。', ocrProgress: { stage: 'prepare' } })
+  const segment = segmentAtFrame(state.history.present.segments, state.gifFrameIndex)
+  const segmentId = segment?.id
+  const frameIndex = state.gifFrameIndex
+  update({ gifPlaying: false, ocrStatus: 'loading', gifOcrProgress: null, ocrMessage: '正在识别文本，图片不会离开这台设备。', ocrProgress: { stage: 'prepare' } })
   try {
     const prepared = await prepareOcrInput(image.imageData)
     const blocks = scaleOcrBlocks(await recognize(prepared.blob, () => token === ocrToken, progress => {
@@ -282,9 +287,18 @@ export async function runOcr() {
     }), prepared.scaleX, prepared.scaleY)
     if (token !== ocrToken || state.image?.source.id !== sourceId) return
     const current = state.history.present
-    const scoped = blocks.map(block => ({ ...block, segmentId, id: `${segmentId ?? 'still'}:${token}:${block.id}` }))
+    const scoped = blocks.map(block => ({ ...block, segmentId, id: `${segmentId ?? 'still'}:${token}:${block.id}`,
+      ...(segment ? { startFrame: segment.start, endFrame: segment.end, framePolygons: [{ frame: frameIndex, polygon: block.polygon }] } : {}) }))
+    const kept = current.blocks.filter(block => block.segmentId !== segmentId)
+      .flatMap(block => {
+        if (!segment || block.startFrame === undefined || block.endFrame === undefined || block.endFrame <= segment.start || block.startFrame >= segment.end) return [block]
+        const parts: OcrBlock[] = []
+        if (block.startFrame < segment.start) parts.push({ ...block, endFrame: segment.start })
+        if (block.endFrame > segment.end) parts.push({ ...block, id: `${token}:after:${block.id}`, startFrame: segment.end })
+        return parts
+      })
     const present: Editable = { ...current,
-      blocks: [...(segmentId ? current.blocks.filter(block => block.segmentId !== segmentId) : []), ...scoped],
+      blocks: [...(segmentId ? kept : []), ...scoped],
       freeTexts: segmentId ? current.freeTexts : [], selectedId: scoped[0]?.id ?? null,
     }
     update({
@@ -301,6 +315,56 @@ export async function runOcr() {
       ocrMessage: error instanceof Error ? `识别失败：${error.message}。仍可以手工加字并导出。` : '识别失败。仍可以手工加字并导出。',
     })
   }
+}
+
+/** All decoded GIF frames are checked; exact duplicate frames reuse the last OCR result. */
+export async function runGifOcr() {
+  const image = state.image
+  const frames = image?.frames
+  if (!frames?.length) return runOcr()
+  cancelOcrRecognition()
+  const token = ++ocrToken
+  const isCurrent = () => token === ocrToken && state.image?.frames === frames
+  update({ gifPlaying: false, cellFocus: null, ocrStatus: 'loading',
+    ocrMessage: '正在逐帧识别 GIF 字幕…', ocrProgress: { stage: 'prepare' },
+    gifOcrProgress: { completed: 0, total: frames.length, recognized: 0 } })
+  try {
+    const result = await scanGifSubtitles(frames, async frame => {
+      const prepared = await prepareOcrInput(frame.imageData)
+      if (!isCurrent()) throw new DOMException('字幕识别已取消', 'AbortError')
+      const blocks = await recognize(prepared.blob, isCurrent, progress => { if (isCurrent()) update({ ocrProgress: progress }) })
+      return scaleOcrBlocks(blocks, prepared.scaleX, prepared.scaleY)
+    }, { isCurrent, idPrefix: `subtitle-${token}`, onProgress: progress => {
+      if (isCurrent()) update({ gifOcrProgress: progress,
+        ocrMessage: `已检查 ${progress.completed}/${progress.total} 帧，已识别 ${progress.recognized} 个不同画面。` })
+    } })
+    if (!isCurrent()) return
+    const current = state.history.present
+    const present: Editable = { ...current, blocks: result.blocks, selectedId: result.blocks[0]?.id ?? null }
+    update({ history: historyCommit(state.history, present), ocrStatus: 'ready',
+      ocrMessage: result.blocks.length
+        ? `识别到 ${result.blocks.length} 条字幕，已检查 ${frames.length} 个解码帧。`
+        : '已检查全部解码帧，没有识别到字幕。可以手工添加文字。' })
+  } catch (error) {
+    if (!isCurrent()) return
+    update({ ocrStatus: 'error', ocrMessage: `字幕识别未完成，已有编辑已保留：${error instanceof Error ? error.message : String(error)}` })
+  }
+}
+
+export function selectGifSubtitle(id: string) {
+  const block = state.history.present.blocks.find(item => item.id === id)
+  if (!block || block.startFrame === undefined) return
+  setGifFrame(block.startFrame)
+  select(id, { clearCellFocus: true })
+}
+
+export function setGifSubtitleRange(id: string, startFrame: number, endFrame: number) {
+  const count = state.image?.frames?.length
+  if (!count || !Number.isFinite(startFrame) || !Number.isFinite(endFrame)) return
+  const start = Math.max(0, Math.min(count - 1, Math.round(startFrame)))
+  const end = Math.max(start + 1, Math.min(count, Math.round(endFrame)))
+  commitEdit(current => ({ ...current, blocks: current.blocks.map(block => block.id === id && block.startFrame !== undefined
+    ? { ...block, startFrame: start, endFrame: end } : block) }))
 }
 
 export function select(id: string | null, options?: { clearCellFocus?: boolean }) {
@@ -474,6 +538,11 @@ export function setFreeStyle(id: string, patch: Partial<TextStyle>) {
 export function removeSelected() {
   const id = state.history.present.selectedId
   if (!id) return
+  const cue = state.history.present.blocks.find(block => block.id === id)
+  if (cue?.startFrame !== undefined) {
+    setTargetText(id, '')
+    return
+  }
   state = { ...state, cellFocus: null }
   commitEdit((current) => ({
     ...current,
@@ -528,7 +597,7 @@ export function resetDocument() {
     ocrMessage: '已回到原图，正在重新识别。',
     notice: null,
   })
-  void runOcr()
+  void (state.image.frames ? runGifOcr() : runOcr())
 }
 
 export function setView(patch: Partial<EditorSnapshot['view']>) {
@@ -642,7 +711,11 @@ export function toggleComparison() {
 }
 
 function retarget(block: OcrBlock): OcrBlock {
-  return { ...block, ...liveRedraw(block, state.image?.imageData ?? null) }
+  const redraw = liveRedraw(blockAtFrame(block, state.gifFrameIndex), state.image?.imageData ?? null)
+  // Subtitle edits replace an entire sentence. Character-preserving diffs can
+  // otherwise leave reordered common glyphs in their original positions.
+  const replaceCaption = block.startFrame !== undefined && block.targetText !== '' && block.targetText !== block.originalText
+  return { ...block, ...redraw, ...(replaceCaption ? { lineRedraw: true, applyLocal: true } : {}) }
 }
 
 function revokePreview() {

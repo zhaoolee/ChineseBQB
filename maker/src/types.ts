@@ -20,6 +20,11 @@ export type TextStyle = {
 
 export type OcrBlock = {
   segmentId?: string
+  /** Subtitle cues use half-open ranges in the decoded GIF's frame timeline. */
+  startFrame?: number
+  endFrame?: number
+  /** OCR locations for each observed frame; no frame pixels enter undo history. */
+  framePolygons?: { frame: number; polygon: [Point, Point, Point, Point] }[]
   id: string
   originalText: string
   targetText: string

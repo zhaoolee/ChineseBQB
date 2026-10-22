@@ -289,3 +289,69 @@ it('keeps canvas text, eight-handle geometry and panel values on one undoable la
   s.setFreeText(id, '格子反向修改')
   expect(s.visibleEdits().freeTexts[0].text).toBe('格子反向修改')
 })
+
+it('automatically builds the GIF subtitle track and erases only the cue interval with undo', async () => {
+  const decoded = await mocks.decode()
+  decoded.frames[1].imageData.data[0] = 1
+  decoded.frames[2].imageData.data[0] = 2
+  mocks.decode.mockResolvedValue(decoded)
+  const first = await mocks.recognize()
+  mocks.recognize.mockResolvedValueOnce(first)
+    .mockResolvedValueOnce([{ ...first[0], originalText: '乙', targetText: '乙' }])
+    .mockResolvedValueOnce([])
+  const s = await loaded()
+  const cues = s.editor.getState().history.present.blocks
+  expect(cues.map(cue => [cue.originalText, cue.startFrame, cue.endFrame])).toEqual([['甲', 0, 1], ['乙', 1, 2]])
+  s.selectGifSubtitle(cues[1].id)
+  expect(s.editor.getState().gifFrameIndex).toBe(1)
+  s.removeSelected()
+  expect(s.visibleEdits().blocks[0]).toMatchObject({ targetText: '', applyLocal: true })
+  expect(s.canCompare()).toBe(true)
+  s.setGifFrame(0)
+  expect(s.visibleEdits().blocks[0].targetText).toBe('甲')
+  expect(s.canCompare()).toBe(false)
+  s.setGifFrame(2)
+  expect(s.visibleEdits().blocks).toHaveLength(0)
+  s.undo()
+  s.setGifFrame(1)
+  expect(s.visibleEdits().blocks[0].targetText).toBe('乙')
+  s.setGifSubtitleRange(cues[1].id, 1, 3)
+  s.setGifFrame(2)
+  expect(s.visibleEdits().blocks[0].originalText).toBe('乙')
+  expect(JSON.stringify(s.editor.getState().history)).not.toContain('imageData')
+})
+
+it('keeps the old subtitle edits if a whole-GIF scan fails or is cancelled by editing', async () => {
+  const s = await loaded()
+  const id = s.visibleEdits().blocks[0].id
+  s.setTargetText(id, '修改后的字幕')
+  const before = s.editor.getState().history
+  mocks.recognize.mockRejectedValueOnce(new Error('resource unavailable'))
+  await s.runGifOcr()
+  expect(s.editor.getState().ocrStatus).toBe('error')
+  expect(s.editor.getState().history).toBe(before)
+  let finish!: (items: unknown[]) => void
+  mocks.recognize.mockImplementationOnce(() => new Promise(resolve => { finish = resolve }))
+  const pending = s.runGifOcr()
+  await vi.waitFor(() => expect(finish).toBeTypeOf('function'))
+  s.setTargetText(id, '识别期间继续修改')
+  const edited = s.editor.getState().history
+  finish([])
+  await pending
+  expect(s.editor.getState().history).toBe(edited)
+  expect(s.editor.getState().gifOcrProgress).toBeNull()
+  expect(s.visibleEdits().blocks[0].targetText).toBe('识别期间继续修改')
+})
+
+it('renders a whole subtitle replacement in target order rather than leaving common glyphs behind', async () => {
+  const s = await loaded()
+  const { collectPatches } = await import('../src/lib/plan')
+  const cue = s.visibleEdits().blocks[0]
+  s.setOriginalText(cue.id, '第二句字幕')
+  s.setTargetText(cue.id, '第二句文字')
+  const visible = s.visibleEdits().blocks
+  expect(visible[0].lineRedraw).toBe(true)
+  expect(collectPatches(visible, s.editor.getState().image!.imageData!).map(patch => patch.text)).toEqual(['第二句文字'])
+  s.setTargetText(cue.id, '第二句字幕')
+  expect(s.canCompare()).toBe(false)
+})

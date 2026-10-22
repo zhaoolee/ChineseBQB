@@ -89,6 +89,23 @@ export function planBlockEdit(block: OcrBlock, image: ImageData | null): EditPla
       message: '这段文字不是近水平单行，自动单字定位不可靠。请手动框选，或选择整行重绘。',
     }
   }
+  if (block.startFrame !== undefined && block.targetText === '' && image) {
+    // A whole burned-in caption on a flat background can be removed cleanly.
+    // Keep complex backgrounds on the existing local-blur fallback.
+    const bounds = polygonBounds(block.polygon)
+    const pad = Math.max(2, bounds.height * 0.08)
+    const polygon = block.manualPolygon ?? [
+      { x: Math.max(0, bounds.minX - pad), y: Math.max(0, bounds.minY - pad) },
+      { x: Math.min(image.width, bounds.maxX + pad), y: Math.max(0, bounds.minY - pad) },
+      { x: Math.min(image.width, bounds.maxX + pad), y: Math.min(image.height, bounds.maxY + pad) },
+      { x: Math.max(0, bounds.minX - pad), y: Math.min(image.height, bounds.maxY + pad) },
+    ]
+    const sample = sampleBackground(image, polygon)
+    return { changes, safety: sample.solid ? 'safe' : 'review',
+      regions: [{ change: changes[0], polygon, estimated: !block.manualPolygon, solid: sample.solid,
+        color: sample.color, blur: !sample.solid }],
+      message: sample.solid ? '按本帧字幕位置填回邻近的纯色背景。' : '背景较复杂，只对本帧字幕区域做局部模糊修补。' }
+  }
   if (block.lineRedraw) {
     const polygon = block.manualPolygon ?? block.polygon
     const sample = image

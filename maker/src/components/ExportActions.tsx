@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { exportSegmentedGif } from '../lib/gif-export'
+import { exportWechatSegmentedGif } from '../lib/gif-export'
 import { collectPatches } from '../lib/plan'
 import { canvasToImage, downloadBlob, editedDownloadName, inheritedStillExport, paintComposite } from '../lib/paint'
 import { editor, setGifPlaying, skipOcr } from '../state/editor-store'
@@ -11,9 +11,18 @@ export function ExportActions() {
   const [message, setMessage] = useState('')
   const [exporting, setExporting] = useState(false)
   const exportLock = useRef(false)
+  const successTimer = useRef<number | null>(null)
   const [previewPane, setPreviewPane] = useState<HTMLElement | null>(null)
   const editable = Boolean(state.image?.imageData)
-  useEffect(() => { setMessage('') }, [state.image?.source.id])
+  const clearSuccessTimer = () => {
+    if (successTimer.current !== null) window.clearTimeout(successTimer.current)
+    successTimer.current = null
+  }
+  useEffect(() => () => clearSuccessTimer(), [])
+  useEffect(() => {
+    clearSuccessTimer()
+    setMessage('')
+  }, [state.image?.source.id])
   useEffect(() => {
     setPreviewPane(document.getElementById('preview-pane'))
   }, [])
@@ -42,7 +51,7 @@ export function ExportActions() {
     const image = latest.image
     const frames = image?.frames
     if (!image?.imageData || !frames || frames.length < 2) throw new Error('当前没有可导出的 GIF。')
-    return exportSegmentedGif(frames, latest.history.present)
+    return exportWechatSegmentedGif(frames, latest.history.present)
   }
 
   const exportButton = (
@@ -70,8 +79,17 @@ export function ExportActions() {
           })
         void task.then(({ blob, filename }) => {
           downloadBlob(blob, filename)
-          setMessage(gifExport ? '已开始下载，改字已按各片段应用，动画时长保留。' : '已开始下载。')
-        }).catch((error: unknown) => setMessage(error instanceof Error ? error.message : '导出失败')).finally(() => {
+          // 成功只留两三秒短句；错误信息常驻。
+          clearSuccessTimer()
+          setMessage('已下载')
+          successTimer.current = window.setTimeout(() => {
+            successTimer.current = null
+            setMessage('')
+          }, 2500)
+        }).catch((error: unknown) => {
+          clearSuccessTimer()
+          setMessage(error instanceof Error ? error.message : '导出失败')
+        }).finally(() => {
           exportLock.current = false
           setExporting(false)
         })
@@ -86,7 +104,7 @@ export function ExportActions() {
     </button>
   )
   const frameNotice = state.image?.source.animated && state.image.imageData && !gifExport
-    ? '这是动图，导出只有当前这一帧。'
+    ? '动图仅导出当前帧。'
     : ''
 
   return (
@@ -95,7 +113,7 @@ export function ExportActions() {
       {(frameNotice || message) && (
         <div className="export-actions">
           {frameNotice && <p className="warn">{frameNotice}</p>}
-          {message && <p className="status" role="status">{message}</p>}
+          {message && <p className="status export-toast" role="status">{message}</p>}
         </div>
       )}
     </>

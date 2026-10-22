@@ -5,23 +5,33 @@ import { CustomStyleControls, StylePresetSelect } from './EditControls'
 import { TextBlockItem } from './TextBlockItem'
 import { useEditor } from './use-editor'
 import { OcrProgressIndicator } from './OcrProgress'
+import { SubtitleTrack } from './SubtitleTrack'
 
 export function TextBlocksPanel() {
   const state = useEditor()
   const present = visibleEdits(state)
   const editable = Boolean(state.image?.imageData)
+  const gif = Boolean(state.image?.frames && state.image.frames.length > 1)
+  const loading = state.ocrStatus === 'loading'
+  // GIF 定时字幕已由字幕行编辑，这里只保留手工非定时 block，避免同一句出现两套编辑器。
+  const blocks = gif
+    ? present.blocks.filter(block => typeof block.startFrame !== 'number' || typeof block.endFrame !== 'number' || block.endFrame <= block.startFrame)
+    : present.blocks
   return (
     <aside className="pane text-pane">
-      <div className="pane-head">
-        <h2>文字</h2>
-        <div className="row">
-          {state.ocrStatus === 'loading' && <button type="button" onClick={skipOcr}>跳过识别</button>}
-          <button type="button" disabled={!editable} onClick={addFreeText}>添加文字</button>
-          <button type="button" disabled={!editable} onClick={resetDocument}>还原原图</button>
-          {state.image?.frames && <button type="button" disabled={state.ocrStatus === 'loading'} onClick={() => void runOcr()}>识别当前片段</button>}
+      {/* GIF 只保留“字幕”一个标题；次要操作收进它的“…”菜单。 */}
+      {!gif && (
+        <div className="pane-head">
+          <h2>文字</h2>
+          <div className="row">
+            {loading && <button type="button" onClick={skipOcr}>取消</button>}
+            <button type="button" disabled={!editable} onClick={addFreeText}>添加文字</button>
+            <button type="button" disabled={!editable} onClick={resetDocument}>还原原图</button>
+          </div>
         </div>
-      </div>
-      {state.ocrStatus === 'loading' && (
+      )}
+      {gif && <SubtitleTrack />}
+      {loading && !gif && (
         <OcrProgressIndicator
           progress={state.ocrProgress}
           animated={Boolean(state.image?.source.animated)}
@@ -29,20 +39,19 @@ export function TextBlocksPanel() {
           frameCount={state.image?.frames?.length ?? 1}
         />
       )}
-      {state.ocrStatus === 'error' && (
-        <div>
-          <p className="status" role="status">{state.ocrMessage}</p>
-          <button type="button" disabled={!editable} onClick={() => { void runOcr() }}>重新识别</button>
+      {state.ocrStatus === 'error' && !gif && (
+        <div className="ocr-retry">
+          <p className="error" role="status">{state.ocrMessage}</p>
+          <button type="button" disabled={!editable} onClick={() => { void runOcr() }}>重试</button>
         </div>
       )}
-      {state.ocrStatus === 'idle' && editable && (
+      {state.ocrStatus === 'idle' && editable && !gif && (
         <div className="row">
-          <p className="status" role="status">{state.ocrMessage}</p>
-          <button type="button" onClick={() => void runOcr()}>识别文字</button>
+          <button type="button" onClick={() => { void runOcr() }}>识别文字</button>
         </div>
       )}
       <div className="block-list">
-        {present.blocks.map((block) => <TextBlockItem key={block.id} block={block} />)}
+        {blocks.map((block) => <TextBlockItem key={block.id} block={block} />)}
         {present.freeTexts.map((layer) => (
           <FreeTextRow
             key={layer.id}
