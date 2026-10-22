@@ -16,16 +16,19 @@ export function stickerBounds(width: number, height: number, edge = WECHAT_GIF_E
 
 export type StickerFrame = { index: number; delayMs: number }
 
-/** Keep subtitle/segment transitions even when thinning motion frames. */
+/** Keep actual caption edits and segment transitions when thinning motion. OCR
+ * observations alone do not change the rendered image and must not pin every frame.
+ */
 export function stickerFramePlan(frames: GifFrame[], edits: TimedEdits, stride = 1): StickerFrame[] {
   const keep = new Set<number>([0, frames.length - 1])
-  for (const item of [...edits.blocks, ...(edits.segments ?? []).map(s => ({ startFrame: s.start, endFrame: s.end }))]) {
+  const captions = edits.blocks.filter(block => block.enabled !== false && block.targetText !== '' && block.targetText !== block.originalText)
+  for (const item of [...captions, ...(edits.segments ?? []).map(s => ({ startFrame: s.start, endFrame: s.end }))]) {
     for (const boundary of [item.startFrame, item.endFrame]) {
       if (boundary !== undefined && Number.isInteger(boundary) && boundary >= 0 && boundary < frames.length) keep.add(boundary)
     }
   }
   if (Number.isFinite(stride)) {
-    for (let i = 0; i < frames.length; i += Math.max(1, Math.floor(stride))) keep.add(i)
+    for (let i = 0; i < frames.length; i += Math.max(1, stride)) keep.add(Math.floor(i))
   }
   const result: StickerFrame[] = []
   // GIF delays are 16-bit centiseconds. Split long holds rather than wrapping.
@@ -43,17 +46,22 @@ export function stickerFramePlan(frames: GifFrame[], edits: TimedEdits, stride =
   return result
 }
 
-/** Reduce colors/motion first, then resolution when protected caption boundaries pin
- * most frames. Always re-render the original edits at the selected size; never truncate time.
+/** Clarity first: do not shrink the canvas while a reasonable 240px palette/motion
+ * combination might fit. Only overflow triggers the next attempt. Render from the
+ * original pixels each time and never truncate the timeline.
  */
 export async function encodeWechatGif(
   frames: GifFrame[], edits: TimedEdits,
   render: (plan: StickerFrame[], edge: number) => AsyncIterable<GifFrame>,
 ): Promise<Blob> {
   const profiles = [
-    [240, 1, 256], [240, 1, 128], [240, 1, 64],
-    [240, 2, 64], [240, 4, 64], [240, 4, 32],
-    [192, 2, 128], [192, 2, 64], [192, 4, 64], [192, 4, 32],
+    [240, 1, 256], [240, 1, 224], [240, 1, 192], [240, 1, 160], [240, 1, 128],
+    [240, 1.25, 128], [240, 1.5, 128], [240, 1.5, 96],
+    [240, 2, 128], [240, 2, 96], [240, 2, 64], [240, 2.5, 96], [240, 2.5, 64],
+    [240, 3, 128], [240, 3, 64], [240, 4, 128], [240, 4, 64],
+    [240, 4, 32], [240, 6, 64], [240, 6, 32],
+    [224, 4, 64], [224, 4, 32], [208, 4, 64], [208, 4, 32],
+    [192, 4, 64], [192, 4, 32],
     [160, 4, 64], [160, 4, 32], [128, 8, 32], [96, 8, 32], [96, 8, 16],
     [72, 16, 16], [48, Infinity, 8], [32, Infinity, 4], [24, Infinity, 4],
   ]

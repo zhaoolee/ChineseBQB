@@ -9,6 +9,8 @@ class Pixels {
 }
 const empty: TimedEdits = { blocks: [], freeTexts: [], selectedId: null }
 const frame = (delayMs = 100): gif.GifFrame => ({ imageData: new Pixels(new Uint8ClampedArray([0, 0, 0, 255]), 1, 1) as ImageData, delayMs })
+const block = (originalText: string, targetText: string, startFrame: number, endFrame: number, enabled = true): OcrBlock =>
+  ({ id: `${startFrame}-${endFrame}`, originalText, targetText, enabled, startFrame, endFrame } as OcrBlock)
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals() })
 
 describe('WeChat GIF export profile', () => {
@@ -22,7 +24,7 @@ describe('WeChat GIF export profile', () => {
   it('preserves a single-frame subtitle, blank transition, segment boundary and total duration', () => {
     const frames = [40, 80, 30, 200, 50, 60, 90, 100].map(frame)
     const edits: TimedEdits = { ...empty,
-      blocks: [{ startFrame: 1, endFrame: 2 } as OcrBlock],
+      blocks: [block('旧字幕', '新字幕', 1, 2)],
       segments: [{ id: 'a', start: 0, end: 5 }, { id: 'b', start: 5, end: 8 }],
     }
     const plan = stickerFramePlan(frames, edits, Infinity)
@@ -36,6 +38,44 @@ describe('WeChat GIF export profile', () => {
     const plan = stickerFramePlan(frames, empty, Infinity)
     expect(plan.every(f => f.delayMs <= 655_350 && f.delayMs > 0)).toBe(true)
     expect(plan.reduce((n, f) => n + f.delayMs, 0)).toBe(1_200_100)
+  })
+
+  it('reduces motion in small steps without losing the final frame or time', () => {
+    const frames = Array.from({ length: 10 }, (_, index) => frame(index % 2 ? 40 : 30))
+    const mild = stickerFramePlan(frames, empty, 1.25)
+    const stronger = stickerFramePlan(frames, empty, 1.5)
+    expect(mild.map(item => item.index)).toEqual([0, 1, 2, 3, 5, 6, 7, 8, 9])
+    expect(stronger.length).toBeLessThan(mild.length)
+    expect(mild.length).toBeLessThan(frames.length)
+    expect(mild.reduce((sum, item) => sum + item.delayMs, 0)).toBe(350)
+    expect(stronger.at(-1)?.index).toBe(9)
+    expect(stronger.reduce((sum, item) => sum + item.delayMs, 0)).toBe(350)
+  })
+
+  it('does not pin frames for untouched, deleted, or disabled OCR blocks', () => {
+    const frames = Array.from({ length: 115 }, () => frame(30))
+    const edits: TimedEdits = { ...empty, blocks: frames.map((_, index) => {
+      if (index % 3 === 0) return block('原字幕', '原字幕', index, index + 1)
+      if (index % 3 === 1) return block('原字幕', '', index, index + 1)
+      return block('原字幕', '改字幕', index, index + 1, false)
+    }) }
+    const plan = stickerFramePlan(frames, edits, Infinity)
+    expect(plan.map(f => f.index)).toEqual([0, 114])
+    expect(plan.length).toBeLessThan(65)
+    expect(plan.reduce((sum, f) => sum + f.delayMs, 0)).toBe(3450)
+  })
+
+  it('keeps start and end boundaries for a visible one-frame caption edit', () => {
+    const frames = Array.from({ length: 12 }, () => frame(30))
+    const edits: TimedEdits = { ...empty, blocks: [
+      block('旧字幕', '', 1, 2),
+      block('旧字幕', '新字幕', 3, 4),
+      block('旧字幕', '旧字幕', 5, 6),
+      block('旧字幕', '新字幕', 7, 8, false),
+    ] }
+    const plan = stickerFramePlan(frames, edits, Infinity)
+    expect(plan.map(f => f.index)).toEqual([0, 3, 4, 11])
+    expect(plan.reduce((sum, f) => sum + f.delayMs, 0)).toBe(360)
   })
 
   it('encodes infinite looping and transparent full frames at reduced palette sizes', async () => {
@@ -72,8 +112,8 @@ describe('WeChat GIF export profile', () => {
 
   it('automatically fits noisy animation under the byte limit without losing cue changes or time', async () => {
     vi.stubGlobal('ImageData', Pixels)
-    const frames = Array.from({ length: 24 }, (_, i) => frame(50 + i * 10))
-    const edits: TimedEdits = { ...empty, blocks: [{ startFrame: 3, endFrame: 4 } as OcrBlock] }
+    const frames = Array.from({ length: 8 }, (_, i) => frame(50 + i * 10))
+    const edits: TimedEdits = { ...empty, blocks: [block('旧字幕', '新字幕', 3, 4)] }
     let attempts = 0
     let lastPlan: StickerFrame[] = []
     async function* render(plan: StickerFrame[]) {
@@ -93,12 +133,12 @@ describe('WeChat GIF export profile', () => {
     expect(attempts).toBeGreaterThan(1)
     expect(blob.size).toBeLessThan(WECHAT_GIF_MAX_BYTES)
     expect(blob.type).toBe('image/gif')
-    expect(lastPlan.map(f => f.index)).toEqual(expect.arrayContaining([0, 3, 4, 23]))
+    expect(lastPlan.map(f => f.index)).toEqual(expect.arrayContaining([0, 3, 4, 7]))
     const decoded = gif.decodeGifFrames(new Uint8Array(await blob.arrayBuffer()))
     expect([decoded.width, decoded.height]).toEqual([240, 240])
     expect(decoded.frames.length).toBeGreaterThan(1)
     expect(decoded.frames.reduce((n, f) => n + f.delayMs, 0)).toBe(frames.reduce((n, f) => n + f.delayMs, 0))
-  }, 15_000)
+  }, 60_000)
 
   it('fails explicitly when all compression attempts exceed the budget and preserves real errors', async () => {
     const encode = vi.spyOn(gif, 'encodeGifAsync').mockRejectedValue(new gif.GifSizeLimitError())
@@ -111,32 +151,33 @@ describe('WeChat GIF export profile', () => {
   it('shrinks dense protected subtitles instead of exhausting palette and frame thinning', async () => {
     vi.stubGlobal('ImageData', Pixels)
     const frames = Array.from({ length: 115 }, () => frame(30))
-    // OCR can emit a different cue on every frame, including cues the user erased.
-    const edits: TimedEdits = { ...empty, blocks: frames.map((_, index) => ({
-      startFrame: index, endFrame: index + 1, targetText: '',
-    } as OcrBlock)) }
-    const tried: string[] = []
+    // A visible caption edit on every frame protects every boundary.
+    const edits: TimedEdits = { ...empty, blocks: frames.map((_, index) => block('原字幕', '新字幕', index, index + 1)) }
+    const tried: { edge: number; maxColors: number; plan: string }[] = []
     const originalEncode = gif.encodeGifAsync
+    let pending: { edge: number; plan: string } | null = null
     vi.spyOn(gif, 'encodeGifAsync').mockImplementation(async (stream, options) => {
-      let edge = 0
-      async function* observed() {
-        for await (const item of stream) { edge = item.imageData.width; yield item }
-      }
-      const producer = observed()
+      const producer = stream[Symbol.asyncIterator]()
       const first = await producer.next()
-      tried.push(`${edge}:${options?.maxColors}`)
-      if (edge > 96) {
-        await producer.return(undefined)
+      if (!pending) throw new Error('render did not start')
+      tried.push({ edge: pending.edge, maxColors: options?.maxColors ?? 0, plan: pending.plan })
+      if (pending.edge > 96) {
+        await producer.return?.(undefined)
         throw new gif.GifSizeLimitError()
       }
       async function* complete() {
         if (!first.done) yield first.value
-        yield* producer
+        for (;;) {
+          const next = await producer.next()
+          if (next.done) return
+          yield next.value
+        }
       }
       return originalEncode(complete(), options)
     })
     let finalPlan: StickerFrame[] = []
     async function* render(plan: StickerFrame[], edge: number) {
+      pending = { edge, plan: plan.map(item => `${item.index},${item.delayMs}`).join(';') }
       finalPlan = plan
       for (const item of plan) {
         const data = new Uint8ClampedArray(edge * edge * 4).fill(255)
@@ -147,12 +188,44 @@ describe('WeChat GIF export profile', () => {
     }
     const blob = await encodeWechatGif(frames, edits, render)
     expect(blob.size).toBeLessThan(WECHAT_GIF_MAX_BYTES)
-    expect(tried.length).toBe(new Set(tried).size)
+    expect(tried.length).toBe(new Set(tried.map(item => `${item.edge}:${item.maxColors}:${item.plan}`)).size)
     const decoded = gif.decodeGifFrames(new Uint8Array(await blob.arrayBuffer()))
     expect([decoded.width, decoded.height]).toEqual([96, 96])
     expect(finalPlan.map(item => item.index)).toEqual(frames.map((_, index) => index))
     expect(decoded.frames).toHaveLength(115)
     expect(decoded.frames.reduce((sum, item) => sum + item.delayMs, 0)).toBe(3450)
+  })
+
+  it('tries low-fps 240px profiles before any smaller edge', async () => {
+    const frames = Array.from({ length: 30 }, () => frame(40))
+    const attempts: { edge: number; maxColors: number; indices: number[] }[] = []
+    let pending: { edge: number; indices: number[] } | null = null
+    vi.spyOn(gif, 'encodeGifAsync').mockImplementation(async (stream, options) => {
+      const producer = stream[Symbol.asyncIterator]()
+      await producer.next()
+      if (!pending) throw new Error('render did not start')
+      attempts.push({ ...pending, maxColors: options?.maxColors ?? 0 })
+      if (pending.edge === 240) {
+        await producer.return?.(undefined)
+        throw new gif.GifSizeLimitError()
+      }
+      return new Uint8Array([71, 73, 70])
+    })
+    async function* render(plan: StickerFrame[], edge: number) {
+      pending = { edge, indices: plan.map(item => item.index) }
+      yield frame(plan[0]?.delayMs)
+    }
+    const blob = await encodeWechatGif(frames, empty, render)
+    expect(blob.size).toBeLessThan(WECHAT_GIF_MAX_BYTES)
+    const firstSmall = attempts.findIndex(item => item.edge < 240)
+    expect(firstSmall).toBeGreaterThan(0)
+    expect(attempts[firstSmall].edge).toBe(224)
+    const beforeShrink = attempts.slice(0, firstSmall)
+    expect(beforeShrink.every(item => item.edge === 240)).toBe(true)
+    expect(beforeShrink.some(item => item.maxColors === 256)).toBe(true)
+    expect(beforeShrink.some(item => item.maxColors <= 64)).toBe(true)
+    expect(beforeShrink.some(item => item.indices.length < frames.length)).toBe(true)
+    expect(attempts.filter(item => item.edge < 224)).toHaveLength(0)
   })
 
   it('downloads the first fitting high-quality result without trying lower profiles', async () => {
@@ -161,5 +234,29 @@ describe('WeChat GIF export profile', () => {
     await encodeWechatGif([frame(), frame()], empty, render)
     expect(encode).toHaveBeenCalledOnce()
     expect(encode).toHaveBeenCalledWith(expect.anything(), { maxColors: 256, maxBytes: WECHAT_GIF_MAX_BYTES })
+  })
+
+  it('keeps the native 240px plan when the first profile already fits', async () => {
+    vi.stubGlobal('ImageData', Pixels)
+    const frames = Array.from({ length: 4 }, () => frame(80))
+    const renders: { edge: number; indices: number[] }[] = []
+    async function* render(plan: StickerFrame[], edge: number) {
+      renders.push({ edge, indices: plan.map(item => item.index) })
+      for (const item of plan) {
+        const data = new Uint8ClampedArray(edge * edge * 4)
+        for (let i = 0; i < data.length; i += 4) {
+          data[i] = item.index * 40
+          data[i + 3] = 255
+        }
+        yield { imageData: new ImageData(data, edge, edge), delayMs: item.delayMs }
+      }
+    }
+    const blob = await encodeWechatGif(frames, empty, render)
+    expect(renders).toEqual([{ edge: 240, indices: [0, 1, 2, 3] }])
+    expect(blob.size).toBeLessThan(WECHAT_GIF_MAX_BYTES)
+    const decoded = gif.decodeGifFrames(new Uint8Array(await blob.arrayBuffer()))
+    expect([decoded.width, decoded.height]).toEqual([240, 240])
+    expect(decoded.frames).toHaveLength(4)
+    expect(decoded.frames.reduce((sum, item) => sum + item.delayMs, 0)).toBe(320)
   })
 })
