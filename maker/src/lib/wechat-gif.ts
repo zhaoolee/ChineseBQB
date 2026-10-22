@@ -6,12 +6,12 @@ import type { TimedEdits } from './timeline'
 export const WECHAT_GIF_EDGE = 240
 export const WECHAT_GIF_MAX_BYTES = 500_000
 
-export function stickerBounds(width: number, height: number) {
-  if (!(width > 0 && height > 0)) throw new Error('GIF 尺寸无效。')
-  const scale = WECHAT_GIF_EDGE / Math.max(width, height)
+export function stickerBounds(width: number, height: number, edge = WECHAT_GIF_EDGE) {
+  if (![width, height, edge].every(value => Number.isFinite(value) && value > 0)) throw new Error('GIF 尺寸无效。')
+  const scale = edge / Math.max(width, height)
   const w = Math.max(1, Math.round(width * scale))
   const h = Math.max(1, Math.round(height * scale))
-  return { x: Math.floor((WECHAT_GIF_EDGE - w) / 2), y: Math.floor((WECHAT_GIF_EDGE - h) / 2), width: w, height: h }
+  return { x: Math.floor((edge - w) / 2), y: Math.floor((edge - h) / 2), width: w, height: h }
 }
 
 export type StickerFrame = { index: number; delayMs: number }
@@ -43,22 +43,33 @@ export function stickerFramePlan(frames: GifFrame[], edits: TimedEdits, stride =
   return result
 }
 
-/** Retry with fewer colors first, then thinner motion; never truncate the timeline. */
+/** Reduce colors/motion first, then resolution when protected caption boundaries pin
+ * most frames. Always re-render the original edits at the selected size; never truncate time.
+ */
 export async function encodeWechatGif(
   frames: GifFrame[], edits: TimedEdits,
-  render: (plan: StickerFrame[]) => AsyncIterable<GifFrame>,
+  render: (plan: StickerFrame[], edge: number) => AsyncIterable<GifFrame>,
 ): Promise<Blob> {
   const profiles = [
-    [1, 256], [1, 128], [1, 64], [1, 32],
-    [2, 32], [4, 32], [8, 16], [16, 16], [Infinity, 16], [Infinity, 8],
+    [240, 1, 256], [240, 1, 128], [240, 1, 64],
+    [240, 2, 64], [192, 2, 128], [192, 2, 64],
+    [160, 4, 64], [160, 4, 32], [128, 8, 32], [96, 8, 32], [96, 8, 16],
+    [72, 16, 16], [48, Infinity, 8], [32, Infinity, 4], [24, Infinity, 4],
   ]
-  for (const [stride, maxColors] of profiles) {
+  const attempted = new Set<string>()
+  for (const [edge, stride, maxColors] of profiles) {
+    const plan = stickerFramePlan(frames, edits, stride)
+    // A cue on every frame can make thinning a no-op. Do not encode the same
+    // resolution, palette and frame plan repeatedly on a phone.
+    const key = `${edge}:${maxColors}:${plan.map(item => `${item.index},${item.delayMs}`).join(';')}`
+    if (attempted.has(key)) continue
+    attempted.add(key)
     try {
-      const bytes = await encodeGifAsync(render(stickerFramePlan(frames, edits, stride)), { maxColors, maxBytes: WECHAT_GIF_MAX_BYTES })
+      const bytes = await encodeGifAsync(render(plan, edge), { maxColors, maxBytes: WECHAT_GIF_MAX_BYTES })
       return new Blob([new Uint8Array(bytes)], { type: 'image/gif' })
     } catch (error) {
       if (!(error instanceof GifSizeLimitError)) throw error
     }
   }
-  throw new Error('压缩后仍超过 500KB，请缩短动画或减少字幕。')
+  throw new Error('动画内容过多，自动压缩后仍超过 500KB，请缩短动画后重试。')
 }

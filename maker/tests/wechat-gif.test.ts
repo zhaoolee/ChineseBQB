@@ -16,6 +16,7 @@ describe('WeChat GIF export profile', () => {
     expect(stickerBounds(420, 220)).toEqual({ x: 0, y: 57, width: 240, height: 126 })
     expect(stickerBounds(100, 200)).toEqual({ x: 60, y: 0, width: 120, height: 240 })
     expect(stickerBounds(240, 240)).toEqual({ x: 0, y: 0, width: 240, height: 240 })
+    expect(stickerBounds(300, 231, 96)).toEqual({ x: 0, y: 11, width: 96, height: 74 })
   })
 
   it('preserves a single-frame subtitle, blank transition, segment boundary and total duration', () => {
@@ -105,5 +106,60 @@ describe('WeChat GIF export profile', () => {
     await expect(encodeWechatGif([frame(), frame()], empty, render)).rejects.toThrow('仍超过 500KB')
     encode.mockRejectedValue(new Error('canvas readback failed'))
     await expect(encodeWechatGif([frame(), frame()], empty, render)).rejects.toThrow('canvas readback failed')
+  })
+
+  it('shrinks dense protected subtitles instead of exhausting palette and frame thinning', async () => {
+    vi.stubGlobal('ImageData', Pixels)
+    const frames = Array.from({ length: 115 }, () => frame(30))
+    // OCR can emit a different cue on every frame, including cues the user erased.
+    const edits: TimedEdits = { ...empty, blocks: frames.map((_, index) => ({
+      startFrame: index, endFrame: index + 1, targetText: '',
+    } as OcrBlock)) }
+    const tried: string[] = []
+    const originalEncode = gif.encodeGifAsync
+    vi.spyOn(gif, 'encodeGifAsync').mockImplementation(async (stream, options) => {
+      let edge = 0
+      async function* observed() {
+        for await (const item of stream) { edge = item.imageData.width; yield item }
+      }
+      const producer = observed()
+      const first = await producer.next()
+      tried.push(`${edge}:${options?.maxColors}`)
+      if (edge > 96) {
+        await producer.return(undefined)
+        throw new gif.GifSizeLimitError()
+      }
+      async function* complete() {
+        if (!first.done) yield first.value
+        yield* producer
+      }
+      return originalEncode(complete(), options)
+    })
+    let finalPlan: StickerFrame[] = []
+    async function* render(plan: StickerFrame[], edge: number) {
+      finalPlan = plan
+      for (const item of plan) {
+        const data = new Uint8ClampedArray(edge * edge * 4).fill(255)
+        // Different pixels on each frame let the round trip distinguish every cue.
+        data[0] = item.index % 2 ? 0 : 255
+        yield { imageData: new ImageData(data, edge, edge), delayMs: item.delayMs }
+      }
+    }
+    const blob = await encodeWechatGif(frames, edits, render)
+    expect(blob.size).toBeLessThan(WECHAT_GIF_MAX_BYTES)
+    expect(tried.length).toBe(new Set(tried).size)
+    const decoded = gif.decodeGifFrames(new Uint8Array(await blob.arrayBuffer()))
+    expect([decoded.width, decoded.height]).toEqual([96, 96])
+    expect(finalPlan.map(item => item.index)).toEqual(frames.map((_, index) => index))
+    expect(decoded.frames).toHaveLength(115)
+    expect(decoded.frames.reduce((sum, item) => sum + item.delayMs, 0)).toBe(3450)
+  })
+
+  it('downloads the first fitting high-quality result without trying lower profiles', async () => {
+    const encode = vi.spyOn(gif, 'encodeGifAsync').mockResolvedValue(new Uint8Array([71, 73, 70]))
+    async function* render() { yield frame() }
+    await encodeWechatGif([frame(), frame()], empty, render)
+    expect(encode).toHaveBeenCalledOnce()
+    expect(encode).toHaveBeenCalledWith(expect.anything(), { maxColors: 256, maxBytes: WECHAT_GIF_MAX_BYTES })
   })
 })
