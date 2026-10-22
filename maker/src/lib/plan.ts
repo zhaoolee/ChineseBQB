@@ -259,7 +259,9 @@ export function hasRenderedEdits(blocks: OcrBlock[], freeTexts: FreeText[], imag
 }
 
 export function activePatches(block: OcrBlock, plan: EditPlan, image?: ImageData | null) {
-  const style = image ? inkStyle(block, image) : block.textStyle
+  // Deleted text draws no glyphs. Probing its native pixel edges for font/ink
+  // style can dominate every frame of a bulk erasure, without changing output.
+  const style = image && block.targetText ? inkStyle(block, image) : block.textStyle
   if (block.lineRedraw && block.applyLocal) {
     const polygon = block.manualPolygon ?? block.polygon
     return [{

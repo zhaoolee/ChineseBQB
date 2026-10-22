@@ -89,8 +89,15 @@ h2 { margin: 0; font-size: 16px; }
   z-index: 6;
   top: 10px;
   right: 10px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: flex-end;
+  max-width: calc(100% - 20px);
 }
-.preview-export > button { box-shadow: 0 1px 4px rgba(63, 47, 34, 0.16); display: inline-flex; align-items: center; gap: 6px; }
+.preview-export > button { box-shadow: 0 1px 4px rgba(63, 47, 34, 0.16); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+/* 导出进行中才出现的取消按钮：紧贴导出按钮，不改变原有导出位置与一键流程。 */
+.preview-export > .export-cancel { background: #fdf9f1; color: #9a3b1a; border-color: #e4cdbd; }
 /* 图库展开时隐藏上方工具/导出与文字操作按钮，收起后自动恢复；不保留空占位或透明焦点。 */
 .maker-app:has(.asset-sheet) .preview-tools,
 .maker-app:has(.asset-sheet) .preview-export,
@@ -354,6 +361,7 @@ h2 { margin: 0; font-size: 16px; }
 .export-actions { flex: 0 0 auto; padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); border-top: 1px solid #e4dad1; background: #fbf7ed; }
 .export-actions p { margin: 0; }
 .export-toast { flex: none; padding: 2px 10px; border-radius: 999px; background: #f3eee5; color: #6f4219; font-size: 12px; line-height: 18px; }
+.export-progress { flex: none; color: #6f4219; font-size: 12px; line-height: 18px; font-variant-numeric: tabular-nums; }
 .block { border: 1px solid #e4dad1; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 8px; background: #fffdf8; }
 .block.selected { border-color: #6f4219; }
 .bang-block { border: none; background: transparent; padding: 2px 0; box-shadow: none; }

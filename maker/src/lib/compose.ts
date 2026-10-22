@@ -47,60 +47,65 @@ export function blurPolygon(image: ImageData, polygon: Point[], radius: number):
   const y0 = Math.max(0, Math.floor(bounds.minY))
   const y1 = Math.min(height - 1, Math.ceil(bounds.maxY))
   if (x1 < x0 || y1 < y0) return output
-  const hx0 = Math.max(0, x0 - r)
-  const hx1 = Math.min(width - 1, x1 + r)
   const hy0 = Math.max(0, y0 - r)
   const hy1 = Math.min(height - 1, y1 + r)
-  const span = hx1 - hx0 + 1
+  const span = x1 - x0 + 1
   const horizontal = new Float32Array((hy1 - hy0 + 1) * span * 4)
-  const sample = (x: number, y: number) => ((y - hy0) * span + (x - hx0)) * 4
+  const sample = (x: number, y: number) => ((y - hy0) * span + (x - x0)) * 4
+  // Sliding sums make the work independent of blur radius. A large native OCR
+  // box must not scan every neighbour again for every pixel on every frame.
   for (let y = hy0; y <= hy1; y += 1) {
-    for (let x = hx0; x <= hx1; x += 1) {
-      let red = 0
-      let green = 0
-      let blue = 0
-      let alpha = 0
-      let count = 0
-      const from = Math.max(0, x - r)
-      const to = Math.min(width - 1, x + r)
-      for (let xx = from; xx <= to; xx += 1) {
-        const index = (y * width + xx) * 4
-        red += image.data[index]
-        green += image.data[index + 1]
-        blue += image.data[index + 2]
-        alpha += image.data[index + 3]
-        count += 1
-      }
+    let red = 0, green = 0, blue = 0, alpha = 0
+    for (let xx = Math.max(0, x0 - r); xx <= Math.min(width - 1, x0 + r); xx++) {
+      const index = (y * width + xx) * 4
+      red += image.data[index]; green += image.data[index + 1]
+      blue += image.data[index + 2]; alpha += image.data[index + 3]
+    }
+    for (let x = x0; x <= x1; x += 1) {
+      const count = Math.min(width - 1, x + r) - Math.max(0, x - r) + 1
       const offset = sample(x, y)
       horizontal[offset] = red / count
       horizontal[offset + 1] = green / count
       horizontal[offset + 2] = blue / count
       horizontal[offset + 3] = alpha / count
+      if (x - r >= 0) {
+        const index = (y * width + x - r) * 4
+        red -= image.data[index]; green -= image.data[index + 1]
+        blue -= image.data[index + 2]; alpha -= image.data[index + 3]
+      }
+      if (x + r + 1 < width) {
+        const index = (y * width + x + r + 1) * 4
+        red += image.data[index]; green += image.data[index + 1]
+        blue += image.data[index + 2]; alpha += image.data[index + 3]
+      }
     }
   }
-  for (let y = y0; y <= y1; y += 1) {
-    for (let x = x0; x <= x1; x += 1) {
-      if (!pointInPolygon({ x: x + 0.5, y: y + 0.5 }, polygon)) continue
-      let red = 0
-      let green = 0
-      let blue = 0
-      let alpha = 0
-      let count = 0
-      const from = Math.max(hy0, y - r)
-      const to = Math.min(hy1, y + r)
-      for (let yy = from; yy <= to; yy += 1) {
-        const index = sample(x, yy)
-        red += horizontal[index]
-        green += horizontal[index + 1]
-        blue += horizontal[index + 2]
-        alpha += horizontal[index + 3]
-        count += 1
+  for (let x = x0; x <= x1; x += 1) {
+    let red = 0, green = 0, blue = 0, alpha = 0
+    for (let yy = hy0; yy <= Math.min(hy1, y0 + r); yy++) {
+      const index = sample(x, yy)
+      red += horizontal[index]; green += horizontal[index + 1]
+      blue += horizontal[index + 2]; alpha += horizontal[index + 3]
+    }
+    for (let y = y0; y <= y1; y += 1) {
+      if (pointInPolygon({ x: x + 0.5, y: y + 0.5 }, polygon)) {
+        const count = Math.min(hy1, y + r) - Math.max(hy0, y - r) + 1
+        const offset = (y * width + x) * 4
+        output.data[offset] = Math.round(red / count)
+        output.data[offset + 1] = Math.round(green / count)
+        output.data[offset + 2] = Math.round(blue / count)
+        output.data[offset + 3] = Math.round(alpha / count)
       }
-      const offset = (y * width + x) * 4
-      output.data[offset] = Math.round(red / count)
-      output.data[offset + 1] = Math.round(green / count)
-      output.data[offset + 2] = Math.round(blue / count)
-      output.data[offset + 3] = Math.round(alpha / count)
+      if (y - r >= hy0) {
+        const index = sample(x, y - r)
+        red -= horizontal[index]; green -= horizontal[index + 1]
+        blue -= horizontal[index + 2]; alpha -= horizontal[index + 3]
+      }
+      if (y + r + 1 <= hy1) {
+        const index = sample(x, y + r + 1)
+        red += horizontal[index]; green += horizontal[index + 1]
+        blue += horizontal[index + 2]; alpha += horizontal[index + 3]
+      }
     }
   }
   return output

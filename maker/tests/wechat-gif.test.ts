@@ -14,11 +14,12 @@ const block = (originalText: string, targetText: string, startFrame: number, end
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals() })
 
 describe('WeChat GIF export profile', () => {
-  it('fits landscape and portrait inside an exact square without cropping or stretching', () => {
-    expect(stickerBounds(420, 220)).toEqual({ x: 0, y: 57, width: 240, height: 126 })
-    expect(stickerBounds(100, 200)).toEqual({ x: 60, y: 0, width: 120, height: 240 })
+  it('keeps the source aspect ratio without padding to a square or upscaling', () => {
+    expect(stickerBounds(420, 220)).toEqual({ x: 0, y: 0, width: 240, height: 126 })
+    expect(stickerBounds(100, 200)).toEqual({ x: 0, y: 0, width: 100, height: 200 })
     expect(stickerBounds(240, 240)).toEqual({ x: 0, y: 0, width: 240, height: 240 })
-    expect(stickerBounds(300, 231, 96)).toEqual({ x: 0, y: 11, width: 96, height: 74 })
+    expect(stickerBounds(932, 720)).toEqual({ x: 0, y: 0, width: 240, height: 185 })
+    expect(stickerBounds(300, 231, 96)).toEqual({ x: 0, y: 0, width: 96, height: 74 })
   })
 
   it('preserves a single-frame subtitle, blank transition, segment boundary and total duration', () => {
@@ -233,7 +234,7 @@ describe('WeChat GIF export profile', () => {
     async function* render() { yield frame() }
     await encodeWechatGif([frame(), frame()], empty, render)
     expect(encode).toHaveBeenCalledOnce()
-    expect(encode).toHaveBeenCalledWith(expect.anything(), { maxColors: 256, maxBytes: WECHAT_GIF_MAX_BYTES })
+    expect(encode).toHaveBeenCalledWith(expect.anything(), { maxColors: 256, maxBytes: WECHAT_GIF_MAX_BYTES, frameCache: expect.any(Map) })
   })
 
   it('keeps the native 240px plan when the first profile already fits', async () => {

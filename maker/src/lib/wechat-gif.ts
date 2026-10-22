@@ -6,12 +6,16 @@ import type { TimedEdits } from './timeline'
 export const WECHAT_GIF_EDGE = 240
 export const WECHAT_GIF_MAX_BYTES = 500_000
 
+/** Fit the image inside an `edge` box while keeping its original aspect ratio.
+ * No square letterboxing, and never enlarge a source already smaller than `edge`
+ * (scale is capped at 1), so 100x200 stays 100x200.
+ */
 export function stickerBounds(width: number, height: number, edge = WECHAT_GIF_EDGE) {
   if (![width, height, edge].every(value => Number.isFinite(value) && value > 0)) throw new Error('GIF 尺寸无效。')
-  const scale = edge / Math.max(width, height)
+  const scale = Math.min(1, edge / Math.max(width, height))
   const w = Math.max(1, Math.round(width * scale))
   const h = Math.max(1, Math.round(height * scale))
-  return { x: Math.floor((edge - w) / 2), y: Math.floor((edge - h) / 2), width: w, height: h }
+  return { x: 0, y: 0, width: w, height: h }
 }
 
 export type StickerFrame = { index: number; delayMs: number }
@@ -48,17 +52,19 @@ export function stickerFramePlan(frames: GifFrame[], edits: TimedEdits, stride =
 
 /** Clarity first: do not shrink the canvas while a reasonable 240px palette/motion
  * combination might fit. Only overflow triggers the next attempt. Render from the
- * original pixels each time and never truncate the timeline.
+ * prepared pixels and never truncate the timeline.
  */
 export async function encodeWechatGif(
   frames: GifFrame[], edits: TimedEdits,
   render: (plan: StickerFrame[], edge: number) => AsyncIterable<GifFrame>,
+  paletteFor?: (maxColors: number) => number[][] | undefined,
 ): Promise<Blob> {
   const profiles = [
-    [240, 1, 256], [240, 1, 224], [240, 1, 192], [240, 1, 160], [240, 1, 128],
-    [240, 1.25, 128], [240, 1.5, 128], [240, 1.5, 96],
-    [240, 2, 128], [240, 2, 96], [240, 2, 64], [240, 2.5, 96], [240, 2.5, 64],
-    [240, 3, 128], [240, 3, 64], [240, 4, 128], [240, 4, 64],
+    [240, 1, 256], [240, 1.25, 256], [240, 1.5, 256], [240, 1.5, 192],
+    [240, 2, 256], [240, 2, 192], [240, 2, 128],
+    [240, 2.5, 256], [240, 2.5, 192], [240, 2.5, 128],
+    [240, 3, 256], [240, 3.25, 256], [240, 3.5, 256], [240, 3, 192], [240, 3, 160],
+    [240, 3, 128], [240, 3, 64], [240, 4, 256], [240, 4, 128], [240, 4, 64],
     [240, 4, 32], [240, 6, 64], [240, 6, 32],
     [224, 4, 64], [224, 4, 32], [208, 4, 64], [208, 4, 32],
     [192, 4, 64], [192, 4, 32],
@@ -66,15 +72,19 @@ export async function encodeWechatGif(
     [72, 16, 16], [48, Infinity, 8], [32, Infinity, 4], [24, Infinity, 4],
   ]
   const attempted = new Set<string>()
+  const frameCache = new Map()
   for (const [edge, stride, maxColors] of profiles) {
     const plan = stickerFramePlan(frames, edits, stride)
+    const globalPalette = paletteFor?.(maxColors)
     // A cue on every frame can make thinning a no-op. Do not encode the same
     // resolution, palette and frame plan repeatedly on a phone.
     const key = `${edge}:${maxColors}:${plan.map(item => `${item.index},${item.delayMs}`).join(';')}`
     if (attempted.has(key)) continue
     attempted.add(key)
     try {
-      const bytes = await encodeGifAsync(render(plan, edge), { maxColors, maxBytes: WECHAT_GIF_MAX_BYTES })
+      const bytes = await encodeGifAsync(render(plan, edge), { maxColors, maxBytes: WECHAT_GIF_MAX_BYTES, frameCache,
+        ...(globalPalette ? { globalPalette } : {}),
+      })
       return new Blob([new Uint8Array(bytes)], { type: 'image/gif' })
     } catch (error) {
       if (!(error instanceof GifSizeLimitError)) throw error

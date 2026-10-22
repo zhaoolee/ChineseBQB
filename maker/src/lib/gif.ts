@@ -159,14 +159,33 @@ export class GifSizeLimitError extends Error {
   constructor() { super('GIF 超出体积预算。'); this.name = 'GifSizeLimitError' }
 }
 
-export type GifEncodeOptions = { maxColors?: number; maxBytes?: number }
+type IndexedFrame = { palette: number[][]; index: Uint8Array; transparentIndex: number }
+// Keep at most two palette variants across attempts. Cached index planes use at
+// most 2 * 200 * 240 * 240 bytes in sticker exports; source RGBA is not copied.
+export type GifFrameCache = Map<number, WeakMap<ImageData, IndexedFrame>>
+export type GifEncodeOptions = { maxColors?: number; maxBytes?: number; frameCache?: GifFrameCache; globalPalette?: number[][] }
 
 /** Async producers can render and release one frame at a time, yielding to the UI. */
 export async function encodeGifAsync(frames: AsyncIterable<GifFrame>, options: GifEncodeOptions = {}): Promise<Uint8Array> {
   const gif = GIFEncoder()
   let count = 0
+  let previous: Uint8Array | undefined
+  const palette = options.globalPalette
+  const lookup = palette ? new Int16Array(65536).fill(-1) : undefined
   for await (const frame of frames) {
-    writeFrame(gif, frame, options.maxColors)
+    if (palette && lookup) {
+      // A stable global palette makes unchanged pixels identical across frames.
+      // Disposal 1 retains them; the reserved transparent index means “reuse”.
+      const index = mapOpaquePalette(frame.imageData, palette, lookup)
+      const transparentIndex = palette.length
+      const delta = index.slice()
+      if (previous) for (let i = 0; i < delta.length; i++) if (index[i] === previous[i]) delta[i] = transparentIndex
+      gif.writeFrame(delta, frame.imageData.width, frame.imageData.height, {
+        palette: count === 0 ? [...palette, [0, 0, 0]] : undefined,
+        delay: frame.delayMs, repeat: 0, dispose: 1, transparent: true, transparentIndex,
+      })
+      previous = index
+    } else writeFrame(gif, frame, options.maxColors, options.frameCache)
     count += 1
     if (options.maxBytes !== undefined && gif.bytesView().byteLength >= options.maxBytes) throw new GifSizeLimitError()
   }
@@ -176,11 +195,52 @@ export async function encodeGifAsync(frames: AsyncIterable<GifFrame>, options: G
   return gif.bytes()
 }
 
-function writeFrame(gif: ReturnType<typeof GIFEncoder>, frame: GifFrame, maxColors = 256) {
-  const rgba = frame.imageData.data
-  const palette = quantize(rgba, maxColors, { format: 'rgba4444', oneBitAlpha: true })
-  const index = applyPalette(rgba, palette, 'rgba4444')
-  const transparentIndex = palette.findIndex((color) => (color[3] ?? 255) === 0)
+function mapOpaquePalette(image: ImageData, palette: number[][], lookup: Int16Array): Uint8Array {
+  if (!palette.length || palette.length > 255) throw new Error('GIF 全局调色板无效。')
+  const index = new Uint8Array(image.width * image.height)
+  for (let p = 0; p < index.length; p++) {
+    const i = p * 4
+    const r = image.data[i], g = image.data[i + 1], b = image.data[i + 2]
+    if (image.data[i + 3] !== 255) throw new Error('透明画面不能使用不透明差分编码。')
+    const key = (r >> 3) << 11 | (g >> 2) << 5 | (b >> 3)
+    let match = lookup[key]
+    if (match === -1) {
+      let distance = Infinity
+      // Match the bin centre, independent of which frame first used the bin.
+      const red = (r & 248) + 4, green = (g & 252) + 2, blue = (b & 248) + 4
+      for (let j = 0; j < palette.length; j++) {
+        const color = palette[j]
+        const d = (red - color[0]) ** 2 + (green - color[1]) ** 2 + (blue - color[2]) ** 2
+        if (d < distance) { distance = d; match = j }
+      }
+      lookup[key] = match
+    }
+    index[p] = match
+  }
+  return index
+}
+
+function writeFrame(gif: ReturnType<typeof GIFEncoder>, frame: GifFrame, maxColors = 256, cache?: GifFrameCache) {
+  let variants = cache?.get(maxColors)
+  if (cache && !variants) {
+    if (cache.size >= 2) cache.delete(cache.keys().next().value!)
+    variants = new WeakMap()
+    cache.set(maxColors, variants)
+  }
+  let encoded = variants?.get(frame.imageData)
+  if (!encoded) {
+    const rgba = frame.imageData.data
+    let opaque = true
+    for (let i = 3; i < rgba.length; i += 4) if (rgba[i] < 255) { opaque = false; break }
+    // Opaque photos need finer RGB bins: rgba4444 point lookup collapsed smooth
+    // gradients into coarse colour bands even when the palette had room left.
+    const format = opaque ? 'rgb565' : 'rgba4444'
+    const palette = quantize(rgba, maxColors, { format: opaque ? 'rgb444' : 'rgba4444', oneBitAlpha: true })
+    encoded = { palette, index: applyPalette(rgba, palette, format),
+      transparentIndex: palette.findIndex(color => (color[3] ?? 255) === 0) }
+    variants?.set(frame.imageData, encoded)
+  }
+  const { palette, index, transparentIndex } = encoded
   gif.writeFrame(index, frame.imageData.width, frame.imageData.height, {
     palette,
     delay: frame.delayMs,
