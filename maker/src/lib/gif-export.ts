@@ -1,5 +1,5 @@
 import { encodeGifAsync, type GifFrame } from './gif'
-import { paintComposite, type TextPatch } from './paint'
+import { paintComposite, paintTextLayers, type TextPatch } from './paint'
 import { collectPatches } from './plan'
 import { editsAtFrame, type TimedEdits } from './timeline'
 import type { FreeText } from '../types'
@@ -42,9 +42,9 @@ export async function exportWechatSegmentedGif(
   createCanvas: () => HTMLCanvasElement = () => document.createElement('canvas'),
 ): Promise<Blob> {
   const source = createCanvas()
-  // At most 200 frames, longest edge 240: <=46 MB, released with the worker.
-  // Native source frames remain lazy; erasures are rendered exactly once, not
-  // again for each palette/frame-rate attempt.
+  const output = createCanvas()
+  // Native erasures and final-grid glyphs are rendered once per frame. Keep
+  // only the 240px result (<=46 MB for 200 frames), never native RGBA sequences.
   const prepared: ImageData[] = []
   let attempt = 0
   async function* painted(plan: StickerFrame[], edge: number) {
@@ -61,29 +61,41 @@ export async function exportWechatSegmentedGif(
     for (const [index, frame] of frames.entries()) {
       const pixels = frame.imageData
       const current = editsAtFrame(edits, index)
-      paintComposite(pixels, collectPatches(current.blocks, pixels), current.freeTexts, source)
+      const patches = collectPatches(current.blocks, pixels)
+      paintComposite(pixels, patches.map((patch) => ({ ...patch, text: '' })), [], source)
       const context = source.getContext('2d')
       if (!context) throw new Error('浏览器不能创建画布，无法导出。')
       const bounds = stickerBounds(source.width, source.height)
-      prepared.push(resizeGif(context.getImageData(0, 0, source.width, source.height), bounds.width, bounds.height))
+      output.width = bounds.width
+      output.height = bounds.height
+      const target = output.getContext('2d')
+      if (!target) throw new Error('浏览器不能创建画布，无法导出。')
+      target.putImageData(resizeGif(context.getImageData(0, 0, source.width, source.height), bounds.width, bounds.height), 0, 0)
+      target.save()
+      target.scale(bounds.width / source.width, bounds.height / source.height)
+      paintTextLayers(target, patches, current.freeTexts)
+      target.restore()
+      // Include the finished glyphs in palette sampling, including rare caption
+      // colours; a palette trained only on the photo would distort red text.
+      prepared.push(target.getImageData(0, 0, bounds.width, bounds.height))
       options.onProgress?.({ stage: 'prepare', completed: index + 1, total: frames.length })
     }
     // Sample all prepared frames for one stable palette. Transparent sources
     // retain full-frame disposal encoding so genuinely clear pixels stay clear.
-    const opaque = prepared.every(frame => {
-      for (let i = 3; i < frame.data.length; i += 4) if (frame.data[i] !== 255) return false
+    const opaque = prepared.every(pixels => {
+      for (let i = 3; i < pixels.data.length; i += 4) if (pixels.data[i] !== 255) return false
       return true
     })
-    const totalPixels = prepared.reduce((sum, frame) => sum + frame.width * frame.height, 0)
+    const totalPixels = prepared.reduce((sum, pixels) => sum + pixels.width * pixels.height, 0)
     const step = Math.max(1, Math.ceil(totalPixels / 80_000))
     const sample = new Uint8ClampedArray(Math.ceil(totalPixels / step) * 4)
     let cursor = 0, offset = 0
-    for (const frame of prepared) {
-      for (let i = (step - offset % step) % step; i < frame.data.length / 4; i += step) {
-        sample.set(frame.data.subarray(i * 4, i * 4 + 4), cursor)
+    for (const pixels of prepared) {
+      for (let i = (step - offset % step) % step; i < pixels.data.length / 4; i += step) {
+        sample.set(pixels.data.subarray(i * 4, i * 4 + 4), cursor)
         cursor += 4
       }
-      offset += frame.data.length / 4
+      offset += pixels.data.length / 4
     }
     const palettes = new Map<number, number[][]>()
     return await encodeWechatGif(frames, edits, painted, opaque ? maxColors => {
@@ -97,5 +109,6 @@ export async function exportWechatSegmentedGif(
   } finally {
     prepared.length = 0
     source.width = source.height = 0
+    output.width = output.height = 0
   }
 }

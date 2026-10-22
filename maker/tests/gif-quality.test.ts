@@ -10,6 +10,14 @@ class Pixels {
 }
 afterEach(() => vi.unstubAllGlobals())
 
+it('keeps neighbouring gradient colours distinct inside one coarse RGB565 bin', async () => {
+  vi.stubGlobal('ImageData', Pixels)
+  const imageData = new ImageData(new Uint8ClampedArray([100,100,100,255,103,103,103,255]),2,1)
+  async function* frames() { yield {imageData,delayMs:100} }
+  const bytes = await encodeGifAsync(frames(), {globalPalette:[[100,100,100],[103,103,103]]})
+  expect(decodeGifFrames(bytes).frames[0].imageData.data).toEqual(imageData.data)
+})
+
 it('reuses unchanged opaque pixels without ghosting, palette flicker or timing loss', async () => {
   vi.stubGlobal('ImageData', Pixels)
   const palette = [[0,0,0], [255,0,0], [0,255,0], [0,0,255]]

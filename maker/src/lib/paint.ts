@@ -90,6 +90,13 @@ export function paintComposite(source: ImageData, patches: TextPatch[], freeText
   const fills = patches.filter((patch) => !patch.blur && !patch.textOnly).map((patch) => ({ polygon: patch.polygon, color: patch.color }))
   const filled = fills.length ? applyFills(current, fills) : current
   context.putImageData(filled, 0, 0)
+  paintTextLayers(context, patches, freeTexts)
+}
+
+/** Draw the replacement glyphs and free text on top of already composited pixels.
+ * The caller owns the transform, so scaled exports can paint text on the final grid.
+ */
+export function paintTextLayers(context: CanvasRenderingContext2D, patches: TextPatch[], freeTexts: FreeText[]) {
   for (const patch of patches) drawClippedText(context, patch.polygon, patch.text, patch.style)
   for (const layer of freeTexts) drawFreeText(context, layer)
 }

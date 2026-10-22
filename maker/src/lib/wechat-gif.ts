@@ -73,21 +73,43 @@ export async function encodeWechatGif(
   ]
   const attempted = new Set<string>()
   const frameCache = new Map()
+  const failedColors = new Map<string, number>()
+  const encode = (plan: StickerFrame[], edge: number, maxColors: number) => {
+    const globalPalette = paletteFor?.(maxColors)
+    return encodeGifAsync(render(plan, edge), { maxColors, maxBytes: WECHAT_GIF_MAX_BYTES, frameCache,
+      ...(globalPalette ? { globalPalette } : {}),
+    })
+  }
   for (const [edge, stride, maxColors] of profiles) {
     const plan = stickerFramePlan(frames, edits, stride)
-    const globalPalette = paletteFor?.(maxColors)
     // A cue on every frame can make thinning a no-op. Do not encode the same
     // resolution, palette and frame plan repeatedly on a phone.
-    const key = `${edge}:${maxColors}:${plan.map(item => `${item.index},${item.delayMs}`).join(';')}`
+    const planKey = `${edge}:${plan.map(item => `${item.index},${item.delayMs}`).join(';')}`
+    const key = `${maxColors}:${planKey}`
     if (attempted.has(key)) continue
     attempted.add(key)
     try {
-      const bytes = await encodeGifAsync(render(plan, edge), { maxColors, maxBytes: WECHAT_GIF_MAX_BYTES, frameCache,
-        ...(globalPalette ? { globalPalette } : {}),
-      })
+      let bytes = await encode(plan, edge, maxColors)
+      // A coarse 160 -> 128 step can leave enough room for, say, 148 colours.
+      // Restore colour detail with up to four measured attempts, keeping exactly
+      // the same dimensions, frame indices, caption boundaries and delays.
+      let lower = maxColors
+      let upper = failedColors.get(planKey) ?? 257
+      for (let refinement = 0; refinement < 4 && upper - lower > 1; refinement++) {
+        const colors = Math.floor((lower + upper) / 2)
+        try {
+          const candidate = await encode(plan, edge, colors)
+          bytes = candidate
+          lower = colors
+        } catch (error) {
+          if (!(error instanceof GifSizeLimitError)) throw error
+          upper = colors
+        }
+      }
       return new Blob([new Uint8Array(bytes)], { type: 'image/gif' })
     } catch (error) {
       if (!(error instanceof GifSizeLimitError)) throw error
+      failedColors.set(planKey, Math.min(failedColors.get(planKey) ?? 257, maxColors))
     }
   }
   throw new Error('动画内容过多，自动压缩后仍超过 500KB，请缩短动画后重试。')

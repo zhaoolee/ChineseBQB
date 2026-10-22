@@ -14,6 +14,28 @@ const block = (originalText: string, targetText: string, startFrame: number, end
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals() })
 
 describe('WeChat GIF export profile', () => {
+  it('uses spare bytes to restore colours after a coarse downgrade, preserving the fitting frame plan', async () => {
+    const attempts: number[] = []
+    const plans: number[][] = []
+    const frames = Array.from({length:6}, () => frame())
+    vi.spyOn(gif,'encodeGifAsync').mockImplementation(async (stream,options) => {
+      const colors = options?.maxColors ?? 256
+      attempts.push(colors)
+      for await (const _ of stream) { /* consume selected frame plan */ }
+      if (colors > 148) throw new gif.GifSizeLimitError()
+      return new Uint8Array(colors)
+    })
+    async function* render(plan: StickerFrame[]) {
+      plans.push(plan.map(item => item.index))
+      yield frame()
+    }
+    const result = await encodeWechatGif(frames,empty,render)
+    // The first fit has 128 colours; bounded refinement tries 160,144,152,148.
+    expect(attempts.slice(-5)).toEqual([128,160,144,152,148])
+    expect(plans.slice(-5).every(plan => JSON.stringify(plan) === JSON.stringify(plans.at(-1)))).toBe(true)
+    expect(result.size).toBe(148)
+    expect(result.size).toBeLessThan(WECHAT_GIF_MAX_BYTES)
+  })
   it('keeps the source aspect ratio without padding to a square or upscaling', () => {
     expect(stickerBounds(420, 220)).toEqual({ x: 0, y: 0, width: 240, height: 126 })
     expect(stickerBounds(100, 200)).toEqual({ x: 0, y: 0, width: 100, height: 200 })

@@ -171,7 +171,7 @@ export async function encodeGifAsync(frames: AsyncIterable<GifFrame>, options: G
   let count = 0
   let previous: Uint8Array | undefined
   const palette = options.globalPalette
-  const lookup = palette ? new Int16Array(65536).fill(-1) : undefined
+  const lookup = palette ? new Map<number, number>() : undefined
   for await (const frame of frames) {
     if (palette && lookup) {
       // A stable global palette makes unchanged pixels identical across frames.
@@ -195,27 +195,28 @@ export async function encodeGifAsync(frames: AsyncIterable<GifFrame>, options: G
   return gif.bytes()
 }
 
-function mapOpaquePalette(image: ImageData, palette: number[][], lookup: Int16Array): Uint8Array {
+function mapOpaquePalette(image: ImageData, palette: number[][], lookup: Map<number, number>): Uint8Array {
   if (!palette.length || palette.length > 255) throw new Error('GIF 全局调色板无效。')
   const index = new Uint8Array(image.width * image.height)
   for (let p = 0; p < index.length; p++) {
     const i = p * 4
     const r = image.data[i], g = image.data[i + 1], b = image.data[i + 2]
     if (image.data[i + 3] !== 255) throw new Error('透明画面不能使用不透明差分编码。')
-    const key = (r >> 3) << 11 | (g >> 2) << 5 | (b >> 3)
-    let match = lookup[key]
-    if (match === -1) {
+    const key = r << 16 | g << 8 | b
+    let match = lookup.get(key)
+    if (match === undefined) {
       let distance = Infinity
-      // Match the bin centre, independent of which frame first used the bin.
-      const red = (r & 248) + 4, green = (g & 252) + 2, blue = (b & 248) + 4
       for (let j = 0; j < palette.length; j++) {
         const color = palette[j]
-        const d = (red - color[0]) ** 2 + (green - color[1]) ** 2 + (blue - color[2]) ** 2
+        const d = (r - color[0]) ** 2 + (g - color[1]) ** 2 + (b - color[2]) ** 2
         if (d < distance) { distance = d; match = j }
       }
-      lookup[key] = match
+      // Exact RGB matching avoids introducing extra colour steps into smooth
+      // gradients. Bound cache memory even for high-entropy photo sequences.
+      if (lookup.size >= 65_536) lookup.clear()
+      lookup.set(key, match!)
     }
-    index[p] = match
+    index[p] = match!
   }
   return index
 }
