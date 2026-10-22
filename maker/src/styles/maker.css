@@ -339,6 +339,18 @@ h2 { margin: 0; font-size: 16px; }
 .thumb span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .editor { flex: 1; min-height: 0; overflow: auto; }
 .pane { padding: 10px 12px; display: flex; flex-direction: column; gap: 10px; }
+/* Only the GIF panel gets independent scroll regions. Static images keep the original panel scroll. */
+.editor:has(.subtitle-track) { flex: 1 1 0; overflow: hidden; display: flex; flex-direction: column; }
+.text-pane:has(.subtitle-track) { flex: 1 1 auto; min-height: 0; overflow: hidden; }
+.text-pane:has(.subtitle-track) .block-list {
+  flex: 0 1 auto;
+  min-width: 0;
+  min-height: 0;
+  max-height: 42%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.block-list:empty { display: none; }
 .export-actions { flex: 0 0 auto; padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); border-top: 1px solid #e4dad1; background: #fbf7ed; }
 .export-actions p { margin: 0; }
 .export-toast { flex: none; padding: 2px 10px; border-radius: 999px; background: #f3eee5; color: #6f4219; font-size: 12px; line-height: 18px; }
@@ -505,10 +517,12 @@ input, select { border: 1px solid #e4dad1; border-radius: 6px; padding: 8px; bac
 }
 .compare-original { background: #e7d8c6; }
 @media (max-width:640px) {
-  /* The subtitle list scrolls itself; reserving half the screen hides its editor. */
+  /* The subtitle list scrolls itself; keep a substantial preview instead of letting a long
+     list shrink the canvas. The dock gets the remaining height and its own scroll region. */
   .maker-app:has(.gif-timeline) { padding-bottom: env(safe-area-inset-bottom, 0px); }
-  .maker-app:has(.gif-timeline) .canvas-pane { flex-basis: 26vh; flex-basis: 26svh; }
-  .maker-app:has(.gif-timeline) .canvas-pane:has(.asset-sheet) { flex-basis: auto; }
+  .maker-app:has(.gif-timeline) .canvas-pane { flex: 0 0 30vh; flex: 0 0 30svh; }
+  .maker-app:has(.gif-timeline) .canvas-pane:has(.asset-sheet) { flex: 1 1 auto; }
+  .maker-app:has(.gif-timeline) .dock { flex: 1 1 0; height: auto; max-height: none; min-height: 0; }
 }
 .banner > button { flex: none; white-space: nowrap; }
 
@@ -563,29 +577,38 @@ input, select { border: 1px solid #e4dad1; border-radius: 6px; padding: 8px; bac
   .loading-preview-dots i { animation: none; opacity: 0.7; }
 }
 
-/* GIF 字幕轨道：一行时间按钮 + 整句输入，其余操作收进行内“…”；随文字面板滚动，不设固定高度。 */
-.subtitle-track { display: flex; flex-direction: column; gap: 6px; min-width: 0; padding: 8px; border: 1px solid #e4d5c1; border-radius: 8px; background: #f8f1e6; }
-.subtitle-head { display: flex; align-items: center; gap: 6px; min-width: 0; }
+/* GIF 字幕轨道填满面板剩余高度；头部/批量控件固定，只有字幕列表滚动，列表长度不再撑高 dock。 */
+.subtitle-track { display: flex; flex: 1 1 0; flex-direction: column; gap: 6px; min-width: 0; min-height: 0; padding: 8px; border: 1px solid #e4d5c1; border-radius: 8px; background: #f8f1e6; }
+.subtitle-head { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; min-width: 0; flex: none; }
 .subtitle-head h3 { margin: 0; font-size: 13px; line-height: 18px; }
 .subtitle-count { color: #8d7761; font-size: 11px; line-height: 16px; font-variant-numeric: tabular-nums; }
+.subtitle-batch-toggle { flex: none; min-height: 28px; padding: 2px 8px; font-size: 12px; line-height: 18px; }
+.subtitle-batch-toggle[aria-pressed="true"] { background: #6f4219; border-color: #6f4219; color: #fff8ed; }
 .subtitle-menu { position: relative; flex: none; margin-left: auto; }
+.subtitle-batch { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; flex: none; min-width: 0; }
+.subtitle-batch button { min-height: 30px; padding: 2px 8px; font-size: 12px; white-space: nowrap; }
+.subtitle-batch-delete:not(:disabled) { color: #9a3b1a; border-color: #e6c6b6; }
+.subtitle-selected-count { color: #6f4219; font-size: 12px; line-height: 18px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .subtitle-menu-list { position: absolute; right: 0; top: calc(100% + 4px); z-index: 9; display: flex; flex-direction: column; gap: 4px; min-width: 132px; padding: 6px; border: 1px solid #e4d5c1; border-radius: 8px; background: #fffdf8; box-shadow: 0 6px 18px rgba(63, 47, 34, 0.18); }
 .subtitle-menu-list button { min-height: 32px; padding: 3px 8px; font-size: 12px; white-space: nowrap; }
-.subtitle-progress { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 8px; min-width: 0; }
+.subtitle-progress { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 8px; min-width: 0; flex: none; }
 .subtitle-status { min-width: 0; overflow: hidden; color: #6f4219; font-size: 12px; line-height: 16px; font-variant-numeric: tabular-nums; text-overflow: ellipsis; white-space: nowrap; }
 .subtitle-progress button { min-height: 32px; padding: 2px 8px; font-size: 12px; }
 .subtitle-progress-track { grid-column: 1 / -1; height: 5px; overflow: hidden; border-radius: 999px; background: #e7d8c6; }
 .subtitle-progress-done { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #b07437, #8f5c2c); transition: width 0.2s ease; }
-.subtitle-error { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 3px 6px; border-radius: 6px; background: #fde7df; color: #9a3b1a; font-size: 12px; line-height: 16px; }
+.subtitle-error { display: flex; align-items: center; gap: 8px; min-width: 0; flex: none; padding: 3px 6px; border-radius: 6px; background: #fde7df; color: #9a3b1a; font-size: 12px; line-height: 16px; }
 .subtitle-error span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .subtitle-error button { flex: none; min-height: 32px; padding: 2px 8px; font-size: 12px; }
-.subtitle-empty { margin: 0; color: #8d7761; font-size: 11px; line-height: 16px; }
-.subtitle-list { display: flex; flex-direction: column; gap: 5px; min-width: 0; margin: 0; padding: 0; list-style: none; }
-.subtitle-item { position: relative; display: flex; flex-direction: column; gap: 5px; min-width: 0; padding: 4px 5px; border: 1px solid #e4d5c1; border-radius: 7px; background: #fffdf8; }
+.subtitle-empty { margin: 0; flex: none; color: #8d7761; font-size: 11px; line-height: 16px; }
+.subtitle-list { display: flex; flex: 1 1 auto; flex-direction: column; gap: 5px; min-width: 0; min-height: 0; overflow-y: auto; overscroll-behavior: contain; margin: 0; padding: 0; list-style: none; }
+.subtitle-item { position: relative; display: flex; flex: none; flex-direction: column; gap: 5px; min-width: 0; padding: 4px 5px; border: 1px solid #e4d5c1; border-radius: 7px; background: #fffdf8; }
 .subtitle-item.is-active { border-color: #6f4219; background: #fff5e4; box-shadow: inset 3px 0 0 #6f4219; }
+.subtitle-item.is-selected { border-color: #6f4219; background: #ffeed8; }
 .subtitle-item.is-deleted { background: #f7f3ec; }
 .subtitle-item.is-deleted .subtitle-text { color: #a08b74; }
-.subtitle-line { display: flex; align-items: center; gap: 5px; min-width: 0; }
+.subtitle-line { display: flex; align-items: center; gap: 5px; min-width: 0; flex-wrap: wrap; }
+.subtitle-check { flex: none; width: 20px; height: 20px; min-height: 20px; margin: 0; padding: 0; accent-color: #6f4219; }
+.subtitle-time-static { display: inline-flex; align-items: center; }
 .subtitle-track .subtitle-time {
   flex: none;
   min-height: 32px;
@@ -601,7 +624,7 @@ input, select { border: 1px solid #e4dad1; border-radius: 6px; padding: 8px; bac
 }
 .subtitle-item.is-active .subtitle-time { border-color: #6f4219; background: #6f4219; color: #fff8ed; }
 /* 输入字号不低于 16px，避免 iPhone 聚焦时页面缩放。 */
-.subtitle-text { flex: 1 1 auto; min-width: 0; min-height: 32px; padding: 4px 7px; font-size: 16px; line-height: 20px; }
+.subtitle-text { flex: 1 1 0; min-width: 0; min-height: 32px; padding: 4px 7px; font-size: 16px; line-height: 20px; }
 .subtitle-text::placeholder { color: #a08b74; }
 .subtitle-icon { flex: none; width: 32px; height: 32px; min-height: 32px; padding: 0; display: grid; place-items: center; }
 .subtitle-delete:not(:disabled) { color: #9a3b1a; border-color: #e6c6b6; }
@@ -650,4 +673,27 @@ input, select { border: 1px solid #e4dad1; border-radius: 6px; padding: 8px; bac
   .subtitle-line { gap: 4px; }
   .subtitle-track .subtitle-time { padding: 0 5px; }
   .subtitle-track .subtitle-time-row label { flex-basis: 78px; }
+  .subtitle-head { gap: 4px; }
+  .subtitle-batch-toggle { min-height: 26px; padding: 1px 6px; }
+  .subtitle-batch { gap: 4px; }
+  .subtitle-batch button { min-height: 28px; padding: 1px 6px; }
+  .subtitle-selected-count { flex: 1 1 100%; }
+}
+@media (max-width: 360px) {
+  /* 320px phones: keep checkbox, time chip and text field on one compact row. */
+  .subtitle-track .subtitle-time { font-size: 10px; padding: 0 4px; }
+  .subtitle-check { width: 18px; height: 18px; min-height: 18px; }
+  .subtitle-batch button { flex: 1 1 auto; }
+}
+@media (max-height: 480px) and (orientation: landscape) {
+  /* Short landscape: keep about 100px of preview, then give the dock enough room for the
+     subtitle header/batch controls and at least one list row even when a banner is visible. */
+  .maker-app:has(.gif-timeline) .canvas-pane { flex: 0 0 clamp(88px, 26vh, 104px); }
+  .maker-app:has(.gif-timeline) .canvas-pane:has(.asset-sheet) { flex: 1 1 auto; }
+  .maker-app:has(.gif-timeline) .dock { flex: 1 1 0; height: auto; max-height: none; min-height: 0; }
+  .maker-app:has(.gif-timeline) .gif-timeline { padding-top: 4px; padding-bottom: 4px; }
+  .maker-app:has(.gif-timeline) .text-pane { gap: 6px; padding-top: 6px; padding-bottom: 6px; }
+  .maker-app:has(.gif-timeline) .subtitle-track { gap: 4px; padding: 6px; }
+  .maker-app:has(.gif-timeline) .subtitle-batch-toggle,
+  .maker-app:has(.gif-timeline) .subtitle-batch button { min-height: 26px; padding-top: 0; padding-bottom: 0; }
 }

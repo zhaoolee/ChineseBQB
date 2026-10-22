@@ -3,6 +3,7 @@ import type { GifFrame } from '../lib/gif'
 import { closestFrameBoundary, frameTimes } from '../lib/timeline'
 import {
   addFreeText,
+  deleteSubtitleBlocks,
   resetDocument,
   runGifOcr,
   selectGifSubtitle,
@@ -49,10 +50,38 @@ export function SubtitleTrack() {
   const failed = state.ocrStatus === 'error'
   const editable = Boolean(state.image?.imageData)
   const subtitles = useMemo(() => subtitleBlocks(state.history.present.blocks), [state.history.present.blocks])
+  const deletable = useMemo(() => subtitles.filter(block => block.targetText !== ''), [subtitles])
+  const deletableIds = useMemo(() => new Set(deletable.map(block => block.id)), [deletable])
+  const [batchMode, setBatchMode] = useState(false)
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const selected = useMemo(() => new Set(selectedIds), [selectedIds])
+  const selectedCount = deletable.reduce((count, block) => count + (selected.has(block.id) ? 1 : 0), 0)
   const menu = useRef<HTMLDetailsElement>(null)
+
+  // OCR replacement creates new block ids, resetDocument empties the document and a new
+  // image starts a new selection scope. Drop ids that no longer point at a deletable cue.
+  useEffect(() => {
+    setSelectedIds(previous => {
+      const next = previous.filter(id => deletableIds.has(id))
+      return next.length === previous.length ? previous : next
+    })
+  }, [deletableIds])
+
+  useEffect(() => {
+    setBatchMode(false)
+    setSelectedIds([])
+  }, [state.image?.source.id])
+
   if (!frames || frameCount < 2) return null
 
   const closeMenu = () => { if (menu.current) menu.current.open = false }
+  const exitBatch = () => { setBatchMode(false); setSelectedIds([]) }
+  const toggleSelected = (id: string) => {
+    if (!deletableIds.has(id)) return
+    setSelectedIds(previous => previous.includes(id)
+      ? previous.filter(item => item !== id)
+      : [...previous, id])
+  }
   const percent = progress && progress.total > 0
     ? clamp((progress.completed / progress.total) * 100, 0, 100)
     : 0
@@ -62,6 +91,18 @@ export function SubtitleTrack() {
       <div className="subtitle-head">
         <h3>字幕</h3>
         {subtitles.length > 0 && <span className="subtitle-count">{subtitles.length} 条</span>}
+        {subtitles.length > 0 && (
+          <button
+            type="button"
+            className="subtitle-batch-toggle"
+            aria-pressed={batchMode}
+            aria-label={batchMode ? '退出批量选择字幕' : '批量选择字幕'}
+            disabled={busy || (!batchMode && deletable.length === 0)}
+            onClick={() => { if (batchMode) exitBatch(); else setBatchMode(true) }}
+          >
+            批量选择
+          </button>
+        )}
         <details className="subtitle-menu" ref={menu}>
           <summary aria-label="更多字幕操作" title="更多字幕操作">…</summary>
           <div className="subtitle-menu-list">
@@ -71,6 +112,28 @@ export function SubtitleTrack() {
           </div>
         </details>
       </div>
+      {batchMode && (
+        <div className="subtitle-batch" role="group" aria-label="批量字幕操作">
+          <span className="subtitle-selected-count" role="status" aria-live="polite">已选 {selectedCount} 条</span>
+          <button
+            type="button"
+            disabled={busy || deletable.length === 0 || selectedCount === deletable.length}
+            onClick={() => setSelectedIds(deletable.map(block => block.id))}
+          >
+            全选
+          </button>
+          <button type="button" disabled={selectedCount === 0} onClick={() => setSelectedIds([])}>取消全选</button>
+          <button
+            type="button"
+            className="subtitle-batch-delete"
+            disabled={busy || selectedCount === 0}
+            onClick={() => { deleteSubtitleBlocks(selectedIds); setSelectedIds([]) }}
+          >
+            删除所选
+          </button>
+          <button type="button" onClick={exitBatch}>取消</button>
+        </div>
+      )}
       {busy && (
         <div className="subtitle-progress" role="group" aria-label="字幕识别">
           <span className="subtitle-status" role="status" aria-live="polite">
@@ -110,6 +173,9 @@ export function SubtitleTrack() {
               timing={timing}
               frameIndex={state.gifFrameIndex}
               busy={busy}
+              batchMode={batchMode}
+              selected={selected.has(block.id)}
+              onToggleSelected={() => toggleSelected(block.id)}
             />
           ))}
         </ul>
@@ -125,6 +191,9 @@ function SubtitleRow({
   timing,
   frameIndex,
   busy,
+  batchMode,
+  selected,
+  onToggleSelected,
 }: {
   block: SubtitleBlock
   index: number
@@ -132,6 +201,9 @@ function SubtitleRow({
   timing: Timing
   frameIndex: number
   busy: boolean
+  batchMode: boolean
+  selected: boolean
+  onToggleSelected: () => void
 }) {
   const frameCount = frames.length
   const startFrame = clamp(Math.floor(block.startFrame), 0, Math.max(0, frameCount - 1))
@@ -211,27 +283,46 @@ function SubtitleRow({
 
   return (
     <li
-      className={`subtitle-item${active ? ' is-active' : ''}${deleted ? ' is-deleted' : ''}`}
+      className={`subtitle-item${active ? ' is-active' : ''}${deleted ? ' is-deleted' : ''}${selected ? ' is-selected' : ''}`}
       aria-current={active ? 'true' : undefined}
     >
       <div className="subtitle-line">
-        <button
-          type="button"
-          className="subtitle-time"
-          aria-label={`字幕 ${number} 时间范围 ${formatSeconds(startMs)} 到 ${formatSeconds(endMs)} 秒，点击定位`}
-          title="定位到这条字幕"
-          disabled={busy}
-          onClick={() => selectGifSubtitle(block.id)}
-        >
-          {formatSeconds(startMs)}–{formatSeconds(endMs)}
-        </button>
+        {batchMode && (
+          <input
+            type="checkbox"
+            className="subtitle-check"
+            aria-label={`选择字幕 ${number}`}
+            checked={selected}
+            disabled={busy || deleted}
+            onChange={onToggleSelected}
+          />
+        )}
+        {batchMode ? (
+          <span
+            className="subtitle-time subtitle-time-static"
+            aria-label={`字幕 ${number} 时间范围 ${formatSeconds(startMs)} 到 ${formatSeconds(endMs)} 秒`}
+          >
+            {formatSeconds(startMs)}–{formatSeconds(endMs)}
+          </span>
+        ) : (
+          <button
+            type="button"
+            className="subtitle-time"
+            aria-label={`字幕 ${number} 时间范围 ${formatSeconds(startMs)} 到 ${formatSeconds(endMs)} 秒，点击定位`}
+            title="定位到这条字幕"
+            disabled={busy}
+            onClick={() => selectGifSubtitle(block.id)}
+          >
+            {formatSeconds(startMs)}–{formatSeconds(endMs)}
+          </button>
+        )}
         <input
           className="subtitle-text"
           type="text"
           aria-label={`字幕 ${number} 整句文字`}
           placeholder={deleted ? '已删除' : '输入字幕'}
           value={textDraft}
-          disabled={busy}
+          disabled={busy || batchMode}
           onFocus={() => selectGifSubtitle(block.id)}
           onChange={changeText}
           onCompositionStart={() => { composing.current = true }}
@@ -241,22 +332,24 @@ function SubtitleRow({
             if (textDraft !== block.targetText) setTargetText(block.id, textDraft)
           }}
         />
-        <button
-          type="button"
-          className="subtitle-icon subtitle-delete"
-          aria-label={`删除字幕 ${number} 原文`}
-          title="删除原文"
-          disabled={busy || deleted}
-          onClick={deleteOriginal}
-        >
-          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M4 7h16" />
-            <path d="M10 4h4a1 1 0 0 1 1 1v2H9V5a1 1 0 0 1 1-1z" />
-            <path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12" />
-            <path d="M10 11v6M14 11v6" />
-          </svg>
-        </button>
-        {changed && (
+        {!batchMode && (
+          <button
+            type="button"
+            className="subtitle-icon subtitle-delete"
+            aria-label={`删除字幕 ${number} 原文`}
+            title="删除原文"
+            disabled={busy || deleted}
+            onClick={deleteOriginal}
+          >
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 7h16" />
+              <path d="M10 4h4a1 1 0 0 1 1 1v2H9V5a1 1 0 0 1 1-1z" />
+              <path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12" />
+              <path d="M10 11v6M14 11v6" />
+            </svg>
+          </button>
+        )}
+        {!batchMode && changed && (
           <button
             type="button"
             className="subtitle-icon subtitle-restore"
@@ -271,40 +364,42 @@ function SubtitleRow({
             </svg>
           </button>
         )}
-        <details className="subtitle-time-details">
-          <summary aria-label={`字幕 ${number} 调整时间`} title="调整时间">…</summary>
-          <div className="subtitle-time-row">
-            <label>
-              开始
-              <input
-                type="number"
-                inputMode="decimal"
-                min={0}
-                step={0.01}
-                aria-label={`字幕 ${number} 开始秒数`}
-                value={startDraft}
-                disabled={busy}
-                onChange={(event) => setStartDraft(event.currentTarget.value)}
-                onBlur={commitStart}
-              />
-            </label>
-            <span aria-hidden="true">–</span>
-            <label>
-              结束
-              <input
-                type="number"
-                inputMode="decimal"
-                min={0}
-                step={0.01}
-                aria-label={`字幕 ${number} 结束秒数`}
-                value={endDraft}
-                disabled={busy}
-                onChange={(event) => setEndDraft(event.currentTarget.value)}
-                onBlur={commitEnd}
-              />
-            </label>
-          </div>
-        </details>
+        {!batchMode && (
+          <details className="subtitle-time-details">
+            <summary aria-label={`字幕 ${number} 调整时间`} title="调整时间">…</summary>
+            <div className="subtitle-time-row">
+              <label>
+                开始
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  min={0}
+                  step={0.01}
+                  aria-label={`字幕 ${number} 开始秒数`}
+                  value={startDraft}
+                  disabled={busy}
+                  onChange={(event) => setStartDraft(event.currentTarget.value)}
+                  onBlur={commitStart}
+                />
+              </label>
+              <span aria-hidden="true">–</span>
+              <label>
+                结束
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  min={0}
+                  step={0.01}
+                  aria-label={`字幕 ${number} 结束秒数`}
+                  value={endDraft}
+                  disabled={busy}
+                  onChange={(event) => setEndDraft(event.currentTarget.value)}
+                  onBlur={commitEnd}
+                />
+              </label>
+            </div>
+          </details>
+        )}
       </div>
     </li>
   )

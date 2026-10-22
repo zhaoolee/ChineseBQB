@@ -321,6 +321,52 @@ it('automatically builds the GIF subtitle track and erases only the cue interval
   expect(JSON.stringify(s.editor.getState().history)).not.toContain('imageData')
 })
 
+it('deletes selected subtitle cues atomically and restores all with undo/redo', async () => {
+  const decoded = await mocks.decode()
+  decoded.frames[1].imageData.data[0] = 1
+  decoded.frames[2].imageData.data[0] = 2
+  mocks.decode.mockResolvedValue(decoded)
+  const first = await mocks.recognize()
+  mocks.recognize.mockResolvedValueOnce([{ ...first[0], originalText: '甲', targetText: '甲' }])
+    .mockResolvedValueOnce([{ ...first[0], originalText: '乙', targetText: '乙' }])
+    .mockResolvedValueOnce([{ ...first[0], originalText: '丙', targetText: '丙' }])
+  const s = await loaded()
+  const cues = s.editor.getState().history.present.blocks
+  expect(cues.map(cue => cue.originalText)).toEqual(['甲', '乙', '丙'])
+  const keep = cues[1]
+  s.focusCell(cues[0].id, 0, ['甲'])
+  const before = s.editor.getState().history
+  expect(s.editor.getState().cellFocus).toMatchObject({ id: cues[0].id })
+
+  expect(s.deleteSubtitleBlocks([cues[2].id, cues[0].id, cues[0].id])).toBe(2)
+  const after = s.editor.getState().history
+  expect(s.editor.getState().cellFocus).toBeNull()
+  expect(after.past).toHaveLength(before.past.length + 1)
+  expect(after.present.blocks).toHaveLength(3)
+  expect(after.present.blocks[1]).toBe(keep)
+  for (const index of [0, 2]) {
+    expect(after.present.blocks[index]).toMatchObject({
+      id: cues[index].id,
+      originalText: cues[index].originalText,
+      startFrame: cues[index].startFrame,
+      endFrame: cues[index].endFrame,
+      framePolygons: cues[index].framePolygons,
+      polygon: cues[index].polygon,
+      targetText: '',
+    })
+  }
+  expect(after.present.blocks[0].applyLocal).toBe(true)
+
+  // Already-empty rows and unknown ids are ignored without creating another history entry.
+  expect(s.deleteSubtitleBlocks([cues[0].id, 'missing'])).toBe(0)
+  expect(s.editor.getState().history).toBe(after)
+
+  s.undo()
+  expect(s.editor.getState().history.present).toBe(before.present)
+  s.redo()
+  expect(s.editor.getState().history.present).toBe(after.present)
+})
+
 it('keeps the old subtitle edits if a whole-GIF scan fails or is cancelled by editing', async () => {
   const s = await loaded()
   const id = s.visibleEdits().blocks[0].id

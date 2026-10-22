@@ -400,6 +400,27 @@ export function setTargetText(id: string, text: string) {
   }))
 }
 
+export function deleteSubtitleBlocks(ids: readonly string[]): number {
+  const targets = new Set(ids)
+  if (!targets.size) return 0
+  if (state.ocrStatus === 'loading') skipOcr()
+  const present = state.history.present
+  const deletedIds = new Set<string>()
+  const blocks = present.blocks.map(block => {
+    if (!targets.has(block.id) || block.startFrame === undefined || block.targetText === '') return block
+    deletedIds.add(block.id)
+    // Same retarget path as the single-row delete: keep OCR geometry/timing and only
+    // replace the caption with an empty target so the original pixels are erased.
+    return retarget({ ...block, targetText: '' })
+  })
+  if (!deletedIds.size) return 0
+  const selectedId = present.selectedId && deletedIds.has(present.selectedId) ? null : present.selectedId
+  const cellFocus = state.cellFocus && deletedIds.has(state.cellFocus.id) ? null : state.cellFocus
+  const history = historyCommit(state.history, { ...present, blocks, selectedId })
+  if (history !== state.history) update({ gifPlaying: false, cellFocus, history })
+  return deletedIds.size
+}
+
 export function setBlockStyle(id: string, patch: Partial<TextStyle>) {
   commitEdit((current) => ({
     ...current,
