@@ -7,7 +7,7 @@ import { assertEditableFile, sniffImage } from '../lib/image'
 import { cancelOcrRecognition, recognize, scaleOcrBlocks } from '../lib/ocr'
 import { prepareOcrInput } from '../lib/ocr-input'
 import type { OcrProgress } from '../lib/ocr-progress'
-import { addedTextStyle, defaultTextStyle, liveRedraw } from '../lib/plan'
+import { addedTextStyle, defaultTextStyle, hasRenderedEdits, liveRedraw } from '../lib/plan'
 import type { CatalogImage, FreeText, OcrBlock, Point, TextStyle } from '../types'
 
 export type Editable = {
@@ -100,7 +100,8 @@ function emit() {
 function update(patch: Partial<EditorSnapshot>) {
   if (patch.ocrStatus && patch.ocrStatus !== 'loading') patch = { ...patch, ocrProgress: null }
   if (patch.imageLoading === false) patch = { ...patch, loadingPreview: null }
-  state = { ...state, ...patch }
+  const next = { ...state, ...patch }
+  state = next.comparing && !canCompare(next) ? { ...next, comparing: false } : next
   emit()
 }
 
@@ -302,9 +303,9 @@ export async function runOcr() {
   }
 }
 
-export function select(id: string | null) {
+export function select(id: string | null, options?: { clearCellFocus?: boolean }) {
   const present = state.history.present
-  const cellFocus = state.cellFocus?.id === id ? state.cellFocus : null
+  const cellFocus = !options?.clearCellFocus && state.cellFocus?.id === id ? state.cellFocus : null
   update({ gifPlaying: false, cellFocus, history: { ...state.history, present: { ...present, selectedId: id } } })
 }
 
@@ -548,6 +549,48 @@ export function visibleEdits(snapshot = state): Editable {
   return editsAtFrame(snapshot.history.present, snapshot.gifFrameIndex)
 }
 
+type CompareKey = {
+  blocks: Editable['blocks']
+  freeTexts: Editable['freeTexts']
+  segments: Editable['segments']
+  frame: number
+  image: ImageData
+}
+
+let compareCache: { key: CompareKey; value: boolean } | null = null
+
+/**
+ * Single source of truth for "is there a visible edit to compare against?"
+ * The toolbar button, the comparison layer and the editing overlay all use it.
+ * A freshly recognized, untouched frame has no patches, so this stays cheap:
+ * plan.ts skips pixel sampling for blocks whose text did not change.
+ */
+export function canCompare(snapshot: EditorSnapshot = state): boolean {
+  const image = snapshot.image?.imageData
+  if (!image) return false
+  const present = snapshot.history.present
+  const key: CompareKey = {
+    blocks: present.blocks,
+    freeTexts: present.freeTexts,
+    segments: present.segments,
+    frame: snapshot.gifFrameIndex,
+    image,
+  }
+  if (snapshot === state && compareCache && sameCompareKey(compareCache.key, key)) return compareCache.value
+  const edits = visibleEdits(snapshot)
+  const value = hasRenderedEdits(edits.blocks, edits.freeTexts, image)
+  if (snapshot === state) compareCache = { key, value }
+  return value
+}
+
+function sameCompareKey(cached: CompareKey, key: CompareKey): boolean {
+  return cached.blocks === key.blocks
+    && cached.freeTexts === key.freeTexts
+    && cached.segments === key.segments
+    && cached.frame === key.frame
+    && cached.image === key.image
+}
+
 function invalidateOcr() {
   ocrToken += 1
   cancelOcrRecognition()
@@ -588,7 +631,15 @@ export function splitGifAtPlayhead() {
   update({ gifPlaying: false, cellFocus: null, history: historyCommit(state.history, present) })
 }
 
-export function toggleComparison() { update({ comparing: !state.comparing }) }
+/** Comparing needs something on screen. Without a live patch or non-empty free text there is nothing to compare. */
+export function toggleComparison() {
+  if (state.comparing) {
+    update({ comparing: false })
+    return
+  }
+  if (!canCompare()) return
+  update({ comparing: true })
+}
 
 function retarget(block: OcrBlock): OcrBlock {
   return { ...block, ...liveRedraw(block, state.image?.imageData ?? null) }

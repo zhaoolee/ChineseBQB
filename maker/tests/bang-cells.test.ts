@@ -26,6 +26,41 @@ beforeEach(() => vi.useFakeTimers())
 afterEach(() => vi.useRealTimers())
 
 describe('cell editing session', () => {
+  it('synchronizes whole-line canvas input with cells without duplicating the old suffix', () => {
+    const editor = harness('原来的文字')
+    editor.session.replaceText('画布改字', false)
+    vi.advanceTimersByTime(APPLY_DELAY_MS)
+    expect(editor.commits).toEqual(['画布改字'])
+    editor.session.syncText('格子改字')
+    expect(editor.cells()).toBe('格子改字')
+    editor.session.replaceText('😀你好', false)
+    editor.session.blur()
+    expect(editor.commits).toEqual(['画布改字', '😀你好'])
+  })
+
+  it('holds canvas IME input and takes the final value after a stale compositionend', () => {
+    const editor = harness('原文')
+    editor.session.compositionStart()
+    editor.session.replaceText('ni', true)
+    vi.advanceTimersByTime(APPLY_DELAY_MS * 3)
+    expect(editor.commits).toEqual([])
+    editor.session.replaceText('ni', false)
+    editor.session.replaceText('你好', false)
+    vi.advanceTimersByTime(APPLY_DELAY_MS)
+    expect(editor.commits).toEqual(['你好'])
+    expect(editor.cells()).toBe('你好')
+  })
+
+  it('cancels a pending canvas change when shared undo or another editor supplies new text', () => {
+    const editor = harness('原文')
+    editor.session.replaceText('尚未提交', false)
+    editor.session.syncText('撤销后的文字')
+    editor.session.close()
+    vi.advanceTimersByTime(APPLY_DELAY_MS)
+    expect(editor.commits).toEqual([])
+    expect(editor.cells()).toBe('撤销后的文字')
+  })
+
   it('commits when iOS ends a composition without firing compositionend', () => {
     const editor = harness('说人话')
     editor.session.compositionStart()

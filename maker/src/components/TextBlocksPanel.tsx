@@ -1,8 +1,7 @@
-import { useState } from 'react'
 import { addFreeText, focusCell, resetDocument, runOcr, select, setFreeText, skipOcr, visibleEdits, type CellFocus } from '../state/editor-store'
 import type { FreeText } from '../types'
 import { BangCells } from './BangCells'
-import { EditControls } from './EditControls'
+import { CustomStyleControls, StylePresetSelect } from './EditControls'
 import { TextBlockItem } from './TextBlockItem'
 import { useEditor } from './use-editor'
 import { OcrProgressIndicator } from './OcrProgress'
@@ -58,28 +57,12 @@ export function TextBlocksPanel() {
 }
 
 function FreeTextRow({ layer, selected, cellFocus }: { layer: FreeText; selected: boolean; cellFocus: CellFocus | null }) {
-  const [open, setOpen] = useState(false)
   return (
     <article
       className={selected ? 'block bang-block selected' : 'block bang-block'}
       onClick={() => select(layer.id)}
     >
       <div className="free-line">
-        <button
-          type="button"
-          className={open ? 'free-expand open' : 'free-expand'}
-          aria-expanded={open}
-          aria-label={open ? '收起编辑' : '展开编辑'}
-          onClick={(event) => {
-            event.stopPropagation()
-            select(layer.id)
-            setOpen((value) => !value)
-          }}
-        >
-          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
-            <path d="M6 3.5 L11 8 L6 12.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
         <BangCells
           text={layer.text}
           cellFocus={cellFocus}
@@ -87,8 +70,9 @@ function FreeTextRow({ layer, selected, cellFocus }: { layer: FreeText; selected
           onActivate={() => select(layer.id)}
           onFocusCell={(index, cells) => focusCell(layer.id, index, cells)}
         />
+        <StylePresetSelect layer={layer} />
       </div>
-      {open && <EditControls layer={layer} />}
+      <CustomStyleControls layer={layer} />
     </article>
   )
 }

@@ -6,15 +6,19 @@ import { segmentGraphemes } from '../lib/grapheme'
 import { collectPatches } from '../lib/plan'
 import { paintComposite } from '../lib/paint'
 import { BeforeAfter } from './BeforeAfter'
+import { CanvasTextInput } from './CanvasTextInput'
 import { LoadingPreview } from './LoadingPreview'
 import {
   beginGesture,
+  canCompare,
   deleteFocusedCell,
   endGesture,
   moveFreeText,
   openLocalFile,
   resizeFreeText,
   select,
+  setFreeText,
+  setTargetText,
   updateManualPolygon,
   editor,
   visibleEdits,
@@ -28,8 +32,33 @@ export function EditorCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const resizeObserver = useRef<ResizeObserver | null>(null)
   const [frame, setFrame] = useState({ width: 0, height: 0 })
+  const [editingId, setEditingId] = useState<string | null>(null)
   const image = state.image
   const present = useMemo(() => visibleEdits(state), [state.history.present, state.gifFrameIndex])
+  // Same judgement as the toolbar: comparison only exists while this frame really has edits.
+  const comparable = canCompare(state)
+  const comparing = state.comparing && comparable
+  const selectedText = useMemo(() => {
+    const block = present.blocks.find((item) => item.id === present.selectedId)
+    if (block) return {
+      id: block.id, text: block.targetText, style: block.textStyle,
+      bounds: polygonBounds(block.manualPolygon ?? block.polygon), kind: 'block' as const,
+    }
+    const layer = present.freeTexts.find((item) => item.id === present.selectedId)
+    return layer ? {
+      id: layer.id, text: layer.text, style: layer.textStyle,
+      bounds: freeTextBox(layer), kind: 'free' as const,
+    } : null
+  }, [present])
+  const editing = editingId === selectedText?.id && !comparing && !state.gifPlaying
+  useEffect(() => {
+    setEditingId(null)
+  }, [image?.source.id, state.gifFrameIndex, comparing, state.gifPlaying, present.selectedId])
+
+  function editText(id: string) {
+    select(id, { clearCellFocus: true })
+    setEditingId(id)
+  }
   // boot() 会先等素材索引再打开 ?src=，这段时间画布是空的；索引失败或链接无效时立刻退出提示。
   const waitingForCatalog = state.catalogLoading && Boolean(new URLSearchParams(location.search).get('src'))
     && !state.image && !state.imageError
@@ -91,6 +120,12 @@ export function EditorCanvas() {
     return { width: image.naturalWidth * fit, height: image.naturalHeight * fit }
   }, [frame, image])
 
+  const actionAnchor = selectedText ? {
+    x: (selectedText.bounds.minX + selectedText.bounds.maxX) / 2,
+    y: selectedText.bounds.minY,
+    below: image ? selectedText.bounds.minY < image.naturalHeight * 0.14 : false,
+  } : null
+
   if (state.imageLoading || waitingForCatalog) {
     const pending = state.loadingPreview
     return <LoadingPreview
@@ -142,6 +177,15 @@ export function EditorCanvas() {
       <div
         className="sheet"
         style={{ width: fitted.width, height: fitted.height, transform: `translate(${state.view.panX}px, ${state.view.panY}px) scale(${state.view.scale})` }}
+        onDoubleClick={(event) => {
+          const target = event.target as HTMLElement
+          if (target.closest('button, input') || comparing || state.gifPlaying) return
+          const point = eventPoint(event)
+          const layer = [...present.freeTexts].reverse().find((item) => pointInTextBox(point, freeTextBox(item)))
+          const block = [...present.blocks].reverse().find((item) => pointInPolygon(point, item.manualPolygon ?? item.polygon))
+          const id = layer?.id ?? block?.id
+          if (id) editText(id)
+        }}
         onPointerDown={(event) => {
           const target = event.target as HTMLElement
           if (target.dataset.handle || target.dataset.layer) return
@@ -218,14 +262,21 @@ export function EditorCanvas() {
         }}
       >
         <canvas ref={canvasRef} width={image.naturalWidth} height={image.naturalHeight} />
-        <svg className="overlay" style={{ display: state.comparing || state.gifPlaying ? 'none' : undefined }} viewBox={`0 0 ${image.naturalWidth} ${image.naturalHeight}`}>
+        <svg className="overlay" style={{ display: comparing || state.gifPlaying ? 'none' : undefined }} viewBox={`0 0 ${image.naturalWidth} ${image.naturalHeight}`}>
           {present.blocks.map((block) => {
             const polygon = block.manualPolygon ?? block.polygon
             const selected = present.selectedId === block.id
             const points = polygon.map((point) => `${point.x},${point.y}`).join(' ')
             return (
               <g key={block.id}>
-                <polygon points={points} className={selected ? 'box selected' : 'box'} />
+                <polygon
+                  points={points}
+                  className={selected ? 'box selected' : 'box'}
+                  style={{ pointerEvents: editing && editingId === block.id ? 'none' : undefined }}
+                  onDoubleClick={(event) => { event.stopPropagation(); editText(block.id) }}
+                >
+                  <title>双击改字</title>
+                </polygon>
                 {selected && polygon.map((point, index) => (
                   <circle
                     key={index}
@@ -261,6 +312,8 @@ export function EditorCanvas() {
                   width={box.width}
                   height={box.height}
                   className="box selected text-box"
+                  style={{ pointerEvents: editing && editingId === layer.id ? 'none' : undefined }}
+                  onDoubleClick={(event) => { event.stopPropagation(); editText(layer.id) }}
                   onPointerDown={(event) => {
                     event.stopPropagation()
                     select(layer.id)
@@ -307,26 +360,49 @@ export function EditorCanvas() {
             )
           })}
         </svg>
-        {!state.comparing && !state.gifPlaying && deleteAnchor && (
-          <button
-            type="button"
-            className={deleteAnchor.below ? 'selection-delete below' : 'selection-delete'}
+        {!comparing && !state.gifPlaying && selectedText && actionAnchor && !editing && (
+          <div
+            className={`selection-actions${actionAnchor.below ? ' below' : ''}`}
             data-layer="true"
             style={{
-              left: `${(deleteAnchor.x / image.naturalWidth) * 100}%`,
-              top: `${(deleteAnchor.y / image.naturalHeight) * 100}%`,
+              left: `${Math.max(13, Math.min(87, actionAnchor.x / image.naturalWidth * 100))}%`,
+              top: `${(actionAnchor.below ? selectedText.bounds.maxY : actionAnchor.y) / image.naturalHeight * 100}%`,
               ['--inv-scale' as string]: String(1 / state.view.scale),
             }}
             onPointerDown={(event) => event.stopPropagation()}
-            onClick={(event) => {
-              event.stopPropagation()
-              deleteFocusedCell()
-            }}
           >
-            删除
-          </button>
+            <button
+              type="button"
+              aria-label="编辑选中文字"
+              title="改字（也可双击文字框）"
+              onClick={(event) => { event.stopPropagation(); editText(selectedText.id) }}
+            >改字</button>
+            {deleteAnchor && <button
+              type="button"
+              className="selection-delete"
+              onClick={(event) => { event.stopPropagation(); deleteFocusedCell() }}
+            >删除</button>}
+          </div>
         )}
-        {state.comparing && image.imageData && <BeforeAfter imageData={image.imageData} />}
+        {editing && selectedText && (
+          <CanvasTextInput
+            key={selectedText.id}
+            text={selectedText.text}
+            style={{
+              left: `${selectedText.bounds.minX / image.naturalWidth * 100}%`,
+              top: `${selectedText.bounds.minY / image.naturalHeight * 100}%`,
+              width: `${(selectedText.bounds.maxX - selectedText.bounds.minX) / image.naturalWidth * 100}%`,
+              height: `${(selectedText.bounds.maxY - selectedText.bounds.minY) / image.naturalHeight * 100}%`,
+              fontSize: Math.max(16, selectedText.style.fontSize * fitted.width / image.naturalWidth),
+              fontFamily: selectedText.style.fontFamily,
+              fontWeight: selectedText.style.weight ?? 700,
+            }}
+            onCommit={(text) => selectedText.kind === 'block'
+              ? setTargetText(selectedText.id, text) : setFreeText(selectedText.id, text)}
+            onDone={() => setEditingId(null)}
+          />
+        )}
+        {comparing && image.imageData && <BeforeAfter imageData={image.imageData} />}
       </div>
     </div>
   )

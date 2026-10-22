@@ -39,6 +39,7 @@ export function App() {
   }, [])
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
+      if (event.isComposing) return
       if (event.key === 'Escape' && pendingPaste) {
         setPendingPaste(null)
         return

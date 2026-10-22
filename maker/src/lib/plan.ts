@@ -3,7 +3,7 @@ import { blockLayout, estimateFontSize, paddedCharPolygon, targetGraphemePolygon
 import { diffText } from './diff'
 import { segmentGraphemes } from './grapheme'
 import { polygonBounds } from './geometry'
-import type { EditSafety, OcrBlock, Point, TextChange, TextStyle } from '../types'
+import type { EditSafety, FreeText, OcrBlock, Point, TextChange, TextStyle } from '../types'
 
 export type EditRegion = {
   change: TextChange
@@ -220,8 +220,25 @@ export function liveRedraw(block: OcrBlock, image: ImageData | null): Pick<OcrBl
   return { lineRedraw, applyLocal: changed, textStyle }
 }
 
+/** A block can only paint pixels when it is applied and its text actually differs; a full-line redraw always paints. */
+function mayPaint(block: OcrBlock): boolean {
+  return block.applyLocal && (block.lineRedraw || (block.enabled && block.originalText !== block.targetText))
+}
+
 export function collectPatches(blocks: OcrBlock[], image: ImageData) {
-  return blocks.flatMap((block) => activePatches(block, planBlockEdit(block, image), image))
+  return blocks.flatMap((block) => (mayPaint(block) ? activePatches(block, planBlockEdit(block, image), image) : []))
+}
+
+/**
+ * Whether the current frame would render anything different from the original.
+ * The original text and pixel sampling are skipped for untouched OCR blocks, so a
+ * freshly recognized picture never walks its whole line set just to hide a button.
+ */
+export function hasRenderedEdits(blocks: OcrBlock[], freeTexts: FreeText[], image: ImageData | null): boolean {
+  if (freeTexts.some((layer) => layer.text.trim().length > 0)) return true
+  if (!image) return false
+  const candidates = blocks.filter(mayPaint)
+  return candidates.length > 0 && collectPatches(candidates, image).length > 0
 }
 
 export function activePatches(block: OcrBlock, plan: EditPlan, image?: ImageData | null) {

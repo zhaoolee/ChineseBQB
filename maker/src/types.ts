@@ -1,5 +1,10 @@
 export type Point = { x: number; y: number }
 
+export type FreeTextPresetId = 'white-outline-black' | 'black-outline-white' | 'black-outline-yellow' | 'white-outline-red'
+
+/** A preset id, or 'custom' once the user opens the manual style controls. */
+export type FreeTextStylePreset = FreeTextPresetId | 'custom'
+
 export type TextStyle = {
   fontFamily: string
   fontSize: number
@@ -9,6 +14,8 @@ export type TextStyle = {
   /** Faint outline and shadow, used when the picture has no text to copy a color from. */
   softOutline?: boolean
   weight?: number | string
+  /** Chosen free-text style. Drawing still reads fill/stroke only; font size drags keep it. */
+  preset?: FreeTextStylePreset
 }
 
 export type OcrBlock = {

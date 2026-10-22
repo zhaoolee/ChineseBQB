@@ -1,14 +1,34 @@
+import { FREE_TEXT_PRESETS, freeTextStyleChoice, freeTextStylePatch, type FreeTextStyleChoice } from '../lib/free-text-presets'
 import { setFreeStyle } from '../state/editor-store'
 import type { FreeText, TextStyle } from '../types'
 
-export function EditControls({ layer }: { layer: FreeText }) {
+/** Picks a preset for a free text layer. It stays visible next to the text cells. */
+export function StylePresetSelect({ layer }: { layer: FreeText }) {
+  const choice = freeTextStyleChoice(layer.textStyle)
+  return (
+    <select
+      className="free-preset"
+      aria-label="样式"
+      value={choice}
+      onChange={(event) => setFreeStyle(layer.id, freeTextStylePatch(event.target.value as FreeTextStyleChoice))}
+    >
+      {choice === 'current' && <option value="current">当前样式</option>}
+      {FREE_TEXT_PRESETS.map((preset) => <option key={preset.id} value={preset.id}>{preset.label}</option>)}
+      <option value="custom">自定义</option>
+    </select>
+  )
+}
+
+/** Manual size, color and outline controls. Only custom styles get this full-width row. */
+export function CustomStyleControls({ layer }: { layer: FreeText }) {
   const style = layer.textStyle
+  if (freeTextStyleChoice(style) !== 'custom') return null
   const update = (patch: Partial<TextStyle>) => {
     setFreeStyle(layer.id, patch)
   }
   const hasStrokeWidth = (style.strokeWidth ?? 0) > 0
   return (
-    <div className="free-editor style-row">
+    <div className="style-row free-custom">
       <label>字号 <input type="number" min={8} max={400} value={style.fontSize} onChange={(event) => update({ fontSize: Number(event.target.value) })} /></label>
       <label>颜色 <input type="color" value={toColor(style.fill, '#161616')} onChange={(event) => update({ fill: event.target.value })} /></label>
       <label>描边 <input type="color" value={toColor(style.stroke, '#000000')} onChange={(event) => update({ stroke: event.target.value, ...(hasStrokeWidth ? {} : { strokeWidth: 2 }), softOutline: false })} /></label>

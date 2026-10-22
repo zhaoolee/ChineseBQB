@@ -40,7 +40,7 @@ h2 { margin: 0; font-size: 16px; }
 .sheet, .sheet * { -webkit-user-select: none; user-select: none; -webkit-user-drag: none; }
 .sheet canvas, .sheet svg, .sheet .gif-preview { position: absolute; inset: 0; width: 100%; height: 100%; }
 .sheet .gif-preview { pointer-events: none; }
-.overlay { pointer-events: none; }
+.overlay { pointer-events: none; z-index: 3; }
 .box { fill: transparent; stroke: #c4552a; stroke-width: 2; pointer-events: auto; }
 .box.selected { stroke: #6f4219; stroke-width: 3; }
 .handle { fill: #fff8ed; stroke: #6f4219; stroke-width: 2; pointer-events: auto; cursor: nwse-resize; }
@@ -48,6 +48,41 @@ h2 { margin: 0; font-size: 16px; }
 .handle.ew { cursor: ew-resize; }
 .handle.nesw { cursor: nesw-resize; }
 .text-box { cursor: move; }
+.sheet .canvas-text-input {
+  position: absolute;
+  z-index: 2;
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0 4px;
+  border: 2px solid #6f4219;
+  border-radius: 3px;
+  background: #fff8ed;
+  color: #3f2f22;
+  text-align: center;
+  -webkit-user-select: text;
+  user-select: text;
+  touch-action: auto;
+}
+.selection-actions {
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: max-content;
+  transform-origin: center bottom;
+  transform: translate(-50%, calc(-100% - 10px)) scale(var(--inv-scale, 1));
+}
+.selection-actions button {
+  padding: 4px 8px;
+  min-height: 28px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.selection-actions.below {
+  transform-origin: center top;
+  transform: translate(-50%, 10px) scale(var(--inv-scale, 1));
+}
 .asset-sheet.with-export { padding-top: 12px; }
 .preview-export {
   position: absolute;
@@ -309,25 +344,10 @@ h2 { margin: 0; font-size: 16px; }
 .block.selected { border-color: #6f4219; }
 .bang-block { border: none; background: transparent; padding: 2px 0; box-shadow: none; }
 .bang-block.selected { border-color: transparent; }
-.free-line { display: flex; align-items: flex-start; gap: 4px; }
-.free-line .bang { flex: 1; min-width: 0; }
-.free-expand {
-  flex: none;
-  width: 22px;
-  height: 22px;
-  min-height: 22px;
-  margin-top: 11px;
-  padding: 0;
-  border: none;
-  background: transparent;
-  color: #8d7761;
-  box-shadow: none;
-  display: grid;
-  place-items: center;
-}
-.free-expand svg { display: block; transition: transform 0.15s ease; }
-.free-expand.open svg { transform: rotate(90deg); }
-.free-editor { margin-left: 26px; }
+.free-line { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 4px; }
+.free-line .bang { flex: 0 1 auto; min-width: 0; }
+.free-preset { flex: 0 1 130px; width: 130px; min-width: 0; height: 44px; padding: 0 8px; }
+.free-custom { min-width: 0; }
 .bang { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .bang-cell {
   width: 44px;
@@ -364,18 +384,10 @@ h2 { margin: 0; font-size: 16px; }
   box-shadow: none;
 }
 .selection-delete {
-  position: absolute;
-  z-index: 4;
-  transform: translate(-50%, calc(-100% - 6px)) scale(var(--inv-scale, 1));
-  transform-origin: center bottom;
   background: #6f4219;
   color: #fff8ed;
   border-color: #6f4219;
   box-shadow: 0 2px 8px rgba(63, 47, 34, 0.28);
-}
-.selection-delete.below {
-  transform: translate(-50%, 6px) scale(var(--inv-scale, 1));
-  transform-origin: center top;
 }
 .block header { display: flex; justify-content: space-between; gap: 8px; }
 .block label, .style-pane label, .pane label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; }
@@ -390,6 +402,7 @@ input, select { border: 1px solid #e4dad1; border-radius: 6px; padding: 8px; bac
 .style-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; }
 .style-row label { flex: 1 1 72px; }
 .style-row input[type="color"] { height: 36px; padding: 4px; }
+.style-row input { min-width: 0; max-width: 100%; }
 .loading { margin: 8px 12px; }
 
 /* OCR progress: five real stages, no time-based percentage. Stays under ~60px tall. */
@@ -437,7 +450,8 @@ input, select { border: 1px solid #e4dad1; border-radius: 6px; padding: 8px; bac
     height: auto;
     max-height: none;
   }
-  /* Expanded gallery owns the upper half; the dock returns when it closes. */
+  /* Expanded gallery owns the whole area under the search/filter bar; the dock returns when it closes. */
+  .maker-app:has(.asset-sheet) { padding-bottom: env(safe-area-inset-bottom, 0px); }
   .canvas-pane:has(.asset-sheet) { flex: 1 1 auto; }
   /* Keep 320px phones free of sideways scroll while the surface still reads as a distinct block. */
   .asset-sheet .gallery-surface { padding: 8px; gap: 8px; }

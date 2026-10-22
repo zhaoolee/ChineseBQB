@@ -69,6 +69,8 @@ export type CellSession = {
    * later edit into a preview-only change that never reaches the document.
    */
   change: (index: number, value: string, isComposing?: boolean) => void
+  /** Whole-line input on the canvas shares the cell editor's IME and commit lifecycle. */
+  replaceText: (value: string, isComposing?: boolean) => void
   compositionStart: () => void
   compositionEnd: (index: number, value: string) => void
   /** Focus left the cells: apply a scheduled change now instead of dropping it with the timer. */
@@ -196,6 +198,13 @@ export function createCellSession(options: CellSessionOptions): CellSession {
       // This value replaces the composed cell, so it is already the normalized text.
       normalize = null
       place(index, value, true)
+    },
+    replaceText(value, isComposing) {
+      if (isComposing === false) trackedComposition = false
+      normalize = null
+      emit([value])
+      if (isComposing ?? trackedComposition) holdPending()
+      else scheduleCommit()
     },
     compositionStart() {
       trackedComposition = true
