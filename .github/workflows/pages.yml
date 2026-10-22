@@ -63,7 +63,7 @@ jobs:
       - name: Build Maker
         run: npm run build --prefix maker
       - name: Install OCR regression browser
-        run: npm exec --prefix maker -- playwright install --with-deps chromium
+        run: npm exec --prefix maker -- playwright install --with-deps chromium webkit
       - name: Verify real OCR and memory recovery before publication
         run: npm run test:browser --prefix maker
       - name: Merge Maker into the Pages artifact
