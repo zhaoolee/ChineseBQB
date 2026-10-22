@@ -2,6 +2,7 @@ import { blockLayout } from './char-layout'
 import { orderQuad, polygonBounds } from './geometry'
 import { defaultTextStyle } from './plan'
 import { runOcrWorker } from './ocr-worker-client'
+import { isOcrMemoryError } from './ocr-memory-policy'
 import type { OcrProgressListener } from './ocr-progress'
 import type { OcrBlock, Point } from '../types'
 
@@ -18,7 +19,7 @@ export function recognize(blob: Blob, isCurrent = () => true, onProgress?: OcrPr
       const items = await runOcrWorker(blob, progress => { if (isCurrent()) onProgress?.(progress) })
       return isCurrent() ? normalizeOcrItems(items) : []
     } catch (error) {
-      if (error instanceof Error && /out of memory|memory access out of bounds|failed to allocate/i.test(error.message)) {
+      if (isOcrMemoryError(error)) {
         throw new Error('识别时内存不足，识别进程已释放；可点「重新识别」，无需刷新页面')
       }
       if (error instanceof Error && error.name === 'TimeoutError') {

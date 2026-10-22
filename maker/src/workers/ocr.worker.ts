@@ -36,6 +36,8 @@ async function sourceToMat(cv: Cv, source: Blob) {
 let engine: Engine | null = null
 let initialization: Promise<Engine> | null = null
 let disposal: Promise<void> | null = null
+let lowMemory = false
+let configured = false
 
 function prepareEngine(): Promise<Engine> {
   if (initialization) return initialization
@@ -53,7 +55,8 @@ function prepareEngine(): Promise<Engine> {
       textDetectionModelAsset: { url: ocrModelUrl(OCR_MODEL_FILES.det) },
       textRecognitionModelName: 'PP-OCRv5_mobile_rec',
       textRecognitionModelAsset: { url: ocrModelUrl(OCR_MODEL_FILES.rec) },
-      textDetLimitType: 'max', textDetLimitSideLen: 640, textDetMaxSideLimit: 640,
+      textDetLimitType: 'max', textDetLimitSideLen: lowMemory ? 480 : 640, textDetMaxSideLimit: lowMemory ? 480 : 640,
+      textDetectionBatchSize: 1,
       textRecognitionBatchSize: 1,
       worker: false, fetch: assets.fetch,
       ortOptions: { backend: 'wasm', numThreads: 1 },
@@ -89,6 +92,12 @@ async function recognize(blob: Blob) {
 let started = false
 let warming = false
 self.onmessage = (event: MessageEvent) => {
+  if (!configured) {
+    configured = true
+    lowMemory = event.data?.lowMemory === true
+    // The pinned SDK build reads this before creating either ONNX session.
+    ;(globalThis as typeof globalThis & { __CHINESEBQB_OCR_LOW_MEMORY__?: boolean }).__CHINESEBQB_OCR_LOW_MEMORY__ = lowMemory
+  }
   if (event.data?.kind === 'warmup') {
     if (started || warming) return
     warming = true

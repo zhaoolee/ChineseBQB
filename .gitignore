@@ -9,6 +9,8 @@
 /.hugo_build.lock
 /public-hugo/
 /maker/dist/
+/maker/test-results/
+/maker/playwright-report/
 
 # Local Python environments and caches.
 /.venv/

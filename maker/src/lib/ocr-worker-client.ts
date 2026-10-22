@@ -1,4 +1,5 @@
 import { isOcrProgress, type OcrProgress, type OcrProgressListener } from './ocr-progress'
+import { isOcrMemoryError, prefersLowMemoryOcr } from './ocr-memory-policy'
 
 export const OCR_WORKER_TIMEOUT_MS = 180_000
 export const OCR_WARM_IDLE_MS = 300_000
@@ -10,6 +11,7 @@ type Recognition = {
 }
 type Session = {
   worker: Worker
+  lowMemory: boolean
   progress: OcrProgress
   request: Recognition | null
   busy: boolean
@@ -20,6 +22,7 @@ type Session = {
 }
 let session: Session | null = null
 let cancellation = 0
+let memoryPressure = false
 
 function interrupted() { return new DOMException('识别已中断，可重新识别', 'AbortError') }
 function timedOut() { return new DOMException('识别超时，请重新识别', 'TimeoutError') }
@@ -33,7 +36,7 @@ function createSession(): Session {
     if (document.visibilityState === 'hidden' && !current.request) current.finish(interrupted())
   }
   const current: Session = {
-    worker, progress: { stage: 'resources' }, request: null, busy: false,
+    worker, lowMemory: memoryPressure || prefersLowMemoryOcr(), progress: { stage: 'resources' }, request: null, busy: false,
     available: Promise.resolve(), release: () => undefined, timer: undefined,
     finish(error, items = []) {
       if (settled) return
@@ -42,6 +45,7 @@ function createSession(): Session {
       if (typeof window !== 'undefined') window.removeEventListener('pagehide', pagehide)
       if (typeof document !== 'undefined') document.removeEventListener('visibilitychange', hidden)
       worker.terminate()
+      if (error && isOcrMemoryError(error)) memoryPressure = true
       if (session === current) session = null
       const request = current.request
       current.request = null
@@ -99,7 +103,7 @@ export function warmOcrWorker() {
   let current: Session | undefined
   try {
     current = createSession()
-    current.worker.postMessage({ kind: 'warmup' })
+    current.worker.postMessage({ kind: 'warmup', lowMemory: current.lowMemory })
   } catch (error) {
     current?.finish(error instanceof Error ? error : new Error(String(error)))
   }
@@ -185,6 +189,24 @@ export function scheduleOcrWarmup(options: OcrWarmupOptions = {}): () => void {
 /** A skipped job drains before the next picture uses the same engine. */
 export async function runOcrWorker(blob: Blob, onProgress?: OcrProgressListener): Promise<unknown[]> {
   const generation = cancellation
+  try {
+    return await runOcrAttempt(blob, onProgress)
+  } catch (error) {
+    if (!isOcrMemoryError(error)) throw error
+    // The failed worker has already terminated. Give its WASM heaps a chance
+    // to be reclaimed, then retry this picture once using bounded inference.
+    let hidden = false
+    const pagehide = () => { hidden = true }
+    if (typeof window !== 'undefined') window.addEventListener('pagehide', pagehide, { once: true })
+    try { await new Promise(resolve => setTimeout(resolve, 150)) }
+    finally { if (typeof window !== 'undefined') window.removeEventListener('pagehide', pagehide) }
+    if (hidden || generation !== cancellation || (typeof document !== 'undefined' && document.visibilityState === 'hidden')) throw interrupted()
+    return runOcrAttempt(blob, onProgress)
+  }
+}
+
+async function runOcrAttempt(blob: Blob, onProgress?: OcrProgressListener): Promise<unknown[]> {
+  const generation = cancellation
   while (session?.busy) {
     await session.available
     if (generation !== cancellation) throw interrupted()
@@ -201,7 +223,7 @@ export async function runOcrWorker(blob: Blob, onProgress?: OcrProgressListener)
       const active = current
       current.timer = setTimeout(() => active.finish(timedOut()), OCR_WORKER_TIMEOUT_MS)
       if (wasWarm) onProgress?.(current.progress)
-      current.worker.postMessage({ kind: 'recognize', blob })
+      current.worker.postMessage({ kind: 'recognize', blob, lowMemory: current.lowMemory })
     } catch (error) {
       const failure = error instanceof Error ? error : new Error(String(error))
       if (current) current.finish(failure)

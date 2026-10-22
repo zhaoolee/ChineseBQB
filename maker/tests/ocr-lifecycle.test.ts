@@ -52,19 +52,17 @@ it('serializes inference, skips stale queued requests, and reuses the same warm 
   expect(worker.terminate).not.toHaveBeenCalled()
 })
 
-it('releases a poisoned WASM backend and retries in a fresh worker', async () => {
+it('automatically retries the same picture after releasing a poisoned WASM backend', async () => {
   const { recognize } = await import('../src/lib/ocr')
-  const failed = recognize(new Blob())
-  const rejection = expect(failed).rejects.toThrow('内存不足')
+  const pending = recognize(new Blob())
   const worker = await nextWorker(1)
   worker.reply({ ok: false, error: { name: 'RangeError', message: 'no available backend found. ERR: [wasm] RangeError: Out of memory' } })
-  await rejection
   expect(worker.terminate).toHaveBeenCalledOnce()
-  const retry = recognize(new Blob())
   const fresh = await nextWorker(2)
   expect(fresh).not.toBe(worker)
+  expect(fresh.postMessage).toHaveBeenCalledWith(expect.objectContaining({lowMemory:true}))
   fresh.reply({ ok: true, items: [{ text: '丢人', score: 1, poly: [[0,0],[80,0],[80,40],[0,40]] }] })
-  expect((await retry)[0].originalText).toBe('丢人')
+  expect((await pending)[0].originalText).toBe('丢人')
   expect(fresh.terminate).not.toHaveBeenCalled()
 })
 
@@ -159,7 +157,7 @@ it('prewarms only one worker and reuses it across pictures', async () => {
   warmOcrWorker()
   const worker = FakeWorker.instances[0]
   expect(FakeWorker.instances).toHaveLength(1)
-  expect(worker.postMessage).toHaveBeenCalledWith({kind: 'warmup'})
+  expect(worker.postMessage).toHaveBeenCalledWith(expect.objectContaining({kind: 'warmup'}))
   worker.reply({kind: 'progress', progress: {stage: 'initialize'}})
   worker.reply({kind: 'ready'})
   cancelOcrRecognition()
@@ -167,7 +165,7 @@ it('prewarms only one worker and reuses it across pictures', async () => {
   const progress = vi.fn()
   const pending = runOcrWorker(new Blob(), progress)
   expect(progress).toHaveBeenCalledWith({stage: 'recognize'})
-  expect(worker.postMessage).toHaveBeenLastCalledWith({kind: 'recognize', blob: expect.any(Blob)})
+  expect(worker.postMessage).toHaveBeenLastCalledWith(expect.objectContaining({kind: 'recognize', blob: expect.any(Blob)}))
   expect(FakeWorker.instances).toHaveLength(1)
   worker.reply({ok: true, items: ['first']})
   await expect(pending).resolves.toEqual(['first'])
@@ -340,4 +338,34 @@ it('still releases a stalled inference after skipping, allowing a fresh retry', 
   expect(FakeWorker.instances).toHaveLength(2)
   FakeWorker.instances[1].reply({ok: true, items: []})
   await expect(next).resolves.toEqual([])
+})
+
+it('limits memory recovery to one retry and leaves a manual retry possible', async () => {
+  const {runOcrWorker} = await import('../src/lib/ocr-worker-client')
+  const pending=runOcrWorker(new Blob())
+  const rejected=expect(pending).rejects.toThrow('Out of memory')
+  FakeWorker.instances[0].reply({ok:false,error:{message:'Out of memory'}})
+  const retry=await nextWorker(2)
+  retry.reply({ok:false,error:{message:'Out of memory'}})
+  await rejected
+  expect(retry.terminate).toHaveBeenCalledOnce()
+  const manual=runOcrWorker(new Blob())
+  const fresh=await nextWorker(3)
+  fresh.reply({ok:true,items:[]})
+  await expect(manual).resolves.toEqual([])
+})
+
+it.each(['cancel','pagehide','hidden'])('does not restart a memory recovery after %s', async kind => {
+  vi.useFakeTimers()
+  const {runOcrWorker,cancelOcrRecognition} = await import('../src/lib/ocr-worker-client')
+  const pending=runOcrWorker(new Blob())
+  const rejected=expect(pending).rejects.toMatchObject({name:'AbortError'})
+  FakeWorker.instances[0].reply({ok:false,error:{message:'Out of memory'}})
+  await vi.advanceTimersByTimeAsync(0)
+  if(kind==='cancel')cancelOcrRecognition()
+  else if(kind==='pagehide')page.dispatchEvent(new Event('pagehide'))
+  else documentState.visibilityState='hidden'
+  await vi.advanceTimersByTimeAsync(150)
+  await rejected
+  expect(FakeWorker.instances).toHaveLength(1)
 })
