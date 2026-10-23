@@ -50,6 +50,33 @@ it('releases an already initialized detection session when recognition initializ
   await expect(initializer(dependencies).call(runner)).rejects.toThrow('Out of memory')
   expect(det.dispose).toHaveBeenCalledOnce()
   expect(runner.detModel).toBeNull()
+  expect(runner).toHaveProperty('ocrPhase', 'recognition-session')
+})
+
+it.each([
+  ['initOpenCvRuntime', 'opencv-initialize'],
+  ['initOrtRuntime', 'onnx-runtime'],
+  ['createDetModel', 'detection-session'],
+  ['createRecModel', 'recognition-session'],
+] as const)('records the exact failing initialization boundary: %s', async (operation, phase) => {
+  const {dependencies,runner} = fixture()
+  const failure = new RangeError('Out of memory')
+  Object.assign(dependencies, {[operation]: vi.fn(async () => { throw failure })})
+  await expect(initializer(dependencies).call(runner)).rejects.toBe(failure)
+  expect(runner).toHaveProperty('ocrPhase', phase)
+})
+
+it('replaces the previous frame phase before converting the next source image', async () => {
+  const start = patched.indexOf('async predict(input, params = {}) {')
+  const end = patched.indexOf('  async disposeModelsOnly()', start)
+  const predict = runInNewContext(`(async function ${patched.slice(start + 'async '.length, end)})`, {
+    nowMs: () => 0, getOcrRuntimeParams: () => ({}), chunkArray: (items: unknown[]) => [items],
+  })
+  const failure = new RangeError('Out of memory')
+  const runner = { cv: {}, ort: {}, detModel: {}, recModel: {}, pipelineConfig: {},
+    ocrPhase: 'recognition-inference', sourceToMat: async () => { throw failure } }
+  await expect(predict.call(runner, {})).rejects.toBe(failure)
+  expect(runner.ocrPhase).toBe('source-conversion')
 })
 
 it.each([false,true])('applies bounded session settings only to low-memory workers: %s', async lowMemory => {

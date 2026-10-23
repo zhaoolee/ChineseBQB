@@ -43,7 +43,7 @@ it('does not report inference or completion when initialization fails', async ()
   mocks.create.mockResolvedValue(engine)
   await import('../src/workers/ocr.worker')
   scope.onmessage!({ data: { kind: 'recognize', blob: new Blob() } } as MessageEvent)
-  await vi.waitFor(() => expect(scope.postMessage).toHaveBeenLastCalledWith({ok: false, error: {name: 'Error', message: 'Model unavailable'}}))
+  await vi.waitFor(() => expect(scope.postMessage).toHaveBeenLastCalledWith({ok: false, error: expect.objectContaining({name: 'Error', message: 'Model unavailable', stage: 'initialize', phase: 'initialize', stack: expect.stringContaining('Model unavailable')})}))
   expect(scope.postMessage.mock.calls.map(([m]) => m.progress?.stage).filter(Boolean)).toEqual(['resources', 'initialize'])
   expect(engine.predict).not.toHaveBeenCalled()
   expect(engine.dispose).toHaveBeenCalledOnce()
@@ -96,7 +96,22 @@ it('disposes a failed warm initialization without trying inference', async () =>
   mocks.create.mockResolvedValue(engine)
   await import('../src/workers/ocr.worker')
   scope.onmessage!({data: {kind: 'warmup'}} as MessageEvent)
-  await vi.waitFor(() => expect(scope.postMessage).toHaveBeenLastCalledWith({ok: false, error: {name: 'Error', message: 'Warm-up failed'}}))
+  await vi.waitFor(() => expect(scope.postMessage).toHaveBeenLastCalledWith({ok: false, error: expect.objectContaining({name: 'Error', message: 'Warm-up failed', stage: 'initialize'})}))
   expect(engine.predict).not.toHaveBeenCalled()
   expect(engine.dispose).toHaveBeenCalledOnce()
+})
+
+it('keeps the failing SDK phase and original stack when a model session cannot allocate', async () => {
+  const failure = new RangeError('Out of memory')
+  const engine = {
+    sourceToMat: vi.fn(), ocrPhase: 'recognition-session', cv: { HEAPU8: new Uint8Array(64) },
+    initialize: vi.fn(async () => { throw failure }), predict: vi.fn(), dispose: vi.fn(async () => undefined),
+  }
+  mocks.create.mockResolvedValue(engine)
+  await import('../src/workers/ocr.worker')
+  scope.onmessage!({data: {kind: 'recognize', blob: new Blob()}} as MessageEvent)
+  await vi.waitFor(() => expect(scope.postMessage).toHaveBeenLastCalledWith({ok: false, error: {
+    name: 'RangeError', message: 'Out of memory', stack: failure.stack,
+    stage: 'initialize', phase: 'recognition-session', openCvHeapBytes: 64,
+  }}))
 })

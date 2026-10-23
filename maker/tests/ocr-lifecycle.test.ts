@@ -14,6 +14,7 @@ let page: EventTarget
 let documentState: EventTarget & { visibilityState: string }
 beforeEach(() => {
   vi.resetModules()
+  vi.spyOn(console, 'error').mockImplementation(() => undefined)
   FakeWorker.instances = []
   page = new EventTarget()
   Object.assign(page, { setTimeout: (callback: () => void, ms: number) => setTimeout(callback, ms), clearTimeout: (id: ReturnType<typeof setTimeout>) => clearTimeout(id) })
@@ -27,7 +28,35 @@ afterEach(async () => {
   cancelOcrRecognition()
   cancelOcrWarmup()
   vi.useRealTimers()
+  vi.restoreAllMocks()
   vi.unstubAllGlobals()
+})
+
+it('retains both allocation failures and the worker stack behind the friendly error', async () => {
+  const { recognize } = await import('../src/lib/ocr')
+  const pending = recognize(new Blob())
+  const result = pending.catch(error => error as Error)
+  const worker = await nextWorker(1)
+  const detail = {name: 'RangeError', message: 'Out of memory',
+    stack: 'RangeError: Out of memory\n    at createRecModel (ocr.js:12:34)',
+    phase: 'recognition-session', openCvHeapBytes: 33554432}
+  worker.reply({kind: 'progress', progress: {stage: 'initialize'}})
+  worker.reply({ok: false, error: detail})
+  const retry = await nextWorker(2)
+  retry.reply({kind: 'progress', progress: {stage: 'initialize'}})
+  retry.reply({ok: false, error: detail})
+  const friendly = await result
+  expect(friendly).toBeInstanceOf(Error)
+  expect((friendly as Error).message).toContain('识别时内存不足')
+  const original = (friendly as Error).cause as Error
+  expect(original.name).toBe('RangeError')
+  expect(original.stack).toBe(detail.stack)
+  expect(original.cause).toEqual({stage: 'initialize', phase: 'recognition-session', openCvHeapBytes: 33554432})
+  expect(console.error).toHaveBeenCalledTimes(2)
+  expect(JSON.parse(vi.mocked(console.error).mock.calls[0][1])).toMatchObject({
+    stage: 'initialize', phase: 'recognition-session', openCvHeapBytes: 33554432,
+    name: 'RangeError', message: 'Out of memory', stack: detail.stack,
+  })
 })
 async function nextWorker(count: number) {
   await vi.waitFor(() => expect(FakeWorker.instances).toHaveLength(count))
@@ -323,6 +352,94 @@ it('releases a successfully used engine after the idle limit', async () => {
   await second
   await vi.advanceTimersByTimeAsync(OCR_WARM_IDLE_MS)
   expect(worker.terminate).toHaveBeenCalledOnce()
+})
+
+it('pauses the next GIF frame in the background instead of allocating another OCR engine', async () => {
+  const {runOcrWorker, cancelOcrRecognition} = await import('../src/lib/ocr-worker-client')
+  const frame = runOcrWorker(new Blob())
+  const worker = FakeWorker.instances[0]
+  documentState.visibilityState = 'hidden'
+  documentState.dispatchEvent(new Event('visibilitychange'))
+  worker.reply({ok:true,items:[]})
+  await frame
+  expect(worker.terminate).toHaveBeenCalledOnce()
+  const nextFrame = runOcrWorker(new Blob()).catch(error => error)
+  await Promise.resolve()
+  const countWhileHidden = FakeWorker.instances.length
+  cancelOcrRecognition()
+  await nextFrame
+  expect(countWhileHidden).toBe(1)
+})
+
+it('resumes a background frame once with a fresh engine when the page becomes visible', async () => {
+  const {runOcrWorker, warmOcrWorker} = await import('../src/lib/ocr-worker-client')
+  documentState.visibilityState = 'hidden'
+  warmOcrWorker()
+  const pending = runOcrWorker(new Blob())
+  await Promise.resolve()
+  expect(FakeWorker.instances).toHaveLength(0)
+  documentState.visibilityState = 'visible'
+  documentState.dispatchEvent(new Event('visibilitychange'))
+  const worker = await nextWorker(1)
+  documentState.dispatchEvent(new Event('visibilitychange'))
+  expect(worker.postMessage).toHaveBeenCalledOnce()
+  worker.reply({ok:true,items:['resumed']})
+  await expect(pending).resolves.toEqual(['resumed'])
+})
+
+it.each(['cancel', 'pagehide'])('discards a background frame on %s without resurrecting it on return', async kind => {
+  const {runOcrWorker, cancelOcrRecognition} = await import('../src/lib/ocr-worker-client')
+  documentState.visibilityState = 'hidden'
+  const pending = runOcrWorker(new Blob())
+  const rejected = expect(pending).rejects.toMatchObject({name:'AbortError'})
+  if (kind === 'cancel') cancelOcrRecognition()
+  else page.dispatchEvent(new Event('pagehide'))
+  await rejected
+  documentState.visibilityState = 'visible'
+  documentState.dispatchEvent(new Event('visibilitychange'))
+  await Promise.resolve()
+  expect(FakeWorker.instances).toHaveLength(0)
+})
+
+it('does not resurrect a cancelled request between foreground notification and its continuation', async () => {
+  const {runOcrWorker, cancelOcrRecognition} = await import('../src/lib/ocr-worker-client')
+  documentState.visibilityState = 'hidden'
+  const pending = runOcrWorker(new Blob())
+  const rejected = expect(pending).rejects.toMatchObject({name:'AbortError'})
+  documentState.visibilityState = 'visible'
+  documentState.dispatchEvent(new Event('visibilitychange'))
+  cancelOcrRecognition()
+  await rejected
+  expect(FakeWorker.instances).toHaveLength(0)
+})
+
+it('holds a queued request after the active worker drains in the background', async () => {
+  const {runOcrWorker} = await import('../src/lib/ocr-worker-client')
+  const first = runOcrWorker(new Blob())
+  const next = runOcrWorker(new Blob())
+  const worker = FakeWorker.instances[0]
+  documentState.visibilityState = 'hidden'
+  documentState.dispatchEvent(new Event('visibilitychange'))
+  worker.reply({ok:true,items:[]})
+  await first
+  expect(worker.terminate).toHaveBeenCalledOnce()
+  expect(FakeWorker.instances).toHaveLength(1)
+  documentState.visibilityState = 'visible'
+  documentState.dispatchEvent(new Event('visibilitychange'))
+  const fresh = await nextWorker(2)
+  fresh.reply({ok:true,items:['next']})
+  await expect(next).resolves.toEqual(['next'])
+})
+
+it('aborts both active and queued requests on pagehide without restarting the engine', async () => {
+  const {runOcrWorker} = await import('../src/lib/ocr-worker-client')
+  const first = runOcrWorker(new Blob())
+  const next = runOcrWorker(new Blob())
+  const rejected = [first, next].map(pending => expect(pending).rejects.toMatchObject({name:'AbortError'}))
+  page.dispatchEvent(new Event('pagehide'))
+  await Promise.all(rejected)
+  expect(FakeWorker.instances).toHaveLength(1)
+  expect(FakeWorker.instances[0].terminate).toHaveBeenCalledOnce()
 })
 
 it('still releases a stalled inference after skipping, allowing a fresh retry', async () => {

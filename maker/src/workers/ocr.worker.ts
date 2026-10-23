@@ -3,12 +3,16 @@ import { OCR_MODEL_FILES, ocrModelUrl } from '../lib/ocr-models'
 import type { OcrStage } from '../lib/ocr-progress'
 
 function report(stage: OcrStage) {
+  lastStage = stage
   self.postMessage({ kind: 'progress', progress: { stage } })
 }
+let lastStage: OcrStage = 'resources'
 
 type Mat = { delete(): void }
 type Cv = { CV_8UC4: number; matFromArray(rows: number, cols: number, type: number, pixels: Uint8ClampedArray): Mat }
 type Engine = {
+  ocrPhase?: string
+  cv?: { HEAPU8?: Uint8Array }
   sourceToMat: (cv: Cv, source: Blob) => Promise<{ width: number; height: number; mat: Mat; dispose(): void }>
   initialize(): Promise<unknown>
   predict(blob: Blob): Promise<Array<{ items?: unknown[] }>>
@@ -78,6 +82,10 @@ function reportError(error: unknown) {
   self.postMessage({ ok: false, error: {
     name: error instanceof Error ? error.name : 'Error',
     message: error instanceof Error ? error.message : String(error),
+    stack: error instanceof Error ? error.stack?.slice(0, 8000) : undefined,
+    stage: lastStage,
+    phase: engine?.ocrPhase ?? lastStage,
+    openCvHeapBytes: engine?.cv?.HEAPU8?.byteLength,
   } })
 }
 

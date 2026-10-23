@@ -23,15 +23,46 @@ type Session = {
 let session: Session | null = null
 let cancellation = 0
 let memoryPressure = false
+const foregroundWaiters = new Set<() => void>()
 
 function interrupted() { return new DOMException('识别已中断，可重新识别', 'AbortError') }
 function timedOut() { return new DOMException('识别超时，请重新识别', 'TimeoutError') }
+function inBackground() { return typeof document !== 'undefined' && document.visibilityState === 'hidden' }
+
+/** A hidden GIF scan must not rebuild an engine after each drained frame. */
+function waitForForeground(generation: number): Promise<void> {
+  return new Promise((resolve, reject) => {
+    let finished = false
+    const finish = (error?: Error) => {
+      if (finished) return
+      finished = true
+      document.removeEventListener('visibilitychange', changed)
+      if (typeof window !== 'undefined') window.removeEventListener('pagehide', interruptedWait)
+      foregroundWaiters.delete(interruptedWait)
+      if (error) reject(error)
+      else resolve()
+    }
+    const interruptedWait = () => finish(interrupted())
+    const changed = () => {
+      if (generation !== cancellation) interruptedWait()
+      else if (!inBackground()) finish()
+    }
+    foregroundWaiters.add(interruptedWait)
+    document.addEventListener('visibilitychange', changed)
+    if (typeof window !== 'undefined') window.addEventListener('pagehide', interruptedWait, { once: true })
+    changed()
+  })
+}
 
 /** Keep one initialized engine, with bounded idle lifetime and serialized inference. */
 function createSession(): Session {
   const worker = new Worker(new URL('../workers/ocr.worker.ts', import.meta.url), { type: 'module' })
   let settled = false
-  const pagehide = () => current.finish(interrupted())
+  const pagehide = () => {
+    // Invalidates queued requests as well as the currently attached consumer.
+    cancelOcrRecognition()
+    current.finish(interrupted())
+  }
   const hidden = () => {
     if (document.visibilityState === 'hidden' && !current.request) current.finish(interrupted())
   }
@@ -45,6 +76,19 @@ function createSession(): Session {
       if (typeof window !== 'undefined') window.removeEventListener('pagehide', pagehide)
       if (typeof document !== 'undefined') document.removeEventListener('visibilitychange', hidden)
       worker.terminate()
+      if (error && error.name !== 'AbortError') {
+        // Preserve the first failure even if the bounded retry succeeds. No
+        // pixels, recognized text, filenames, or model response bodies are logged.
+        const detail = error.cause as { phase?: unknown; openCvHeapBytes?: unknown } | undefined
+        // Send the same fields through mobile console relays as a plain string,
+        // without depending on their rendering of nested Error/cause objects.
+        console.error('ChineseBQB OCR worker failed', JSON.stringify({
+          stage: current.progress.stage, lowMemory: current.lowMemory,
+          phase: typeof detail?.phase === 'string' ? detail.phase : undefined,
+          openCvHeapBytes: typeof detail?.openCvHeapBytes === 'number' ? detail.openCvHeapBytes : undefined,
+          name: error.name, message: error.message, stack: error.stack?.slice(0, 8000),
+        }))
+      }
       if (error && isOcrMemoryError(error)) memoryPressure = true
       if (session === current) session = null
       const request = current.request
@@ -87,8 +131,13 @@ function createSession(): Session {
       request?.resolve(data.items)
     }
     else {
-      const error = new Error(typeof data?.error?.message === 'string' ? data.error.message : '识别进程返回了无效结果')
+      const detail = data?.error
+      const error = new Error(typeof detail?.message === 'string' ? detail.message : '识别进程返回了无效结果', {
+        cause: { stage: current.progress.stage, phase: detail?.phase,
+          openCvHeapBytes: typeof detail?.openCvHeapBytes === 'number' ? detail.openCvHeapBytes : undefined },
+      })
       error.name = typeof data?.error?.name === 'string' ? data.error.name : 'Error'
+      if (typeof detail?.stack === 'string') error.stack = detail.stack.slice(0, 8000)
       current.finish(error)
     }
   }
@@ -99,7 +148,7 @@ function createSession(): Session {
 
 /** Warm-up errors are silent and disposable; choosing a picture can always start a fresh attempt. */
 export function warmOcrWorker() {
-  if (session) return
+  if (session || inBackground()) return
   let current: Session | undefined
   try {
     current = createSession()
@@ -111,6 +160,7 @@ export function warmOcrWorker() {
 
 export function cancelOcrRecognition() {
   cancellation += 1
+  for (const interrupt of foregroundWaiters) interrupt()
   // Let in-flight inference drain in the worker, retaining its initialized engine.
   // Detach the consumer now so a late result cannot reach the editor.
   const request = session?.request
@@ -207,10 +257,15 @@ export async function runOcrWorker(blob: Blob, onProgress?: OcrProgressListener)
 
 async function runOcrAttempt(blob: Blob, onProgress?: OcrProgressListener): Promise<unknown[]> {
   const generation = cancellation
+  if (inBackground()) await waitForForeground(generation)
   while (session?.busy) {
     await session.available
     if (generation !== cancellation) throw interrupted()
+    if (inBackground()) await waitForForeground(generation)
   }
+  // Visibility callbacks resolve asynchronously; a picture switch or pagehide
+  // may have cancelled this request before its continuation gets CPU time.
+  if (generation !== cancellation) throw interrupted()
   return new Promise((resolve, reject) => {
     let current: Session | undefined
     try {

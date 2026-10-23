@@ -20,10 +20,10 @@ export function recognize(blob: Blob, isCurrent = () => true, onProgress?: OcrPr
       return isCurrent() ? normalizeOcrItems(items) : []
     } catch (error) {
       if (isOcrMemoryError(error)) {
-        throw new Error('识别时内存不足，识别进程已释放；可点「重新识别」，无需刷新页面')
+        throw new Error('识别时内存不足，识别进程已释放；可点「重新识别」，无需刷新页面', { cause: error })
       }
       if (error instanceof Error && error.name === 'TimeoutError') {
-        throw new Error('识别资源加载或处理超时，请检查网络后重新识别')
+        throw new Error('识别资源加载或处理超时，请检查网络后重新识别', { cause: error })
       }
       throw error
     }
