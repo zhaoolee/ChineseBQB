@@ -38,6 +38,12 @@
 
 [《ChineseBQB在线搜图斗图工具》详细介绍](https://v2fy.com/p/t037-chinesebqb-2020-10-09/)
 
+**功能4: 表情包制作器**
+
+[直达地址：表情包制作器](https://zhaoolee.com/ChineseBQB/maker/)
+
+![表情包制作器演示](https://raw.githubusercontent.com/zhaoolee/ChineseBQB/master/README.assets/fbd77dc5fdedc97da9714ad3355b41058e3119e4c1fabb19a15ad1eff1ef1705.gif)
+
 ## 用表情包学英语
 
 作者 zhaoolee 写了个「摄影学英语」App，可以用表情包图片学英语：[App Store 下载](https://apps.apple.com/cn/app/id6808490052)，欢迎体验。
