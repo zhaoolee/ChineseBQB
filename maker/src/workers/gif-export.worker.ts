@@ -1,12 +1,10 @@
-import { createEditableGifFrames } from '../lib/gif'
-import { exportWechatSegmentedGif } from '../lib/gif-export'
+import { exportEditableSource, type EditableExportInput } from '../lib/gif-export'
 import type { TimedEdits } from '../lib/timeline'
 
-self.onmessage = async (event: MessageEvent<{ source: Blob; edits: TimedEdits }>) => {
+self.onmessage = async (event: MessageEvent<{ input: EditableExportInput; edits: TimedEdits }>) => {
   try {
-    const { source, edits } = event.data
-    const { frames } = createEditableGifFrames(new Uint8Array(await source.arrayBuffer()))
-    const blob = await exportWechatSegmentedGif(frames, edits, {
+    const { input, edits } = event.data
+    const blob = await exportEditableSource(input, edits, {
       onProgress: progress => self.postMessage({ progress }),
     }, () => new OffscreenCanvas(1, 1) as unknown as HTMLCanvasElement)
     self.postMessage({ blob })

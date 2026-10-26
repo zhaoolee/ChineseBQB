@@ -1,9 +1,9 @@
-import type { GifExportOptions } from './gif-export'
+import type { EditableExportInput, GifExportOptions } from './gif-export'
 import type { TimedEdits } from './timeline'
 
 /** All native erasure, area resampling and palette work lives in a disposable
  * worker. Cancelling or changing the source stops CPU work immediately. */
-export function exportGifInWorker(source: Blob, edits: TimedEdits, options: GifExportOptions & { signal?: AbortSignal } = {}): Promise<Blob> {
+export function exportGifInWorker(input: EditableExportInput, edits: TimedEdits, options: GifExportOptions & { signal?: AbortSignal } = {}): Promise<Blob> {
   return new Promise((resolve, reject) => {
     let worker: Worker | undefined
     let timer: ReturnType<typeof setTimeout> | undefined
@@ -33,9 +33,9 @@ export function exportGifInWorker(source: Blob, edits: TimedEdits, options: GifE
       }
       worker.onerror = event => { event.preventDefault(); finish(new Error(event.message || 'GIF 导出进程启动失败')) }
       worker.onmessageerror = () => finish(new Error('GIF 导出结果读取失败'))
-      // Blob structured cloning shares immutable compressed bytes, never the
-      // editor's native RGBA frames or their lazy getters.
-      worker.postMessage({ source, edits })
+      // Animation blobs share immutable compressed bytes. Still pixels are
+      // structured-cloned, so the worker never detaches the editor's ImageData.
+      worker.postMessage({ input, edits })
     } catch (error) { finish(error instanceof Error ? error : new Error(String(error))) }
   })
 }

@@ -8,7 +8,7 @@ import { createHistory, historyCommit, historyRedo, historyUndo } from '../src/l
 import { decideCatalogSrc, matchesQuery, normalizeQueryPath, readCatalog, siteAsset, siteBaseFrom, makerBaseUrl } from '../src/lib/catalog'
 import { composeGifFrames, decodeGifFrames, encodeGif } from '../src/lib/gif'
 import { sniffImage } from '../src/lib/image'
-import { editedDownloadName, inheritedStillExport, paintComposite, paintOverlay } from '../src/lib/paint'
+import { editedDownloadName, paintComposite, paintOverlay } from '../src/lib/paint'
 import { imageFileFromClipboard } from '../src/lib/clipboard'
 import { OCR_MODEL_FILES, normalizeOcrItems, ocrModelUrl, scaleOcrBlocks } from '../src/lib/ocr'
 import { spreadCellValue } from '../src/lib/grapheme'
@@ -946,13 +946,10 @@ describe('free text box', () => {
 })
 
 describe('export format', () => {
-  it('keeps jpeg, png, and webp instead of renaming everything to png', () => {
-    expect(inheritedStillExport('image/jpeg', '假笑男孩00001-拽')).toEqual({ mime: 'image/jpeg', extension: 'jpg' })
-    expect(inheritedStillExport('', 'media/abc.jpg', '假笑男孩00001-拽')).toEqual({ mime: 'image/jpeg', extension: 'jpg' })
-    expect(inheritedStillExport('image/png', 'shot.png')).toEqual({ mime: 'image/png', extension: 'png' })
-    expect(inheritedStillExport('image/webp', 'sticker.webp')).toEqual({ mime: 'image/webp', extension: 'webp' })
-    expect(editedDownloadName('假笑男孩00001-拽.jpg', 'jpg')).toBe('edited-假笑男孩00001-拽.jpg')
-    expect(editedDownloadName('shot.png', 'png')).toBe('edited-shot.png')
+  it('downloads every edited image as a gif', () => {
+    expect(editedDownloadName('假笑男孩00001-拽.jpg', 'gif')).toBe('edited-假笑男孩00001-拽.gif')
+    expect(editedDownloadName('shot.png', 'gif')).toBe('edited-shot.gif')
+    expect(editedDownloadName('sticker.webp', 'gif')).toBe('edited-sticker.gif')
   })
 })
 

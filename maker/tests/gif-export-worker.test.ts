@@ -22,9 +22,9 @@ afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals() })
 it('passes only compressed source and edits, reports progress and releases the worker after success', async () => {
   const source = new Blob(['gif'])
   const progress = vi.fn()
-  const pending = exportGifInWorker(source, edits, { onProgress: progress })
+  const pending = exportGifInWorker({ source }, edits, { onProgress: progress })
   const worker = FakeWorker.instances[0]
-  expect(worker.postMessage).toHaveBeenCalledWith({ source, edits })
+  expect(worker.postMessage).toHaveBeenCalledWith({ input: { source }, edits })
   worker.onmessage?.({ data: { progress: { stage:'prepare', completed:1, total:115 } } })
   expect(progress).toHaveBeenCalledOnce()
   const blob = new Blob(['encoded'], { type:'image/gif' })
@@ -38,29 +38,58 @@ it('passes only compressed source and edits, reports progress and releases the w
 
 it('cancels CPU work immediately, ignores late results, and allows a new export', async () => {
   const controller = new AbortController()
-  const pending = exportGifInWorker(new Blob(), edits, { signal:controller.signal })
+  const pending = exportGifInWorker({ source: new Blob() }, edits, { signal:controller.signal })
   const rejection = expect(pending).rejects.toMatchObject({ name:'AbortError' })
   controller.abort()
   await rejection
   const first = FakeWorker.instances[0]
   expect(first.terminate).toHaveBeenCalledOnce()
   first.onmessage?.({ data: { blob:new Blob() } })
-  const retry = exportGifInWorker(new Blob(), edits)
+  const retry = exportGifInWorker({ source: new Blob() }, edits)
   FakeWorker.instances[1].onmessage?.({ data: { blob:new Blob(['retry']) } })
   expect((await retry).size).toBe(5)
   expect(vi.getTimerCount()).toBe(0)
 })
 
 it('does not start an already cancelled export and stops timed-out or failed workers', async () => {
-  await expect(exportGifInWorker(new Blob(), edits, { signal:AbortSignal.abort() })).rejects.toMatchObject({ name:'AbortError' })
+  await expect(exportGifInWorker({ source: new Blob() }, edits, { signal:AbortSignal.abort() })).rejects.toMatchObject({ name:'AbortError' })
   expect(FakeWorker.instances).toHaveLength(0)
-  const pending = exportGifInWorker(new Blob(), edits)
+  const pending = exportGifInWorker({ source: new Blob() }, edits)
   const rejection = expect(pending).rejects.toThrow('耗时过长')
   await vi.advanceTimersByTimeAsync(120_000)
   await rejection
   expect(FakeWorker.instances[0].terminate).toHaveBeenCalledOnce()
-  const failed = exportGifInWorker(new Blob(), edits)
+  const failed = exportGifInWorker({ source: new Blob() }, edits)
   FakeWorker.instances[1].onmessage?.({ data:{ error:'encoding failed' } })
   await expect(failed).rejects.toThrow('encoding failed')
   expect(FakeWorker.instances[1].terminate).toHaveBeenCalledOnce()
+})
+
+it('sends still editing pixels to the worker without re-reading the original file', async () => {
+  const imageData = { data: new Uint8ClampedArray([12, 34, 56, 255]), width: 1, height: 1 } as unknown as ImageData
+  const pending = exportGifInWorker({ imageData }, edits)
+  const worker = FakeWorker.instances[0]
+  expect(worker.postMessage).toHaveBeenCalledWith({ input: { imageData }, edits })
+  worker.onmessage?.({ data: { blob: new Blob(['gif'], { type: 'image/gif' }) } })
+  expect(await pending).toBeInstanceOf(Blob)
+  expect(worker.terminate).toHaveBeenCalledOnce()
+})
+
+it('passes native mode and editor dimensions, then allows a cancelled native export to retry', async () => {
+  const input = { mode: 'native' as const, source: new Blob(['source']), editWidth: 3200, editHeight: 1600 }
+  const controller = new AbortController()
+  const pending = exportGifInWorker(input, edits, { signal: controller.signal })
+  const worker = FakeWorker.instances[0]
+  expect(worker.postMessage).toHaveBeenCalledWith({ input, edits })
+  const rejection = expect(pending).rejects.toMatchObject({ name: 'AbortError' })
+  controller.abort()
+  await rejection
+  expect(worker.terminate).toHaveBeenCalledOnce()
+
+  const retry = exportGifInWorker(input, edits)
+  const retryWorker = FakeWorker.instances[1]
+  expect(retryWorker.postMessage).toHaveBeenCalledWith({ input, edits })
+  retryWorker.onmessage?.({ data: { blob: new Blob(['native'], { type: 'image/png' }) } })
+  expect((await retry).type).toBe('image/png')
+  expect(retryWorker.terminate).toHaveBeenCalledOnce()
 })

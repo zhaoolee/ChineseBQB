@@ -164,14 +164,13 @@ function fitFontSize(context: CanvasRenderingContext2D, text: string, style: Tex
 
 export type StillMime = 'image/png' | 'image/jpeg' | 'image/webp'
 
-/** Keep the original still-image type. GIF frames are handled separately. */
-export function inheritedStillExport(mime: string, ...names: string[]): { mime: StillMime; extension: 'png' | 'jpg' | 'webp' } {
-  const type = mime.toLowerCase()
-  const labeled = names.some((name) => /\.jpe?g($|[?#])/i.test(name))
-  const webp = names.some((name) => /\.webp($|[?#])/i.test(name))
-  if (type === 'image/jpeg' || labeled) return { mime: 'image/jpeg', extension: 'jpg' }
-  if (type === 'image/webp' || webp) return { mime: 'image/webp', extension: 'webp' }
-  return { mime: 'image/png', extension: 'png' }
+const MIME_EXTENSIONS: Record<string, string> = {
+  'image/png': 'png', 'image/jpeg': 'jpg', 'image/jpg': 'jpg', 'image/webp': 'webp', 'image/gif': 'gif',
+}
+
+/** Keep the downloaded extension tied to the bytes the browser actually encoded. */
+export function extensionForMime(mime: string): string {
+  return MIME_EXTENSIONS[mime.trim().toLowerCase()] ?? 'png'
 }
 
 export function editedDownloadName(name: string, extension: string): string {
@@ -179,7 +178,19 @@ export function editedDownloadName(name: string, extension: string): string {
   return `edited-${base}.${extension}`
 }
 
+type BlobCanvas = HTMLCanvasElement & { convertToBlob?: (options?: { type?: string; quality?: number }) => Promise<Blob> }
+
 export async function canvasToImage(canvas: HTMLCanvasElement, mime: StillMime): Promise<Blob> {
+  const target = canvas as BlobCanvas
+  // Workers use OffscreenCanvas, which exposes convertToBlob instead of toBlob.
+  if (typeof target.convertToBlob === 'function') {
+    try {
+      return await target.convertToBlob({ type: mime, quality: mime === 'image/jpeg' ? 0.92 : undefined })
+    } catch (error) {
+      if (mime === 'image/png') throw error
+      return target.convertToBlob({ type: 'image/png' })
+    }
+  }
   const blob = await new Promise<Blob | null>((resolve) => {
     canvas.toBlob(resolve, mime, mime === 'image/png' ? undefined : 0.92)
   })

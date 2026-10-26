@@ -1,18 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { exportGifInWorker } from '../lib/gif-export-worker'
-import type { GifExportProgress } from '../lib/gif-export'
-import { collectPatches } from '../lib/plan'
-import { canvasToImage, downloadBlob, editedDownloadName, inheritedStillExport, paintComposite } from '../lib/paint'
+import type { EditableExportInput, GifExportProgress } from '../lib/gif-export'
+import { downloadBlob, editedDownloadName, extensionForMime } from '../lib/paint'
 import { editor, setGifPlaying, skipOcr, type EditorSnapshot } from '../state/editor-store'
 import { useEditor } from './use-editor'
-
-type ExportKind = 'still' | 'gif'
 
 export function ExportActions() {
   const state = useEditor()
   const [message, setMessage] = useState('')
-  const [exporting, setExporting] = useState<ExportKind | null>(null)
+  const [wechatFit, setWechatFit] = useState(true)
+  const [exporting, setExporting] = useState(false)
   const [progress, setProgress] = useState<GifExportProgress | null>(null)
   const exportLock = useRef(false)
   // controller 既作为 GIF 的取消信号，也作为任务身份：旧任务的 finally 不会解开新任务的锁。
@@ -21,7 +19,7 @@ export function ExportActions() {
   const [previewPane, setPreviewPane] = useState<HTMLElement | null>(null)
   const editable = Boolean(state.image?.imageData)
   const sourceIdentity = state.image?.frames ?? state.image?.imageData
-  const busy = exporting !== null
+  const busy = exporting
   const clearSuccessTimer = () => {
     if (successTimer.current !== null) window.clearTimeout(successTimer.current)
     successTimer.current = null
@@ -31,7 +29,7 @@ export function ExportActions() {
     abortRef.current = null
     controller?.abort()
     exportLock.current = false
-    setExporting(null)
+    setExporting(false)
     setProgress(null)
   }
   useEffect(() => () => {
@@ -51,31 +49,26 @@ export function ExportActions() {
     setPreviewPane(document.getElementById('preview-pane'))
   }, [])
 
-  const gifExport = Boolean(state.image?.frames && state.image.frames.length > 1)
+  const animated = Boolean(state.image?.frames && state.image.frames.length > 1)
 
-  async function paintStill(snapshot: EditorSnapshot) {
+  async function buildExport(snapshot: EditorSnapshot, controller: AbortController, fitWechat: boolean): Promise<Blob> {
     const image = snapshot.image
     if (!image?.imageData) throw new Error('当前没有可导出的图片。')
-    const canvas = document.createElement('canvas')
-    paintComposite(
-      image.imageData,
-      collectPatches(snapshot.history.present.blocks, image.imageData),
-      snapshot.history.present.freeTexts,
-      canvas,
-    )
-    if (canvas.width !== image.naturalWidth || canvas.height !== image.naturalHeight) {
-      throw new Error('导出尺寸与原图不一致。')
+    let input: EditableExportInput
+    if (!fitWechat) {
+      if (!image.blob) throw new Error('缺少原始文件，无法导出。')
+      // 未勾选时以原始压缩文件为准：静图缩到 1600 的只是编辑预览，
+      // 动态 GIF 仍由 Worker 按原尺寸懒解码。
+      input = { mode: 'native', source: image.blob, editWidth: image.imageData.width, editHeight: image.imageData.height }
+    } else if (image.frames && image.frames.length > 1) {
+      if (!image.blob) throw new Error('缺少原始文件，无法导出 GIF。')
+      // 动画继续使用压缩原文件，Worker 内按原尺寸懒解码，保留原时序与压缩策略。
+      input = { source: image.blob }
+    } else {
+      // 静图（含单帧 GIF）直接使用编辑画布像素，避免重新解码出与画布不同的尺寸。
+      input = { imageData: image.imageData }
     }
-    return canvas
-  }
-
-  async function buildGif(snapshot: EditorSnapshot, controller: AbortController): Promise<Blob> {
-    const image = snapshot.image
-    const frames = image?.frames
-    if (!image?.imageData || !frames || frames.length < 2) throw new Error('当前没有可导出的 GIF。')
-    const source = image.blob
-    if (!source) throw new Error('缺少原始文件，无法导出 GIF。')
-    return exportGifInWorker(source, snapshot.history.present, {
+    return exportGifInWorker(input, snapshot.history.present, {
       signal: controller.signal,
       onProgress: (next) => {
         if (abortRef.current !== controller || controller.signal.aborted) return
@@ -84,17 +77,19 @@ export function ExportActions() {
     })
   }
 
-  function startExport(kind: ExportKind) {
+  function startExport() {
     if (exportLock.current) return
+    // 锁定选择：导出期间禁用复选框，本次任务只使用开始时的模式。
+    const fitWechat = wechatFit
     exportLock.current = true
     clearSuccessTimer()
     setMessage('')
     setProgress(null)
     skipOcr()
     setGifPlaying(false)
-    setExporting(kind)
+    setExporting(true)
     const controller = new AbortController()
-    // 静图也占用同一个 controller 作为任务身份，只有 GIF 会把 signal 传进 worker。
+    // 只有当前 controller 仍持有导出权时，才允许旧任务改状态。
     abortRef.current = controller
     // 只在开始时取一次快照：中途换图/改字不会把旧结果下载到新图名下。
     const snapshot = editor.getState()
@@ -108,24 +103,15 @@ export function ExportActions() {
         ? (image?.frames ?? null) !== framesAtStart
         : (image?.imageData ?? null) !== imageDataAtStart
     }
-    // 只有当前 controller 仍持有导出权时，才允许旧任务改状态。
     const current = () => abortRef.current === controller
-    const task = kind === 'gif'
-      ? buildGif(snapshot, controller).then((blob) => ({
-        blob,
-        filename: editedDownloadName(imageAtStart?.source.name || 'chinesebqb', 'gif'),
-        label: `已下载 · ${Math.max(1, Math.round(blob.size / 1000))} KB`,
-      }))
-      : paintStill(snapshot).then(async (canvas) => {
-        const image = imageAtStart
-        const still = inheritedStillExport(image?.blob?.type ?? '', image?.source.id ?? '', image?.source.name ?? '')
-        try {
-          const blob = await canvasToImage(canvas, still.mime)
-          return { blob, filename: editedDownloadName(image?.source.name || 'chinesebqb', still.extension), label: '已下载' }
-        } finally {
-          canvas.width = canvas.height = 0
-        }
-      })
+    const task = buildExport(snapshot, controller, fitWechat).then((blob) => ({
+      blob,
+      filename: editedDownloadName(
+        imageAtStart?.source.name || 'chinesebqb',
+        fitWechat ? 'gif' : extensionForMime(blob.type),
+      ),
+      label: `已下载 · ${Math.max(1, Math.round(blob.size / 1000))} KB`,
+    }))
     void task.then(({ blob, filename, label }) => {
       if (!current() || stale()) return
       downloadBlob(blob, filename)
@@ -149,7 +135,7 @@ export function ExportActions() {
       if (!current()) return
       abortRef.current = null
       exportLock.current = false
-      setExporting(null)
+      setExporting(false)
       setProgress(null)
     })
   }
@@ -162,17 +148,24 @@ export function ExportActions() {
   const progressLabel = progress
     ? `${progress.stage === 'prepare' ? '处理画面' : progress.stage === 'motion' ? '优化流畅度' : '压缩中'} ${progress.completed}/${progress.total}`
     : ''
-  const exportLabel = !busy
-    ? '导出'
-    : exporting === 'gif'
-      ? (progressLabel || '压缩中…')
-      : '导出中…'
+  const exportLabel = !busy ? (wechatFit ? '导出 GIF' : '导出原图') : (progressLabel || '导出中…')
+  const fitWechatToggle = (
+    <label className="export-fit">
+      <input
+        type="checkbox"
+        checked={wechatFit}
+        disabled={busy}
+        onChange={(event) => setWechatFit(event.target.checked)}
+      />
+      <span>适配微信表情</span>
+    </label>
+  )
   const exportButton = (
     <button
       type="button"
       className="primary"
       disabled={!editable || busy}
-      onClick={() => startExport(gifExport ? 'gif' : 'still')}
+      onClick={startExport}
     >
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 3v11" />
@@ -182,21 +175,21 @@ export function ExportActions() {
       {exportLabel}
     </button>
   )
-  const cancelButton = exporting === 'gif'
+  const cancelButton = busy
     ? (
       <button type="button" className="export-cancel" onClick={cancelExport}>
         取消导出
       </button>
     )
     : null
-  const frameNotice = state.image?.source.animated && state.image.imageData && !gifExport
+  const frameNotice = state.image?.source.animated && state.image.imageData && !animated
     ? '动图仅导出当前帧。'
     : ''
 
   return (
     <>
       {previewPane && (state.image || state.imageLoading) && createPortal(
-        <div className="preview-export">{exportButton}{cancelButton}</div>,
+        <div className="preview-export">{fitWechatToggle}{exportButton}{cancelButton}</div>,
         previewPane,
       )}
       {(frameNotice || message || (busy && progressLabel)) && (
