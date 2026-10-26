@@ -25,7 +25,7 @@ test('unchecking 适配微信表情 exports a >1600 still at native size and for
     buffer: Buffer.from(dataUrl.split(',')[1], 'base64'),
   })
 
-  await expect(page.getByRole('button', { name: '导出 GIF', exact: true })).toBeEnabled()
+  await expect(page.getByRole('button', { name: '下载', exact: true })).toBeEnabled()
   const fit = page.getByRole('checkbox', { name: '适配微信表情' })
   await expect(fit).toBeChecked()
 
@@ -36,7 +36,7 @@ test('unchecking 适配微信表情 exports a >1600 still at native size and for
   await expect(cell).toHaveValue('测')
 
   await fit.uncheck()
-  const exportButton = page.getByRole('button', { name: '导出原图', exact: true })
+  const exportButton = page.getByRole('button', { name: '下载', exact: true })
   await expect(exportButton).toBeEnabled()
   const [download] = await Promise.all([
     page.waitForEvent('download'),

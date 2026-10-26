@@ -23,7 +23,7 @@ test('a still PNG downloads a real transparent GIF through the export worker', a
     buffer: Buffer.from(dataUrl.split(',')[1], 'base64'),
   })
 
-  const exportButton = page.getByRole('button', { name: '导出 GIF', exact: true })
+  const exportButton = page.getByRole('button', { name: '下载', exact: true })
   await expect(exportButton).toBeEnabled()
   const [download] = await Promise.all([
     page.waitForEvent('download'),

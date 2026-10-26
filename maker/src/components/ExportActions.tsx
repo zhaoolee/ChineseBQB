@@ -148,7 +148,7 @@ export function ExportActions() {
   const progressLabel = progress
     ? `${progress.stage === 'prepare' ? '处理画面' : progress.stage === 'motion' ? '优化流畅度' : '压缩中'} ${progress.completed}/${progress.total}`
     : ''
-  const exportLabel = !busy ? (wechatFit ? '导出 GIF' : '导出原图') : (progressLabel || '导出中…')
+  const exportLabel = !busy ? '下载' : (progressLabel || '导出中…')
   const fitWechatToggle = (
     <label className="export-fit">
       <input
