@@ -4,9 +4,10 @@ import { exportGifInWorker } from '../lib/gif-export-worker'
 import type { EditableExportInput, GifExportProgress } from '../lib/gif-export'
 import { downloadBlob, editedDownloadName, extensionForMime } from '../lib/paint'
 import { clipboardErrorMessage, writeClipboardImage } from '../lib/clipboard-write'
+import { fileShareSupport, isShareCancellation, shareErrorMessage, shareFile as requestShare, shareFileFromBlob } from '../lib/file-share'
 import { editor, setGifPlaying, skipOcr, type EditorSnapshot } from '../state/editor-store'
 import { useEditor } from './use-editor'
-import { ExportFeedback, type ExportAction, type ExportResult } from './ExportFeedback'
+import { ExportFeedback, type ExportAction, type ExportResult, type ExportShareNotice } from './ExportFeedback'
 
 export function ExportActions() {
   const state = useEditor()
@@ -16,10 +17,16 @@ export function ExportActions() {
   const [action, setAction] = useState<ExportAction | null>(null)
   const [delivering, setDelivering] = useState(false)
   const [progress, setProgress] = useState<GifExportProgress | null>(null)
+  const [shareTarget, setShareTarget] = useState<File | null>(null)
+  const [sharePending, setSharePending] = useState(false)
+  const [shareNotice, setShareNotice] = useState<ExportShareNotice | null>(null)
   const exportLock = useRef(false)
   // controller 既作为 GIF 的取消信号，也作为任务身份：旧任务的 finally 不会解开新任务的锁。
   const abortRef = useRef<AbortController | null>(null)
   const successTimer = useRef<number | null>(null)
+  // 系统分享不能由网页取消；用 token 让换图、关闭或卸载后的迟到结果失效。
+  const shareSequence = useRef(0)
+  const shareLock = useRef(false)
   const triggerRef = useRef<HTMLElement | null>(null)
   const [previewPane, setPreviewPane] = useState<HTMLElement | null>(null)
   const editable = Boolean(state.image?.imageData)
@@ -28,6 +35,16 @@ export function ExportActions() {
   const clearSuccessTimer = () => {
     if (successTimer.current !== null) window.clearTimeout(successTimer.current)
     successTimer.current = null
+  }
+  function invalidateShare() {
+    shareSequence.current += 1
+    shareLock.current = false
+  }
+  function clearShare() {
+    invalidateShare()
+    setShareTarget(null)
+    setSharePending(false)
+    setShareNotice(null)
   }
   function releaseExport() {
     const controller = abortRef.current
@@ -41,6 +58,7 @@ export function ExportActions() {
   useEffect(() => () => {
     clearSuccessTimer()
     // 卸载时先撤掉身份再 abort，旧任务的回调不会再碰状态。
+    invalidateShare()
     const controller = abortRef.current
     abortRef.current = null
     controller?.abort()
@@ -49,8 +67,9 @@ export function ExportActions() {
     clearSuccessTimer()
     setResult(null)
     setClosing(false)
+    // 换源即丢弃旧任务与分享文件：旧进度、成功或分享结果都不能复活。
+    clearShare()
     releaseExport()
-    // 换源即丢弃旧任务：旧进度/成功被忽略，锁交还给新图。
   }, [sourceIdentity])
   useEffect(() => {
     setPreviewPane(document.getElementById('preview-pane'))
@@ -59,20 +78,58 @@ export function ExportActions() {
   const animated = Boolean(state.image?.frames && state.image.frames.length > 1)
 
   function closeFeedback() {
+    if (shareLock.current) return
     clearSuccessTimer()
     setClosing(true)
     successTimer.current = window.setTimeout(() => {
       successTimer.current = null
       setResult(null)
       setClosing(false)
+      clearShare()
     }, 180)
   }
 
-  function showResult(next: ExportResult) {
+  function showResult(next: ExportResult, keepOpen = false) {
     clearSuccessTimer()
     setClosing(false)
     setResult(next)
-    if (next.tone !== 'error') successTimer.current = window.setTimeout(closeFeedback, 2400)
+    if (!keepOpen && next.tone !== 'error') successTimer.current = window.setTimeout(closeFeedback, 2400)
+  }
+
+  function startShare() {
+    const file = shareTarget
+    if (!file || shareLock.current) return
+    const support = fileShareSupport(file)
+    if (!support.ok) {
+      setShareNotice({ tone: 'error', detail: support.message })
+      return
+    }
+    clearSuccessTimer()
+    shareLock.current = true
+    const token = ++shareSequence.current
+    setSharePending(true)
+    setShareNotice(null)
+    const settle = (error?: unknown) => {
+      // 旧操作或换图后的迟到回调不能改写新状态，也不能解开新任务的锁。
+      if (token !== shareSequence.current) return
+      shareLock.current = false
+      setSharePending(false)
+      if (!error) {
+        setShareNotice({ tone: 'success', detail: '已交给系统分享；请在目标应用里完成发送。' })
+        return
+      }
+      setShareNotice({
+        tone: isShareCancellation(error) ? 'cancelled' : 'error',
+        detail: shareErrorMessage(error),
+      })
+    }
+    try {
+      // 必须在点击事件里同步调用，不能先等待编码或重新生成文件。
+      const pending = requestShare(file)
+      void pending.then(() => settle(), settle)
+    } catch (error) {
+      settle(error)
+    }
   }
 
   async function buildExport(snapshot: EditorSnapshot, controller: AbortController, fitWechat: boolean, kind: ExportAction): Promise<Blob> {
@@ -112,6 +169,7 @@ export function ExportActions() {
     const fitWechat = wechatFit
     exportLock.current = true
     clearSuccessTimer()
+    clearShare()
     setResult(null)
     setClosing(false)
     setProgress(null)
@@ -139,9 +197,12 @@ export function ExportActions() {
       if (!current() || stale() || controller.signal.aborted) throw new DOMException('已取消操作', 'AbortError')
     }
     let size = 0
+    // 只保留本次复制已完成的 Blob；GIF 稍后会转成 HTML，但分享仍使用这份原始字节。
+    let readyBlob: Blob | null = null
     const createImage = () => buildExport(snapshot, controller, fitWechat, kind).then(blob => {
       checkCurrent()
       size = blob.size
+      readyBlob = blob
       setDelivering(true)
       return blob
     })
@@ -156,11 +217,22 @@ export function ExportActions() {
       })
     void task.then(() => {
       if (!current() || stale() || controller.signal.aborted) return
+      const readyFile = kind === 'copy' && readyBlob
+        ? shareFileFromBlob(readyBlob, imageAtStart?.source.name || 'chinesebqb')
+        : null
+      if (readyFile) {
+        invalidateShare()
+        setShareTarget(readyFile)
+        setSharePending(false)
+        setShareNotice(null)
+      } else {
+        clearShare()
+      }
       showResult({ tone: 'success', title: kind === 'copy' ? '已复制到剪贴板' : '图片已下载',
         detail: kind === 'copy'
           ? (fitWechat ? '已复制 GIF 富文本（HTML 图片），可粘贴到公众号或支持 HTML 的编辑器；接收应用是否播放动画取决于其自身支持。'
             : animated ? '已复制当前帧（PNG 静态图），可以粘贴到聊天或其他应用。' : '已复制 PNG 图片，可以粘贴到聊天或其他应用。')
-          : `下载文件已生成 · ${Math.max(1, Math.round(size / 1000))} KB` })
+          : `下载文件已生成 · ${Math.max(1, Math.round(size / 1000))} KB` }, Boolean(readyFile))
     }).catch((error: unknown) => {
       if (!current() || stale()) return
       const cancelled = controller.signal.aborted || error instanceof DOMException && error.name === 'AbortError'
@@ -173,6 +245,8 @@ export function ExportActions() {
       showResult({ tone: 'error', title: kind === 'copy' ? '复制失败' : '下载失败',
         detail: kind === 'copy' ? clipboardErrorMessage(error) : error instanceof Error ? error.message : '请重试。' })
     }).finally(() => {
+      // 分享状态只保留包装后的 File；这里释放任务内的临时 Blob 引用。
+      readyBlob = null
       if (!current()) return
       abortRef.current = null
       exportLock.current = false
@@ -214,7 +288,7 @@ export function ExportActions() {
     </button>
   )
   const copyButton = (
-    <button type="button" className="export-copy" disabled={!editable || busy} onClick={event => startExport('copy', event.currentTarget)} title={wechatFit ? '复制 GIF 表情（需浏览器支持）' : '复制 PNG 静态图，动图复制当前帧'}>
+    <button type="button" className="export-copy" disabled={!editable || busy} onClick={event => startExport('copy', event.currentTarget)} title={wechatFit ? '复制 GIF 富文本（HTML 图片），可粘贴到支持 HTML 的编辑器' : '复制 PNG 静态图，动图复制当前帧'}>
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" />
       </svg>
@@ -233,7 +307,8 @@ export function ExportActions() {
       )}
       {frameNotice && <div className="export-actions"><p className="warn">{frameNotice}</p></div>}
       <ExportFeedback action={action} progress={progress} delivering={delivering} result={result} closing={closing}
-        onCancel={cancelExport} onClose={closeFeedback} restoreFocus={triggerRef} />
+        share={shareTarget ? { file: shareTarget, support: fileShareSupport(shareTarget), pending: sharePending, notice: shareNotice } : null}
+        onShare={startShare} onCancel={cancelExport} onClose={closeFeedback} restoreFocus={triggerRef} />
     </>
   )
 }

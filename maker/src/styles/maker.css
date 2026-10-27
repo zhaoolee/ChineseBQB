@@ -150,12 +150,19 @@ h2 { margin: 0; font-size: 16px; }
 .export-feedback-eyebrow { margin: 0 0 10px; color: #8d7761; font-size: 12px; letter-spacing: 0.12em; }
 .export-dialog h2 { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.04em; }
 .export-dialog #export-feedback-detail { min-height: 42px; margin: 12px 0 0; color: #8d7761; font-size: 14px; line-height: 1.65; overflow-wrap: anywhere; }
+.export-share-status { margin: 10px 0 0; padding: 8px 10px; border-radius: 10px; background: rgba(255, 255, 255, 0.52); color: #8d7761; font-size: 12px; line-height: 1.55; overflow-wrap: anywhere; }
+.export-share-status.is-pending { color: #8a5a1f; }
+.export-share-status.is-success { color: #51754a; }
+.export-share-status.is-error { color: #b5533d; }
 .export-meter { margin: 22px 0 8px; }
 .export-meter-track { height: 12px; overflow: hidden; border-radius: 999px; background: #e7dac5; box-shadow: inset 0 1px 2px rgba(70, 47, 21, 0.08); }
 .export-meter-track > span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #9a6429, #d5a450); transition: width 220ms ease-out; }
 .export-meter-track.is-indeterminate > span { width: 38%; animation: export-progress-sweep 1400ms ease-in-out infinite; }
 .export-meter-caption { display: block; margin-top: 10px; color: #8d7761; font-size: 12px; font-variant-numeric: tabular-nums; }
+.export-dialog-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
 .export-dialog-action { min-width: 120px; min-height: 40px; margin-top: 20px; border-radius: 999px; border-color: #ddccb6; background: rgba(255, 255, 255, 0.6); }
+.export-dialog-actions .export-dialog-action { margin-top: 0; }
+.export-dialog-share { border-color: #6f4219; background: #6f4219; color: #fff8ed; }
 .export-dialog-action:focus-visible { outline: 3px solid #c79447; outline-offset: 4px; }
 .export-dialog.is-success .export-feedback-icon { color: #51754a; }
 .export-dialog.is-error .export-feedback-icon { color: #b5533d; }
@@ -176,6 +183,8 @@ h2 { margin: 0; font-size: 16px; }
 @media (max-width: 420px) {
   .preview-export { max-width: calc(100% - 64px); }
   .export-dialog { padding: 30px 22px 22px; }
+  .export-dialog-actions { gap: 8px; }
+  .export-dialog-actions .export-dialog-action { flex: 1 1 120px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .export-overlay, .export-dialog, .export-feedback-icon svg, .export-orbit,
