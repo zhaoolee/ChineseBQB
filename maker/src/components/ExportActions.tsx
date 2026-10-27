@@ -158,7 +158,7 @@ export function ExportActions() {
       if (!current() || stale() || controller.signal.aborted) return
       showResult({ tone: 'success', title: kind === 'copy' ? '已复制到剪贴板' : '图片已下载',
         detail: kind === 'copy'
-          ? (fitWechat ? '已复制 GIF 图片，可粘贴到支持 GIF 的应用。'
+          ? (fitWechat ? '已复制 GIF 富文本（HTML 图片），可粘贴到公众号或支持 HTML 的编辑器；接收应用是否播放动画取决于其自身支持。'
             : animated ? '已复制当前帧（PNG 静态图），可以粘贴到聊天或其他应用。' : '已复制 PNG 图片，可以粘贴到聊天或其他应用。')
           : `下载文件已生成 · ${Math.max(1, Math.round(size / 1000))} KB` })
     }).catch((error: unknown) => {

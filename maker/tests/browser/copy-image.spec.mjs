@@ -64,15 +64,8 @@ async function prepare(page, { mock = true, delay = 450, hold = false, gifSuppor
         return super.terminate()
       }
     }
-    if (gifSupport === true) {
-      // Simulate the advertised native GIF API without pretending that current
-      // browsers or the host OS actually support this format.
-      window.ClipboardItem = class {
-        static supports(mime) { return mime === 'image/gif' || mime === 'image/png' }
-        constructor(data) { this.data = data; this.types = Object.keys(data) }
-        async getType(mime) { return this.data[mime] }
-      }
-    } else if (gifSupport === false) {
+    if (gifSupport === false) {
+      // 只压低原生 image/gif 的检测结果，ClipboardItem 仍使用浏览器真实实现。
       Object.defineProperty(ClipboardItem, 'supports', { configurable: true, value: mime => mime === 'image/png' })
     }
     if (mock) Object.defineProperty(navigator, 'clipboard', { configurable: true, value: {
@@ -270,51 +263,79 @@ test('a real browser clipboard contains the composited PNG after copying', async
   expect(await inspectCopy(page, true)).toMatchObject({ type: 'image/png', width: 480, height: 240 })
 })
 
-test('checked WeChat mode refuses unsupported GIF rather than silently copying PNG', async ({ page }) => {
-  await prepare(page, { gifSupport: false })
-  await upload(page, 480, 240, true)
-  let downloads = 0; page.on('download', () => downloads++)
-  await expect(page.getByRole('checkbox', { name: '适配微信表情' })).toBeChecked()
-  await page.getByRole('button', { name: '复制', exact: true }).click()
-  await expect(page.getByRole('dialog', { name: '复制失败' })).toBeVisible()
-  await expect(page.getByRole('alert')).toContainText('不支持复制 GIF')
-  expect(await page.evaluate(() => ({ calls: window.__copyCalls, payloads: window.__copyPayloads, workers: window.__exportGate.started })))
-    .toEqual({ calls: 0, payloads: 0, workers: 0 })
-  expect(downloads).toBe(0)
-  await page.getByRole('button', { name: '知道了' }).click()
-  await expect(page.getByRole('dialog')).toHaveCount(0)
-  await page.getByRole('checkbox', { name: '适配微信表情' }).uncheck()
-  await page.getByRole('button', { name: '复制', exact: true }).click()
-  await expect(page.getByRole('dialog', { name: '已复制到剪贴板' })).toBeVisible()
-  expect((await inspectCopy(page)).type).toBe('image/png')
-})
-
-test('checked mode sends a complete real GIF with animation when native support is advertised', async ({ page }) => {
-  await prepare(page, { gifSupport: true })
+function animatedGif() {
   const gif = GIFEncoder()
   const width = 480, height = 240, palette = [[232, 53, 42], [20, 80, 230]]
   gif.writeFrame(new Uint8Array(width * height), width, height, { palette, delay: 100 })
   gif.writeFrame(new Uint8Array(width * height).fill(1), width, height, { palette, delay: 250 })
   gif.finish()
-  await page.locator('input[type=file]').first().setInputFiles({ name: 'animated.gif', mimeType: 'image/gif', buffer: Buffer.from(gif.bytes()) })
+  return Buffer.from(gif.bytes())
+}
+
+function decodeCopiedGif(bytes) {
+  const data = Uint8Array.from(bytes)
+  const parsed = parseGIF(data.buffer)
+  const frames = decompressFrames(parsed, true)
+  return { data, width: parsed.lsd.width, height: parsed.lsd.height, delays: frames.map(frame => frame.delay) }
+}
+
+async function uploadAnimatedGif(page) {
+  await page.locator('input[type=file]').first().setInputFiles({ name: 'animated.gif', mimeType: 'image/gif', buffer: animatedGif() })
   await expect(page.getByRole('button', { name: '复制', exact: true })).toBeEnabled()
   await expect(page.getByRole('checkbox', { name: '适配微信表情' })).toBeChecked()
+  // 定位到末帧，确认复制的是整段动画，而不是时间轴当前帧。
   await page.getByRole('slider', { name: 'GIF 当前帧' }).focus()
   await page.keyboard.press('End')
+}
+
+test('checked mode copies animated GIF as HTML rich text even when native image/gif support is false', async ({ page }) => {
+  await prepare(page, { gifSupport: false })
+  await uploadAnimatedGif(page)
+  expect(await page.evaluate(() => ClipboardItem.supports('image/gif'))).toBe(false)
   let downloads = 0; page.on('download', () => downloads++)
   await page.getByRole('button', { name: '复制', exact: true }).click()
   await expect(page.getByRole('dialog', { name: '已复制到剪贴板' })).toBeVisible()
   const copied = await page.evaluate(async () => {
-    const bytes = new Uint8Array(await window.__copied.arrayBuffer())
-    return { type: window.__copied.type, types: window.__copiedTypes, bytes: [...bytes] }
+    const html = await window.__copied.text()
+    const match = /data:image\/gif;base64,([A-Za-z0-9+/=]+)/.exec(html)
+    return { type: window.__copied.type, types: window.__copiedTypes, htmlLength: html.length,
+      bytes: match ? [...Uint8Array.from(atob(match[1]), character => character.charCodeAt(0))] : [] }
   })
-  expect(copied.type).toBe('image/gif')
-  expect(copied.types).toEqual(['image/gif'])
-  const bytes = Uint8Array.from(copied.bytes)
-  expect(Buffer.from(bytes.subarray(0, 6)).toString('ascii')).toBe('GIF89a')
-  const parsed = parseGIF(bytes.buffer)
-  expect([parsed.lsd.width, parsed.lsd.height]).toEqual([240, 120])
-  expect(decompressFrames(parsed, true).map(frame => frame.delay)).toEqual([100, 250])
-  expect(bytes.length).toBeLessThan(500_000)
+  expect(copied.type).toBe('text/html')
+  expect(copied.types).toEqual(['text/html'])
+  expect(copied.bytes.length).toBeGreaterThan(0)
+  const gif = decodeCopiedGif(copied.bytes)
+  expect(Buffer.from(gif.data.subarray(0, 6)).toString('ascii')).toBe('GIF89a')
+  expect([gif.width, gif.height]).toEqual([240, 120])
+  expect(gif.delays).toEqual([100, 250])
+  // 上限检查针对内嵌 GIF 字节，而不是 base64 之后的 HTML 体积。
+  expect(gif.data.length).toBeLessThan(500_000)
+  expect(copied.htmlLength).toBeGreaterThan(gif.data.length)
+  expect(await page.evaluate(() => ({ calls: window.__copyCalls, payloads: window.__copyPayloads, workers: window.__exportGate.started })))
+    .toEqual({ calls: 1, payloads: 1, workers: 1 })
   expect(downloads).toBe(0)
+})
+
+test('a real browser clipboard reads back the copied GIF as HTML with animation', async ({ page, context, browserName }) => {
+  test.skip(browserName !== 'chromium', 'Native permission grants are Chromium-specific; mocked cases cover both engines.')
+  await context.grantPermissions(['clipboard-read', 'clipboard-write'])
+  await prepare(page, { mock: false, delay: 0 })
+  await uploadAnimatedGif(page)
+  await page.getByRole('button', { name: '复制', exact: true }).click()
+  await expect(page.getByRole('dialog', { name: '已复制到剪贴板' })).toBeVisible()
+  const copied = await page.evaluate(async () => {
+    const items = await navigator.clipboard.read()
+    const item = items.find(entry => entry.types.includes('text/html'))
+    if (!item) return { types: items.map(entry => entry.types), htmlLength: 0, bytes: [] }
+    const html = await (await item.getType('text/html')).text()
+    const match = /data:image\/gif;base64,([A-Za-z0-9+/=]+)/.exec(html)
+    return { types: item.types, htmlLength: html.length,
+      bytes: match ? [...Uint8Array.from(atob(match[1]), character => character.charCodeAt(0))] : [] }
+  })
+  expect(copied.types).toContain('text/html')
+  const gif = decodeCopiedGif(copied.bytes)
+  expect([gif.width, gif.height]).toEqual([240, 120])
+  expect(gif.delays).toEqual([100, 250])
+  expect(gif.data.length).toBeLessThan(500_000)
+  expect(copied.htmlLength).toBeGreaterThan(gif.data.length)
 })

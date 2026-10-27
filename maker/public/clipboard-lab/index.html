@@ -1,0 +1,3071 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="在浏览器里对比 GIF 和 WebP 动图写入剪贴板的十种方式，并读取剪贴板核对类型、字节数和 SHA-256。">
+  <title>剪贴板动图实验台 · ChineseBQB</title>
+  <style>
+    :root {
+      --bg: #f2ecdf;
+      --bg-deep: #e9e0d0;
+      --surface: #fffdf8;
+      --surface-2: #faf4e9;
+      --surface-3: #f5eddf;
+      --ink: #27221b;
+      --ink-soft: #3c352c;
+      --muted: #6d6254;
+      --muted-strong: #594e41;
+      --line: #e3d8c7;
+      --line-strong: #cdbda6;
+      --header: #1c1a16;
+      --header-soft: #302b24;
+      --header-ink: #f7efe2;
+      --accent: #9c5516;
+      --accent-strong: #7d4210;
+      --accent-soft: #f5e5cf;
+      --ok: #2f6b4d;
+      --ok-soft: #edf6ef;
+      --error: #a1372f;
+      --error-soft: #fbefec;
+      --warn: #875611;
+      --warn-soft: #fbf1dc;
+      --radius: 18px;
+      --radius-sm: 12px;
+      --shadow: 0 1px 0 rgba(255, 255, 255, .65) inset, 0 20px 46px -40px rgba(52, 39, 24, .55);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      --sans: "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    *,
+    *::before,
+    *::after { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    [hidden] { display: none !important; }
+
+    h1, h2, h3, h4, p, dl, dd, figure { margin-top: 0; }
+    h1, h2, h3, h4 { line-height: 1.25; letter-spacing: -.012em; }
+    code, pre { font-family: var(--mono); }
+    button, input, textarea { font: inherit; }
+    img { max-width: 100%; }
+
+    a { color: var(--accent-strong); }
+
+    :focus-visible {
+      outline: 3px solid #c67a2a;
+      outline-offset: 3px;
+    }
+
+    .skip-link {
+      position: absolute;
+      z-index: 10;
+      left: 16px;
+      top: -80px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--ink);
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, .22);
+    }
+    .skip-link:focus { top: 16px; }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(34px, 5vw, 64px) 20px clamp(30px, 4vw, 48px);
+      background:
+        radial-gradient(900px 380px at 12% -20%, rgba(163, 109, 53, .38), transparent 62%),
+        radial-gradient(760px 360px at 96% 0%, rgba(93, 112, 94, .2), transparent 64%),
+        linear-gradient(145deg, #24201a, var(--header) 58%, #171511);
+      color: var(--header-ink);
+      border-bottom: 1px solid rgba(0, 0, 0, .4);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: .18;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, .08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, .08) 1px, transparent 1px);
+      background-size: 46px 46px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, .8), transparent 88%);
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 32px;
+      align-items: end;
+    }
+    .eyebrow {
+      margin: 0 0 12px;
+      color: #d7a25f;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      max-width: 860px;
+      margin-bottom: 14px;
+      font-size: clamp(2rem, 4.6vw, 3.55rem);
+      font-weight: 750;
+      letter-spacing: -.035em;
+      text-wrap: balance;
+    }
+    .lede {
+      max-width: 820px;
+      margin-bottom: 0;
+      color: #d9cfc0;
+      font-size: clamp(14px, 1.4vw, 16px);
+      line-height: 1.75;
+      text-wrap: pretty;
+    }
+    .workflow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 22px 0 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: step;
+    }
+    .workflow li {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 11px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .055);
+      color: #e8dfd2;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .workflow li::before {
+      counter-increment: step;
+      content: counter(step);
+      display: inline-grid;
+      place-items: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #d49a55;
+      color: #231d16;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 800;
+    }
+    .hero-aside {
+      display: grid;
+      gap: 8px;
+      min-width: 180px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: 14px;
+      background: rgba(0, 0, 0, .18);
+      backdrop-filter: blur(4px);
+    }
+    .hero-stat {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      color: #cfc3b3;
+      font-size: 12px;
+    }
+    .hero-stat strong {
+      color: #f3c98e;
+      font-family: var(--mono);
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .layout {
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      padding: 24px 20px 60px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr);
+      gap: 24px;
+      align-items: start;
+    }
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      min-width: 0;
+    }
+
+    .card {
+      min-width: 0;
+      padding: clamp(18px, 2.2vw, 28px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+    .card-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .card-heading h2 { margin-bottom: 0; font-size: clamp(1.2rem, 1.7vw, 1.52rem); }
+    .section-kicker {
+      margin: 0 0 5px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .chip {
+      flex: 0 0 auto;
+      padding: 4px 9px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: var(--surface-2);
+      color: var(--muted-strong);
+      font-size: 11px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .chip-strong {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: #fff9ef;
+    }
+
+    .source-top {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(250px, .95fr);
+      gap: 20px;
+      align-items: start;
+    }
+    .preview-shell {
+      margin: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface-2);
+    }
+    .preview-stage {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 250px;
+      padding: 18px;
+      background-color: #f7f0e4;
+      background-image:
+        linear-gradient(45deg, #eee3d2 25%, transparent 25%),
+        linear-gradient(-45deg, #eee3d2 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #eee3d2 75%),
+        linear-gradient(-45deg, transparent 75%, #eee3d2 75%);
+      background-size: 22px 22px;
+      background-position: 0 0, 0 11px, 11px -11px, -11px 0;
+    }
+    #source-preview {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 360px;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 10px 30px -18px rgba(39, 34, 27, .55);
+    }
+    .preview-placeholder {
+      max-width: 28ch;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      text-wrap: balance;
+    }
+    .preview-placeholder.is-error { color: var(--error); }
+    .preview-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 3px 8px;
+      border: 1px solid rgba(39, 34, 27, .16);
+      border-radius: 999px;
+      background: rgba(255, 253, 248, .92);
+      color: var(--ink-soft);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      backdrop-filter: blur(4px);
+    }
+    .preview-caption {
+      padding: 9px 12px;
+      border-top: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .meta-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px 14px;
+      margin: 0;
+    }
+    .meta-list > div {
+      min-width: 0;
+      padding-bottom: 7px;
+      border-bottom: 1px dashed var(--line);
+    }
+    .meta-list .span-2 { grid-column: 1 / -1; }
+    .meta-list dt {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+    .meta-list dd {
+      margin: 1px 0 0;
+      color: var(--ink-soft);
+      font-size: 13px;
+      font-weight: 650;
+      overflow-wrap: anywhere;
+    }
+    .meta-list dd code {
+      font-size: 11px;
+      font-weight: 500;
+      word-break: break-all;
+    }
+    .meta-list.compact { gap: 6px 12px; }
+    .meta-list.compact dd { font-size: 12px; }
+
+    .micro-note {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.65;
+    }
+    .micro-note strong { color: var(--muted-strong); }
+
+    .source-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-end;
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+    .format-picker {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+    .format-picker legend {
+      float: left;
+      margin-right: 3px;
+      padding: 0;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 650;
+    }
+    .segment { position: relative; display: inline-flex; }
+    .segment input {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .segment span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 58px;
+      min-height: 38px;
+      padding: 7px 13px;
+      border: 1px solid var(--line-strong);
+      border-radius: 9px;
+      background: var(--surface-2);
+      color: var(--muted-strong);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      transition: background .15s ease, color .15s ease, border-color .15s ease;
+    }
+    .segment input:checked + span {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: #fff9ef;
+    }
+    .segment input:focus-visible + span {
+      outline: 3px solid #c67a2a;
+      outline-offset: 3px;
+    }
+    .segment input:disabled + span { opacity: .5; cursor: not-allowed; }
+
+    .file-control { flex: 1 1 285px; min-width: 230px; }
+    .file-control-label,
+    .field-label {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    input[type="file"] {
+      width: 100%;
+      padding: 7px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 9px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 11px;
+    }
+    input[type="file"]::file-selector-button {
+      margin-right: 9px;
+      padding: 6px 10px;
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--ink-soft);
+      font: inherit;
+      font-weight: 650;
+      cursor: pointer;
+    }
+    .source-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .fallback-panel {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 18px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface-2);
+    }
+    .fallback-panel img {
+      flex: 0 0 auto;
+      width: 86px;
+      height: 86px;
+      padding: 5px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      object-fit: contain;
+    }
+    .fallback-panel h3 {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 3px;
+      font-size: 13px;
+    }
+    .fallback-panel p { margin-bottom: 0; }
+    .tag {
+      padding: 1px 6px;
+      border: 1px solid #e5c8a1;
+      border-radius: 999px;
+      background: #f9e8cf;
+      color: var(--warn);
+      font-size: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status {
+      margin-bottom: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--muted);
+      border-radius: 11px;
+      background: var(--surface-2);
+    }
+    .status-title {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.55;
+    }
+    .status-details {
+      margin: 6px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.65;
+      overflow-wrap: anywhere;
+    }
+    .status.is-pending { border-left-color: var(--accent); background: var(--accent-soft); }
+    .status.is-success { border-left-color: var(--ok); background: var(--ok-soft); }
+    .status.is-success .status-title { color: #24563d; }
+    .status.is-error { border-left-color: var(--error); background: var(--error-soft); }
+    .status.is-error .status-title { color: #7c2923; }
+    .status.is-info { border-left-color: #7f6a50; background: #f7f0e4; }
+
+    .strategy-list { border-bottom: 1px solid var(--line); }
+    .strategy {
+      padding: 17px 0 18px;
+      border-top: 1px solid var(--line);
+    }
+    .strategy-head {
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: start;
+    }
+    .strategy-num {
+      display: inline-grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+      background: var(--surface-2);
+      color: var(--accent-strong);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .strategy h3 {
+      margin: 3px 0 0;
+      font-size: 14px;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+    }
+    .strategy-mime {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+    .strategy-mime code {
+      padding: 1px 5px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      color: var(--accent-strong);
+      font-size: 10px;
+    }
+    .method-state {
+      padding: 3px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .method-state.is-pending { border-color: #d9b47f; background: var(--accent-soft); color: var(--warn); }
+    .method-state.is-success { border-color: #a9ccb6; background: var(--ok-soft); color: var(--ok); }
+    .method-state.is-error { border-color: #e1aaa4; background: var(--error-soft); color: var(--error); }
+    .strategy-body { margin-left: 44px; }
+    .strategy-desc {
+      margin: 7px 0 0;
+      color: var(--ink-soft);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+    .strategy-caveat {
+      margin: 6px 0 11px;
+      padding-left: 9px;
+      border-left: 2px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      background: var(--ink);
+      color: #fff9ef;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.2;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background .15s ease, border-color .15s ease, color .15s ease, transform .15s ease;
+    }
+    .btn:hover:not(:disabled) { background: #3b342b; transform: translateY(-1px); }
+    .btn:active:not(:disabled) { transform: translateY(0); }
+    .btn:disabled {
+      opacity: .48;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-copy { min-width: 138px; }
+    .btn-ghost {
+      border-color: var(--line-strong);
+      background: transparent;
+      color: var(--ink-soft);
+    }
+    .btn-ghost:hover:not(:disabled) { background: var(--surface-2); }
+    .btn-secondary {
+      border-color: var(--line-strong);
+      background: var(--surface-2);
+      color: var(--ink-soft);
+    }
+    .btn-secondary:hover:not(:disabled) { background: var(--surface-3); }
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .callout {
+      margin: 0 0 14px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface-2);
+      color: var(--muted-strong);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+    .callout-warn { border-color: #e7c894; background: var(--warn-soft); color: #6e4710; }
+    .callout-error { border-color: #e1aaa4; background: var(--error-soft); color: #7c2923; }
+
+    .supports-block { margin-top: 16px; }
+    .supports-block h3 {
+      margin-bottom: 8px;
+      color: var(--ink-soft);
+      font-size: 12px;
+    }
+    .supports-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .supports-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--surface-2);
+      font-size: 11px;
+    }
+    .supports-item code { color: var(--accent-strong); font-size: 10px; }
+    .support-yes { color: var(--ok); font-weight: 700; }
+    .support-no { color: var(--error); font-weight: 700; }
+    .support-unknown { color: var(--muted); font-weight: 700; }
+    .ua-line {
+      margin: 14px 0 0;
+      padding-top: 12px;
+      border-top: 1px dashed var(--line);
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .ua-line span { display: block; margin-bottom: 3px; font-weight: 700; }
+    .ua-line code { display: block; color: var(--ink-soft); font-size: 10px; line-height: 1.55; overflow-wrap: anywhere; }
+
+    .inline-status {
+      margin: 10px 0 0;
+      padding: 7px 9px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+    .inline-status.is-pending { border-color: #d9b47f; background: var(--accent-soft); color: var(--warn); }
+    .inline-status.is-success { border-color: #a9ccb6; background: var(--ok-soft); color: var(--ok); }
+    .inline-status.is-error { border-color: #e1aaa4; background: var(--error-soft); color: var(--error); }
+
+    .read-results,
+    .paste-results {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .read-item {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface-2);
+    }
+    .read-item-title {
+      margin: 0 0 10px;
+      color: var(--ink-soft);
+      font-size: 12px;
+    }
+    .read-type {
+      padding-top: 11px;
+      border-top: 1px dashed var(--line);
+    }
+    .read-type:first-of-type { padding-top: 0; border-top: 0; }
+    .read-type-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 7px;
+    }
+    .read-type-name {
+      padding: 2px 6px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      color: var(--accent-strong);
+      font-size: 10px;
+      overflow-wrap: anywhere;
+    }
+    .badge {
+      padding: 2px 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge-ok { border-color: #a9ccb6; background: var(--ok-soft); color: var(--ok); }
+    .badge-muted { background: var(--surface-3); color: var(--muted); }
+    .badge-error { border-color: #e1aaa4; background: var(--error-soft); color: var(--error); }
+    .read-error { margin: 6px 0 0; color: var(--error); font-size: 11px; overflow-wrap: anywhere; }
+    .read-preview-wrap { margin: 10px 0 0; }
+    .read-preview {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: min(230px, 100%);
+      max-height: 190px;
+      padding: 5px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      object-fit: contain;
+    }
+    .text-snippet {
+      max-height: 170px;
+      margin: 5px 0 0;
+      padding: 9px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      color: var(--ink-soft);
+      font-size: 10px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .empty-state {
+      margin: 0;
+      padding: 10px;
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .paste-zone {
+      width: 100%;
+      min-height: 100px;
+      padding: 12px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 11px;
+      background: var(--surface-2);
+      color: var(--ink-soft);
+      font-size: 12px;
+      line-height: 1.65;
+      resize: vertical;
+    }
+    .paste-zone::placeholder { color: #9b8c79; }
+    .paste-zone:disabled { opacity: .6; cursor: not-allowed; }
+    .paste-file {
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface-2);
+    }
+    .paste-file h4 { margin-bottom: 6px; font-size: 12px; overflow-wrap: anywhere; }
+    .paste-file-preview {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: min(230px, 100%);
+      max-height: 190px;
+      margin-top: 9px;
+      padding: 5px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      object-fit: contain;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin: 0 0 10px;
+      padding: 0;
+      list-style: none;
+    }
+    .chips code {
+      display: inline-block;
+      padding: 2px 6px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      color: var(--accent-strong);
+      font-size: 10px;
+      overflow-wrap: anywhere;
+    }
+
+    .log-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      max-height: 460px;
+      margin: 0;
+      padding: 0;
+      overflow: auto;
+      list-style: none;
+    }
+    .log-entry {
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-2);
+      font-size: 11px;
+    }
+    .log-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+    .log-time { color: var(--muted); font-family: var(--mono); font-size: 10px; }
+    .log-badge {
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: var(--surface-3);
+      color: var(--muted-strong);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }
+    .log-badge.is-success { background: var(--ok-soft); color: var(--ok); }
+    .log-badge.is-error { background: var(--error-soft); color: var(--error); }
+    .log-badge.is-pending { background: var(--accent-soft); color: var(--warn); }
+    .log-kind { color: var(--ink-soft); font-weight: 700; }
+    .log-title { color: var(--muted); }
+    .log-meta {
+      margin-top: 3px;
+      color: var(--muted);
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
+    .log-error { margin-top: 3px; color: var(--error); line-height: 1.55; overflow-wrap: anywhere; }
+
+    .footer {
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      padding: 0 20px 34px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+    .footer p { margin: 0; }
+
+    .legacy-copy-helper {
+      position: fixed;
+      top: 0;
+      left: -10000px;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @media (max-width: 1120px) {
+      .layout { grid-template-columns: minmax(0, 1fr); }
+      .hero-inner { grid-template-columns: minmax(0, 1fr); }
+      .hero-aside { grid-template-columns: repeat(2, minmax(0, 1fr)); min-width: 0; }
+    }
+
+    @media (max-width: 760px) {
+      .source-top { grid-template-columns: minmax(0, 1fr); }
+      .preview-stage { min-height: 210px; }
+      #source-preview { max-height: 300px; }
+      .source-buttons { margin-left: 0; }
+      .strategy-head { grid-template-columns: 30px minmax(0, 1fr); }
+      .method-state { grid-column: 2; justify-self: start; }
+      .strategy-body { margin-left: 0; }
+    }
+
+    @media (max-width: 520px) {
+      .layout { padding-inline: 12px; }
+      .hero { padding-inline: 14px; }
+      .card { padding: 16px; }
+      .hero-aside { grid-template-columns: 1fr; }
+      .meta-list { grid-template-columns: 1fr; }
+      .meta-list .span-2 { grid-column: auto; }
+      .fallback-panel { align-items: flex-start; }
+      .fallback-panel img { width: 70px; height: 70px; }
+      .btn-copy { width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <div>
+        <p class="eyebrow">ChineseBQB · maker / clipboard-lab</p>
+        <h1>动图复制到剪贴板实验台</h1>
+        <p class="lede">
+          把真正的两帧 GIF / WebP 交给十种不同的剪贴板写入方式，再由你亲自粘贴到 TextEdit 或其他应用里比较结果。
+          页面不会自动读取、写入或替换剪贴板；所有剪贴板操作都来自一次明确的点击或粘贴。
+        </p>
+        <ol class="workflow" aria-label="建议流程">
+          <li>选择素材</li>
+          <li>点一种复制方式</li>
+          <li>到 TextEdit 粘贴</li>
+          <li>回来读取剪贴板</li>
+          <li>按类型 / 字节 / SHA-256 对比</li>
+        </ol>
+      </div>
+      <aside class="hero-aside" aria-label="实验台摘要">
+        <span class="hero-stat"><span>写入路径</span><strong>10</strong></span>
+        <span class="hero-stat"><span>自动剪贴板操作</span><strong>0</strong></span>
+      </aside>
+    </div>
+  </header>
+
+  <main id="main" class="layout">
+    <div class="column">
+      <section class="card source-card" aria-labelledby="source-heading">
+        <div class="card-heading">
+          <div>
+            <p class="section-kicker">01 · 源文件</p>
+            <h2 id="source-heading">选择要测试的动图</h2>
+          </div>
+          <span id="source-origin" class="chip">等待载入</span>
+        </div>
+
+        <div class="source-top">
+          <figure class="preview-shell">
+            <div class="preview-stage">
+              <span id="preview-badge" class="preview-badge" hidden>动画</span>
+              <img id="source-preview" alt="" hidden>
+              <div id="source-placeholder" class="preview-placeholder">正在加载示例 sample.gif…</div>
+            </div>
+            <figcaption id="source-caption" class="preview-caption">示例文件与页面同目录，使用相对 URL 加载。</figcaption>
+          </figure>
+
+          <div class="source-meta">
+            <dl class="meta-list">
+              <div><dt>文件名</dt><dd id="meta-name">—</dd></div>
+              <div><dt>大小</dt><dd id="meta-size">—</dd></div>
+              <div><dt>MIME（魔数嗅探）</dt><dd id="meta-mime">—</dd></div>
+              <div><dt>画布尺寸</dt><dd id="meta-dimensions">—</dd></div>
+              <div><dt>帧数</dt><dd id="meta-frames">—</dd></div>
+              <div><dt>帧延迟</dt><dd id="meta-delays">—</dd></div>
+              <div><dt>循环次数</dt><dd id="meta-loop">—</dd></div>
+              <div class="span-2"><dt>源文件 SHA-256</dt><dd><code id="meta-sha">—</code></dd></div>
+            </dl>
+            <p id="meta-parse-note" class="micro-note" hidden></p>
+          </div>
+        </div>
+
+        <div class="source-controls">
+          <fieldset class="format-picker">
+            <legend>示例格式</legend>
+            <label class="segment">
+              <input id="format-gif" type="radio" name="source-format" value="gif" checked>
+              <span>GIF</span>
+            </label>
+            <label class="segment">
+              <input id="format-webp" type="radio" name="source-format" value="webp">
+              <span>WebP</span>
+            </label>
+          </fieldset>
+
+          <div class="file-control">
+            <label class="file-control-label" for="source-upload">上传本地 GIF / WebP（20 MiB 上限）</label>
+            <input id="source-upload" type="file" accept=".gif,.webp,image/gif,image/webp">
+            <p class="micro-note">只按 GIF87a / GIF89a 或 RIFF…WEBP 魔数识别，不做格式转换；文件只在浏览器内存里，不会上传。</p>
+          </div>
+
+          <div class="source-buttons">
+            <button id="reload-sample" class="btn btn-ghost" type="button">重新加载示例</button>
+            <button id="download-source" class="btn btn-ghost" type="button" disabled>下载当前原图</button>
+          </div>
+        </div>
+
+        <div class="fallback-panel">
+          <img id="fallback-preview" alt="静态 PNG 备用图预览" hidden>
+          <div>
+            <h3>静态 PNG 备用图 <span class="tag">丢失动画</span></h3>
+            <p id="fallback-meta" class="micro-note">等待源文件后自动生成。</p>
+            <p class="micro-note">从 createImageBitmap / canvas 的第一帧生成，只用于 image/png 策略；它不是动图。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card strategies-card" aria-labelledby="strategies-heading">
+        <div class="card-heading">
+          <div>
+            <p class="section-kicker">02 · 复制策略</p>
+            <h2 id="strategies-heading">十种写入方式</h2>
+          </div>
+          <span class="chip chip-strong">手动触发</span>
+        </div>
+
+        <div id="status" class="status is-pending" role="status" aria-live="polite" aria-atomic="true">
+          <p id="status-title" class="status-title">正在加载示例…</p>
+          <ul id="status-details" class="status-details" hidden></ul>
+        </div>
+        <p id="strategy-lock-note" class="micro-note">源与静态 PNG 备用图准备好后，复制按钮才会启用。</p>
+
+        <div class="strategy-list">
+          <article class="strategy">
+            <div class="strategy-head">
+              <span class="strategy-num">1</span>
+              <div>
+                <h3>原生 ClipboardItem（标准图像 MIME）</h3>
+                <p class="strategy-mime"><code data-mime-for="standard">image/gif</code> · Promise 包装的 Blob</p>
+              </div>
+              <span class="method-state is-idle" data-state-for="1">等待源就绪</span>
+            </div>
+            <div class="strategy-body">
+              <p class="strategy-desc">真正调用 <code>navigator.clipboard.write</code>，写入当前源的标准图像 MIME。数据用 <code>Promise.resolve(blob)</code> 包装，写入调用发生在点击处理器的同一任务内。</p>
+              <p class="strategy-caveat" id="caveat-1">不支持的尝试不会静默跳过：NotAllowedError、NotSupportedError 等会原样显示。supports() 结果只代表浏览器层面，见右栏。</p>
+              <button class="btn btn-copy" type="button" data-copy-method="1" aria-describedby="caveat-1">复制原生图像</button>
+            </div>
+          </article>
+
+          <article class="strategy">
+            <div class="strategy-head">
+              <span class="strategy-num">2</span>
+              <div>
+                <h3>自定义 ClipboardItem（web image/*）</h3>
+                <p class="strategy-mime"><code data-mime-for="custom">web image/gif</code> · 原始 Blob 字节</p>
+              </div>
+              <span class="method-state is-idle" data-state-for="2">等待源就绪</span>
+            </div>
+            <div class="strategy-body">
+              <p class="strategy-desc">使用 <code>web image/gif</code> 或 <code>web image/webp</code> 自定义类型，写入与源文件完全相同的 Blob 字节，不做转码。</p>
+              <p class="strategy-caveat" id="caveat-2">只有理解这个自定义类型的接收方才能读到它；普通应用可能完全忽略该类型。</p>
+              <button class="btn btn-copy" type="button" data-copy-method="2" aria-describedby="caveat-2">复制自定义格式</button>
+            </div>
+          </article>
+
+          <article class="strategy">
+            <div class="strategy-head">
+              <span class="strategy-num">3</span>
+              <div>
+                <h3>text/html + Data URL 图片</h3>
+                <p class="strategy-mime"><code>text/html</code> · &lt;img src="data:…"&gt;</p>
+              </div>
+              <span class="method-state is-idle" data-state-for="3">等待源就绪</span>
+            </div>
+            <div class="strategy-body">
+              <p class="strategy-desc">把原始文件转成 base64 Data URL，嵌入完整 HTML 图片标签后写入 <code>text/html</code>。</p>
+              <p class="strategy-caveat" id="caveat-3">接收方可能把 HTML 当成富文本或图片处理；是否保留动画取决于目标应用，而不是浏览器。</p>
+              <button class="btn btn-copy" type="button" data-copy-method="3" aria-describedby="caveat-3">复制 HTML（Data URL）</button>
+            </div>
+          </article>
+
+          <article class="strategy">
+            <div class="strategy-head">
+              <span class="strategy-num">4</span>
+              <div>
+                <h3>text/html + 绝对 URL / blob URL</h3>
+                <p class="strategy-mime"><code>text/html</code> · 远程或 blob 地址</p>
+              </div>
+              <span class="method-state is-idle" data-state-for="4">等待源就绪</span>
+            </div>
+            <div class="strategy-body">
+              <p class="strategy-desc">HTML 里只放一个绝对地址：示例文件使用同目录的 HTTP 地址；本地上传使用 <code>blob:</code> URL。</p>
+              <p class="strategy-caveat" id="caveat-4">上传文件的 blob URL 只在当前页面打开期间有效，接收方也可能拒绝解析 blob: 地址；示例 HTTP 地址还取决于接收方能否访问网络。</p>
+              <button class="btn btn-copy" type="button" data-copy-method="4" aria-describedby="caveat-4">复制 HTML（URL）</button>
+            </div>
+          </article>
+
+          <article class="strategy">
+            <div class="strategy-head">
+              <span class="strategy-num">5</span>
+              <div>
+                <h3>仅 image/png 静态备用图</h3>
+                <p class="strategy-mime"><code>image/png</code> · 第一帧</p>
+              </div>
+              <span class="method-state is-idle" data-state-for="5">等待源就绪</span>
+            </div>
+            <div class="strategy-body">
+              <p class="strategy-desc">只写入提前准备好的 PNG。它来自第一帧，是普通静态图片。</p>
+              <p class="strategy-caveat" id="caveat-5">这是兼容性最高的路径，但动画一定丢失。目标应用拿到的是静态 PNG。</p>
+              <button class="btn btn-copy" type="button" data-copy-method="5" aria-describedby="caveat-5">复制静态 PNG</button>
+            </div>
+          </article>
+
+          <article class="strategy">
+            <div class="strategy-head">
+              <span class="strategy-num">6</span>
+              <div>
+                <h3>自定义格式 + image/png</h3>
+                <p class="strategy-mime"><code data-mime-for="custom">web image/gif</code> + <code>image/png</code></p>
+              </div>
+              <span class="method-state is-idle" data-state-for="6">等待源就绪</span>
+            </div>
+            <div class="strategy-body">
+              <p class="strategy-desc">同一个 ClipboardItem 同时放入自定义动图类型和静态 PNG，让接收方自己挑选能理解的类型。</p>
+              <p class="strategy-caveat" id="caveat-6">原生应用很可能只取 PNG；你看到的可能是静态图，而不是动画。</p>
+              <button class="btn btn-copy" type="button" data-copy-method="6" aria-describedby="caveat-6">复制自定义 + PNG</button>
+            </div>
+          </article>
+
+          <article class="strategy">
+            <div class="strategy-head">
+              <span class="strategy-num">7</span>
+              <div>
+                <h3>自定义格式 + text/html Data URL</h3>
+                <p class="strategy-mime"><code data-mime-for="custom">web image/gif</code> + <code>text/html</code></p>
+              </div>
+              <span class="method-state is-idle" data-state-for="7">等待源就绪</span>
+            </div>
+            <div class="strategy-body">
+              <p class="strategy-desc">同时提供自定义 Blob 类型和 Data URL HTML。两条路径都保留原始字节或完整内嵌数据。</p>
+              <p class="strategy-caveat" id="caveat-7">仍没有任何规范保证接收方会识别自定义类型；HTML 路径是否被采用也取决于目标应用。</p>
+              <button class="btn btn-copy" type="button" data-copy-method="7" aria-describedby="caveat-7">复制自定义 + HTML</button>
+            </div>
+          </article>
+
+          <article class="strategy">
+            <div class="strategy-head">
+              <span class="strategy-num">8</span>
+              <div>
+                <h3>text/html Data URL + image/png</h3>
+                <p class="strategy-mime"><code>text/html</code> + <code>image/png</code></p>
+              </div>
+              <span class="method-state is-idle" data-state-for="8">等待源就绪</span>
+            </div>
+            <div class="strategy-body">
+              <p class="strategy-desc">同时写入富文本 HTML 和静态 PNG，覆盖偏向 HTML 或偏向位图的接收方。</p>
+              <p class="strategy-caveat" id="caveat-8">原生应用若选择 PNG，只会得到静态图；HTML 路径也可能被目标应用忽略。</p>
+              <button class="btn btn-copy" type="button" data-copy-method="8" aria-describedby="caveat-8">复制 HTML + PNG</button>
+            </div>
+          </article>
+
+          <article class="strategy">
+            <div class="strategy-head">
+              <span class="strategy-num">9</span>
+              <div>
+                <h3>旧式 copy 事件 + execCommand</h3>
+                <p class="strategy-mime"><code>text/html</code> · 已弃用 / 实验性</p>
+              </div>
+              <span class="method-state is-idle" data-state-for="9">等待源就绪</span>
+            </div>
+            <div class="strategy-body">
+              <p class="strategy-desc">临时插入一个可编辑节点，监听 <code>copy</code> 事件并调用 <code>clipboardData.setData('text/html', dataUrlHTML)</code>，最后执行 <code>document.execCommand('copy')</code>。</p>
+              <p class="strategy-caveat" id="caveat-9">这是已弃用、实验性的路径。操作结束后会移除临时节点和监听器，并恢复之前的焦点与选区。</p>
+              <button class="btn btn-copy" type="button" data-copy-method="9" aria-describedby="caveat-9">旧式复制 HTML</button>
+            </div>
+          </article>
+
+          <article class="strategy">
+            <div class="strategy-head">
+              <span class="strategy-num">10</span>
+              <div>
+                <h3>text/plain 源 URL（仅链接）</h3>
+                <p class="strategy-mime"><code>text/plain</code> · 不是图片数据</p>
+              </div>
+              <span class="method-state is-idle" data-state-for="10">等待源就绪</span>
+            </div>
+            <div class="strategy-body">
+              <p class="strategy-desc">只写入一个纯文本 URL：示例文件写同目录 HTTP 地址，上传文件写当前页面的 blob URL。</p>
+              <p class="strategy-caveat" id="caveat-10">这不是图片数据。粘贴到大多数应用只会得到一条链接；上传文件的 blob URL 关闭页面后失效。</p>
+              <button class="btn btn-copy" type="button" data-copy-method="10" aria-describedby="caveat-10">复制纯文本 URL</button>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+
+    <div class="column">
+      <section class="card" aria-labelledby="env-heading">
+        <div class="card-heading">
+          <div>
+            <p class="section-kicker">03 · 环境</p>
+            <h2 id="env-heading">能力与限制</h2>
+          </div>
+          <span class="chip">只读</span>
+        </div>
+        <div id="env-warning" class="callout callout-warn" hidden></div>
+        <dl id="capability-list" class="meta-list"></dl>
+        <div class="supports-block">
+          <h3>ClipboardItem.supports()</h3>
+          <ul id="supports-list" class="supports-list"></ul>
+          <p class="micro-note">true 只表示浏览器愿意构造 / 写入该类型，不表示 TextEdit 或其他接收应用能识别动画、自定义类型或富文本。</p>
+        </div>
+        <p class="ua-line"><span>实际浏览器 User-Agent</span><code id="ua-text"></code></p>
+      </section>
+
+      <section class="card" aria-labelledby="read-heading">
+        <div class="card-heading">
+          <div>
+            <p class="section-kicker">04 · 检查</p>
+            <h2 id="read-heading">读取剪贴板</h2>
+          </div>
+          <span class="chip">显式操作</span>
+        </div>
+        <p class="micro-note">点击后调用 <code>navigator.clipboard.read()</code>，列出每个条目的所有类型、Blob 类型、字节数、SHA-256 和可解析的动画信息。不会自动读取，也不会把内容发到任何地方。</p>
+        <div class="btn-row">
+          <button id="read-clipboard" class="btn" type="button">读取剪贴板</button>
+        </div>
+        <p id="read-status" class="inline-status" role="status" aria-live="polite">尚未读取。</p>
+        <div id="read-results" class="read-results">
+          <p class="empty-state">尚未读取剪贴板。</p>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="paste-heading">
+        <div class="card-heading">
+          <div>
+            <p class="section-kicker">05 · 事件检查</p>
+            <h2 id="paste-heading">粘贴事件检查</h2>
+          </div>
+          <span class="chip">不是原生富文本预览</span>
+        </div>
+        <p class="micro-note">把剪贴板内容粘贴到下面区域。这里只检查这一次 <code>paste</code> 事件里的 <code>ClipboardData</code> 类型和文件元数据，不代表系统剪贴板的全部分格式，也不会写入剪贴板。</p>
+        <label class="field-label" for="paste-zone">粘贴到此处（⌘V / Ctrl+V）</label>
+        <textarea id="paste-zone" class="paste-zone" spellcheck="false" aria-describedby="paste-help" placeholder="点击这里，然后按 ⌘V 或 Ctrl+V。为避免插入内容，本区域会拦截默认粘贴行为。"></textarea>
+        <p id="paste-help" class="micro-note">仅显示本次事件的 MIME 类型、文件信息与安全嗅探结果；文本片段不会写入记录或导出报告。</p>
+        <p id="paste-status" class="inline-status" role="status" aria-live="polite">尚未粘贴。</p>
+        <div id="paste-results" class="paste-results">
+          <p class="empty-state">尚未收到粘贴事件。</p>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="records-heading">
+        <div class="card-heading">
+          <div>
+            <p class="section-kicker">06 · 记录</p>
+            <h2 id="records-heading">操作记录与报告</h2>
+          </div>
+          <span class="chip">最多 50 条</span>
+        </div>
+        <p class="micro-note">记录时间、状态、方法、MIME 与元数据；不记录剪贴板文本内容或原始文件字节。清空只影响本页 UI，不会改动剪贴板。</p>
+        <div class="btn-row">
+          <button id="export-report" class="btn btn-secondary" type="button">导出 JSON 报告</button>
+          <button id="clear-records" class="btn btn-ghost" type="button">清空记录</button>
+        </div>
+        <ol id="log-list" class="log-list">
+          <li class="empty-state">暂无记录。</li>
+        </ol>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>所有图片处理、哈希和剪贴板操作都在当前浏览器内完成。页面不会上传文件、收集遥测，也不会在初始加载时替换剪贴板。示例文件地址是相对的 <code>sample.gif</code> / <code>sample.webp</code>。</p>
+  </footer>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
+      const LOG_LIMIT = 50;
+      const SUPPORT_TYPES = ['image/png', 'image/gif', 'image/webp', 'web image/gif', 'web image/webp'];
+      const PNG_SIGNATURE = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+
+      const state = {
+        generation: 0,
+        selectionSeq: 0,
+        selectedFormat: 'gif',
+        source: null,
+        ready: false,
+        busy: false,
+        busyLabel: '',
+        dataUrlHtml: '',
+        urlHtml: '',
+        plainUrl: '',
+        logs: [],
+        logSeq: 0,
+        readUrls: [],
+        pasteUrls: [],
+        pasteSeq: 0
+      };
+
+      const ui = {
+        sourcePreview: document.getElementById('source-preview'),
+        sourcePlaceholder: document.getElementById('source-placeholder'),
+        previewBadge: document.getElementById('preview-badge'),
+        sourceCaption: document.getElementById('source-caption'),
+        sourceOrigin: document.getElementById('source-origin'),
+        metaName: document.getElementById('meta-name'),
+        metaSize: document.getElementById('meta-size'),
+        metaMime: document.getElementById('meta-mime'),
+        metaDimensions: document.getElementById('meta-dimensions'),
+        metaFrames: document.getElementById('meta-frames'),
+        metaDelays: document.getElementById('meta-delays'),
+        metaLoop: document.getElementById('meta-loop'),
+        metaSha: document.getElementById('meta-sha'),
+        metaParseNote: document.getElementById('meta-parse-note'),
+        fallbackPreview: document.getElementById('fallback-preview'),
+        fallbackMeta: document.getElementById('fallback-meta'),
+        formatRadios: Array.from(document.querySelectorAll('input[name="source-format"]')),
+        upload: document.getElementById('source-upload'),
+        reloadSample: document.getElementById('reload-sample'),
+        downloadSource: document.getElementById('download-source'),
+        status: document.getElementById('status'),
+        statusTitle: document.getElementById('status-title'),
+        statusDetails: document.getElementById('status-details'),
+        strategyLockNote: document.getElementById('strategy-lock-note'),
+        copyButtons: Array.from(document.querySelectorAll('[data-copy-method]')),
+        methodStates: new Map(),
+        capabilityList: document.getElementById('capability-list'),
+        supportsList: document.getElementById('supports-list'),
+        envWarning: document.getElementById('env-warning'),
+        uaText: document.getElementById('ua-text'),
+        readButton: document.getElementById('read-clipboard'),
+        readStatus: document.getElementById('read-status'),
+        readResults: document.getElementById('read-results'),
+        pasteZone: document.getElementById('paste-zone'),
+        pasteStatus: document.getElementById('paste-status'),
+        pasteResults: document.getElementById('paste-results'),
+        exportReport: document.getElementById('export-report'),
+        clearRecords: document.getElementById('clear-records'),
+        logList: document.getElementById('log-list')
+      };
+
+      document.querySelectorAll('[data-state-for]').forEach((node) => {
+        ui.methodStates.set(Number(node.dataset.stateFor), node);
+      });
+
+      const METHODS = {
+        1: {
+          title: '原生 ClipboardItem（标准图像 MIME）',
+          mimes: () => [state.source.mime],
+          build: () => new ClipboardItem({ [state.source.mime]: Promise.resolve(state.source.blob) })
+        },
+        2: {
+          title: '自定义 ClipboardItem（web image/*）',
+          mimes: () => [customMime()],
+          build: () => new ClipboardItem({ [customMime()]: state.source.blob })
+        },
+        3: {
+          title: 'text/html + Data URL 图片',
+          mimes: () => ['text/html'],
+          build: () => new ClipboardItem({ 'text/html': htmlBlob(state.dataUrlHtml) })
+        },
+        4: {
+          title: 'text/html + 绝对 URL / blob URL',
+          mimes: () => ['text/html'],
+          build: () => new ClipboardItem({ 'text/html': htmlBlob(state.urlHtml) })
+        },
+        5: {
+          title: '仅 image/png 静态备用图',
+          mimes: () => ['image/png'],
+          build: () => new ClipboardItem({ 'image/png': state.source.fallbackBlob })
+        },
+        6: {
+          title: '自定义格式 + image/png',
+          mimes: () => [customMime(), 'image/png'],
+          build: () => new ClipboardItem({
+            [customMime()]: state.source.blob,
+            'image/png': state.source.fallbackBlob
+          })
+        },
+        7: {
+          title: '自定义格式 + text/html Data URL',
+          mimes: () => [customMime(), 'text/html'],
+          build: () => new ClipboardItem({
+            [customMime()]: state.source.blob,
+            'text/html': htmlBlob(state.dataUrlHtml)
+          })
+        },
+        8: {
+          title: 'text/html Data URL + image/png',
+          mimes: () => ['text/html', 'image/png'],
+          build: () => new ClipboardItem({
+            'text/html': htmlBlob(state.dataUrlHtml),
+            'image/png': state.source.fallbackBlob
+          })
+        },
+        9: {
+          title: '旧式 copy 事件 + execCommand',
+          legacy: true,
+          mimes: () => ['text/html'],
+          build: null
+        },
+        10: {
+          title: 'text/plain 源 URL（仅链接）',
+          mimes: () => ['text/plain'],
+          build: () => new ClipboardItem({
+            'text/plain': new Blob([state.plainUrl], { type: 'text/plain' })
+          })
+        }
+      };
+
+      function create(tag, className, text) {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text !== undefined && text !== null) node.textContent = String(text);
+        return node;
+      }
+
+      function clearNode(node) {
+        while (node.firstChild) node.removeChild(node.firstChild);
+      }
+
+      function formatBytes(bytes) {
+        if (!Number.isFinite(bytes) || bytes < 0) return '—';
+        if (bytes < 1024) return bytes + ' B';
+        const units = ['KiB', 'MiB', 'GiB'];
+        let value = bytes / 1024;
+        let unit = 0;
+        while (value >= 1024 && unit < units.length - 1) {
+          value /= 1024;
+          unit += 1;
+        }
+        return bytes.toLocaleString('zh-CN') + ' B（' + value.toFixed(value >= 10 ? 1 : 2) + ' ' + units[unit] + '）';
+      }
+
+      function formatTime(iso) {
+        const date = new Date(iso);
+        if (Number.isNaN(date.getTime())) return String(iso);
+        return date.toLocaleString('zh-CN', { hour12: false });
+      }
+
+      function errorInfo(error) {
+        const name = error && error.name ? String(error.name) : 'Error';
+        const message = error && error.message ? String(error.message) : String(error || '未知错误');
+        return { name: name, message: message.length > 700 ? message.slice(0, 700) + '…' : message };
+      }
+
+      function truncate(value, max) {
+        const text = String(value);
+        return text.length > max ? text.slice(0, max) : text;
+      }
+
+      function readU16LE(bytes, pos) {
+        if (pos + 2 > bytes.length) return null;
+        return bytes[pos] | (bytes[pos + 1] << 8);
+      }
+
+      function readU24LE(bytes, pos) {
+        if (pos + 3 > bytes.length) return null;
+        return bytes[pos] | (bytes[pos + 1] << 8) | (bytes[pos + 2] << 16);
+      }
+
+      function readU32LE(bytes, pos) {
+        if (pos + 4 > bytes.length) return null;
+        return (bytes[pos] | (bytes[pos + 1] << 8) | (bytes[pos + 2] << 16) | (bytes[pos + 3] << 24)) >>> 0;
+      }
+
+      function asciiAt(bytes, pos, length) {
+        if (pos + length > bytes.length) return '';
+        let value = '';
+        for (let i = 0; i < length; i += 1) value += String.fromCharCode(bytes[pos + i]);
+        return value;
+      }
+
+      function sniffMime(bytes) {
+        if (!bytes || typeof bytes.length !== 'number') return null;
+        if (bytes.length >= 6) {
+          const signature = asciiAt(bytes, 0, 6);
+          if (signature === 'GIF87a' || signature === 'GIF89a') return 'image/gif';
+        }
+        if (bytes.length >= 12 && asciiAt(bytes, 0, 4) === 'RIFF' && asciiAt(bytes, 8, 4) === 'WEBP') {
+          return 'image/webp';
+        }
+        if (bytes.length >= 8 && PNG_SIGNATURE.every((value, index) => bytes[index] === value)) {
+          return 'image/png';
+        }
+        return null;
+      }
+
+      function skipGifSubBlocks(bytes, pos) {
+        let cursor = pos;
+        while (cursor < bytes.length) {
+          const size = bytes[cursor];
+          cursor += 1;
+          if (size === 0) return cursor;
+          cursor += size;
+        }
+        return cursor;
+      }
+
+      function parseGif(bytes) {
+        if (bytes.length < 13) throw new Error('GIF 头部不完整');
+        const signature = asciiAt(bytes, 0, 6);
+        if (signature !== 'GIF87a' && signature !== 'GIF89a') throw new Error('不是 GIF87a / GIF89a');
+        const width = readU16LE(bytes, 6);
+        const height = readU16LE(bytes, 8);
+        const packed = bytes[10];
+        let pos = 13;
+        if (packed & 0x80) pos += 3 * (1 << ((packed & 0x07) + 1));
+
+        const delaysMs = [];
+        let pendingDelayMs = 0;
+        let loop = null;
+
+        while (pos < bytes.length) {
+          const block = bytes[pos];
+          pos += 1;
+
+          if (block === 0x3b) break;
+
+          if (block === 0x21) {
+            if (pos >= bytes.length) break;
+            const label = bytes[pos];
+            pos += 1;
+
+            if (label === 0xf9) {
+              if (pos >= bytes.length) break;
+              const size = bytes[pos];
+              pos += 1;
+              if (pos + size > bytes.length) break;
+              if (size >= 4) pendingDelayMs = (readU16LE(bytes, pos + 1) || 0) * 10;
+              pos += size;
+              if (pos < bytes.length && bytes[pos] === 0) pos += 1;
+            } else if (label === 0xff) {
+              if (pos >= bytes.length) break;
+              const size = bytes[pos];
+              pos += 1;
+              if (pos + size > bytes.length) break;
+              if (size === 11 && asciiAt(bytes, pos, 11) === 'NETSCAPE2.0') {
+                pos += size;
+                while (pos < bytes.length) {
+                  const subSize = bytes[pos];
+                  pos += 1;
+                  if (subSize === 0) break;
+                  if (pos + subSize > bytes.length) break;
+                  if (subSize >= 3 && bytes[pos] === 1) {
+                    const parsedLoop = readU16LE(bytes, pos + 1);
+                    if (parsedLoop !== null) loop = parsedLoop;
+                  }
+                  pos += subSize;
+                }
+              } else {
+                pos += size;
+                pos = skipGifSubBlocks(bytes, pos);
+              }
+            } else {
+              pos = skipGifSubBlocks(bytes, pos);
+            }
+          } else if (block === 0x2c) {
+            if (pos + 9 > bytes.length) break;
+            pos += 8;
+            const imagePacked = bytes[pos];
+            pos += 1;
+            if (imagePacked & 0x80) pos += 3 * (1 << ((imagePacked & 0x07) + 1));
+            if (pos >= bytes.length) break;
+            pos += 1;
+            pos = skipGifSubBlocks(bytes, pos);
+            delaysMs.push(pendingDelayMs);
+            pendingDelayMs = 0;
+          } else {
+            break;
+          }
+        }
+
+        return {
+          format: 'gif',
+          width: width,
+          height: height,
+          frameCount: delaysMs.length,
+          delaysMs: delaysMs,
+          loop: loop,
+          animated: delaysMs.length > 1
+        };
+      }
+
+      function parseWebp(bytes) {
+        if (bytes.length < 12) throw new Error('WebP 头部不完整');
+        if (asciiAt(bytes, 0, 4) !== 'RIFF' || asciiAt(bytes, 8, 4) !== 'WEBP') {
+          throw new Error('不是 RIFF…WEBP');
+        }
+
+        let pos = 12;
+        let width = null;
+        let height = null;
+        let animated = false;
+        let loop = null;
+        const delaysMs = [];
+
+        while (pos + 8 <= bytes.length) {
+          const fourcc = asciiAt(bytes, pos, 4);
+          const size = readU32LE(bytes, pos + 4);
+          if (size === null) break;
+          const dataStart = pos + 8;
+          const dataEnd = dataStart + size;
+          if (dataEnd > bytes.length) break;
+
+          if (fourcc === 'VP8X' && size >= 10) {
+            animated = Boolean(bytes[dataStart] & 0x02);
+            width = (readU24LE(bytes, dataStart + 4) || 0) + 1;
+            height = (readU24LE(bytes, dataStart + 7) || 0) + 1;
+          } else if (fourcc === 'ANIM' && size >= 6) {
+            const parsedLoop = readU16LE(bytes, dataStart + 4);
+            if (parsedLoop !== null) loop = parsedLoop;
+          } else if (fourcc === 'ANMF' && size >= 16) {
+            const duration = readU24LE(bytes, dataStart + 12);
+            if (duration !== null) delaysMs.push(duration);
+          }
+
+          pos = dataStart + size + (size % 2);
+        }
+
+        if (delaysMs.length > 1) animated = true;
+
+        return {
+          format: 'webp',
+          width: width,
+          height: height,
+          frameCount: delaysMs.length > 0 ? delaysMs.length : (animated ? 0 : 1),
+          delaysMs: delaysMs,
+          loop: loop,
+          animated: animated
+        };
+      }
+
+      function parseAnimationMetadata(mime, bytes) {
+        try {
+          if (mime === 'image/gif') return parseGif(bytes);
+          if (mime === 'image/webp') return parseWebp(bytes);
+        } catch (error) {
+          return { parseError: errorInfo(error).message };
+        }
+        return null;
+      }
+
+      function frameSummary(meta) {
+        if (!meta) return '—';
+        if (meta.parseError) return '解析失败';
+        if (!meta.frameCount) return '未知';
+        return meta.frameCount + ' 帧' + (meta.frameCount > 1 ? '（动画）' : '（静态）');
+      }
+
+      function delaySummary(meta) {
+        if (!meta || meta.parseError) return '—';
+        if (meta.delaysMs && meta.delaysMs.length) return meta.delaysMs.map((value) => value + ' ms').join(' / ');
+        return meta.frameCount === 1 ? '—' : '未解析到';
+      }
+
+      function loopLabel(loop) {
+        if (loop === null || loop === undefined) return '未声明';
+        if (loop === 0) return '0（通常表示无限循环）';
+        return loop + ' 次';
+      }
+
+      function customMime() {
+        return state.source ? 'web ' + state.source.mime : 'web image/gif';
+      }
+
+      function htmlBlob(html) {
+        return new Blob([html], { type: 'text/html' });
+      }
+
+      function imageHtml(src, alt) {
+        const safeSrc = String(src)
+          .replace(/&/g, '&amp;')
+          .replace(/"/g, '&quot;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+        const safeAlt = String(alt)
+          .replace(/&/g, '&amp;')
+          .replace(/"/g, '&quot;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+        return '<img src="' + safeSrc + '" alt="' + safeAlt + '">';
+      }
+
+      function hasClipboardWrite() {
+        return Boolean(navigator.clipboard && typeof navigator.clipboard.write === 'function');
+      }
+
+      function hasClipboardRead() {
+        return Boolean(navigator.clipboard && typeof navigator.clipboard.read === 'function');
+      }
+
+      function hasClipboardItem() {
+        return typeof ClipboardItem !== 'undefined';
+      }
+
+      function supportsClipboardType(type) {
+        if (!hasClipboardItem() || typeof ClipboardItem.supports !== 'function') return null;
+        try {
+          return Boolean(ClipboardItem.supports(type));
+        } catch (error) {
+          return { error: errorInfo(error) };
+        }
+      }
+
+      function collectCapabilities() {
+        const supports = SUPPORT_TYPES.map((type) => {
+          const result = supportsClipboardType(type);
+          if (result && typeof result === 'object') {
+            return { type: type, supported: null, error: result.error };
+          }
+          return { type: type, supported: result, error: null };
+        });
+        return {
+          secureContext: Boolean(window.isSecureContext),
+          clipboardRead: hasClipboardRead(),
+          clipboardWrite: hasClipboardWrite(),
+          clipboardItem: hasClipboardItem(),
+          clipboardItemSupports: hasClipboardItem() && typeof ClipboardItem.supports === 'function',
+          supports: supports
+        };
+      }
+
+      function renderCapabilities() {
+        const caps = collectCapabilities();
+        clearNode(ui.capabilityList);
+
+        const addRow = (term, value) => {
+          const row = create('div');
+          row.appendChild(create('dt', '', term));
+          row.appendChild(create('dd', '', value));
+          ui.capabilityList.appendChild(row);
+        };
+
+        addRow('安全上下文', caps.secureContext ? '是（HTTPS / localhost）' : '否');
+        addRow('navigator.clipboard.read', caps.clipboardRead ? '可用' : '不可用');
+        addRow('navigator.clipboard.write', caps.clipboardWrite ? '可用' : '不可用');
+        addRow('ClipboardItem 构造器', caps.clipboardItem ? '可用' : '不可用');
+        addRow('ClipboardItem.supports()', caps.clipboardItemSupports ? '可用' : '不可用');
+
+        clearNode(ui.supportsList);
+        caps.supports.forEach((entry) => {
+          const item = create('li', 'supports-item');
+          item.appendChild(create('code', '', entry.type));
+          if (entry.supported === null) {
+            item.appendChild(create('span', 'support-unknown', entry.error ? '调用失败' : '不可用'));
+          } else {
+            item.appendChild(create('span', entry.supported ? 'support-yes' : 'support-no', entry.supported ? '支持' : '不支持'));
+          }
+          ui.supportsList.appendChild(item);
+        });
+
+        ui.uaText.textContent = navigator.userAgent || '（浏览器未提供 User-Agent）';
+
+        if (!caps.secureContext) {
+          ui.envWarning.hidden = false;
+          ui.envWarning.textContent = '当前页面不是安全上下文。请通过 HTTPS、http://localhost 或 http://127.0.0.1 打开；普通 HTTP 或某些 file:// 场景下，剪贴板 API 可能不可用。';
+        } else if (!caps.clipboardWrite && !caps.clipboardRead) {
+          ui.envWarning.hidden = false;
+          ui.envWarning.textContent = '浏览器没有提供 navigator.clipboard 读写接口。请使用较新的 Chrome、Edge、Safari 或 Firefox，并确认页面是安全上下文。';
+        } else if (!caps.clipboardWrite) {
+          ui.envWarning.hidden = false;
+          ui.envWarning.textContent = '当前浏览器可读取剪贴板，但没有提供写入接口；复制按钮会保持禁用。';
+        } else if (!caps.clipboardItem) {
+          ui.envWarning.hidden = false;
+          ui.envWarning.textContent = '浏览器没有 ClipboardItem；标准写入策略不可用，只有旧式 execCommand 方法可能可用。';
+        } else {
+          ui.envWarning.hidden = true;
+          ui.envWarning.textContent = '';
+        }
+      }
+
+      function updateStatus(kind, title, details) {
+        ui.status.className = 'status is-' + kind;
+        ui.statusTitle.textContent = title;
+        clearNode(ui.statusDetails);
+        const list = Array.isArray(details) ? details.filter(Boolean) : [];
+        list.forEach((detail) => ui.statusDetails.appendChild(create('li', '', detail)));
+        ui.statusDetails.hidden = list.length === 0;
+      }
+
+      function updateReadStatus(kind, text) {
+        ui.readStatus.className = 'inline-status is-' + kind;
+        ui.readStatus.textContent = text;
+      }
+
+      function updatePasteStatus(kind, text) {
+        ui.pasteStatus.className = 'inline-status is-' + kind;
+        ui.pasteStatus.textContent = text;
+      }
+
+      function setMethodState(id, kind, text) {
+        const node = ui.methodStates.get(Number(id));
+        if (!node) return;
+        node.className = 'method-state is-' + kind;
+        node.textContent = text;
+      }
+
+      function resetMethodStates(text) {
+        Object.keys(METHODS).forEach((id) => setMethodState(Number(id), 'idle', text));
+      }
+
+      function methodDisabledReason(id) {
+        if (state.busy) return '当前剪贴板操作尚未结束';
+        if (!window.isSecureContext) return '需要 HTTPS 或 localhost 安全上下文';
+        if (!state.ready || !state.source) return '源文件或静态 PNG 备用图尚未准备好';
+        if (Number(id) === 9) {
+          return typeof document.execCommand === 'function' ? '' : '浏览器没有 document.execCommand';
+        }
+        if (!hasClipboardItem()) return '浏览器没有 ClipboardItem';
+        if (!hasClipboardWrite()) return '浏览器没有 navigator.clipboard.write';
+        return '';
+      }
+
+      function setDisabled(button, disabled, reason) {
+        button.disabled = disabled;
+        if (disabled && reason) button.title = reason;
+        else button.removeAttribute('title');
+      }
+
+      function refreshControls() {
+        const busy = state.busy;
+
+        ui.copyButtons.forEach((button) => {
+          const id = Number(button.dataset.copyMethod);
+          const reason = methodDisabledReason(id);
+          setDisabled(button, reason !== '', reason);
+        });
+
+        setDisabled(ui.readButton, busy || !window.isSecureContext || !hasClipboardRead(),
+          busy ? '当前剪贴板操作尚未结束' : (!window.isSecureContext ? '需要 HTTPS 或 localhost' : '浏览器没有 navigator.clipboard.read'));
+        setDisabled(ui.downloadSource, busy || !state.source,
+          busy ? '当前剪贴板操作尚未结束' : '尚未准备好源文件');
+        setDisabled(ui.reloadSample, busy, '当前剪贴板操作尚未结束');
+        setDisabled(ui.exportReport, busy, '当前剪贴板操作尚未结束');
+        setDisabled(ui.clearRecords, busy || state.logs.length === 0, busy ? '当前剪贴板操作尚未结束' : '暂无记录');
+        ui.upload.disabled = busy;
+        ui.pasteZone.disabled = busy;
+        ui.formatRadios.forEach((radio) => { radio.disabled = busy; });
+
+        if (busy) {
+          ui.strategyLockNote.textContent = state.busyLabel || '当前剪贴板操作尚未结束，所有相关控件暂时锁定。';
+        } else if (!window.isSecureContext) {
+          ui.strategyLockNote.textContent = '当前不是安全上下文；复制与读取按钮已禁用。请使用 HTTPS 或 localhost。';
+        } else if (!hasClipboardItem() && !hasClipboardWrite()) {
+          ui.strategyLockNote.textContent = '浏览器缺少 ClipboardItem / navigator.clipboard.write；只有旧式 execCommand 方法可能可用。';
+        } else if (!state.ready) {
+          ui.strategyLockNote.textContent = '源文件与静态 PNG 备用图准备好后，复制按钮才会启用。';
+        } else {
+          ui.strategyLockNote.textContent = '所有写入都只在点击按钮时发生；页面不会自动复制、重试或回退。';
+        }
+      }
+
+      function setBusy(flag, label) {
+        state.busy = Boolean(flag);
+        state.busyLabel = flag ? (label || '') : '';
+        refreshControls();
+      }
+
+      function revokeSourceUrls() {
+        if (!state.source) return;
+        if (state.source.sourceUrl) URL.revokeObjectURL(state.source.sourceUrl);
+        if (state.source.fallbackUrl) URL.revokeObjectURL(state.source.fallbackUrl);
+      }
+
+      function clearReadUrls() {
+        state.readUrls.forEach((url) => URL.revokeObjectURL(url));
+        state.readUrls = [];
+      }
+
+      function clearPasteUrls() {
+        state.pasteUrls.forEach((url) => URL.revokeObjectURL(url));
+        state.pasteUrls = [];
+      }
+
+      function resetMetaFields() {
+        ui.metaName.textContent = '—';
+        ui.metaSize.textContent = '—';
+        ui.metaMime.textContent = '—';
+        ui.metaDimensions.textContent = '—';
+        ui.metaFrames.textContent = '—';
+        ui.metaDelays.textContent = '—';
+        ui.metaLoop.textContent = '—';
+        ui.metaSha.textContent = '—';
+        ui.metaParseNote.hidden = true;
+        ui.metaParseNote.textContent = '';
+      }
+
+      function renderSourcePlaceholder(message, isError) {
+        ui.sourcePreview.hidden = true;
+        ui.sourcePreview.removeAttribute('src');
+        ui.sourcePreview.alt = '';
+        ui.sourcePlaceholder.hidden = false;
+        ui.sourcePlaceholder.textContent = message;
+        ui.sourcePlaceholder.className = 'preview-placeholder' + (isError ? ' is-error' : '');
+        ui.previewBadge.hidden = true;
+        ui.sourceCaption.textContent = isError ? '源文件载入失败。' : '正在准备源文件…';
+        ui.sourceOrigin.textContent = isError ? '载入失败' : '等待载入';
+        ui.sourceOrigin.className = 'chip';
+        resetMetaFields();
+        ui.fallbackPreview.hidden = true;
+        ui.fallbackPreview.removeAttribute('src');
+        ui.fallbackMeta.textContent = '等待源文件后自动生成。';
+      }
+
+      function renderSource() {
+        const source = state.source;
+        if (!source) return;
+
+        ui.sourcePreview.hidden = false;
+        ui.sourcePreview.src = source.sourceUrl;
+        ui.sourcePreview.alt = '当前源动图预览：' + source.name;
+        ui.sourcePlaceholder.hidden = true;
+        ui.sourcePlaceholder.className = 'preview-placeholder';
+        ui.previewBadge.hidden = false;
+        ui.previewBadge.textContent = source.frameCount > 1
+          ? '动画 · ' + source.frameCount + ' 帧'
+          : (source.frameCount === 1 ? '静态 / 单帧' : '预览');
+        ui.sourceCaption.textContent = source.name + ' · ' + source.mime + ' · ' + frameSummary(source);
+        ui.sourceOrigin.textContent = source.origin === 'sample' ? '示例文件' : '本地上传';
+        ui.sourceOrigin.className = 'chip chip-strong';
+
+        ui.metaName.textContent = source.name;
+        ui.metaSize.textContent = formatBytes(source.size);
+        ui.metaMime.textContent = source.mime;
+        ui.metaDimensions.textContent = source.width && source.height ? source.width + ' × ' + source.height + ' px' : '—';
+        ui.metaFrames.textContent = frameSummary(source);
+        ui.metaDelays.textContent = delaySummary(source);
+        ui.metaLoop.textContent = loopLabel(source.loop);
+        ui.metaSha.textContent = source.sha256 || '不可用（需要安全上下文 / Web Crypto）';
+        ui.metaParseNote.hidden = !source.parseError;
+        ui.metaParseNote.textContent = source.parseError ? '动画元数据解析失败：' + source.parseError : '';
+
+        ui.fallbackPreview.hidden = false;
+        ui.fallbackPreview.src = source.fallbackUrl;
+        ui.fallbackPreview.alt = '静态 PNG 备用图，第一帧';
+        ui.fallbackMeta.textContent = 'PNG · ' + formatBytes(source.fallbackSize) + ' · ' + source.width + ' × ' + source.height + ' px（第一帧）';
+      }
+
+      function updateFormatRadios(format) {
+        ui.formatRadios.forEach((radio) => {
+          radio.checked = radio.value === format;
+        });
+      }
+
+      function refreshMimeLabels() {
+        const mime = state.source ? state.source.mime : 'image/gif';
+        document.querySelectorAll('[data-mime-for="standard"]').forEach((node) => {
+          node.textContent = mime;
+        });
+        document.querySelectorAll('[data-mime-for="custom"]').forEach((node) => {
+          node.textContent = 'web ' + mime;
+        });
+      }
+
+      function beginSourceLoad(message) {
+        const generation = ++state.generation;
+        revokeSourceUrls();
+        state.source = null;
+        state.ready = false;
+        state.dataUrlHtml = '';
+        state.urlHtml = '';
+        state.plainUrl = '';
+        renderSourcePlaceholder(message, false);
+        resetMethodStates('源准备中…');
+        refreshMimeLabels();
+        refreshControls();
+        updateStatus('pending', message, ['复制按钮会保持禁用，直到源文件与静态 PNG 备用图都准备好。']);
+        return generation;
+      }
+
+      function failSource(message) {
+        state.ready = false;
+        state.source = null;
+        revokeSourceUrls();
+        renderSourcePlaceholder(message, true);
+        resetMethodStates('源未就绪');
+        refreshControls();
+        updateStatus('error', message, ['复制按钮保持禁用；请重新加载示例或选择本地 GIF / WebP。']);
+      }
+
+      function currentGeneration(generation) {
+        return generation === state.generation;
+      }
+
+      function blobToDataUrl(blob) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result));
+          reader.onerror = () => reject(reader.error || new Error('FileReader 读取 Data URL 失败'));
+          reader.readAsDataURL(blob);
+        });
+      }
+
+      async function sha256Hex(buffer) {
+        try {
+          if (!window.crypto || !window.crypto.subtle || typeof window.crypto.subtle.digest !== 'function') {
+            return null;
+          }
+          const digest = await window.crypto.subtle.digest('SHA-256', buffer);
+          return Array.from(new Uint8Array(digest))
+            .map((value) => value.toString(16).padStart(2, '0'))
+            .join('');
+        } catch (error) {
+          return null;
+        }
+      }
+
+      function loadImageElement(blob) {
+        return new Promise((resolve, reject) => {
+          const url = URL.createObjectURL(blob);
+          const image = new Image();
+          image.onload = () => {
+            URL.revokeObjectURL(url);
+            resolve(image);
+          };
+          image.onerror = () => {
+            URL.revokeObjectURL(url);
+            reject(new Error('浏览器无法解码该图片'));
+          };
+          image.src = url;
+        });
+      }
+
+      async function renderStaticPng(blob) {
+        let bitmap = null;
+        let image = null;
+
+        if (typeof createImageBitmap === 'function') {
+          try {
+            bitmap = await createImageBitmap(blob);
+          } catch (error) {
+            bitmap = null;
+          }
+        }
+
+        let width = 0;
+        let height = 0;
+        if (bitmap) {
+          width = bitmap.width;
+          height = bitmap.height;
+        } else {
+          image = await loadImageElement(blob);
+          width = image.naturalWidth || image.width;
+          height = image.naturalHeight || image.height;
+        }
+
+        if (!width || !height) throw new Error('无法确定图片尺寸');
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext('2d');
+        if (!context) throw new Error('无法创建 canvas 2D 上下文');
+        context.drawImage(bitmap || image, 0, 0, width, height);
+        if (bitmap && typeof bitmap.close === 'function') bitmap.close();
+
+        const pngBlob = await new Promise((resolve, reject) => {
+          canvas.toBlob((value) => {
+            if (value) resolve(value);
+            else reject(new Error('canvas.toBlob 返回空，无法生成静态 PNG'));
+          }, 'image/png');
+        });
+
+        return { blob: pngBlob, width: width, height: height };
+      }
+
+      async function prepareSource(input, generation) {
+        try {
+          if (!input.blob || input.blob.size === 0) throw new Error('文件为空');
+          if (input.blob.size > MAX_UPLOAD_BYTES) {
+            throw new Error('文件大小 ' + formatBytes(input.blob.size) + ' 超过 20 MiB 限制');
+          }
+
+          const buffer = await input.blob.arrayBuffer();
+          if (!currentGeneration(generation)) return;
+
+          const bytes = new Uint8Array(buffer);
+          const mime = sniffMime(bytes);
+          if (mime !== 'image/gif' && mime !== 'image/webp') {
+            throw new Error('魔数校验失败：仅支持 GIF87a / GIF89a 或 RIFF…WEBP');
+          }
+
+          const metadata = parseAnimationMetadata(mime, bytes);
+          if (metadata && metadata.width * metadata.height > 16000000) {
+            throw new Error('图片画布超过 1600 万像素，无法安全生成 PNG 对照图；请选择较小的文件。');
+          }
+          const imageBlob = input.blob.type === mime ? input.blob : new Blob([input.blob], { type: mime });
+          const results = await Promise.all([
+            sha256Hex(buffer),
+            blobToDataUrl(imageBlob),
+            renderStaticPng(imageBlob)
+          ]);
+          if (!currentGeneration(generation)) return;
+
+          const sha256 = results[0];
+          const dataUrl = results[1];
+          const fallback = results[2];
+          if (!fallback || !fallback.blob) throw new Error('静态 PNG 备用图生成失败');
+
+          const sourceUrl = URL.createObjectURL(imageBlob);
+          const fallbackUrl = URL.createObjectURL(fallback.blob);
+          if (!currentGeneration(generation)) {
+            URL.revokeObjectURL(sourceUrl);
+            URL.revokeObjectURL(fallbackUrl);
+            return;
+          }
+
+          revokeSourceUrls();
+
+          const publicUrl = input.origin === 'sample'
+            ? new URL(input.name, document.baseURI).href
+            : sourceUrl;
+          const width = (metadata && metadata.width) || fallback.width;
+          const height = (metadata && metadata.height) || fallback.height;
+          const source = {
+            name: input.name,
+            origin: input.origin,
+            blob: imageBlob,
+            size: input.blob.size,
+            mime: mime,
+            width: width,
+            height: height,
+            frameCount: metadata ? metadata.frameCount : 0,
+            delaysMs: metadata && metadata.delaysMs ? metadata.delaysMs : [],
+            loop: metadata ? metadata.loop : null,
+            animated: metadata ? Boolean(metadata.animated) : false,
+            parseError: metadata && metadata.parseError ? metadata.parseError : null,
+            sha256: sha256,
+            sourceUrl: sourceUrl,
+            fallbackBlob: fallback.blob,
+            fallbackUrl: fallbackUrl,
+            fallbackSize: fallback.blob.size
+          };
+
+          state.source = source;
+          state.ready = true;
+          state.dataUrlHtml = imageHtml(dataUrl, input.name);
+          state.urlHtml = imageHtml(publicUrl, input.name);
+          state.plainUrl = publicUrl;
+
+          renderSource();
+          refreshMimeLabels();
+          resetMethodStates('未尝试');
+          refreshControls();
+          updateStatus('success', '源已就绪，可选择一种复制方式。', [
+            '文件：' + source.name + ' · ' + source.mime + ' · ' + formatBytes(source.size),
+            source.origin === 'upload'
+              ? '本地上传按魔数识别为 ' + source.mime + '，未做格式转换。'
+              : '示例文件按魔数识别为 ' + source.mime + '。',
+            '静态 PNG 备用图：' + formatBytes(source.fallbackSize) + '（仅第一帧，丢失动画）',
+            '没有任何内容被自动写入剪贴板。'
+          ]);
+        } catch (error) {
+          if (!currentGeneration(generation)) return;
+          failSource('无法准备源文件：' + errorInfo(error).message);
+        }
+      }
+
+      async function loadSample(format) {
+        if (state.busy) return;
+        const extension = format === 'webp' ? 'webp' : 'gif';
+        const name = 'sample.' + extension;
+        const seq = ++state.selectionSeq;
+        const generation = beginSourceLoad('正在加载示例 ' + name + '…');
+        state.selectedFormat = format;
+        updateFormatRadios(format);
+
+        try {
+          const url = new URL(name, document.baseURI);
+          const response = await fetch(url.href, { cache: 'no-store' });
+          if (seq !== state.selectionSeq || !currentGeneration(generation)) return;
+          if (!response.ok) {
+            throw new Error('无法加载 ' + name + '（HTTP ' + response.status + '）。请确认示例文件与 index.html 同目录。');
+          }
+          const blob = await response.blob();
+          if (seq !== state.selectionSeq || !currentGeneration(generation)) return;
+          await prepareSource({ name: name, blob: blob, origin: 'sample' }, generation);
+        } catch (error) {
+          if (seq !== state.selectionSeq || !currentGeneration(generation)) return;
+          failSource('示例加载失败：' + errorInfo(error).message);
+        }
+      }
+
+      async function onUploadChange() {
+        const file = ui.upload.files && ui.upload.files[0];
+        ui.upload.value = '';
+        if (!file) return;
+        if (state.busy) {
+          updateStatus('error', '当前有剪贴板操作尚未结束，暂时不能更换源文件。');
+          return;
+        }
+        if (file.size === 0) {
+          updateStatus('error', '文件为空，无法作为源文件。');
+          return;
+        }
+        if (file.size > MAX_UPLOAD_BYTES) {
+          updateStatus('error', '文件大小 ' + formatBytes(file.size) + ' 超过 20 MiB 限制。');
+          return;
+        }
+
+        const seq = ++state.selectionSeq;
+        try {
+          const header = new Uint8Array(await file.slice(0, 12).arrayBuffer());
+          if (seq !== state.selectionSeq) return;
+          const sniffed = sniffMime(header);
+          if (sniffed !== 'image/gif' && sniffed !== 'image/webp') {
+            updateStatus('error', '魔数校验失败：仅支持 GIF87a / GIF89a 或 RIFF…WEBP，不会按扩展名猜测格式。');
+            return;
+          }
+
+          state.selectedFormat = sniffed === 'image/gif' ? 'gif' : 'webp';
+          updateFormatRadios(state.selectedFormat);
+          const generation = beginSourceLoad('正在准备本地文件 ' + (file.name || 'upload') + '…');
+          await prepareSource({
+            name: file.name || ('upload.' + (sniffed === 'image/gif' ? 'gif' : 'webp')),
+            blob: file,
+            origin: 'upload'
+          }, generation);
+        } catch (error) {
+          if (seq !== state.selectionSeq) return;
+          updateStatus('error', '读取本地文件失败：' + errorInfo(error).message);
+        }
+      }
+
+      function downloadSource() {
+        if (!state.source || state.busy) return;
+        const anchor = document.createElement('a');
+        anchor.href = state.source.sourceUrl;
+        anchor.download = state.source.name;
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
+        updateStatus('info', '已请求下载当前原图：' + state.source.name, ['这是显式下载，不会改动剪贴板。']);
+      }
+
+      function finishSuccess(id, requestedMimes, startedAt) {
+        const method = METHODS[id];
+        setBusy(false);
+        setMethodState(id, 'success', '写入成功');
+        updateStatus('success', '已写入剪贴板；请到目标应用粘贴验证', [
+          '方法 ' + id + ' · ' + method.title,
+          '实际请求 MIME：' + requestedMimes.join('、'),
+          '本页无法确认 TextEdit 或其他接收方是否接受动画、富文本或自定义类型。'
+        ]);
+        addLog({
+          kind: 'write',
+          status: 'success',
+          method: id,
+          title: method.title,
+          mimes: requestedMimes.slice(),
+          startedAt: startedAt.toISOString(),
+          durationMs: Date.now() - startedAt.getTime()
+        });
+      }
+
+      function finishError(id, error, requestedMimes, startedAt) {
+        const method = METHODS[id] || { title: '未知方法' };
+        const detail = errorInfo(error);
+        setBusy(false);
+        setMethodState(id, 'error', '写入失败');
+        updateStatus('error', '写入失败：' + detail.name, [
+          '方法 ' + id + ' · ' + method.title,
+          '实际请求 MIME：' + requestedMimes.join('、'),
+          detail.name + ': ' + detail.message,
+          '没有自动重试或回退到其他方法。'
+        ]);
+        addLog({
+          kind: 'write',
+          status: 'error',
+          method: id,
+          title: method.title,
+          mimes: requestedMimes.slice(),
+          startedAt: startedAt.toISOString(),
+          durationMs: Date.now() - startedAt.getTime(),
+          error: detail
+        });
+      }
+
+      function performCopy(id) {
+        const method = METHODS[id];
+        if (!method || state.busy || !state.ready || !state.source) return;
+        const reason = methodDisabledReason(id);
+        if (reason) {
+          updateStatus('error', '此复制方式当前不可用。', [reason]);
+          return;
+        }
+
+        const requestedMimes = method.mimes();
+        const startedAt = new Date();
+        setBusy(true, '正在写入剪贴板：方法 ' + id + '…');
+        updateStatus('pending', '正在写入剪贴板（方法 ' + id + '）…', ['请求 MIME：' + requestedMimes.join('、')]);
+        setMethodState(id, 'pending', '写入中…');
+
+        let item;
+        try {
+          item = method.build();
+        } catch (error) {
+          finishError(id, error, requestedMimes, startedAt);
+          return;
+        }
+
+        let writePromise;
+        try {
+          // 必须在 click 处理器的同一任务中调用 write；这里前面没有 await。
+          writePromise = navigator.clipboard.write([item]);
+        } catch (error) {
+          finishError(id, error, requestedMimes, startedAt);
+          return;
+        }
+
+        Promise.resolve(writePromise).then(
+          () => finishSuccess(id, requestedMimes, startedAt),
+          (error) => finishError(id, error, requestedMimes, startedAt)
+        );
+      }
+
+      function performLegacyCopy() {
+        const id = 9;
+        const method = METHODS[id];
+        if (state.busy || !state.ready || !state.source) return;
+        const reason = methodDisabledReason(id);
+        if (reason) {
+          updateStatus('error', '旧式复制当前不可用。', [reason]);
+          return;
+        }
+
+        const requestedMimes = method.mimes();
+        const startedAt = new Date();
+        const previousFocus = document.activeElement;
+        const selection = window.getSelection();
+        const savedRanges = [];
+        if (selection) {
+          for (let i = 0; i < selection.rangeCount; i += 1) {
+            savedRanges.push(selection.getRangeAt(i).cloneRange());
+          }
+        }
+
+        setBusy(true, '正在用 execCommand 写入剪贴板…');
+        updateStatus('pending', '正在执行旧式 copy（方法 9）…', ['请求 MIME：text/html']);
+        setMethodState(id, 'pending', '执行中…');
+
+        const helper = document.createElement('div');
+        helper.className = 'legacy-copy-helper';
+        helper.setAttribute('contenteditable', 'true');
+        helper.setAttribute('aria-hidden', 'true');
+        helper.textContent = state.source.name;
+        document.body.appendChild(helper);
+
+        let listener = null;
+        let wroteData = false;
+        let succeeded = false;
+        let thrown = null;
+
+        try {
+          if (selection) {
+            selection.removeAllRanges();
+            const range = document.createRange();
+            range.selectNodeContents(helper);
+            selection.addRange(range);
+          }
+          listener = (event) => {
+            if (!event.clipboardData) return;
+            event.clipboardData.setData('text/html', state.dataUrlHtml);
+            event.preventDefault();
+            wroteData = true;
+          };
+          document.addEventListener('copy', listener, true);
+          succeeded = document.execCommand('copy');
+        } catch (error) {
+          thrown = error;
+        } finally {
+          if (listener) document.removeEventListener('copy', listener, true);
+          if (helper.parentNode) helper.parentNode.removeChild(helper);
+          if (selection) selection.removeAllRanges();
+        }
+
+        const restorePreviousContext = () => {
+          // 先恢复焦点，再把保存的文档选区放回去；按钮此时已重新启用。
+          if (previousFocus && typeof previousFocus.focus === 'function') {
+            try { previousFocus.focus({ preventScroll: true }); }
+            catch (error) {
+              try { previousFocus.focus(); } catch (focusError) { /* 忽略 */ }
+            }
+          }
+          const currentSelection = window.getSelection();
+          if (!currentSelection) return;
+          currentSelection.removeAllRanges();
+          savedRanges.forEach((range) => {
+            try { currentSelection.addRange(range); } catch (error) { /* 选区已失效，忽略 */ }
+          });
+        };
+
+        if (thrown) {
+          finishError(id, thrown, requestedMimes, startedAt);
+          restorePreviousContext();
+          return;
+        }
+        if (!succeeded || !wroteData) {
+          finishError(id, new Error('document.execCommand("copy") 返回 false，或 copy 事件没有收到可写入的数据'), requestedMimes, startedAt);
+          restorePreviousContext();
+          return;
+        }
+        finishSuccess(id, requestedMimes, startedAt);
+        restorePreviousContext();
+      }
+
+      function handleCopyClick(id) {
+        if (id === 9) performLegacyCopy();
+        else performCopy(id);
+      }
+
+      function addLog(entry) {
+        state.logSeq += 1;
+        state.logs.unshift(Object.assign({
+          id: state.logSeq,
+          at: new Date().toISOString()
+        }, entry));
+        state.logs = state.logs.slice(0, LOG_LIMIT);
+        renderLogs();
+        refreshControls();
+      }
+
+      function renderLogs() {
+        clearNode(ui.logList);
+        if (state.logs.length === 0) {
+          ui.logList.appendChild(create('li', 'empty-state', '暂无记录。'));
+          return;
+        }
+
+        const kindLabels = { write: '写入', read: '读取', paste: '粘贴事件' };
+        state.logs.forEach((log) => {
+          const item = create('li', 'log-entry');
+
+          const head = create('div', 'log-head');
+          head.appendChild(create('span', 'log-time', formatTime(log.at)));
+          head.appendChild(create('span', 'log-badge is-' + log.status, log.status === 'success' ? '成功' : (log.status === 'error' ? '失败' : '进行中')));
+          head.appendChild(create('span', 'log-kind', kindLabels[log.kind] || log.kind));
+          if (log.kind === 'write') {
+            head.appendChild(create('span', 'log-title', '方法 ' + log.method + ' · ' + log.title));
+          } else if (log.kind === 'read') {
+            head.appendChild(create('span', 'log-title', '剪贴板读取'));
+          } else if (log.kind === 'paste') {
+            head.appendChild(create('span', 'log-title', '粘贴事件'));
+          }
+          item.appendChild(head);
+
+          const metaParts = [];
+          if (log.mimes && log.mimes.length) metaParts.push('MIME：' + log.mimes.join('、'));
+          if (log.itemCount !== undefined) metaParts.push('条目：' + log.itemCount);
+          if (log.files && log.files.length) metaParts.push('文件：' + log.files.length);
+          if (log.durationMs !== undefined) metaParts.push('耗时：' + log.durationMs + ' ms');
+          if (metaParts.length) item.appendChild(create('div', 'log-meta', metaParts.join(' · ')));
+          if (log.error) item.appendChild(create('div', 'log-error', log.error.name + ': ' + log.error.message));
+
+          ui.logList.appendChild(item);
+        });
+      }
+
+      function metaRow(dl, term, value, useCode) {
+        const row = create('div');
+        row.appendChild(create('dt', '', term));
+        const dd = create('dd');
+        if (useCode) dd.appendChild(create('code', '', value));
+        else dd.textContent = String(value);
+        row.appendChild(dd);
+        dl.appendChild(row);
+        return row;
+      }
+
+      function compareLabel(matchesSource) {
+        if (matchesSource === true) return '匹配当前源 SHA-256';
+        if (matchesSource === false) return '不匹配当前源 SHA-256';
+        return '无法比较（缺当前源 SHA 或读取 SHA）';
+      }
+
+      async function readClipboard() {
+        if (state.busy) return;
+        if (!window.isSecureContext) {
+          updateReadStatus('error', '不是安全上下文：请使用 HTTPS 或 localhost。');
+          return;
+        }
+        if (!hasClipboardRead()) {
+          updateReadStatus('error', '当前浏览器没有 navigator.clipboard.read()。');
+          return;
+        }
+
+        setBusy(true, '正在读取剪贴板…');
+        updateReadStatus('pending', '正在调用 navigator.clipboard.read()…');
+        clearReadUrls();
+        clearNode(ui.readResults);
+        ui.readResults.appendChild(create('p', 'empty-state', '正在读取剪贴板…'));
+        const startedAt = new Date();
+
+        try {
+          const items = await navigator.clipboard.read();
+          const itemResults = [];
+
+          for (let index = 0; index < items.length; index += 1) {
+            const item = items[index];
+            const types = Array.from(item.types || []);
+            const entries = [];
+
+            for (const type of types) {
+              try {
+                const blob = await item.getType(type);
+                if (blob.size > MAX_UPLOAD_BYTES) throw new Error('此表示超过 20 MiB，仅显示类型，未读取其字节。');
+                const buffer = await blob.arrayBuffer();
+                const bytes = new Uint8Array(buffer);
+                const sniffed = sniffMime(bytes);
+                const sha256 = await sha256Hex(buffer);
+                const metadata = sniffed === 'image/gif' || sniffed === 'image/webp'
+                  ? parseAnimationMetadata(sniffed, bytes)
+                  : null;
+
+                let matchesSource = null;
+                if (sniffed && state.source) {
+                  if (state.source.sha256 && sha256) matchesSource = state.source.sha256 === sha256;
+                }
+
+                let previewUrl = null;
+                if (sniffed === 'image/gif' || sniffed === 'image/webp' || sniffed === 'image/png') {
+                  // 即使原始 Blob.type 是 web image/gif，也用嗅探出的标准 MIME 重建预览。
+                  const previewBlob = new Blob([buffer], { type: sniffed });
+                  previewUrl = URL.createObjectURL(previewBlob);
+                  state.readUrls.push(previewUrl);
+                }
+
+                let textLength = null;
+                let textSnippet = null;
+                let textTruncated = false;
+                if (type.indexOf('text/') === 0) {
+                  const text = await blob.text();
+                  textLength = text.length;
+                  textSnippet = truncate(text, 240);
+                  textTruncated = text.length > 240;
+                }
+
+                entries.push({
+                  type: type,
+                  blobType: blob.type,
+                  size: blob.size,
+                  sha256: sha256,
+                  sniffed: sniffed,
+                  metadata: metadata,
+                  matchesSource: matchesSource,
+                  previewUrl: previewUrl,
+                  textLength: textLength,
+                  textSnippet: textSnippet,
+                  textTruncated: textTruncated,
+                  note: blob.type && sniffed && blob.type !== sniffed
+                    ? '原始 Blob.type 为 ' + blob.type + '；预览已用嗅探出的 ' + sniffed + ' 重建。'
+                    : ''
+                });
+              } catch (error) {
+                entries.push({ type: type, error: errorInfo(error) });
+              }
+            }
+
+            itemResults.push({ types: types, entries: entries });
+          }
+
+          if (!itemResults.length) {
+            clearNode(ui.readResults);
+            ui.readResults.appendChild(create('p', 'empty-state', '剪贴板没有可读取的条目。'));
+          } else {
+            renderReadResults(itemResults);
+          }
+
+          const allTypes = itemResults.reduce((list, item) => {
+            item.types.forEach((type) => {
+              if (list.indexOf(type) === -1) list.push(type);
+            });
+            return list;
+          }, []);
+          updateReadStatus('success', '读取完成：' + itemResults.length + ' 个条目，' + allTypes.length + ' 种 MIME 类型。');
+          addLog({
+            kind: 'read',
+            status: 'success',
+            mimes: allTypes,
+            itemCount: itemResults.length,
+            startedAt: startedAt.toISOString(),
+            durationMs: Date.now() - startedAt.getTime(),
+            items: itemResults.map((item) => ({
+              types: item.types.slice(),
+              entries: item.entries.map((entry) => entry.error ? {
+                type: entry.type,
+                error: entry.error
+              } : {
+                type: entry.type,
+                blobType: entry.blobType,
+                size: entry.size,
+                sha256: entry.sha256,
+                sniffed: entry.sniffed,
+                frameCount: entry.metadata ? entry.metadata.frameCount : null,
+                delaysMs: entry.metadata && entry.metadata.delaysMs ? entry.metadata.delaysMs.slice() : [],
+                width: entry.metadata ? entry.metadata.width : null,
+                height: entry.metadata ? entry.metadata.height : null,
+                loop: entry.metadata ? entry.metadata.loop : null,
+                parseError: entry.metadata && entry.metadata.parseError ? entry.metadata.parseError : null,
+                matchesSource: entry.matchesSource,
+                textLength: entry.textLength
+              })
+            }))
+          });
+        } catch (error) {
+          const detail = errorInfo(error);
+          clearNode(ui.readResults);
+          ui.readResults.appendChild(create('p', 'empty-state', '读取失败：' + detail.name + '。'));
+          updateReadStatus('error', '读取失败：' + detail.name + ' — ' + detail.message);
+          addLog({
+            kind: 'read',
+            status: 'error',
+            mimes: [],
+            startedAt: startedAt.toISOString(),
+            durationMs: Date.now() - startedAt.getTime(),
+            error: detail
+          });
+        } finally {
+          setBusy(false);
+        }
+      }
+
+      function renderReadEntry(entry) {
+        const wrap = create('div', 'read-type');
+        const head = create('div', 'read-type-head');
+        head.appendChild(create('code', 'read-type-name', entry.type));
+
+        if (entry.error) {
+          head.appendChild(create('span', 'badge badge-error', '读取失败'));
+          wrap.appendChild(head);
+          wrap.appendChild(create('p', 'read-error', entry.error.name + ': ' + entry.error.message));
+          return wrap;
+        }
+
+        head.appendChild(create('span', 'badge ' + (entry.sniffed ? 'badge-ok' : 'badge-muted'),
+          entry.sniffed ? '嗅探：' + entry.sniffed : '未识别为标准图像'));
+        wrap.appendChild(head);
+
+        const dl = create('dl', 'meta-list compact');
+        metaRow(dl, 'Blob.type', entry.blobType || '（空）', true);
+        metaRow(dl, '字节数', formatBytes(entry.size));
+        metaRow(dl, 'SHA-256', entry.sha256 || '不可用', true);
+        if (entry.sniffed) metaRow(dl, '与当前源 SHA-256', compareLabel(entry.matchesSource));
+        if (entry.metadata) {
+          metaRow(dl, '帧', frameSummary(entry.metadata));
+          metaRow(dl, '帧延迟', delaySummary(entry.metadata));
+          if (entry.metadata.width && entry.metadata.height) {
+            metaRow(dl, '尺寸', entry.metadata.width + ' × ' + entry.metadata.height + ' px');
+          }
+          if (entry.metadata.loop !== null && entry.metadata.loop !== undefined) {
+            metaRow(dl, '循环次数', loopLabel(entry.metadata.loop));
+          }
+          if (entry.metadata.parseError) {
+            metaRow(dl, '解析', entry.metadata.parseError);
+          }
+        }
+        if (entry.textLength !== null && entry.textLength !== undefined) {
+          metaRow(dl, '文本长度', entry.textLength + ' 字符');
+        }
+        wrap.appendChild(dl);
+
+        if (entry.previewUrl) {
+          const figure = create('figure', 'read-preview-wrap');
+          const image = document.createElement('img');
+          image.className = 'read-preview';
+          image.src = entry.previewUrl;
+          image.alt = '剪贴板 ' + entry.sniffed + ' 预览';
+          figure.appendChild(image);
+          figure.appendChild(create('figcaption', 'micro-note', '仅对安全嗅探出的 GIF / WebP / PNG 预览；预览可能播放动画。'));
+          wrap.appendChild(figure);
+        }
+
+        if (entry.textSnippet !== null && entry.textSnippet !== undefined) {
+          wrap.appendChild(create('p', 'micro-note', '文本片段仅在本页显示，不写入记录或导出报告。'));
+          wrap.appendChild(create('pre', 'text-snippet', entry.textSnippet + (entry.textTruncated ? '\n…' : '')));
+        }
+
+        if (entry.note) wrap.appendChild(create('p', 'micro-note', entry.note));
+        return wrap;
+      }
+
+      function renderReadResults(itemResults) {
+        clearNode(ui.readResults);
+        ui.readResults.appendChild(create('p', 'read-summary micro-note',
+          '共 ' + itemResults.length + ' 个剪贴板条目。每个类型单独列出；SHA-256 只用于本地对比。'));
+
+        itemResults.forEach((item, index) => {
+          const card = create('article', 'read-item');
+          card.appendChild(create('h3', 'read-item-title', '条目 ' + (index + 1) + ' · ' + item.types.length + ' 个类型'));
+          if (!item.entries.length) {
+            card.appendChild(create('p', 'empty-state', '该条目没有可读取的类型。'));
+          }
+          item.entries.forEach((entry) => card.appendChild(renderReadEntry(entry)));
+          ui.readResults.appendChild(card);
+        });
+      }
+
+      function onPaste(event) {
+        event.preventDefault();
+        const data = event.clipboardData;
+        const seq = ++state.pasteSeq;
+        clearPasteUrls();
+        clearNode(ui.pasteResults);
+
+        if (!data) {
+          updatePasteStatus('error', '此浏览器没有在粘贴事件中提供 clipboardData。');
+          ui.pasteResults.appendChild(create('p', 'empty-state', '没有可检查的事件数据。'));
+          return;
+        }
+
+        const types = Array.from(data.types || []);
+        const items = Array.from(data.items || []).map((item) => ({ kind: item.kind, type: item.type }));
+        const files = Array.from(data.files || []);
+        const textSnippets = {};
+
+        types.forEach((type) => {
+          if (type.indexOf('text/') === 0) {
+            try {
+              const value = data.getData(type);
+              textSnippets[type] = {
+                length: value.length,
+                snippet: truncate(value, 240),
+                truncated: value.length > 240
+              };
+            } catch (error) {
+              textSnippets[type] = { error: errorInfo(error) };
+            }
+          }
+        });
+
+        updatePasteStatus('pending', '正在检查粘贴事件…');
+        ui.pasteResults.appendChild(create('p', 'empty-state', '正在读取事件中的文件元数据…'));
+        processPaste(seq, types, items, files, textSnippets);
+      }
+
+      async function processPaste(seq, types, items, files, textSnippets) {
+        try {
+          const fileResults = [];
+          for (const file of files) {
+            const entry = {
+              name: file.name || '（未命名文件）',
+              type: file.type || '（空）',
+              size: file.size,
+              lastModified: file.lastModified ? new Date(file.lastModified).toISOString() : null
+            };
+
+            if (file.size > MAX_UPLOAD_BYTES) {
+              entry.skipped = '文件超过 20 MiB，只显示基础信息，未读取字节。';
+              fileResults.push(entry);
+              continue;
+            }
+
+            try {
+              const buffer = await file.arrayBuffer();
+              if (seq !== state.pasteSeq) return;
+              const bytes = new Uint8Array(buffer);
+              const sniffed = sniffMime(bytes);
+              entry.sniffed = sniffed;
+              entry.sha256 = await sha256Hex(buffer);
+              if (seq !== state.pasteSeq) return;
+              if (sniffed === 'image/gif' || sniffed === 'image/webp') {
+                entry.metadata = parseAnimationMetadata(sniffed, bytes);
+              }
+              if (sniffed === 'image/gif' || sniffed === 'image/webp' || sniffed === 'image/png') {
+                const url = URL.createObjectURL(new Blob([buffer], { type: sniffed }));
+                if (seq !== state.pasteSeq) {
+                  URL.revokeObjectURL(url);
+                  return;
+                }
+                state.pasteUrls.push(url);
+                entry.previewUrl = url;
+              }
+            } catch (error) {
+              entry.error = errorInfo(error);
+            }
+
+            if (seq !== state.pasteSeq) return;
+            fileResults.push(entry);
+          }
+
+          if (seq !== state.pasteSeq) return;
+          renderPasteResults(types, items, textSnippets, fileResults);
+          updatePasteStatus('success', '已检查本次粘贴事件；这不是对系统剪贴板全部格式的读取。');
+          addLog({
+            kind: 'paste',
+            status: 'success',
+            mimes: types.slice(),
+            files: fileResults.map((entry) => ({
+              name: entry.name,
+              type: entry.type,
+              size: entry.size,
+              sniffed: entry.sniffed || null,
+              sha256: entry.sha256 || null,
+              frameCount: entry.metadata ? entry.metadata.frameCount : null,
+              delaysMs: entry.metadata && entry.metadata.delaysMs ? entry.metadata.delaysMs.slice() : [],
+              parseError: entry.metadata && entry.metadata.parseError ? entry.metadata.parseError : null,
+              lastModified: entry.lastModified,
+              skipped: entry.skipped || null,
+              error: entry.error || null
+            }))
+          });
+        } catch (error) {
+          if (seq !== state.pasteSeq) return;
+          const detail = errorInfo(error);
+          clearNode(ui.pasteResults);
+          ui.pasteResults.appendChild(create('p', 'empty-state', '检查粘贴事件失败。'));
+          updatePasteStatus('error', '检查失败：' + detail.name + ' — ' + detail.message);
+          addLog({
+            kind: 'paste',
+            status: 'error',
+            mimes: types.slice(),
+            error: detail
+          });
+        }
+      }
+
+      function renderPasteResults(types, items, textSnippets, fileResults) {
+        clearNode(ui.pasteResults);
+
+        if (!types.length && !items.length && !fileResults.length) {
+          ui.pasteResults.appendChild(create('p', 'empty-state', '这次粘贴事件没有 MIME 类型、条目或文件。'));
+          return;
+        }
+
+        ui.pasteResults.appendChild(create('p', 'micro-note',
+          '事件类型 ' + types.length + ' 种 · 条目 ' + items.length + ' 个 · 文件 ' + fileResults.length + ' 个。'));
+
+        if (types.length) {
+          const typeList = create('ul', 'chips');
+          types.forEach((type) => {
+            const item = document.createElement('li');
+            item.appendChild(create('code', '', type));
+            typeList.appendChild(item);
+          });
+          ui.pasteResults.appendChild(typeList);
+        }
+
+        if (items.length) {
+          const list = create('div', 'paste-file');
+          list.appendChild(create('h4', '', '事件条目'));
+          const dl = create('dl', 'meta-list compact');
+          items.forEach((item, index) => {
+            metaRow(dl, '条目 ' + (index + 1), item.kind + ' / ' + item.type, true);
+          });
+          list.appendChild(dl);
+          ui.pasteResults.appendChild(list);
+        }
+
+        types.forEach((type) => {
+          if (type.indexOf('text/') !== 0) return;
+          const info = textSnippets[type];
+          if (!info) return;
+          const block = create('div', 'paste-file');
+          block.appendChild(create('h4', '', type + ' 文本'));
+          if (info.error) {
+            block.appendChild(create('p', 'read-error', info.error.name + ': ' + info.error.message));
+          } else {
+            block.appendChild(create('p', 'micro-note', '长度 ' + info.length + ' 字符。内容仅在本页显示，不写入日志或导出。'));
+            block.appendChild(create('pre', 'text-snippet', info.snippet + (info.truncated ? '\n…' : '')));
+          }
+          ui.pasteResults.appendChild(block);
+        });
+
+        fileResults.forEach((file, index) => {
+          const card = create('div', 'paste-file');
+          card.appendChild(create('h4', '', '文件 ' + (index + 1) + '：' + file.name));
+          const dl = create('dl', 'meta-list compact');
+          metaRow(dl, 'File.type', file.type, true);
+          metaRow(dl, '大小', formatBytes(file.size));
+          if (file.lastModified) metaRow(dl, '修改时间', file.lastModified, true);
+          if (file.sniffed) metaRow(dl, '魔数嗅探', file.sniffed, true);
+          if (file.sha256) metaRow(dl, 'SHA-256', file.sha256, true);
+          if (file.metadata) {
+            metaRow(dl, '帧', frameSummary(file.metadata));
+            metaRow(dl, '帧延迟', delaySummary(file.metadata));
+            if (file.metadata.width && file.metadata.height) {
+              metaRow(dl, '尺寸', file.metadata.width + ' × ' + file.metadata.height + ' px');
+            }
+          }
+          if (file.skipped) metaRow(dl, '说明', file.skipped);
+          if (file.error) metaRow(dl, '错误', file.error.name + ': ' + file.error.message);
+          card.appendChild(dl);
+          if (file.previewUrl) {
+            const image = document.createElement('img');
+            image.className = 'paste-file-preview';
+            image.src = file.previewUrl;
+            image.alt = '粘贴事件 ' + (file.sniffed || '文件') + ' 预览';
+            card.appendChild(image);
+          }
+          ui.pasteResults.appendChild(card);
+        });
+      }
+
+      function clearRecords() {
+        if (state.busy) return;
+        state.logs = [];
+        state.pasteSeq += 1;
+        clearReadUrls();
+        clearPasteUrls();
+        renderLogs();
+        clearNode(ui.readResults);
+        ui.readResults.appendChild(create('p', 'empty-state', '尚未读取剪贴板。'));
+        clearNode(ui.pasteResults);
+        ui.pasteResults.appendChild(create('p', 'empty-state', '尚未收到粘贴事件。'));
+        updateReadStatus('info', '尚未读取。');
+        updatePasteStatus('info', '尚未粘贴。');
+        if (state.ready) resetMethodStates('未尝试');
+        updateStatus('info', '已清空本地记录与检查结果。', ['剪贴板内容没有被读取、修改或清除。']);
+        refreshControls();
+      }
+
+      function exportReport() {
+        if (state.busy) return;
+        const caps = collectCapabilities();
+        const source = state.source ? {
+          name: state.source.name,
+          origin: state.source.origin,
+          mime: state.source.mime,
+          size: state.source.size,
+          width: state.source.width,
+          height: state.source.height,
+          frameCount: state.source.frameCount,
+          delaysMs: state.source.delaysMs.slice(),
+          loop: state.source.loop,
+          sha256: state.source.sha256,
+          fallbackPngBytes: state.source.fallbackSize,
+          parseError: state.source.parseError
+        } : null;
+
+        const report = {
+          report: 'chinesebqb-clipboard-lab',
+          version: 1,
+          generatedAt: new Date().toISOString(),
+          page: location.href,
+          environment: {
+            userAgent: navigator.userAgent,
+            language: navigator.language,
+            secureContext: Boolean(window.isSecureContext)
+          },
+          capabilities: caps,
+          source: source,
+          attempts: state.logs.slice().reverse(),
+          limits: [
+            '报告只含元数据，不含剪贴板文本内容或原始文件字节。',
+            'ClipboardItem.supports() 为 true 不代表接收应用能识别动画或自定义类型。',
+            '页面无法确认 TextEdit 或其他应用是否接受动画。'
+          ]
+        };
+
+        const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+        anchor.href = url;
+        anchor.download = 'clipboard-lab-report-' + stamp + '.json';
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
+        window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+        updateStatus('info', '已导出元数据报告（JSON）。', ['报告不含剪贴板文本内容或原始文件字节。']);
+      }
+
+      function onFormatChange() {
+        const checked = ui.formatRadios.find((radio) => radio.checked);
+        if (!checked) return;
+        state.selectedFormat = checked.value;
+        if (state.busy) return;
+        loadSample(checked.value);
+      }
+
+      function onPageHide(event) {
+        if (event.persisted) return;
+        revokeSourceUrls();
+        clearReadUrls();
+        clearPasteUrls();
+      }
+
+      function bindEvents() {
+        ui.copyButtons.forEach((button) => {
+          button.addEventListener('click', () => handleCopyClick(Number(button.dataset.copyMethod)));
+        });
+        ui.readButton.addEventListener('click', readClipboard);
+        ui.exportReport.addEventListener('click', exportReport);
+        ui.clearRecords.addEventListener('click', clearRecords);
+        ui.upload.addEventListener('change', onUploadChange);
+        ui.reloadSample.addEventListener('click', () => {
+          if (state.busy) return;
+          loadSample(state.selectedFormat);
+        });
+        ui.downloadSource.addEventListener('click', downloadSource);
+        ui.formatRadios.forEach((radio) => radio.addEventListener('change', onFormatChange));
+        ui.pasteZone.addEventListener('paste', onPaste);
+        window.addEventListener('pagehide', onPageHide);
+      }
+
+      function init() {
+        bindEvents();
+        renderCapabilities();
+        renderLogs();
+        resetMethodStates('等待源就绪');
+        updateReadStatus('info', '尚未读取。');
+        updatePasteStatus('info', '尚未粘贴。');
+        refreshMimeLabels();
+        refreshControls();
+        updateStatus('pending', '正在加载示例 sample.gif…', ['页面不会自动访问剪贴板。']);
+        loadSample('gif');
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>
