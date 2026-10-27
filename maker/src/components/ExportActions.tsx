@@ -79,8 +79,8 @@ export function ExportActions() {
     const image = snapshot.image
     if (!image?.imageData) throw new Error('当前没有可导出的图片。')
     let input: EditableExportInput
-    if (kind === 'copy') {
-      const source = !fitWechat && image.blob ? { source: image.blob } : { imageData: image.imageData }
+    if (kind === 'copy' && !fitWechat) {
+      const source = image.blob ? { source: image.blob } : { imageData: image.imageData }
       input = { ...source, mode: 'clipboard', fitWechat, frameIndex: snapshot.gifFrameIndex,
         editWidth: image.imageData.width, editHeight: image.imageData.height }
     } else if (!fitWechat) {
@@ -146,9 +146,9 @@ export function ExportActions() {
       return blob
     })
     // Call write() synchronously in this click handler. The ClipboardItem waits
-    // for the worker's PNG promise, preserving Safari's transient activation.
+    // for the worker's image promise, preserving Safari's transient activation.
     const task = kind === 'copy'
-      ? writeClipboardImage(createImage, controller.signal)
+      ? writeClipboardImage(createImage, controller.signal, fitWechat ? 'image/gif' : 'image/png')
       : createImage().then(blob => {
         checkCurrent()
         downloadBlob(blob, editedDownloadName(imageAtStart?.source.name || 'chinesebqb',
@@ -158,7 +158,8 @@ export function ExportActions() {
       if (!current() || stale() || controller.signal.aborted) return
       showResult({ tone: 'success', title: kind === 'copy' ? '已复制到剪贴板' : '图片已下载',
         detail: kind === 'copy'
-          ? (animated ? '已复制当前帧，可以粘贴到聊天或其他应用。' : '可以粘贴到聊天或其他应用。')
+          ? (fitWechat ? '已复制 GIF 图片，可粘贴到支持 GIF 的应用。'
+            : animated ? '已复制当前帧（PNG 静态图），可以粘贴到聊天或其他应用。' : '已复制 PNG 图片，可以粘贴到聊天或其他应用。')
           : `下载文件已生成 · ${Math.max(1, Math.round(size / 1000))} KB` })
     }).catch((error: unknown) => {
       if (!current() || stale()) return
@@ -213,7 +214,7 @@ export function ExportActions() {
     </button>
   )
   const copyButton = (
-    <button type="button" className="export-copy" disabled={!editable || busy} onClick={event => startExport('copy', event.currentTarget)} title="复制当前画面，动图复制当前帧">
+    <button type="button" className="export-copy" disabled={!editable || busy} onClick={event => startExport('copy', event.currentTarget)} title={wechatFit ? '复制 GIF 表情（需浏览器支持）' : '复制 PNG 静态图，动图复制当前帧'}>
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" />
       </svg>

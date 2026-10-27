@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test'
 import gifenc from 'gifenc'
+import gifuct from 'gifuct-js'
 
 const { GIFEncoder } = gifenc
+const { parseGIF, decompressFrames } = gifuct
 
 test.beforeEach(async ({ page }) => {
   page.copyErrors = []
@@ -9,10 +11,10 @@ test.beforeEach(async ({ page }) => {
 })
 test.afterEach(async ({ page }) => { expect(page.copyErrors).toEqual([]) })
 
-async function prepare(page, { mock = true, delay = 450, hold = false } = {}) {
+async function prepare(page, { mock = true, delay = 450, hold = false, gifSupport = null } = {}) {
   await page.route('**/catalog/**', route => route.fulfill({ json: [] }))
   await page.route('**/models/**', route => route.abort())
-  await page.addInitScript(({ mock, delay, hold }) => {
+  await page.addInitScript(({ mock, delay, hold, gifSupport }) => {
     window.__copyCalls = 0
     window.__copyPayloads = 0
     window.__copyDenied = false
@@ -62,21 +64,33 @@ async function prepare(page, { mock = true, delay = 450, hold = false } = {}) {
         return super.terminate()
       }
     }
+    if (gifSupport === true) {
+      // Simulate the advertised native GIF API without pretending that current
+      // browsers or the host OS actually support this format.
+      window.ClipboardItem = class {
+        static supports(mime) { return mime === 'image/gif' || mime === 'image/png' }
+        constructor(data) { this.data = data; this.types = Object.keys(data) }
+        async getType(mime) { return this.data[mime] }
+      }
+    } else if (gifSupport === false) {
+      Object.defineProperty(ClipboardItem, 'supports', { configurable: true, value: mime => mime === 'image/png' })
+    }
     if (mock) Object.defineProperty(navigator, 'clipboard', { configurable: true, value: {
       write: async items => {
         window.__copyCalls++
         window.__activeAtCopy = navigator.userActivation?.isActive
         if (window.__copyDenied) throw new DOMException('denied', 'NotAllowedError')
-        const blob = await items[0].getType('image/png')
+        window.__copiedTypes = [...items[0].types]
+        const blob = await items[0].getType(items[0].types[0])
         window.__copied = blob
         window.__copyPayloads++
       },
     } })
-  }, { mock, delay, hold })
+  }, { mock, delay, hold, gifSupport })
   await page.goto('./')
 }
 
-async function upload(page, width = 480, height = 240) {
+async function upload(page, width = 480, height = 240, keepWechat = false) {
   const data = await page.evaluate(({ width, height }) => {
     const c = document.createElement('canvas'); c.width = width; c.height = height
     const x = c.getContext('2d'); x.fillStyle = '#e8352a'; x.fillRect(0, 0, width / 2, height)
@@ -84,6 +98,7 @@ async function upload(page, width = 480, height = 240) {
   }, { width, height })
   await page.locator('input[type=file]').first().setInputFiles({ name: 'copy.png', mimeType: 'image/png', buffer: Buffer.from(data, 'base64') })
   await expect(page.getByRole('button', { name: '复制', exact: true })).toBeEnabled()
+  if (!keepWechat) await page.getByRole('checkbox', { name: '适配微信表情' }).uncheck()
 }
 
 async function inspectCopy(page, native = false) {
@@ -123,7 +138,7 @@ test('copy shows full-screen real progress, writes a transparent composite, and 
   await expect(page.getByRole('dialog', { name: '已复制到剪贴板' })).toBeVisible()
   expect(await page.evaluate(() => window.__activeAtCopy)).toBe(true)
   const image = await inspectCopy(page)
-  expect(image).toMatchObject({ type: 'image/png', width: 240, height: 120 })
+  expect(image).toMatchObject({ type: 'image/png', width: 480, height: 240 })
   expect(image.first[3]).toBe(255); expect(image.last[3]).toBe(0)
   expect(downloads).toBe(0)
   await expect(page.locator('.export-check')).toBeVisible()
@@ -195,6 +210,7 @@ test('cancel prevents a late clipboard payload and download uses the same full-s
   expect(await page.evaluate(() => window.__copyPayloads)).toBe(0)
   await page.getByRole('button', { name: '知道了' }).click()
   await expect(page.getByRole('dialog')).toHaveCount(0)
+  await page.getByRole('checkbox', { name: '适配微信表情' }).check()
   const downloaded = page.waitForEvent('download')
   await page.getByRole('button', { name: '下载', exact: true }).click()
   await expect(page.getByRole('dialog', { name: '正在生成下载图片' }).getByRole('progressbar')).toBeVisible()
@@ -236,6 +252,7 @@ test('copying a GIF uses the selected frame rather than the first frame', async 
   await expect(frame).toBeVisible()
   await frame.focus()
   await page.keyboard.press('End')
+  await page.getByRole('checkbox', { name: '适配微信表情' }).uncheck()
   await page.getByRole('button', { name: '复制', exact: true }).click()
   await expect(page.getByRole('dialog', { name: '已复制到剪贴板' })).toBeVisible()
   const image = await inspectCopy(page)
@@ -250,5 +267,54 @@ test('a real browser clipboard contains the composited PNG after copying', async
   await upload(page)
   await page.getByRole('button', { name: '复制', exact: true }).click()
   await expect(page.getByRole('dialog', { name: '已复制到剪贴板' })).toBeVisible()
-  expect(await inspectCopy(page, true)).toMatchObject({ type: 'image/png', width: 240, height: 120 })
+  expect(await inspectCopy(page, true)).toMatchObject({ type: 'image/png', width: 480, height: 240 })
+})
+
+test('checked WeChat mode refuses unsupported GIF rather than silently copying PNG', async ({ page }) => {
+  await prepare(page, { gifSupport: false })
+  await upload(page, 480, 240, true)
+  let downloads = 0; page.on('download', () => downloads++)
+  await expect(page.getByRole('checkbox', { name: '适配微信表情' })).toBeChecked()
+  await page.getByRole('button', { name: '复制', exact: true }).click()
+  await expect(page.getByRole('dialog', { name: '复制失败' })).toBeVisible()
+  await expect(page.getByRole('alert')).toContainText('不支持复制 GIF')
+  expect(await page.evaluate(() => ({ calls: window.__copyCalls, payloads: window.__copyPayloads, workers: window.__exportGate.started })))
+    .toEqual({ calls: 0, payloads: 0, workers: 0 })
+  expect(downloads).toBe(0)
+  await page.getByRole('button', { name: '知道了' }).click()
+  await expect(page.getByRole('dialog')).toHaveCount(0)
+  await page.getByRole('checkbox', { name: '适配微信表情' }).uncheck()
+  await page.getByRole('button', { name: '复制', exact: true }).click()
+  await expect(page.getByRole('dialog', { name: '已复制到剪贴板' })).toBeVisible()
+  expect((await inspectCopy(page)).type).toBe('image/png')
+})
+
+test('checked mode sends a complete real GIF with animation when native support is advertised', async ({ page }) => {
+  await prepare(page, { gifSupport: true })
+  const gif = GIFEncoder()
+  const width = 480, height = 240, palette = [[232, 53, 42], [20, 80, 230]]
+  gif.writeFrame(new Uint8Array(width * height), width, height, { palette, delay: 100 })
+  gif.writeFrame(new Uint8Array(width * height).fill(1), width, height, { palette, delay: 250 })
+  gif.finish()
+  await page.locator('input[type=file]').first().setInputFiles({ name: 'animated.gif', mimeType: 'image/gif', buffer: Buffer.from(gif.bytes()) })
+  await expect(page.getByRole('button', { name: '复制', exact: true })).toBeEnabled()
+  await expect(page.getByRole('checkbox', { name: '适配微信表情' })).toBeChecked()
+  await page.getByRole('slider', { name: 'GIF 当前帧' }).focus()
+  await page.keyboard.press('End')
+  let downloads = 0; page.on('download', () => downloads++)
+  await page.getByRole('button', { name: '复制', exact: true }).click()
+  await expect(page.getByRole('dialog', { name: '已复制到剪贴板' })).toBeVisible()
+  const copied = await page.evaluate(async () => {
+    const bytes = new Uint8Array(await window.__copied.arrayBuffer())
+    return { type: window.__copied.type, types: window.__copiedTypes, bytes: [...bytes] }
+  })
+  expect(copied.type).toBe('image/gif')
+  expect(copied.types).toEqual(['image/gif'])
+  const bytes = Uint8Array.from(copied.bytes)
+  expect(Buffer.from(bytes.subarray(0, 6)).toString('ascii')).toBe('GIF89a')
+  const parsed = parseGIF(bytes.buffer)
+  expect([parsed.lsd.width, parsed.lsd.height]).toEqual([240, 120])
+  expect(decompressFrames(parsed, true).map(frame => frame.delay)).toEqual([100, 250])
+  expect(bytes.length).toBeLessThan(500_000)
+  expect(downloads).toBe(0)
 })
