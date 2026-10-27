@@ -135,6 +135,13 @@ function mockCanvas(fail = false) {
 }
 
 describe('canvas lifetime and OCR dimensions', () => {
+  it.each([[193,181], [240,240], [480,360], [640,480]])('preserves %i×%i OCR pixels without upscaling', async (width, height) => {
+    const {canvases} = mockCanvas()
+    const input = await prepareOcrInput({width,height} as ImageData)
+    expect(input.scaleX).toBe(1)
+    expect(input.scaleY).toBe(1)
+    expect(canvases.every(c=>c.width===0&&c.height===0)).toBe(true)
+  })
   it('caps large OCR inputs and maps both axes back to editor coordinates', async () => {
     const {canvases,blob} = mockCanvas()
     const input = await prepareOcrInput({width:1600,height:1201} as ImageData)

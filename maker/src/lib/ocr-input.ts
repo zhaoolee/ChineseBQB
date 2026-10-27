@@ -1,9 +1,10 @@
 import { canvasToPng } from './paint'
 
-/** Always recognize editor pixels, never the original (possibly huge) file. */
+/** Bound large editor images without enlarging small captions: resampling can
+ * make the recognition model skip glyphs even with a high confidence score. */
 export async function prepareOcrInput(image: ImageData): Promise<{ blob: Blob; scaleX: number; scaleY: number }> {
   const edge = Math.max(image.width, image.height)
-  const scale = Math.min(640, Math.max(480, edge)) / edge
+  const scale = Math.min(1, 640 / edge)
   const width = Math.max(1, Math.round(image.width * scale))
   const height = Math.max(1, Math.round(image.height * scale))
   const source = document.createElement('canvas')
@@ -18,7 +19,8 @@ export async function prepareOcrInput(image: ImageData): Promise<{ blob: Blob; s
     canvas.height = height
     const context = canvas.getContext('2d')
     if (!context) throw new Error('浏览器不能读取这张图片的像素。')
-    context.drawImage(source, 0, 0, width, height)
+    if (scale === 1) context.putImageData(image, 0, 0)
+    else context.drawImage(source, 0, 0, width, height)
     return { blob: await canvasToPng(canvas), scaleX: width / image.width, scaleY: height / image.height }
   } finally {
     source.width = source.height = 0
