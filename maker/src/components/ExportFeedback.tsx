@@ -143,11 +143,11 @@ export function ExportFeedback({ action, progress, delivering, result, closing, 
               <button
                 type="button"
                 className="export-dialog-action export-dialog-share"
-                disabled={sharing || !share.support.ok}
+                disabled={sharing || closing || !share.support.ok}
                 onClick={onShare}
               >{sharing ? '分享中…' : '分享'}</button>
             )}
-            <button type="button" className="export-dialog-action" disabled={sharing} onClick={onClose}>知道了</button>
+            <button type="button" className="export-dialog-action" disabled={sharing || closing} onClick={onClose}>知道了</button>
           </div>
         )}
       </section>

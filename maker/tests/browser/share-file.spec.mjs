@@ -159,8 +159,14 @@ test('GIF copy shares the exact ready File, keeps the success modal open and cyc
   await expect(page.getByRole('button', { name: '分享', exact: true })).toBeFocused()
   await page.keyboard.press('Shift+Tab')
   await expect(page.getByRole('button', { name: '知道了', exact: true })).toBeFocused()
-  await page.getByRole('button', { name: '知道了', exact: true }).click()
+  // A rapid Share activation during the close animation cannot reopen native UI.
+  await page.evaluate(() => {
+    const close = [...document.querySelectorAll('.export-dialog button')].find(button => button.textContent === '知道了')
+    close.click()
+    document.querySelector('.export-dialog-share').dispatchEvent(new MouseEvent('click', { bubbles: true }))
+  })
   await expect(page.getByRole('dialog')).toHaveCount(0)
+  expect(await page.evaluate(() => window.__share.calls.length)).toBe(1)
 })
 
 test('pending native share blocks duplicate share and close, Escape, then allows retry', async ({ page }) => {

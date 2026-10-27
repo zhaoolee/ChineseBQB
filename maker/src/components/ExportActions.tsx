@@ -98,7 +98,9 @@ export function ExportActions() {
 
   function startShare() {
     const file = shareTarget
-    if (!file || shareLock.current) return
+    // The close timer is set synchronously, before React renders disabled actions.
+    // A second click must not cancel that timer and leave a closing modal inert.
+    if (!file || shareLock.current || successTimer.current !== null) return
     const support = fileShareSupport(file)
     if (!support.ok) {
       setShareNotice({ tone: 'error', detail: support.message })
