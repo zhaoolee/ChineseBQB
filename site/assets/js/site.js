@@ -285,7 +285,7 @@
     link.dataset.src = link.href;
     link.dataset.animated = item.animated ? 'true' : 'false';
     const image = document.createElement('img');
-    image.src = asset(item.thumb);
+    image.src = asset(item.animated ? item.src : item.thumb);
     image.alt = item.label;
     image.loading = 'lazy';
     image.width = 360;
