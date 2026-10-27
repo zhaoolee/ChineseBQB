@@ -6,9 +6,16 @@ export function writeClipboardImage(createImage: () => Promise<Blob>, signal: Ab
   }
   if (signal.aborted) return Promise.reject(new DOMException('已取消复制', 'AbortError'))
 
+  let rejectCancellation!: (error: DOMException) => void
+  const cancellation = new Promise<never>((_resolve, reject) => { rejectCancellation = reject })
+  void cancellation.catch(() => {})
   let stop: () => void = () => {}
   const image = new Promise<Blob>((resolve, reject) => {
-    const abort = () => reject(new DOMException('已取消复制', 'AbortError'))
+    const abort = () => {
+      const error = new DOMException('已取消复制', 'AbortError')
+      reject(error)
+      rejectCancellation(error)
+    }
     signal.addEventListener('abort', abort, { once: true })
     stop = () => signal.removeEventListener('abort', abort)
     try {
@@ -22,7 +29,10 @@ export function writeClipboardImage(createImage: () => Promise<Blob>, signal: Ab
   // A denied write can reject before the browser consumes the image promise.
   void image.catch(() => {})
   try {
-    return navigator.clipboard.write([new ClipboardItem({ 'image/png': image })]).finally(stop)
+    // A native clipboard promise need not settle promptly when its data promise
+    // rejects. Release the UI immediately on cancellation as well as denying
+    // the pending PNG payload; a late platform callback cannot claim success.
+    return Promise.race([navigator.clipboard.write([new ClipboardItem({ 'image/png': image })]), cancellation]).finally(stop)
   } catch (error) {
     stop()
     return Promise.reject(error)

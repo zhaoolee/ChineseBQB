@@ -9,25 +9,56 @@ test.beforeEach(async ({ page }) => {
 })
 test.afterEach(async ({ page }) => { expect(page.copyErrors).toEqual([]) })
 
-async function prepare(page, { mock = true, delay = 450 } = {}) {
+async function prepare(page, { mock = true, delay = 450, hold = false } = {}) {
   await page.route('**/catalog/**', route => route.fulfill({ json: [] }))
   await page.route('**/models/**', route => route.abort())
-  await page.addInitScript(({ mock, delay }) => {
+  await page.addInitScript(({ mock, delay, hold }) => {
     window.__copyCalls = 0
     window.__copyPayloads = 0
     window.__copyDenied = false
     window.__exportDelay = delay
     window.__terminatedExports = 0
+    window.__unhandledRejections = []
+    window.addEventListener('unhandledrejection', event => {
+      window.__unhandledRejections.push(String(event.reason?.message ?? event.reason))
+    })
     const NativeWorker = Worker
+    // 测试专用 gate：hold 时导出 Worker 的 postMessage 停在页面内，编码任务
+    // 无法在自动化取消前完成；释放时拒绝把数据投递给已 terminate 的 Worker。
+    const gate = window.__exportGate = { hold, started: 0, posted: 0, attempted: 0, blocked: 0, waiting: [] }
+    const nextTask = () => new Promise(resolve => setTimeout(resolve, 0))
+    window.__exportGateSettled = Promise.resolve()
+    window.__releaseExportGate = ({ keepHolding = false } = {}) => {
+      gate.hold = keepHolding
+      const summary = { attempted: 0, posted: 0, blocked: 0 }
+      for (const worker of gate.waiting.splice(0)) {
+        for (const call of worker.exportPending.splice(0)) {
+          gate.attempted++; summary.attempted++
+          if (worker.exportTerminated) { gate.blocked++; summary.blocked++; continue }
+          gate.posted++; summary.posted++
+          NativeWorker.prototype.postMessage.call(worker, call.data, ...call.args)
+        }
+      }
+      // 页面内 settled Promise：放行后等两个任务轮转，观察是否留下延迟 rejection。
+      window.__exportGateSettled = nextTask().then(nextTask)
+        .then(() => ({ ...summary, unhandled: window.__unhandledRejections.slice() }))
+      return summary
+    }
     window.Worker = class extends NativeWorker {
-      constructor(...args) { super(...args); this.exporting = String(args[0]).includes('gif-export.worker') }
+      constructor(...args) {
+        super(...args)
+        this.exporting = String(args[0]).includes('gif-export.worker')
+        this.exportPending = []
+      }
       postMessage(data, ...args) {
         if (!this.exporting) return super.postMessage(data, ...args)
-        this.delayed = setTimeout(() => super.postMessage(data, ...args), window.__exportDelay)
+        gate.started++
+        if (gate.hold) { this.exportPending.push({ data, args }); gate.waiting.push(this); return }
+        this.delayed = setTimeout(() => { this.delayed = null; gate.posted++; super.postMessage(data, ...args) }, window.__exportDelay)
       }
       terminate() {
         clearTimeout(this.delayed)
-        if (this.exporting) window.__terminatedExports++
+        if (this.exporting) { this.exportTerminated = true; window.__terminatedExports++ }
         return super.terminate()
       }
     }
@@ -41,7 +72,7 @@ async function prepare(page, { mock = true, delay = 450 } = {}) {
         window.__copyPayloads++
       },
     } })
-  }, { mock, delay })
+  }, { mock, delay, hold })
   await page.goto('./')
 }
 
@@ -143,22 +174,43 @@ test('permission denial animates an error, stops the worker and allows retry', a
 })
 
 test('cancel prevents a late clipboard payload and download uses the same full-screen progress', async ({ page }) => {
-  await prepare(page, { delay: 800 })
+  await prepare(page, { hold: true })
   await upload(page)
   await page.getByRole('button', { name: '复制', exact: true }).click()
   await expect(page.getByRole('progressbar')).toBeVisible()
+  // Worker 的 postMessage 被 gate 扣住：取消前不可能出现进度或完成结果。
+  expect(await page.evaluate(() => ({ started: window.__exportGate.started, posted: window.__exportGate.posted })))
+    .toEqual({ started: 1, posted: 0 })
   await page.getByRole('button', { name: '取消', exact: true }).click()
   await expect(page.getByRole('dialog', { name: '已取消', exact: true })).toBeVisible()
+  expect(await page.evaluate(() => window.__copyPayloads)).toBe(0)
+  // 取消后仍尝试释放旧 gate：不得投递给已 terminate 的 Worker，也不得留下 rejection。
+  const late = await page.evaluate(async () => {
+    window.__releaseExportGate({ keepHolding: true })
+    return window.__exportGateSettled
+  })
+  expect(late).toEqual({ attempted: 1, posted: 0, blocked: 1, unhandled: [] })
+  expect(await page.evaluate(() => window.__terminatedExports)).toBe(1)
+  expect(await page.evaluate(() => window.__exportGate.posted)).toBe(0)
   expect(await page.evaluate(() => window.__copyPayloads)).toBe(0)
   await page.getByRole('button', { name: '知道了' }).click()
   await expect(page.getByRole('dialog')).toHaveCount(0)
   const downloaded = page.waitForEvent('download')
   await page.getByRole('button', { name: '下载', exact: true }).click()
   await expect(page.getByRole('dialog', { name: '正在生成下载图片' }).getByRole('progressbar')).toBeVisible()
+  // 下载分支同样先挂起：全屏进度确认可见后再放行，慢机器上也不会提前收尾。
+  expect(await page.evaluate(() => window.__exportGate.started)).toBe(2)
+  const closed = await page.evaluate(async () => {
+    window.__releaseExportGate()
+    return window.__exportGateSettled
+  })
+  expect(closed).toEqual({ attempted: 1, posted: 1, blocked: 0, unhandled: [] })
   const download = await downloaded
   expect(download.suggestedFilename()).toBe('edited-copy.gif')
   await expect(page.getByRole('dialog', { name: '图片已下载' })).toBeVisible()
+  expect(await page.evaluate(() => window.__terminatedExports)).toBe(2)
   expect(await page.evaluate(() => window.__copyPayloads)).toBe(0)
+  expect(await page.evaluate(() => window.__unhandledRejections)).toEqual([])
 })
 
 test('an unavailable clipboard shows actionable failure without an automatic download', async ({ page }) => {

@@ -53,6 +53,18 @@ it('handles permission denial before encoding finishes and explains it without c
   expect(clipboardErrorMessage(denied)).toContain('允许剪贴板访问')
 })
 
+it('releases a cancelled operation even if the native clipboard promise never settles', async () => {
+  vi.stubGlobal('navigator', { clipboard: { write: () => new Promise<void>(() => {}) } })
+  let finish!: (blob: Blob) => void
+  const composite = new Promise<Blob>(resolve => { finish = resolve })
+  const controller = new AbortController()
+  const pending = writeClipboardImage(() => composite, controller.signal)
+  const rejected = expect(pending).rejects.toMatchObject({ name: 'AbortError' })
+  controller.abort()
+  await rejected
+  finish(png())
+})
+
 it('rejects a mislabeled GIF payload rather than putting GIF bytes under image/png', async () => {
   vi.stubGlobal('navigator', { clipboard: { write: async (items: Item[]) => { await items[0].data['image/png'] } } })
   await expect(writeClipboardImage(async () => new Blob(['GIF89a'], { type: 'image/gif' }), new AbortController().signal))
