@@ -117,8 +117,75 @@ h2 { margin: 0; font-size: 16px; }
 }
 .preview-export > .export-fit input { width: 16px; height: 16px; margin: 0; accent-color: #6f4219; }
 .preview-export > .export-fit:has(input:disabled) { opacity: 0.6; cursor: default; }
-/* 导出进行中才出现的取消按钮：紧贴导出按钮，不改变原有导出位置与一键流程。 */
-.preview-export > .export-cancel { background: #fdf9f1; color: #9a3b1a; border-color: #e4cdbd; }
+.preview-export > .export-copy { background: #fffaf1; color: #6f4219; }
+.export-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom));
+  background: rgba(44, 32, 21, 0.62);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  animation: export-backdrop-in 180ms ease-out both;
+}
+.export-dialog {
+  width: min(100%, 400px);
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+  padding: 36px 28px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 24px;
+  background: linear-gradient(155deg, #fffdf7, #f6eddf);
+  box-shadow: 0 24px 90px rgba(26, 17, 9, 0.28), inset 0 1px 0 #fff;
+  color: #51351e;
+  text-align: center;
+  outline: none;
+  animation: export-card-in 360ms cubic-bezier(0.18, 0.8, 0.24, 1) both;
+}
+.export-feedback-icon { width: 76px; height: 76px; margin: 0 auto 24px; display: grid; place-items: center; color: #a46c25; }
+.export-feedback-icon svg { width: 68px; height: 68px; animation: export-symbol-in 400ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.export-orbit { width: 64px; height: 64px; border: 4px solid #eadcc5; border-top-color: #a46c25; border-right-color: #c79447; border-radius: 50%; animation: export-spin 900ms linear infinite; }
+.export-feedback-eyebrow { margin: 0 0 10px; color: #8d7761; font-size: 12px; letter-spacing: 0.12em; }
+.export-dialog h2 { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.04em; }
+.export-dialog #export-feedback-detail { min-height: 42px; margin: 12px 0 0; color: #8d7761; font-size: 14px; line-height: 1.65; overflow-wrap: anywhere; }
+.export-meter { margin: 22px 0 8px; }
+.export-meter-track { height: 12px; overflow: hidden; border-radius: 999px; background: #e7dac5; box-shadow: inset 0 1px 2px rgba(70, 47, 21, 0.08); }
+.export-meter-track > span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #9a6429, #d5a450); transition: width 220ms ease-out; }
+.export-meter-track.is-indeterminate > span { width: 38%; animation: export-progress-sweep 1400ms ease-in-out infinite; }
+.export-meter-caption { display: block; margin-top: 10px; color: #8d7761; font-size: 12px; font-variant-numeric: tabular-nums; }
+.export-dialog-action { min-width: 120px; min-height: 40px; margin-top: 20px; border-radius: 999px; border-color: #ddccb6; background: rgba(255, 255, 255, 0.6); }
+.export-dialog-action:focus-visible { outline: 3px solid #c79447; outline-offset: 4px; }
+.export-dialog.is-success .export-feedback-icon { color: #51754a; }
+.export-dialog.is-error .export-feedback-icon { color: #b5533d; }
+.export-dialog.is-error .export-feedback-icon svg { animation: export-symbol-in 400ms ease-out both, export-error-nudge 450ms 200ms ease-out; }
+.export-dialog.is-cancelled .export-feedback-icon { color: #8d7761; }
+.export-check { stroke-dasharray: 44; stroke-dashoffset: 44; animation: export-check-draw 450ms 120ms ease-out forwards; }
+.export-overlay.is-closing { animation: export-backdrop-out 180ms ease-in both; }
+.export-overlay.is-closing .export-dialog { animation: export-card-out 180ms ease-in both; }
+@keyframes export-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes export-backdrop-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes export-card-in { from { opacity: 0; transform: translateY(18px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes export-card-out { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(8px) scale(0.98); } }
+@keyframes export-spin { to { transform: rotate(360deg); } }
+@keyframes export-progress-sweep { from { transform: translateX(-110%); } to { transform: translateX(370%); } }
+@keyframes export-symbol-in { from { opacity: 0; transform: scale(0.72); } to { opacity: 1; transform: scale(1); } }
+@keyframes export-check-draw { to { stroke-dashoffset: 0; } }
+@keyframes export-error-nudge { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 65% { transform: translateX(3px); } }
+@media (max-width: 420px) {
+  .preview-export { max-width: calc(100% - 64px); }
+  .export-dialog { padding: 30px 22px 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .export-overlay, .export-dialog, .export-feedback-icon svg, .export-orbit,
+  .export-check, .export-dialog.is-error .export-feedback-icon svg,
+  .export-overlay.is-closing, .export-overlay.is-closing .export-dialog,
+  .export-meter-track.is-indeterminate > span { animation: none; }
+  .export-meter-track > span { transition: none; }
+  .export-check { stroke-dashoffset: 0; }
+  .export-meter-track.is-indeterminate > span { width: 100%; opacity: 0.55; }
+}
 /* 图库展开时隐藏上方工具/导出与文字操作按钮，收起后自动恢复；不保留空占位或透明焦点。 */
 .maker-app:has(.asset-sheet) .preview-tools,
 .maker-app:has(.asset-sheet) .preview-export,

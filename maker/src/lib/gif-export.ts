@@ -19,9 +19,13 @@ export type GifExportOptions = { onProgress?: (progress: GifExportProgress) => v
  * downscaled preview; the worker composites edits on the real source pixels.
  */
 export type NativeExportInput = { mode: 'native'; source: Blob; editWidth: number; editHeight: number }
+export type ClipboardExportInput = {
+  mode: 'clipboard'; fitWechat: boolean; frameIndex: number; editWidth: number; editHeight: number
+} & ({ source: Blob } | { imageData: ImageData })
 export type EditableExportInput =
   | ({ mode?: 'wechat' } & ({ source: Blob } | { imageData: ImageData }))
   | NativeExportInput
+  | ClipboardExportInput
 
 // One frame needs a non-zero delay for viewers that ignore zero-delay frames;
 // there is no second frame, so the exported sticker remains visually static.
@@ -62,11 +66,61 @@ export async function exportEditableSource(
   input: EditableExportInput, edits: TimedEdits, options: GifExportOptions = {},
   createCanvas: () => HTMLCanvasElement = () => document.createElement('canvas'),
 ): Promise<Blob> {
+  if (input.mode === 'clipboard') return exportClipboardPng(input, edits, options, createCanvas)
   if (input.mode === 'native') return exportNativeSource(input, edits, options, createCanvas)
   const frames = 'source' in input
     ? createEditableGifFrames(new Uint8Array(await input.source.arrayBuffer())).frames
     : [{ imageData: input.imageData, delayMs: STILL_GIF_DELAY_MS }]
   return exportWechatSegmentedGif(frames, edits, options, createCanvas)
+}
+
+/** Clipboard images use PNG: keep transparency and the selected GIF frame,
+ * without quantizing a still through GIF or encoding the whole animation. */
+export async function exportClipboardPng(
+  input: ClipboardExportInput, edits: TimedEdits, options: GifExportOptions,
+  createCanvas: () => HTMLCanvasElement,
+): Promise<Blob> {
+  options.onProgress?.({ stage: 'prepare', completed: 0, total: 3 })
+  let pixels: ImageData
+  if ('imageData' in input) pixels = input.imageData
+  else {
+    const bytes = new Uint8Array(await input.source.arrayBuffer())
+    const sniffed = sniffImage(bytes, input.source.type)
+    if (sniffed.mime === 'image/gif') {
+      const { frames } = createEditableGifFrames(bytes)
+      pixels = frames[Math.min(frames.length - 1, Math.max(0, input.frameIndex))].imageData
+    } else pixels = await decodeNativeStill(new Blob([bytes], { type: sniffed.mime }), createCanvas)
+  }
+  options.onProgress?.({ stage: 'prepare', completed: 1, total: 3 })
+  const scaled = scaleEditsForSource(edits, input.editWidth, input.editHeight, pixels.width, pixels.height)
+  const current = editsAtFrame(scaled, input.frameIndex)
+  const patches = collectPatches(current.blocks, pixels)
+  const source = createCanvas()
+  const output = createCanvas()
+  try {
+    paintComposite(pixels, patches.map(patch => ({ ...patch, text: '' })), [], source)
+    options.onProgress?.({ stage: 'prepare', completed: 2, total: 3 })
+    const bounds = input.fitWechat ? stickerBounds(pixels.width, pixels.height) : pixels
+    output.width = bounds.width
+    output.height = bounds.height
+    const sourceContext = source.getContext('2d')
+    const target = output.getContext('2d')
+    if (!sourceContext || !target) throw new Error('浏览器不能创建画布，无法复制。')
+    const erased = sourceContext.getImageData(0, 0, source.width, source.height)
+    target.putImageData(resizeGif(erased, bounds.width, bounds.height), 0, 0)
+    target.save()
+    target.scale(bounds.width / pixels.width, bounds.height / pixels.height)
+    paintTextLayers(target, patches, current.freeTexts)
+    target.restore()
+    options.onProgress?.({ stage: 'prepare', completed: 3, total: 3 })
+    options.onProgress?.({ stage: 'encode', completed: 0, total: 1 })
+    const blob = await canvasToImage(output, 'image/png')
+    options.onProgress?.({ stage: 'encode', completed: 1, total: 1 })
+    return blob
+  } finally {
+    source.width = source.height = 0
+    output.width = output.height = 0
+  }
 }
 
 /** Map edit geometry from the editor canvas (which may be capped at 1600px)
