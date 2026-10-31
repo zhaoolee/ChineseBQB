@@ -70,12 +70,13 @@
 
 <!-- BQB-DIRECTORY:START -->
 
-## 表情包目录（共收录 5872 张表情包） / Sticker directory
+## 表情包目录（共收录 5887 张表情包） / Sticker directory
 
-> 根据 BQB 文件夹自动更新，共 114 个分类。点击“直链下载”即可获取该分类的 ZIP 合集。
+> 根据 BQB 文件夹自动更新，共 115 个分类。点击“直链下载”即可获取该分类的 ZIP 合集。
 
 | 示例 / Preview | 分类入口 / Browse | 下载 / Download |
 | :---: | :---: | :---: |
+| <img src="https://zhaoolee.com/ChineseBQB/media/c72b8ff98fb24bb2f910a095100ceaecf2dd6531e61b3dbff558443f38b39801.gif" height="100" alt="影之刃零" /> | [112PhantomBladeZero\_影之刃零\_BQB（15 张）](https://zhaoolee.com/ChineseBQB/112phantombladezero_%E5%BD%B1%E4%B9%8B%E5%88%83%E9%9B%B6_bqb/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/releases/download/bqb-downloads/bqb-112-bc1c3bf28ad92206.zip) |
 | <img src="https://zhaoolee.com/ChineseBQB/thumbs/93632560e2f7fa35346a66cec0156df48e79d7406788e85a07bdce1518e36530.webp" height="100" alt="黑袍纠察队" /> | [111\_TheBoys\_黑袍纠察队\_BQB（13 张）](https://zhaoolee.com/ChineseBQB/111_theboys_%E9%BB%91%E8%A2%8D%E7%BA%A0%E5%AF%9F%E9%98%9F_bqb/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/releases/download/bqb-downloads/bqb-111-63f207ae27c17569.zip) |
 | <img src="https://zhaoolee.com/ChineseBQB/media/3aecfad8a20030e916a804b3e881e140916a7583ed5a584db083eb5abb1d8c8d.gif" height="100" alt="人工智能" /> | [110\_AI\_人工智能\_BQB（11 张）](https://zhaoolee.com/ChineseBQB/110_ai_%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD_bqb/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/releases/download/bqb-downloads/bqb-110-7a447361ed2dd273.zip) |
 | <img src="https://zhaoolee.com/ChineseBQB/thumbs/9ebf76f2076be1d94f8142aff4784baf1b5fe60f3bf61a855b1442212d2da972.webp" height="100" alt="负鼠" /> | [109\_Opossum\_负鼠\_BQB（32 张）](https://zhaoolee.com/ChineseBQB/109_opossum_%E8%B4%9F%E9%BC%A0_bqb/) | [直链下载](https://github.com/zhaoolee/ChineseBQB/releases/download/bqb-downloads/bqb-109-b5418ebb5d545c14.zip) |
