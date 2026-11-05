@@ -40,6 +40,7 @@ h2 { margin: 0; font-size: 16px; }
 .toolbar button { flex: none; }
 .workspace { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .canvas-pane { position: relative; z-index: 1; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: row; align-items: stretch; background: var(--surface-soft); }
+.canvas-pane:has(.download-settings-panel) { z-index: 3; }
 .preview-frame { position: relative; flex: 1 1 auto; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
 .preview-tools { position: relative; z-index: 7; flex: 0 0 72px; display: flex; align-items: center; padding: 10px; background: var(--surface); }
 .preview-tools .tool-toggle { width: 36px; height: 36px; padding: 0; display: grid; place-items: center; pointer-events: auto; }
@@ -98,31 +99,25 @@ h2 { margin: 0; font-size: 16px; }
   max-width: 100%;
 }
 .preview-export > button { box-shadow: var(--raised); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-/* 390px 手机视口里复选框和导出按钮同排；更窄时整组换行，不遮挡预览。 */
-.preview-export > .export-fit {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  min-height: 36px;
-  padding: 0 8px;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  background: var(--surface);
-  color: var(--ink);
-  font-size: 12px;
-  line-height: 1;
-  white-space: nowrap;
-  cursor: pointer;
-  box-shadow: var(--raised);
-}
-.preview-export > .export-fit input { width: 16px; height: 16px; margin: 0; accent-color: var(--ink); }
-.preview-export > .export-fit:has(input:disabled) { opacity: 0.6; cursor: default; }
 .preview-export > .export-copy { background: var(--surface); color: var(--ink); }
-.mp4-export-note { width: 100%; font-size: 12px; line-height: 1.5; color: var(--ink); }
-.mp4-export-note summary { cursor: pointer; text-align: right; }
-.mp4-export-note p { margin: 8px 0; }
-.mp4-export-note label { display: flex; gap: 6px; align-items: center; }
-.mp4-export-note input { margin: 0; }
+.preview-export:has(.download-settings-panel) { z-index: 8; }
+.download-settings { position: relative; }
+.download-settings-trigger { display: grid; place-items: center; width: 38px; height: 38px; padding: 0; box-shadow: var(--raised); }
+.download-settings-panel { position: absolute; top: calc(100% + 10px); right: -78px; z-index: 30; width: min(332px, calc(100vw - 32px)); max-height: min(560px, 70dvh); overflow-y: auto; padding: 16px; border-radius: 18px; background: var(--surface); color: var(--ink); box-shadow: 0 8px 32px #0003; text-align: left; font-size: 13px; line-height: 1.5; }
+.download-settings-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.download-settings-heading button { min-height: 28px; padding: 0 8px; font-size: 20px; }
+.download-mode-options { display: grid; gap: 8px; }
+.download-mode-option { display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid #8884; border-radius: 12px; cursor: pointer; }
+.download-mode-option:has(input:checked) { border-color: var(--ink); box-shadow: var(--inset); }
+.download-mode-option input, .download-mp4-options input { accent-color: var(--ink); flex: 0 0 auto; }
+.download-mode-option strong, .download-mode-option small { display: block; }
+.download-mode-option small { font-size: 11px; opacity: .72; margin-top: 2px; }
+.download-mode-option.is-disabled { opacity: .45; cursor: default; }
+.download-mp4-options p { margin: 10px 0; font-size: 12px; }
+.download-mp4-options label { display: flex; align-items: center; gap: 6px; margin: 10px 0; font-size: 12px; }
+.download-mp4-options summary { cursor: pointer; padding: 6px 0; }
+.download-settings-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; font-size: 11px; }
+.download-settings-footer .download-native { padding: 4px 8px; font-size: 12px; min-height: 30px; }
 .export-overlay {
   position: fixed;
   inset: 0;
@@ -847,8 +842,6 @@ button.primary:not(:disabled):active, .export-dialog-share:not(:disabled):active
   box-shadow: none;
   background: transparent;
 }
-.preview-export > .export-fit:has(input:checked) { box-shadow: var(--inset); }
-.preview-export > .export-fit:has(input:disabled) { box-shadow: none; }
 input[type="checkbox"], input[type="range"], input[type="color"] { box-shadow: none; }
 .paste-confirm section { box-shadow: 0 18px 48px rgba(0, 0, 0, 0.18), inset 0 1px 0 var(--highlight); }
 button:disabled, .preview-tools .tool-menu button:disabled { box-shadow: none; }

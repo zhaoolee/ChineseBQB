@@ -19,7 +19,7 @@ export type GifExportOptions = { onProgress?: (progress: GifExportProgress) => v
  * downscaled preview; the worker composites edits on the real source pixels.
  */
 export type NativeExportInput = { mode: 'native'; source: Blob; editWidth: number; editHeight: number }
-export type Mp4ExportInput = { mode: 'mp4'; source: Blob; editWidth: number; editHeight: number; flattenTransparency: boolean }
+export type Mp4ExportInput = { mode: 'mp4'; source: Blob; editWidth: number; editHeight: number; flattenTransparency: boolean; lossless?: boolean }
 export type ClipboardExportInput = {
   mode: 'clipboard'; fitWechat: boolean; frameIndex: number; editWidth: number; editHeight: number
 } & ({ source: Blob } | { imageData: ImageData })
@@ -69,8 +69,8 @@ export async function exportEditableSource(
   createCanvas: () => HTMLCanvasElement = () => document.createElement('canvas'),
 ): Promise<Blob> {
   if (input.mode === 'mp4') {
-    const { exportLosslessMp4 } = await import('./mp4-export')
-    return exportLosslessMp4(input, edits, options)
+    const { exportMp4 } = await import('./mp4-export')
+    return exportMp4(input, edits, options)
   }
   if (input.mode === 'clipboard') return exportClipboardPng(input, edits, options, createCanvas)
   if (input.mode === 'native') return exportNativeSource(input, edits, options, createCanvas)

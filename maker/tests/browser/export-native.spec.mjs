@@ -1,3 +1,4 @@
+import { setNativeDownload, expectWechatMode } from './download-settings.mjs'
 import { readFileSync } from 'node:fs'
 import { test, expect } from '@playwright/test'
 
@@ -26,8 +27,7 @@ test('unchecking 适配微信表情 exports a >1600 still at native size and for
   })
 
   await expect(page.getByRole('button', { name: '下载', exact: true })).toBeEnabled()
-  const fit = page.getByRole('checkbox', { name: '适配微信表情' })
-  await expect(fit).toBeChecked()
+  await expectWechatMode(page)
 
   await page.getByRole('button', { name: '添加文字' }).click()
   const cell = page.locator('.free-line input').first()
@@ -35,7 +35,7 @@ test('unchecking 适配微信表情 exports a >1600 still at native size and for
   await cell.blur()
   await expect(cell).toHaveValue('测')
 
-  await fit.uncheck()
+  await setNativeDownload(page)
   const exportButton = page.getByRole('button', { name: '下载', exact: true })
   await expect(exportButton).toBeEnabled()
   const [download] = await Promise.all([

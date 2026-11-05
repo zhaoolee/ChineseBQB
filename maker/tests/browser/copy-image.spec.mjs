@@ -1,3 +1,4 @@
+import { setNativeDownload, expectWechatMode, setWechatMode } from './download-settings.mjs'
 import { test, expect } from '@playwright/test'
 import gifenc from 'gifenc'
 import gifuct from 'gifuct-js'
@@ -91,7 +92,7 @@ async function upload(page, width = 480, height = 240, keepWechat = false) {
   }, { width, height })
   await page.locator('input[type=file]').first().setInputFiles({ name: 'copy.png', mimeType: 'image/png', buffer: Buffer.from(data, 'base64') })
   await expect(page.getByRole('button', { name: '复制', exact: true })).toBeEnabled()
-  if (!keepWechat) await page.getByRole('checkbox', { name: '适配微信表情' }).uncheck()
+  if (!keepWechat) await setNativeDownload(page)
 }
 
 async function inspectCopy(page, native = false) {
@@ -149,7 +150,7 @@ test('native copy restores original dimensions and includes added text', async (
   await page.getByRole('button', { name: '添加文字' }).click()
   await page.locator('.free-line input').first().fill('A')
   await page.locator('.free-line input').first().blur()
-  await page.getByRole('checkbox', { name: '适配微信表情' }).uncheck()
+  await setNativeDownload(page)
   await page.getByRole('button', { name: '复制', exact: true }).click()
   await expect(page.getByRole('dialog', { name: '已复制到剪贴板' })).toBeVisible()
   expect(await inspectCopy(page)).toMatchObject({ width: 2400, height: 1200, type: 'image/png' })
@@ -203,7 +204,7 @@ test('cancel prevents a late clipboard payload and download uses the same full-s
   expect(await page.evaluate(() => window.__copyPayloads)).toBe(0)
   await page.getByRole('button', { name: '知道了' }).click()
   await expect(page.getByRole('dialog')).toHaveCount(0)
-  await page.getByRole('checkbox', { name: '适配微信表情' }).check()
+  await setWechatMode(page)
   const downloaded = page.waitForEvent('download')
   await page.getByRole('button', { name: '下载', exact: true }).click()
   await expect(page.getByRole('dialog', { name: '正在生成下载图片' }).getByRole('progressbar')).toBeVisible()
@@ -245,7 +246,7 @@ test('copying a GIF uses the selected frame rather than the first frame', async 
   await expect(frame).toBeVisible()
   await frame.focus()
   await page.keyboard.press('End')
-  await page.getByRole('checkbox', { name: '适配微信表情' }).uncheck()
+  await setNativeDownload(page)
   await page.getByRole('button', { name: '复制', exact: true }).click()
   await expect(page.getByRole('dialog', { name: '已复制到剪贴板' })).toBeVisible()
   const image = await inspectCopy(page)
@@ -282,7 +283,7 @@ function decodeCopiedGif(bytes) {
 async function uploadAnimatedGif(page) {
   await page.locator('input[type=file]').first().setInputFiles({ name: 'animated.gif', mimeType: 'image/gif', buffer: animatedGif() })
   await expect(page.getByRole('button', { name: '复制', exact: true })).toBeEnabled()
-  await expect(page.getByRole('checkbox', { name: '适配微信表情' })).toBeChecked()
+  await expectWechatMode(page)
   // 定位到末帧，确认复制的是整段动画，而不是时间轴当前帧。
   await page.getByRole('slider', { name: 'GIF 当前帧' }).focus()
   await page.keyboard.press('End')

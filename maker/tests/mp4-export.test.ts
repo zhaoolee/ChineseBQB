@@ -1,7 +1,7 @@
 import { expect, it } from 'vitest'
 import { GIFEncoder } from 'gifenc'
 import { createEditableGifFrames } from '../src/lib/gif'
-import { mp4Manifest, mp4OpaquePixels, mp4Timing } from '../src/lib/mp4-export'
+import { mp4EncodingArgs, mp4Manifest, mp4OpaquePixels, mp4Timing } from '../src/lib/mp4-export'
 import { wechatPreparationPlan } from '../src/lib/gif-export'
 
 if (typeof ImageData === 'undefined') {
@@ -9,6 +9,20 @@ if (typeof ImageData === 'undefined') {
     constructor(public data: Uint8ClampedArray, public width: number, public height: number) {}
   } as unknown as typeof ImageData
 }
+
+it('defaults to compatible YUV420 and only enables RGB lossless with an explicit choice', () => {
+  const compatible = mp4EncodingArgs(10)
+  expect(compatible).toContain('libx264')
+  expect(compatible).toContain('yuv420p')
+  expect(compatible).toContain('bt709')
+  expect(compatible).not.toContain('libx264rgb')
+  expect(compatible.join(' ')).toContain('pad=ceil(iw/2)*2:ceil(ih/2)*2')
+  const lossless = mp4EncodingArgs(10, true)
+  expect(lossless).toContain('libx264rgb')
+  expect(lossless).toContain('rgb24')
+  expect(lossless[lossless.indexOf('-crf') + 1]).toBe('0')
+  expect(lossless.join(' ')).not.toContain('pad=')
+})
 
 it('keeps unequal frame holds, including 10ms and the final hold, on an exact clock', () => {
   const delays = [10, 70, 130]

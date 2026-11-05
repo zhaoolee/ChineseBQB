@@ -1,3 +1,4 @@
+import { setNativeDownload, expectWechatMode } from './download-settings.mjs'
 import { test, expect } from '@playwright/test'
 import gifenc from 'gifenc'
 import gifuct from 'gifuct-js'
@@ -92,7 +93,7 @@ async function uploadAnimatedGif(page) {
     name: 'animated.gif', mimeType: 'image/gif', buffer: animatedGif(),
   })
   await expect(page.getByRole('button', { name: '复制', exact: true })).toBeEnabled()
-  await expect(page.getByRole('checkbox', { name: '适配微信表情' })).toBeChecked()
+  await expectWechatMode(page)
 }
 
 function decodeGif(bytes) {
@@ -255,7 +256,7 @@ test('a late share result after source replacement cannot revive the old modal',
 test('unchecked GIF copy shares the exact PNG of the current frame', async ({ page }) => {
   await prepare(page)
   await uploadAnimatedGif(page)
-  await page.getByRole('checkbox', { name: '适配微信表情' }).uncheck()
+  await setNativeDownload(page)
   await page.getByRole('slider', { name: 'GIF 当前帧' }).focus()
   await page.keyboard.press('End')
   await copyAndWait(page)
