@@ -16,7 +16,7 @@ type GifPatch = {
 const PIXEL_BUDGET = 8_000_000
 const MAX_GIF_EDGE = 1600
 const MAX_GIF_FRAMES = 200
-const MAX_DECODE_FRAMES = 2000
+export const MAX_DECODE_FRAMES = 2000
 const MAX_PATCH_PIXELS = 200_000_000
 
 function readGifSource(bytes: Uint8Array) {
@@ -47,7 +47,6 @@ export function validateGif(bytes: Uint8Array): void { readGifSource(bytes) }
  */
 export function createEditableGifFrames(bytes: Uint8Array): ReturnType<typeof decodeGifFrames> {
   const { parsed, raw, width, height } = readGifSource(bytes)
-  const sampleEvery = Math.ceil(raw.length / MAX_GIF_FRAMES)
   const screen = new Uint8ClampedArray(width * height * 4)
   const recent = new Map<number, ImageData>()
   const checkpoints = new Map<number, Uint8ClampedArray>()
@@ -57,7 +56,7 @@ export function createEditableGifFrames(bytes: Uint8Array): ReturnType<typeof de
   function read(index: number): ImageData {
     const cached = recent.get(index)
     if (cached) return cached
-    const target = index * sampleEvery
+    const target = index
     if (target < nextRaw) {
       // Checkpoints contain the screen *after disposal*, ready for the next raw frame.
       const nearest = [...checkpoints.keys()].filter(next => next <= target).sort((a, b) => b - a)[0]
@@ -93,30 +92,29 @@ export function createEditableGifFrames(bytes: Uint8Array): ReturnType<typeof de
   }
 
   const frames: GifFrame[] = []
-  for (let index = 0; index < raw.length; index += sampleEvery) {
-    const outputIndex = frames.length
-    const delayMs = raw.slice(index, index + sampleEvery)
-      .reduce((total, frame) => total + Math.max(20, (frame.gce?.delay ?? 0) * 10 || 100), 0)
-    frames.push({ get imageData() { return read(outputIndex) }, delayMs })
+  for (let index = 0; index < raw.length; index++) {
+    // GIF stores centiseconds. Preserve every positive delay, including 10ms;
+    // absent/zero delays use the existing 100ms playback convention.
+    const delayMs = (raw[index].gce?.delay ?? 0) * 10 || 100
+    frames.push({ get imageData() { return read(index) }, delayMs })
   }
-  return { width, height, frames, limited: sampleEvery > 1, sourceFrameCount: raw.length }
+  return { width, height, frames, limited: false, sourceFrameCount: raw.length }
 }
 
 /** Eager bounded decoder for independent exports/tests. Editing uses the lazy source above. */
 export function decodeGifFrames(bytes: Uint8Array): { width: number; height: number; frames: GifFrame[]; limited: boolean; sourceFrameCount: number } {
   const { parsed, raw, width, height } = readGifSource(bytes)
-  const sampleEvery = Math.ceil(raw.length / MAX_GIF_FRAMES)
-  const count = Math.ceil(raw.length / sampleEvery)
+  const count = raw.length
   const scale = Math.min(1, Math.sqrt(PIXEL_BUDGET / (width * height * count)))
   const outputWidth = Math.max(1, Math.floor(width * scale))
   const outputHeight = Math.max(1, Math.floor(height * scale))
-  const limited = scale < 1 || sampleEvery > 1
+  const limited = scale < 1
   function* patches() {
     for (const frame of raw) {
       yield decompressFrame(frame, parsed.gct, true)
     }
   }
-  const frames = composeGifFrames(outputWidth, outputHeight, patches(), { sourceWidth: width, sourceHeight: height, sampleEvery })
+  const frames = composeGifFrames(outputWidth, outputHeight, patches(), { sourceWidth: width, sourceHeight: height })
   return { width: outputWidth, height: outputHeight, frames, limited, sourceFrameCount: raw.length }
 }
 
@@ -129,7 +127,7 @@ export function composeGifFrames(width: number, height: number, frames: Iterable
   for (const frame of frames) {
     const saved = frame.disposalType === 3 ? screen.slice() : null
     blit(screen, width, height, frame, scaleX, scaleY)
-    const delayMs = Math.max(20, frame.delay || 100)
+    const delayMs = frame.delay || 100
     if (index++ % (options.sampleEvery ?? 1) === 0) {
       output.push({ imageData: new ImageData(new Uint8ClampedArray(screen), width, height), delayMs })
     } else output[output.length - 1].delayMs += delayMs

@@ -14,6 +14,7 @@ export function ExportActions() {
   const [result, setResult] = useState<ExportResult | null>(null)
   const [closing, setClosing] = useState(false)
   const [wechatFit, setWechatFit] = useState(true)
+  const [flattenTransparency, setFlattenTransparency] = useState(false)
   const [action, setAction] = useState<ExportAction | null>(null)
   const [delivering, setDelivering] = useState(false)
   const [progress, setProgress] = useState<GifExportProgress | null>(null)
@@ -76,6 +77,7 @@ export function ExportActions() {
   }, [])
 
   const animated = Boolean(state.image?.frames && state.image.frames.length > 1)
+  const gifSource = Boolean(state.image?.frames || state.image?.blob?.type === 'image/gif' || /\.gif$/i.test(state.image?.source.name ?? ''))
 
   function closeFeedback() {
     if (shareLock.current) return
@@ -134,11 +136,15 @@ export function ExportActions() {
     }
   }
 
-  async function buildExport(snapshot: EditorSnapshot, controller: AbortController, fitWechat: boolean, kind: ExportAction): Promise<Blob> {
+  async function buildExport(snapshot: EditorSnapshot, controller: AbortController, fitWechat: boolean, kind: ExportAction, flatten: boolean): Promise<Blob> {
     const image = snapshot.image
     if (!image?.imageData) throw new Error('当前没有可导出的图片。')
     let input: EditableExportInput
-    if (kind === 'copy' && !fitWechat) {
+    if (kind === 'mp4') {
+      if (!image.blob) throw new Error('请先选择 GIF，再导出无损 MP4。')
+      input = { mode: 'mp4', source: image.blob, editWidth: image.imageData.width,
+        editHeight: image.imageData.height, flattenTransparency: flatten }
+    } else if (kind === 'copy' && !fitWechat) {
       const source = image.blob ? { source: image.blob } : { imageData: image.imageData }
       input = { ...source, mode: 'clipboard', fitWechat, frameIndex: snapshot.gifFrameIndex,
         editWidth: image.imageData.width, editHeight: image.imageData.height }
@@ -168,7 +174,8 @@ export function ExportActions() {
     if (exportLock.current || !editor.getState().image?.imageData) return
     triggerRef.current = trigger
     // 锁定选择：导出期间禁用复选框，本次任务只使用开始时的模式。
-    const fitWechat = wechatFit
+    const fitWechat = kind !== 'mp4' && wechatFit
+    const flatten = flattenTransparency
     exportLock.current = true
     clearSuccessTimer()
     clearShare()
@@ -201,7 +208,7 @@ export function ExportActions() {
     let size = 0
     // 只保留本次复制已完成的 Blob；GIF 稍后会转成 HTML，但分享仍使用这份原始字节。
     let readyBlob: Blob | null = null
-    const createImage = () => buildExport(snapshot, controller, fitWechat, kind).then(blob => {
+    const createImage = () => buildExport(snapshot, controller, fitWechat, kind, flatten).then(blob => {
       checkCurrent()
       size = blob.size
       readyBlob = blob
@@ -215,7 +222,7 @@ export function ExportActions() {
       : createImage().then(blob => {
         checkCurrent()
         downloadBlob(blob, editedDownloadName(imageAtStart?.source.name || 'chinesebqb',
-          fitWechat ? 'gif' : extensionForMime(blob.type)))
+          kind === 'mp4' ? 'mp4' : fitWechat ? 'gif' : extensionForMime(blob.type)))
       })
     void task.then(() => {
       if (!current() || stale() || controller.signal.aborted) return
@@ -230,8 +237,10 @@ export function ExportActions() {
       } else {
         clearShare()
       }
-      showResult({ tone: 'success', title: kind === 'copy' ? '已复制到剪贴板' : '图片已下载',
-        detail: kind === 'copy'
+      showResult({ tone: 'success', title: kind === 'copy' ? '已复制到剪贴板' : kind === 'mp4' ? 'MP4 已下载' : '图片已下载',
+        detail: kind === 'mp4'
+          ? `无损 MP4 已生成 · ${Math.max(1, Math.round(size / 1000))} KB。需使用支持 H.264 RGB 无损的播放器。${flatten ? '透明区域已铺白。' : ''}`
+          : kind === 'copy'
           ? (fitWechat ? '已复制 GIF 富文本（HTML 图片），可粘贴到公众号或支持 HTML 的编辑器；接收应用是否播放动画取决于其自身支持。'
             : animated ? '已复制当前帧（PNG 静态图），可以粘贴到聊天或其他应用。' : '已复制 PNG 图片，可以粘贴到聊天或其他应用。')
           : `下载文件已生成 · ${Math.max(1, Math.round(size / 1000))} KB` }, Boolean(readyFile))
@@ -304,7 +313,18 @@ export function ExportActions() {
   return (
     <>
       {previewPane && (state.image || state.imageLoading) && createPortal(
-        <div className="preview-export">{fitWechatToggle}{copyButton}{exportButton}</div>,
+        <div className="preview-export">
+          {fitWechatToggle}{copyButton}{exportButton}
+          {gifSource && <>
+            <button type="button" disabled={!editable || busy} onClick={event => startExport('mp4', event.currentTarget)} aria-describedby="mp4-export-note">无损 MP4</button>
+            <details className="mp4-export-note" id="mp4-export-note">
+              <summary>MP4 说明</summary>
+              <p>原尺寸、完整动画、RGB 无损；不受「适配微信表情」限制。部分手机、微信和浏览器无法播放此编码，可用支持 H.264 RGB 无损的播放器打开。首次使用需加载约 31 MB 编码器，图片不上传。</p>
+              <p>MP4 不保留透明度。默认遇到透明区域会停止导出；需要时可选择铺白，再无损编码铺白后的画面。</p>
+              <label><input type="checkbox" checked={flattenTransparency} disabled={busy} onChange={event => setFlattenTransparency(event.target.checked)} />透明区域铺白（移除透明度）</label>
+            </details>
+          </>}
+        </div>,
         previewPane,
       )}
       {frameNotice && <div className="export-actions"><p className="warn">{frameNotice}</p></div>}

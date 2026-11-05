@@ -1,9 +1,9 @@
 import type { OcrBlock, Point } from '../types'
-import type { GifFrame } from './gif'
+import { MAX_DECODE_FRAMES, type GifFrame } from './gif'
 import { polygonBounds } from './geometry'
 
 export type GifOcrProgress = { completed: number; total: number; recognized: number }
-export const MAX_GIF_OCR_FRAMES = 200
+export const MAX_GIF_OCR_FRAMES = MAX_DECODE_FRAMES
 const MAX_CUES = 2000
 
 const interrupted = () => new DOMException('字幕识别已取消', 'AbortError')

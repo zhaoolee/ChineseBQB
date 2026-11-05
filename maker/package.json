@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ffmpeg/core": "0.12.10",
     "@paddleocr/paddleocr-js": "0.4.2",
     "gifenc": "^1.0.3",
     "gifuct-js": "^2.1.2",

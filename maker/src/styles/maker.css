@@ -118,6 +118,11 @@ h2 { margin: 0; font-size: 16px; }
 .preview-export > .export-fit input { width: 16px; height: 16px; margin: 0; accent-color: var(--ink); }
 .preview-export > .export-fit:has(input:disabled) { opacity: 0.6; cursor: default; }
 .preview-export > .export-copy { background: var(--surface); color: var(--ink); }
+.mp4-export-note { width: 100%; font-size: 12px; line-height: 1.5; color: var(--ink); }
+.mp4-export-note summary { cursor: pointer; text-align: right; }
+.mp4-export-note p { margin: 8px 0; }
+.mp4-export-note label { display: flex; gap: 6px; align-items: center; }
+.mp4-export-note input { margin: 0; }
 .export-overlay {
   position: fixed;
   inset: 0;

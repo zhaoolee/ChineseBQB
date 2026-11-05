@@ -87,15 +87,15 @@ describe('bounded GIF processing', () => {
     expect(() => decodeGifFrames(gifFile(9000,1,2))).toThrow('1600')
     expect(allocation).not.toHaveBeenCalled()
   })
-  it('limits tiny animations with excessive frame counts', () => {
+  it('retains every frame beyond 200 in both decoders', () => {
     vi.stubGlobal('ImageData', Pixels)
-    expect(decodeGifFrames(gifFile(1,1,201))).toMatchObject({ limited:true, frames:expect.any(Array) })
+    expect(decodeGifFrames(gifFile(1,1,201))).toMatchObject({ limited:false, frames:expect.any(Array) })
     const result = decodeGifFrames(gifFile(1,1,201))
-    expect(result.frames.length).toBeLessThanOrEqual(200)
+    expect(result.frames.length).toBe(201)
     expect(result.frames.reduce((sum, frame) => sum + frame.delayMs, 0)).toBe(20_100)
     const editing = createEditableGifFrames(gifFile(1,1,201))
-    expect(editing.limited).toBe(true)
-    expect(editing.frames.length).toBeLessThanOrEqual(200)
+    expect(editing.limited).toBe(false)
+    expect(editing.frames.length).toBe(201)
     expect(editing.frames.reduce((sum, frame) => sum + frame.delayMs, 0)).toBe(20_100)
   })
   it('preserves exact frame delays in synchronous and streaming exports', async () => {

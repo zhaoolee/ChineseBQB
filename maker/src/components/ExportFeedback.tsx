@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import type { GifExportProgress } from '../lib/gif-export'
 import type { FileShareSupport } from '../lib/file-share'
 
-export type ExportAction = 'copy' | 'download'
+export type ExportAction = 'copy' | 'download' | 'mp4'
 export type ExportResult = { tone: 'success' | 'error' | 'cancelled'; title: string; detail: string }
 export type ExportShareNotice = { tone: 'success' | 'error' | 'cancelled'; detail: string }
 
@@ -60,11 +60,12 @@ export function ExportFeedback({ action, progress, delivering, result, closing, 
       ? { tone: 'unavailable', detail: share.support.message }
       : share?.notice
   const stage = delivering ? (action === 'copy' ? '正在写入剪贴板' : '正在准备下载')
-    : progress?.stage === 'encode' ? '正在编码图片'
+    : progress?.stage === 'load' ? '正在加载无损视频编码器（首次约 31 MB）'
+      : progress?.stage === 'encode' ? (action === 'mp4' ? '正在无损编码视频' : '正在编码图片')
       : progress?.stage === 'motion' ? '正在优化动画流畅度' : '正在合成画面'
   const fraction = progress && progress.total > 0 && !delivering
     ? Math.max(0, Math.min(1, progress.completed / progress.total)) : null
-  const title = working ? (action === 'copy' ? '正在复制图片' : '正在生成下载图片') : result!.title
+  const title = working ? (action === 'copy' ? '正在复制图片' : action === 'mp4' ? '正在生成无损 MP4' : '正在生成下载图片') : result!.title
   const detail = working ? stage : result!.detail
   const tone = working ? 'working' : result!.tone
 

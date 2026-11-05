@@ -24,7 +24,7 @@ export function exportGifInWorker(input: EditableExportInput, edits: TimedEdits,
       worker = new Worker(new URL('../workers/gif-export.worker.ts', import.meta.url), { type: 'module' })
       options.signal?.addEventListener('abort', cancel, { once: true })
       window.addEventListener('pagehide', cancel, { once: true })
-      timer = setTimeout(() => finish(new Error('导出耗时过长，已停止处理，请重试。')), 120_000)
+      timer = setTimeout(() => finish(new Error('导出耗时过长，已停止处理，请重试。')), input.mode === 'mp4' ? 300_000 : 120_000)
       worker.onmessage = event => {
         if (settled) return
         if (event.data?.progress) options.onProgress?.(event.data.progress)

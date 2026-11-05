@@ -17,6 +17,18 @@ const block = (text: string, y = 5, x = 2): OcrBlock => ({
 })
 
 describe('automatic GIF subtitle scan', () => {
+  it('scans the complete editor timeline beyond 200 frames without dropping a brief caption', async () => {
+    const still = frame(1)
+    const frames = Array(201).fill(still)
+    frames[199] = frame(2, 10)
+    const recognize = vi.fn(async (_frame, index: number) => [block(index === 199 ? '闪过' : '原文')])
+    const result = await scanGifSubtitles(frames, recognize)
+    expect(recognize.mock.calls.map(call => call[1])).toEqual([0, 199, 200])
+    expect(result.blocks.map(cue => [cue.originalText, cue.startFrame, cue.endFrame])).toEqual([
+      ['原文', 0, 199], ['闪过', 199, 200], ['原文', 200, 201],
+    ])
+  })
+
   it('checks a single-frame caption, reuses only exact duplicates, and keeps blank gaps', async () => {
     const frames = [frame(1, 80), frame(1, 120), frame(2, 20), frame(3, 200), frame(1, 100)]
     const recognize = vi.fn(async (_frame, index: number) => index === 3 ? [] : [block(index === 2 ? '闪过' : '第一句')])

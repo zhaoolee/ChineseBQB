@@ -62,6 +62,10 @@ jobs:
         run: python scripts/build_site.py build
       - name: Build Maker
         run: npm run build --prefix maker
+      - name: Install video regression tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ffmpeg
       - name: Install OCR regression browser
         run: npm exec --prefix maker -- playwright install --with-deps chromium webkit
       - name: Verify real OCR and memory recovery before publication

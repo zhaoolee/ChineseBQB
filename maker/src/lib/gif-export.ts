@@ -9,7 +9,7 @@ import { resizeGif } from './resize-area'
 import { sniffImage } from './image'
 import { quantize } from 'gifenc'
 
-export type GifExportProgress = { stage: 'prepare' | 'encode' | 'motion'; completed: number; total: number; attempt?: number }
+export type GifExportProgress = { stage: 'load' | 'prepare' | 'encode' | 'motion'; completed: number; total: number; attempt?: number }
 export type GifExportOptions = { onProgress?: (progress: GifExportProgress) => void }
 
 /** A static editing source is already on the editor canvas: its pixels are sent
@@ -19,6 +19,7 @@ export type GifExportOptions = { onProgress?: (progress: GifExportProgress) => v
  * downscaled preview; the worker composites edits on the real source pixels.
  */
 export type NativeExportInput = { mode: 'native'; source: Blob; editWidth: number; editHeight: number }
+export type Mp4ExportInput = { mode: 'mp4'; source: Blob; editWidth: number; editHeight: number; flattenTransparency: boolean }
 export type ClipboardExportInput = {
   mode: 'clipboard'; fitWechat: boolean; frameIndex: number; editWidth: number; editHeight: number
 } & ({ source: Blob } | { imageData: ImageData })
@@ -26,6 +27,7 @@ export type EditableExportInput =
   | ({ mode?: 'wechat' } & ({ source: Blob } | { imageData: ImageData }))
   | NativeExportInput
   | ClipboardExportInput
+  | Mp4ExportInput
 
 // One frame needs a non-zero delay for viewers that ignore zero-delay frames;
 // there is no second frame, so the exported sticker remains visually static.
@@ -66,6 +68,10 @@ export async function exportEditableSource(
   input: EditableExportInput, edits: TimedEdits, options: GifExportOptions = {},
   createCanvas: () => HTMLCanvasElement = () => document.createElement('canvas'),
 ): Promise<Blob> {
+  if (input.mode === 'mp4') {
+    const { exportLosslessMp4 } = await import('./mp4-export')
+    return exportLosslessMp4(input, edits, options)
+  }
   if (input.mode === 'clipboard') return exportClipboardPng(input, edits, options, createCanvas)
   if (input.mode === 'native') return exportNativeSource(input, edits, options, createCanvas)
   const frames = 'source' in input
@@ -260,14 +266,37 @@ export async function exportNativeSource(
   return exportNativeStillImage(pixels, edits, input.editWidth, input.editHeight, options, createCanvas, sniffed.mime)
 }
 
+/** Thinning belongs exclusively to the opted-in WeChat export. Keep caption
+ * boundaries and map the encoder's timeline to original frame indices. */
+export function wechatPreparationPlan(frames: GifFrame[], edits: TimedEdits) {
+  const plan = frames.length <= 200
+    ? frames.map((frame, index) => ({ index, delayMs: frame.delayMs }))
+    : stickerFramePlan(frames, edits, Math.ceil(frames.length / 200))
+  const boundary = (frame: number) => {
+    const index = plan.findIndex(item => item.index >= frame)
+    return index < 0 ? plan.length : index
+  }
+  const mapped: TimedEdits = {
+    ...edits,
+    blocks: edits.blocks.map(block => ({ ...block,
+      startFrame: block.startFrame === undefined ? undefined : boundary(block.startFrame),
+      endFrame: block.endFrame === undefined ? undefined : boundary(block.endFrame),
+    })),
+    segments: edits.segments?.map(segment => ({ ...segment, start: boundary(segment.start), end: boundary(segment.end) })),
+  }
+  return { plan, edits: mapped }
+}
+
 export async function exportWechatSegmentedGif(
-  frames: GifFrame[], edits: TimedEdits, options: GifExportOptions = {},
+  sourceFrames: GifFrame[], sourceEdits: TimedEdits, options: GifExportOptions = {},
   createCanvas: () => HTMLCanvasElement = () => document.createElement('canvas'),
 ): Promise<Blob> {
+  const { plan: preparation, edits } = wechatPreparationPlan(sourceFrames, sourceEdits)
+  const frames = preparation.map(item => ({ get imageData() { return sourceFrames[item.index].imageData }, delayMs: item.delayMs }))
   const source = createCanvas()
   const output = createCanvas()
   // Native erasures and final-grid glyphs are rendered once per frame. Keep
-  // only the 240px result (<=46 MB for 200 frames), never native RGBA sequences.
+  // only bounded 240px results, never native RGBA sequences.
   const prepared: ImageData[] = []
   let attempt = 0
   async function* painted(plan: StickerFrame[], edge: number) {
@@ -283,7 +312,13 @@ export async function exportWechatSegmentedGif(
     options.onProgress?.({ stage: 'prepare', completed: 0, total: frames.length })
     for (const [index, frame] of frames.entries()) {
       const pixels = frame.imageData
-      const current = editsAtFrame(edits, index)
+      if (index === 0) {
+        const bounds = stickerBounds(pixels.width, pixels.height)
+        if (bounds.width * bounds.height * 4 * frames.length > 48_000_000) {
+          throw new Error('字幕切换过密，保留字幕所需的画面超过浏览器内存预算，请先缩短动画。')
+        }
+      }
+      const current = editsAtFrame(sourceEdits, preparation[index].index)
       const patches = collectPatches(current.blocks, pixels)
       paintComposite(pixels, patches.map((patch) => ({ ...patch, text: '' })), [], source)
       const context = source.getContext('2d')
