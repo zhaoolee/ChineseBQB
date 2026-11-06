@@ -219,6 +219,9 @@ async function verifyCompatiblePlayback(page, result, source) {
   const color = await page.evaluate(async base64 => {
     const video = document.createElement('video')
     video.muted = true; video.playsInline = true; video.preload = 'auto'
+    // Linux WebKit can report a frame while skipping paint for offscreen video.
+    // Keep the playback surface visible, above the editor's export feedback.
+    video.style.cssText = 'position:fixed;inset:0;width:300px;height:300px;z-index:2147483647'
     document.body.append(video)
     try {
       await new Promise((resolve, reject) => {
