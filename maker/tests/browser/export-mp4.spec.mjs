@@ -227,21 +227,28 @@ async function verifyCompatiblePlayback(page, result, source) {
         video.onerror = () => { clearTimeout(timer); reject(new Error('Browser rejected compatible MP4')) }
         video.src = `data:video/mp4;base64,${base64}`
       })
-      await new Promise((resolve, reject) => {
-        const timer = setTimeout(() => reject(new Error('Video seek timed out')), 15000)
-        video.onseeked = () => { clearTimeout(timer); resolve() }
-        video.currentTime = 0.05
+      // `seeked`/`loadeddata` need not mean WebKit has presented a drawable
+      // frame yet (WebKit #236604). Read pixels inside the frame callback.
+      return await new Promise((resolve, reject) => {
+        const timer = setTimeout(() => reject(new Error('Video frame presentation timed out')), 15000)
+        video.requestVideoFrameCallback(() => {
+          try {
+            const canvas = document.createElement('canvas')
+            canvas.width = video.videoWidth; canvas.height = video.videoHeight
+            const ctx = canvas.getContext('2d')
+            ctx.drawImage(video, 0, 0)
+            const pixels = ctx.getImageData(20, 20, 80, 80).data
+            const sum = [0, 0, 0]
+            for (let i = 0; i < pixels.length; i += 4) for (let c = 0; c < 3; c++) sum[c] += pixels[i + c]
+            resolve(sum.map(value => value / (pixels.length / 4)))
+          } catch (error) { reject(error) }
+          finally { clearTimeout(timer); video.pause() }
+        })
+        video.play().catch(error => { clearTimeout(timer); reject(error) })
       })
-      const canvas = new OffscreenCanvas(video.videoWidth, video.videoHeight)
-      const ctx = canvas.getContext('2d')
-      ctx.drawImage(video, 0, 0)
-      const pixels = ctx.getImageData(20, 20, 80, 80).data
-      const sum = [0, 0, 0]
-      for (let i = 0; i < pixels.length; i += 4) for (let c = 0; c < 3; c++) sum[c] += pixels[i + c]
-      return sum.map(value => value / (pixels.length / 4))
     } finally { video.remove(); video.removeAttribute('src'); video.load() }
   }, readFileSync(result.path).toString('base64'))
-  expect(Math.min(...color)).toBeGreaterThan(235)
+  expect(Math.min(...color), `played RGB: ${color.join(', ')}`).toBeGreaterThan(235)
   expect(Math.max(...color) - Math.min(...color)).toBeLessThan(20)
 }
 
