@@ -1,4 +1,4 @@
-import { setNativeDownload, expectWechatMode, setWechatMode } from './download-settings.mjs'
+import { setMp4Mode, expectWechatMode, setWechatMode } from './download-settings.mjs'
 import { test, expect } from '@playwright/test'
 import gifenc from 'gifenc'
 import gifuct from 'gifuct-js'
@@ -85,14 +85,14 @@ async function prepare(page, { mock = true, delay = 450, hold = false, gifSuppor
 }
 
 async function upload(page, width = 480, height = 240, keepWechat = false) {
-  const data = await page.evaluate(({ width, height }) => {
-    const c = document.createElement('canvas'); c.width = width; c.height = height
-    const x = c.getContext('2d'); x.fillStyle = '#e8352a'; x.fillRect(0, 0, width / 2, height)
-    return c.toDataURL('image/png').split(',')[1]
-  }, { width, height })
-  await page.locator('input[type=file]').first().setInputFiles({ name: 'copy.png', mimeType: 'image/png', buffer: Buffer.from(data, 'base64') })
+  const gif = GIFEncoder()
+  const indexed = Uint8Array.from({ length: width * height }, (_, i) => i % width < width / 2 ? 0 : 1)
+  gif.writeFrame(indexed, width, height, { palette: [[232, 53, 42], [0, 0, 0]], delay: 100,
+    transparent: true, transparentIndex: 1 })
+  gif.finish()
+  await page.locator('input[type=file]').first().setInputFiles({ name: 'copy.gif', mimeType: 'image/gif', buffer: Buffer.from(gif.bytes()) })
   await expect(page.getByRole('button', { name: '复制', exact: true })).toBeEnabled()
-  if (!keepWechat) await setNativeDownload(page)
+  if (!keepWechat) await setMp4Mode(page)
 }
 
 async function inspectCopy(page, native = false) {
@@ -144,20 +144,20 @@ test('copy shows full-screen real progress, writes a transparent composite, and 
   await expect(page.getByRole('button', { name: '复制', exact: true })).toBeFocused()
 })
 
-test('native copy restores original dimensions and includes added text', async ({ page }) => {
+test('MP4 mode copy keeps GIF dimensions and includes added text', async ({ page }) => {
   await prepare(page)
-  await upload(page, 2400, 1200)
+  await upload(page, 1200, 600)
   await page.getByRole('button', { name: '添加文字' }).click()
   await page.locator('.free-line input').first().fill('A')
   await page.locator('.free-line input').first().blur()
-  await setNativeDownload(page)
+  await setMp4Mode(page)
   await page.getByRole('button', { name: '复制', exact: true }).click()
   await expect(page.getByRole('dialog', { name: '已复制到剪贴板' })).toBeVisible()
-  expect(await inspectCopy(page)).toMatchObject({ width: 2400, height: 1200, type: 'image/png' })
+  expect(await inspectCopy(page)).toMatchObject({ width: 1200, height: 600, type: 'image/png' })
   const bright = await page.evaluate(async () => {
     const b = await createImageBitmap(window.__copied)
     const c = new OffscreenCanvas(b.width, b.height); const x = c.getContext('2d'); x.drawImage(b, 0, 0); b.close()
-    const d = x.getImageData(1000, 450, 400, 300).data
+    const d = x.getImageData(500, 225, 200, 150).data
     let count = 0; for (let i = 0; i < d.length; i += 4) if (d[i] > 220 && d[i + 1] > 220 && d[i + 2] > 220 && d[i + 3] > 0) count++
     return count
   })
@@ -246,7 +246,7 @@ test('copying a GIF uses the selected frame rather than the first frame', async 
   await expect(frame).toBeVisible()
   await frame.focus()
   await page.keyboard.press('End')
-  await setNativeDownload(page)
+  await setMp4Mode(page)
   await page.getByRole('button', { name: '复制', exact: true }).click()
   await expect(page.getByRole('dialog', { name: '已复制到剪贴板' })).toBeVisible()
   const image = await inspectCopy(page)

@@ -1,18 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 
-export type DownloadMode = 'wechat' | 'mp4' | 'native'
+export type DownloadMode = 'wechat' | 'mp4'
 type Props = {
   mode: DownloadMode
   onMode: (mode: DownloadMode) => void
-  lossless: boolean
-  onLossless: (lossless: boolean) => void
-  flatten: boolean
-  onFlatten: (flatten: boolean) => void
   gif: boolean
   disabled: boolean
 }
 
-export function DownloadSettings({ mode, onMode, lossless, onLossless, flatten, onFlatten, gif, disabled }: Props) {
+export function DownloadSettings({ mode, onMode, gif, disabled }: Props) {
   const [open, setOpen] = useState(false)
   const root = useRef<HTMLDivElement>(null)
   const trigger = useRef<HTMLButtonElement>(null)
@@ -27,12 +23,17 @@ export function DownloadSettings({ mode, onMode, lossless, onLossless, flatten, 
     const outside = (event: PointerEvent) => {
       if (!root.current?.contains(event.target as Node)) setOpen(false)
     }
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { event.preventDefault(); close() }
+    }
     document.addEventListener('pointerdown', outside)
-    return () => document.removeEventListener('pointerdown', outside)
+    document.addEventListener('keydown', escape)
+    return () => {
+      document.removeEventListener('pointerdown', outside)
+      document.removeEventListener('keydown', escape)
+    }
   }, [open])
-  return <div className="download-settings" ref={root} onKeyDown={event => {
-    if (open && event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); close() }
-  }} onBlur={event => {
+  return <div className="download-settings" ref={root} onBlur={event => {
     if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget as Node)) setOpen(false)
   }}>
     <button ref={trigger} type="button" className="download-settings-trigger" aria-label="下载设置" title="下载设置"
@@ -52,23 +53,8 @@ export function DownloadSettings({ mode, onMode, lossless, onLossless, flatten, 
         </label>
         <label className={`download-mode-option ${!gif ? 'is-disabled' : ''}`}>
           <input type="radio" name="download-mode" value="mp4" checked={mode === 'mp4'} disabled={!gif} onChange={() => onMode('mp4')} />
-          <span><strong>MP4 视频</strong><small>{gif ? '默认高画质兼容 · 可选无损' : '选择 GIF 后可用'}</small></span>
+          <span><strong>MP4 视频</strong><small>{gif ? '高画质兼容' : '选择 GIF 后可用'}</small></span>
         </label>
-      </div>
-      {mode === 'mp4' && <div className="download-mp4-options">
-        <p>{lossless
-          ? '保留原尺寸、完整动画和 RGB 像素，不缩图、不抽帧。'
-          : '保留完整动画，不缩图、不抽帧。兼容编码有轻微色彩损失；奇数边长会补 1 像素白边。'}</p>
-        <label><input type="checkbox" checked={flatten} onChange={event => onFlatten(event.target.checked)} />透明区域铺白（移除透明度）</label>
-        <details>
-          <summary>高级选项</summary>
-          <label><input type="checkbox" checked={lossless} onChange={event => onLossless(event.target.checked)} />逐像素无损 MP4</label>
-        </details>
-        {lossless && <p className="warn" role="status">无损模式使用 RGB 编码，iPhone、X 等可能偏色或无法播放。用于手机或社交分享时，请关闭此项。</p>}
-      </div>}
-      <div className="download-settings-footer">
-        <button type="button" className="download-native" onClick={() => { onMode('native'); close() }}>恢复原格式</button>
-        <span>{mode === 'native' ? '原尺寸 · 全部帧' : mode === 'wechat' ? '已选：微信 GIF' : lossless ? '已选：无损 MP4' : '已选：兼容 MP4'}</span>
       </div>
     </div>}
   </div>

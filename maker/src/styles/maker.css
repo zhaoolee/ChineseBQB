@@ -109,15 +109,10 @@ h2 { margin: 0; font-size: 16px; }
 .download-mode-options { display: grid; gap: 8px; }
 .download-mode-option { display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid #8884; border-radius: 12px; cursor: pointer; }
 .download-mode-option:has(input:checked) { border-color: var(--ink); box-shadow: var(--inset); }
-.download-mode-option input, .download-mp4-options input { accent-color: var(--ink); flex: 0 0 auto; }
+.download-mode-option input { accent-color: var(--ink); flex: 0 0 auto; }
 .download-mode-option strong, .download-mode-option small { display: block; }
 .download-mode-option small { font-size: 11px; opacity: .72; margin-top: 2px; }
 .download-mode-option.is-disabled { opacity: .45; cursor: default; }
-.download-mp4-options p { margin: 10px 0; font-size: 12px; }
-.download-mp4-options label { display: flex; align-items: center; gap: 6px; margin: 10px 0; font-size: 12px; }
-.download-mp4-options summary { cursor: pointer; padding: 6px 0; }
-.download-settings-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; font-size: 11px; }
-.download-settings-footer .download-native { padding: 4px 8px; font-size: 12px; min-height: 30px; }
 .export-overlay {
   position: fixed;
   inset: 0;

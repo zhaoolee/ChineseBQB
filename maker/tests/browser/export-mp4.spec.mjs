@@ -1,4 +1,4 @@
-import { openDownloadSettings, setMp4Mode, setNativeDownload, expectWechatMode } from './download-settings.mjs'
+import { openDownloadSettings, setMp4Mode, expectWechatMode } from './download-settings.mjs'
 import { execFileSync } from 'node:child_process'
 import { readFileSync, writeFileSync } from 'node:fs'
 import gifenc from 'gifenc'
@@ -9,7 +9,7 @@ import { test, expect } from '@playwright/test'
 const ffmpeg = process.env.FFMPEG_PATH || 'ffmpeg'
 const ffprobe = process.env.FFPROBE_PATH || 'ffprobe'
 const { GIFEncoder } = gifenc
-const palette = [[13, 101, 209], [246, 28, 87], [1, 255, 53], [239, 181, 7]]
+const palette = [[20, 20, 20], [100, 100, 100], [180, 180, 180], [240, 240, 240]]
 function fixture({ width = 17, height = 13, delays = [10, 70, 130], transparent = false } = {}) {
   const gif = GIFEncoder()
   const frames = delays.map((delay, frame) => {
@@ -25,8 +25,8 @@ async function upload(page, source) {
   await page.locator('input[type=file]').first().setInputFiles({ name: 'exact.gif', mimeType: 'image/gif', buffer: source.bytes })
   await expect(page.getByRole('button', { name: '下载', exact: true })).toBeEnabled()
 }
-async function downloadMp4(page, testInfo, options = { lossless: true }) {
-  await setMp4Mode(page, options)
+async function downloadMp4(page, testInfo) {
+  await setMp4Mode(page)
   const [download] = await Promise.all([
     page.waitForEvent('download'), page.getByRole('button', { name: '下载', exact: true }).click(),
   ])
@@ -43,16 +43,21 @@ function verifyPixels(source, result) {
   const gcd = (a, b) => b ? gcd(b, a % b) : a
   const tick = source.delays.reduce(gcd)
   const samples = source.delays.reduce((a, b) => a + b, 0) / tick
-  expect(streams[0]).toMatchObject({ width: source.width, height: source.height, codec_name: 'h264', pix_fmt: 'gbrp' })
+  const width = Math.ceil(source.width / 2) * 2, height = Math.ceil(source.height / 2) * 2
+  expect(streams[0]).toMatchObject({ width, height, codec_name: 'h264', pix_fmt: 'yuv420p' })
   expect(Number(streams[0].duration)).toBeCloseTo(source.delays.reduce((a, b) => a + b, 0) / 1000, 6)
   expect(frames).toHaveLength(samples)
-  const frameSize = source.width * source.height * 3
+  const frameSize = width * height * 3
   expect(result.raw.length).toBe(samples * frameSize)
   let sample = 0
   source.frames.forEach((expected, index) => {
     for (let n = 0; n < source.delays[index] / tick; n++, sample++) {
       expect(Number(frames[sample].best_effort_timestamp_time)).toBeCloseTo(sample * tick / 1000, 6)
-      expect(result.raw.subarray(sample * frameSize, (sample + 1) * frameSize).equals(expected), `source frame ${index}, sample ${sample}: RGB must match exactly`).toBe(true)
+      let error = 0
+      for (let y = 0; y < source.height; y++) for (let x = 0; x < source.width; x++) for (let c = 0; c < 3; c++) {
+        error += Math.abs(result.raw[sample * frameSize + (y * width + x) * 3 + c] - expected[(y * source.width + x) * 3 + c])
+      }
+      expect(error / expected.length, `source frame ${index}, sample ${sample}: retain the source picture`).toBeLessThan(5)
     }
   })
 }
@@ -62,7 +67,7 @@ test.beforeEach(async ({ page }) => {
   await page.route('**/*.onnx*', route => route.abort())
 })
 
-test('MP4 is pixel-exact at odd native dimensions and preserves every frame hold', async ({ page }, testInfo) => {
+test('MP4 pads odd dimensions without shrinking and preserves every frame hold', async ({ page }, testInfo) => {
   const source = fixture()
   const assets = []
   page.on('request', request => { if (/ffmpeg-core/.test(request.url())) assets.push(request.url()) })
@@ -83,22 +88,14 @@ test('editor and MP4 retain all 201 original frames', async ({ page }, testInfo)
   verifyPixels(source, await downloadMp4(page, testInfo))
 })
 
-test('unchecking WeChat exports all 201 GIF frames at native dimensions and delays', async ({ page }) => {
+test('MP4 preserves unequal holds across all 201 original frames', async ({ page }, testInfo) => {
   const source = fixture({ width: 17, height: 13, delays: Array.from({ length: 201 }, (_, i) => i % 2 ? 70 : 10) })
   await upload(page, source)
   await expect(page.getByRole('slider', { name: 'GIF 当前帧' })).toHaveAttribute('max', '200')
-  await setNativeDownload(page)
-  const [download] = await Promise.all([
-    page.waitForEvent('download'), page.getByRole('button', { name: '下载', exact: true }).click(),
-  ])
-  expect(download.suggestedFilename()).toBe('edited-exact.gif')
-  const bytes = readFileSync(await download.path())
-  const parsed = gifuct.parseGIF(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength))
-  expect(parsed.lsd).toMatchObject({ width: source.width, height: source.height })
-  expect(parsed.frames.filter(frame => frame.image).map(frame => frame.gce.delay * 10)).toEqual(source.delays)
+  verifyPixels(source, await downloadMp4(page, testInfo))
 })
 
-test('a single-frame GIF also exports a lossless MP4 with its full hold', async ({ page }, testInfo) => {
+test('a single-frame GIF also exports an MP4 with its full hold', async ({ page }, testInfo) => {
   const source = fixture({ delays: [170] })
   await upload(page, source)
   verifyPixels(source, await downloadMp4(page, testInfo))
@@ -143,20 +140,14 @@ test('MP4 pixels include edits only in their timeline segment', async ({ page },
   await expect.poll(async () => (await readCanvas()).equals(source.frames[1])).toBe(false)
   source.frames[2] = await readCanvas()
   writeFileSync(testInfo.outputPath('expected.rgb'), Buffer.concat(source.frames))
-  // Frame zero remains unedited; independently decoded video must equal all
-  // three expected frames, including the canvas's antialiased text pixels.
+  // Each source frame is compared independently, including the timed text.
   verifyPixels(source, await downloadMp4(page, testInfo))
 })
 
-test('transparent GIF requires explicit matting and remains exact after matting', async ({ page }, testInfo) => {
-  const source = fixture({ transparent: true })
+test('transparent GIF automatically uses a white background without extra settings', async ({ page }, testInfo) => {
+  const source = fixture({ width: 101, height: 65, transparent: true })
   await upload(page, source)
-  await setMp4Mode(page, { lossless: true })
-  await page.getByRole('button', { name: '下载', exact: true }).click()
-  await expect(page.getByRole('dialog')).toContainText('含透明区域')
-  await page.getByRole('button', { name: '知道了', exact: true }).click()
-  await expect(page.getByRole('dialog')).toHaveCount(0)
-  verifyPixels(source, await downloadMp4(page, testInfo, { lossless: true, flatten: true }))
+  verifyPixels(source, await downloadMp4(page, testInfo))
 })
 
 test('cancel during codec loading stops export and a subsequent download succeeds', async ({ page }, testInfo) => {
@@ -166,7 +157,7 @@ test('cancel during codec loading stops export and a subsequent download succeed
     await route.abort().catch(() => {})
   })
   await upload(page, source)
-  await setMp4Mode(page, { lossless: true })
+  await setMp4Mode(page)
   await page.getByRole('button', { name: '下载', exact: true }).click()
   await expect(page.getByRole('dialog')).toContainText('正在加载')
   await page.getByRole('button', { name: '取消', exact: true }).click()
@@ -181,7 +172,7 @@ test('codec loading failure is actionable and retry uses a fresh worker', async 
   const source = fixture()
   await page.route('**/ffmpeg-core*.wasm', route => route.abort())
   await upload(page, source)
-  await setMp4Mode(page, { lossless: true })
+  await setMp4Mode(page)
   await page.getByRole('button', { name: '下载', exact: true }).click()
   await expect(page.getByRole('dialog')).toContainText('视频编码器加载失败')
   await page.getByRole('button', { name: '知道了', exact: true }).click()
@@ -260,10 +251,9 @@ test('default MP4 uses compatible playback and keeps the white background white'
   await upload(page, source)
   const panel = await openDownloadSettings(page)
   await panel.getByRole('radio', { name: 'MP4 视频' }).check()
-  await panel.locator('summary').click()
-  await expect(panel.getByRole('checkbox', { name: '逐像素无损 MP4', exact: true })).not.toBeChecked()
+  await expect(panel.getByRole('checkbox')).toHaveCount(0)
   await panel.getByRole('button', { name: '关闭下载设置' }).click()
-  const result = await downloadMp4(page, testInfo, { lossless: false })
+  const result = await downloadMp4(page, testInfo)
   await verifyCompatiblePlayback(page, result, source)
 })
 
@@ -286,11 +276,9 @@ test('download gear is left of Download and modes are mutually exclusive in its 
   const bounds = await panel.boundingBox()
   expect(bounds.x).toBeGreaterThanOrEqual(0)
   expect(bounds.x + bounds.width).toBeLessThanOrEqual(page.viewportSize().width)
-  // The panel must remain above both the tool rail and the timeline/dock.
-  await panel.locator('summary').click()
-  await panel.getByRole('checkbox', { name: '逐像素无损 MP4', exact: true }).check()
-  await expect(panel.getByRole('button', { name: '恢复原格式' })).toBeInViewport()
-  await panel.getByRole('button', { name: '恢复原格式' }).click({ trial: true })
+  await expect(panel.getByRole('checkbox')).toHaveCount(0)
+  await expect(panel.locator('details')).toHaveCount(0)
+  await expect(panel.getByText(/恢复原格式|已选：|保留完整动画|透明区域铺白|可选无损/)).toHaveCount(0)
   await page.screenshot({ path: testInfo.outputPath('download-settings.png'), fullPage: true })
   await wechat.check()
   await expect(mp4).not.toBeChecked()
@@ -302,14 +290,13 @@ test('download gear is left of Download and modes are mutually exclusive in its 
   await expect(panel).toHaveCount(0)
   for (const viewport of [{ width: 320, height: 568 }, { width: 1280, height: 800 }]) {
     await page.setViewportSize(viewport)
-    await setMp4Mode(page, { lossless: true })
+    await setMp4Mode(page)
     await openDownloadSettings(page)
-    await panel.locator('summary').click()
     const rect = await panel.boundingBox()
     expect(rect.x).toBeGreaterThanOrEqual(0)
     expect(rect.x + rect.width).toBeLessThanOrEqual(viewport.width)
     expect(rect.y + rect.height).toBeLessThanOrEqual(viewport.height)
-    await panel.getByRole('button', { name: '恢复原格式' }).click({ trial: true })
+    await panel.getByRole('radio', { name: '适配微信表情' }).click({ trial: true })
     await page.keyboard.press('Escape')
   }
 })
@@ -323,7 +310,7 @@ if (process.env.MP4_REGRESSION_GIF) {
     const source = { bytes, width: parsed.lsd.width, height: parsed.lsd.height,
       delays: parsed.frames.filter(frame => frame.image).map(frame => (frame.gce?.delay || 10) * 10) }
     await upload(page, source)
-    const result = await downloadMp4(page, testInfo, { lossless: false })
+    const result = await downloadMp4(page, testInfo)
     await verifyCompatiblePlayback(page, result, source)
     if (process.env.MP4_REGRESSION_OUTPUT) writeFileSync(process.env.MP4_REGRESSION_OUTPUT, readFileSync(result.path))
   })

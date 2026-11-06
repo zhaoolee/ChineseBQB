@@ -15,8 +15,6 @@ export function ExportActions() {
   const [result, setResult] = useState<ExportResult | null>(null)
   const [closing, setClosing] = useState(false)
   const [downloadMode, setDownloadMode] = useState<DownloadMode>('wechat')
-  const [losslessMp4, setLosslessMp4] = useState(false)
-  const [flattenTransparency, setFlattenTransparency] = useState(false)
   const [action, setAction] = useState<ExportAction | null>(null)
   const [delivering, setDelivering] = useState(false)
   const [progress, setProgress] = useState<GifExportProgress | null>(null)
@@ -80,7 +78,7 @@ export function ExportActions() {
 
   const animated = Boolean(state.image?.frames && state.image.frames.length > 1)
   const gifSource = Boolean(state.image?.frames || state.image?.blob?.type === 'image/gif' || /\.gif$/i.test(state.image?.source.name ?? ''))
-  const effectiveMode = downloadMode === 'mp4' && !gifSource ? 'native' : downloadMode
+  const effectiveMode = downloadMode === 'mp4' && !gifSource ? 'wechat' : downloadMode
   const wechatFit = effectiveMode === 'wechat'
 
   function closeFeedback() {
@@ -140,14 +138,14 @@ export function ExportActions() {
     }
   }
 
-  async function buildExport(snapshot: EditorSnapshot, controller: AbortController, fitWechat: boolean, kind: ExportAction, flatten: boolean, lossless: boolean): Promise<Blob> {
+  async function buildExport(snapshot: EditorSnapshot, controller: AbortController, fitWechat: boolean, kind: ExportAction): Promise<Blob> {
     const image = snapshot.image
     if (!image?.imageData) throw new Error('当前没有可导出的图片。')
     let input: EditableExportInput
     if (kind === 'mp4') {
       if (!image.blob) throw new Error('请先选择 GIF，再导出 MP4。')
       input = { mode: 'mp4', source: image.blob, editWidth: image.imageData.width,
-        editHeight: image.imageData.height, flattenTransparency: flatten, lossless }
+        editHeight: image.imageData.height, flattenTransparency: true, lossless: false }
     } else if (kind === 'copy' && !fitWechat) {
       const source = image.blob ? { source: image.blob } : { imageData: image.imageData }
       input = { ...source, mode: 'clipboard', fitWechat, frameIndex: snapshot.gifFrameIndex,
@@ -179,8 +177,6 @@ export function ExportActions() {
     triggerRef.current = trigger
     // 锁定选择：导出期间禁用设置，本次任务只使用开始时的模式。
     const fitWechat = kind !== 'mp4' && wechatFit
-    const flatten = flattenTransparency
-    const lossless = losslessMp4
     exportLock.current = true
     clearSuccessTimer()
     clearShare()
@@ -213,7 +209,7 @@ export function ExportActions() {
     let size = 0
     // 只保留本次复制已完成的 Blob；GIF 稍后会转成 HTML，但分享仍使用这份原始字节。
     let readyBlob: Blob | null = null
-    const createImage = () => buildExport(snapshot, controller, fitWechat, kind, flatten, lossless).then(blob => {
+    const createImage = () => buildExport(snapshot, controller, fitWechat, kind).then(blob => {
       checkCurrent()
       size = blob.size
       readyBlob = blob
@@ -244,7 +240,7 @@ export function ExportActions() {
       }
       showResult({ tone: 'success', title: kind === 'copy' ? '已复制到剪贴板' : kind === 'mp4' ? 'MP4 已下载' : '图片已下载',
         detail: kind === 'mp4'
-          ? `${lossless ? '逐像素无损' : '高画质兼容'} MP4 已生成 · ${Math.max(1, Math.round(size / 1000))} KB。${lossless ? 'RGB 编码在 iPhone、X 等可能偏色或无法播放。' : '保留完整动画，使用兼容编码。'}${flatten ? '透明区域已铺白。' : ''}`
+          ? `MP4 已生成 · ${Math.max(1, Math.round(size / 1000))} KB。`
           : kind === 'copy'
           ? (fitWechat ? '已复制 GIF 富文本（HTML 图片），可粘贴到公众号或支持 HTML 的编辑器；接收应用是否播放动画取决于其自身支持。'
             : animated ? '已复制当前帧（PNG 静态图），可以粘贴到聊天或其他应用。' : '已复制 PNG 图片，可以粘贴到聊天或其他应用。')
@@ -309,8 +305,7 @@ export function ExportActions() {
       {previewPane && (state.image || state.imageLoading) && createPortal(
         <div className="preview-export">
           {copyButton}
-          <DownloadSettings mode={effectiveMode} onMode={setDownloadMode} lossless={losslessMp4} onLossless={setLosslessMp4}
-            flatten={flattenTransparency} onFlatten={setFlattenTransparency} gif={gifSource} disabled={!editable || busy} />
+          <DownloadSettings mode={effectiveMode} onMode={setDownloadMode} gif={gifSource} disabled={!editable || busy} />
           {exportButton}
         </div>,
         previewPane,

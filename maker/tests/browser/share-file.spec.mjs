@@ -1,4 +1,4 @@
-import { setNativeDownload, expectWechatMode } from './download-settings.mjs'
+import { setMp4Mode, expectWechatMode } from './download-settings.mjs'
 import { test, expect } from '@playwright/test'
 import gifenc from 'gifenc'
 import gifuct from 'gifuct-js'
@@ -253,10 +253,10 @@ test('a late share result after source replacement cannot revive the old modal',
   await expect(page.getByText('已交给系统分享；请在目标应用里完成发送。')).toHaveCount(0)
 })
 
-test('unchecked GIF copy shares the exact PNG of the current frame', async ({ page }) => {
+test('MP4 mode GIF copy shares the exact PNG of the current frame', async ({ page }) => {
   await prepare(page)
   await uploadAnimatedGif(page)
-  await setNativeDownload(page)
+  await setMp4Mode(page)
   await page.getByRole('slider', { name: 'GIF 当前帧' }).focus()
   await page.keyboard.press('End')
   await copyAndWait(page)
